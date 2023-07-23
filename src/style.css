@@ -1,0 +1,65 @@
+[vaul-drawer] {
+  transform: translateY(var(--swipe-amount));
+  user-select: none;
+  touch-action: none;
+  animation: show-dialog 0.5s cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+[vaul-drawer]::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  background: inherit;
+  background-color: inherit;
+  left: 0;
+  right: 0;
+  height: 200%;
+}
+
+[vaul-drawer][data-state='closed'] {
+  animation: hide-dialog 0.5s cubic-bezier(0.32, 0.72, 0, 1) forwards;
+}
+
+[vaul-overlay] {
+  animation: show-overlay 0.5s cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+[vaul-overlay][data-state='closed'] {
+  animation: hide-overlay 0.5s cubic-bezier(0.32, 0.72, 0, 1) forwards;
+}
+
+@keyframes show-dialog {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes hide-dialog {
+  from {
+    transform: translateY(var(--hide-from, 0));
+  }
+  to {
+    transform: translateY(100%);
+  }
+}
+
+@keyframes show-overlay {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes hide-overlay {
+  from {
+    opacity: var(--opacity-from, 1);
+  }
+  to {
+    opacity: 0;
+  }
+}

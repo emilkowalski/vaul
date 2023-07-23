@@ -1,0 +1,27 @@
+import { Hero } from './components/hero';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Vaul',
+  description: 'Drawer component for React.',
+  openGraph: {
+    title: 'Vaul',
+    description: 'Drawer component for React.',
+    url: 'https://vaul.emilkowal.ski',
+    siteName: 'Enuk Kowalski',
+    locale: 'en-US',
+    type: 'website',
+  },
+  twitter: {
+    title: 'Emil Kowalski',
+    card: 'summary_large_image',
+  },
+};
+
+export default function Home() {
+  return (
+    <main className="antialiased">
+      <Hero />
+    </main>
+  );
+}
