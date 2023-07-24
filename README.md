@@ -42,7 +42,7 @@ Play around with the examples on codesandbox:
 
 ### Root
 
-Contains all parts of a dialog. Use `shouldScaleBackground` to enable background scaling, it requires an element with `[vaul-drawer-wrapper]` data attribute to scale its background, [example](https://github.com/emilkowalski/vaul/blob/main/website/src/app/layout.tsx#L13).
+Contains all parts of a dialog. Use `shouldScaleBackground` to enable background scaling, it requires an element with `[vaul-drawer-wrapper]` data attribute to scale its background.
 Can be controlled with the `value` and `onOpenChange` props. Can be opened by default via `defaultOpen` prop.
 
 ### Trigger
