@@ -67,7 +67,7 @@ An optional accessible description to be announced when the dialog is opened. [P
 
 ### Close
 
-The button that closes the dialog. [Props](https://www.radix-ui.com/docs/primitives/components/dialog#close)https://www.radix-ui.com/docs/primitives/components/dialog#close.
+The button that closes the dialog. [Props](https://www.radix-ui.com/docs/primitives/components/dialog#close).
 
 ### Portal
 
