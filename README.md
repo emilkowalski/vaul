@@ -67,7 +67,7 @@ An accessible title to be announced when the dialog is opened. [Props](https://w
 
 ### Description
 
-An optional accessible description to be announced when the dialog is opened. [Props](https://www.radix-ui.com/docs/primitives/components/dialog#description)https://www.radix-ui.com/docs/primitives/components/dialog#description.
+An optional accessible description to be announced when the dialog is opened. [Props](https://www.radix-ui.com/docs/primitives/components/dialog#description).
 
 ### Close
 
