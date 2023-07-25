@@ -1,4 +1,8 @@
-https://github.com/emilkowalski/vaul/assets/36730035/52d2319a-9c64-4a1a-9704-15b9e3fa4177
+
+
+
+https://github.com/emilkowalski/vaul/assets/36730035/fdf8c5e8-ade8-433b-8bb0-4ce10e722516
+
 
 Vaul is an unstyled drawer component for React that can be used as a Dialog replacement on tablet and mobile devices. It uses [Radix's Dialog primitive](https://www.radix-ui.com/docs/primitives/components/dialog#trigger) under the hood and is inspired by [this tweet](https://twitter.com/devongovett/status/1674470185783402496).
 
