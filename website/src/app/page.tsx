@@ -8,7 +8,7 @@ export const metadata: Metadata = {
     title: 'Vaul',
     description: 'Drawer component for React.',
     url: 'https://vaul.emilkowal.ski',
-    siteName: 'Enuk Kowalski',
+    siteName: 'Emil Kowalski',
     locale: 'en-US',
     type: 'website',
   },
