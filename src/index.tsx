@@ -71,16 +71,17 @@ function Root({ open: openProp, defaultOpen, onOpenChange, children, shouldScale
     defaultProp: defaultOpen,
     onChange: onOpenChange,
   });
+  const [isDragging, setIsDragging] = React.useState(false);
   const overlayRef = React.useRef<HTMLDivElement>(null);
   const dragStartTime = React.useRef<Date | null>(null);
   const dragEndTime = React.useRef<Date | null>(null);
   const lastTimeDragPrevented = React.useRef<Date | null>(null);
-  const isMouseDown = React.useRef(false);
   const pointerStartY = React.useRef(0);
   const drawerRef = React.useRef<HTMLDivElement>(null);
   const initialViewportHeight = React.useRef(0);
+
   usePreventScroll({
-    isDisabled: !isOpen,
+    isDisabled: !isOpen || isDragging,
   });
 
   function getScale() {
@@ -88,7 +89,7 @@ function Root({ open: openProp, defaultOpen, onOpenChange, children, shouldScale
   }
 
   function onPress(event: React.PointerEvent<HTMLDivElement>) {
-    isMouseDown.current = true;
+    setIsDragging(true);
     dragStartTime.current = new Date();
 
     // Ensure we maintain correct pointer capture even when going outside of the drawer
@@ -144,7 +145,7 @@ function Root({ open: openProp, defaultOpen, onOpenChange, children, shouldScale
 
   function onMove(event: React.PointerEvent<HTMLDivElement>) {
     // We need to know how much of the drawer has been dragged in percentages so that we can transform background accordingly
-    if (isMouseDown.current) {
+    if (isDragging) {
       const draggedDistance = pointerStartY.current - (event as unknown as React.PointerEvent<HTMLDivElement>).clientY;
       const isDraggingDown = draggedDistance > 0;
 
@@ -168,13 +169,23 @@ function Root({ open: openProp, defaultOpen, onOpenChange, children, shouldScale
       const absDraggedDistance = Math.abs(draggedDistance);
       const wrapper = document.querySelector('[vaul-drawer-wrapper]');
 
+      const percentageDragged = absDraggedDistance / drawerHeight;
+      const opacityValue = 1 - percentageDragged;
+
+      set(
+        overlayRef.current,
+        {
+          opacity: `${opacityValue}`,
+        },
+        true,
+      );
+	  
       if (wrapper && overlayRef.current && shouldScaleBackground) {
         // Calculate percentageDragged as a fraction (0 to 1)
-        const percentageDragged = absDraggedDistance / drawerHeight;
 
         const scaleValue = Math.min(getScale() + percentageDragged * (1 - getScale()), 1);
         const borderRadiusValue = 8 - percentageDragged * 8;
-        const opacityValue = 1 - percentageDragged;
+
         const translateYValue = Math.max(0, 14 - percentageDragged * 14);
 
         set(
@@ -183,14 +194,6 @@ function Root({ open: openProp, defaultOpen, onOpenChange, children, shouldScale
             borderRadius: `${borderRadiusValue}px`,
             transform: `scale(${scaleValue}) translateY(${translateYValue}px)`,
             transition: 'none',
-          },
-          true,
-        );
-
-        set(
-          overlayRef.current,
-          {
-            opacity: `${opacityValue}`,
           },
           true,
         );
@@ -286,7 +289,7 @@ function Root({ open: openProp, defaultOpen, onOpenChange, children, shouldScale
   }
 
   function onRelease(event: React.PointerEvent<HTMLDivElement>) {
-    isMouseDown.current = false;
+    setIsDragging(false);
     dragEndTime.current = new Date();
     const swipeAmount = drawerRef.current
       ? getComputedStyle(drawerRef.current).getPropertyValue('--swipe-amount').slice(0, -2)
@@ -360,7 +363,7 @@ function Root({ open: openProp, defaultOpen, onOpenChange, children, shouldScale
     <DialogPrimitive.Root
       open={isOpen}
       onOpenChange={(o) => {
-        isMouseDown.current = false;
+        setIsDragging(false);
         setIsOpen(o);
       }}
     >
