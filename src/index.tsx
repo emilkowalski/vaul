@@ -63,9 +63,17 @@ interface DialogProps {
   defaultOpen?: boolean;
   onOpenChange?(open: boolean): void;
   shouldScaleBackground?: boolean;
+  dismissible?: boolean;
 }
 
-function Root({ open: openProp, defaultOpen, onOpenChange, children, shouldScaleBackground }: DialogProps) {
+function Root({
+  open: openProp,
+  defaultOpen,
+  onOpenChange,
+  children,
+  shouldScaleBackground,
+  dismissible = true,
+}: DialogProps) {
   const [isOpen = false, setIsOpen] = useControllableState({
     prop: openProp,
     defaultProp: defaultOpen,
@@ -179,7 +187,7 @@ function Root({ open: openProp, defaultOpen, onOpenChange, children, shouldScale
         },
         true,
       );
-	  
+
       if (wrapper && overlayRef.current && shouldScaleBackground) {
         // Calculate percentageDragged as a fraction (0 to 1)
 
@@ -311,12 +319,12 @@ function Root({ open: openProp, defaultOpen, onOpenChange, children, shouldScale
       return;
     }
 
-    if (velocity > 0.4) {
+    if (velocity > 0.4 && dismissible) {
       closeDrawer();
       return;
     }
 
-    if (y > window.innerHeight * 0.75) {
+    if (y > window.innerHeight * 0.75 && dismissible) {
       closeDrawer();
       return;
     }
@@ -364,7 +372,7 @@ function Root({ open: openProp, defaultOpen, onOpenChange, children, shouldScale
       open={isOpen}
       onOpenChange={(o) => {
         setIsDragging(false);
-        setIsOpen(o);
+        setIsOpen(!dismissible || o);
       }}
     >
       <DrawerContext.Provider
