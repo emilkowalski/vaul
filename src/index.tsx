@@ -105,7 +105,6 @@ function Root({ open: openProp, defaultOpen, onOpenChange, children, shouldScale
 
     // Don't drag if there's highlighted text
     if (highlightedText.length > 0) {
-      lastTimeDragPrevented.current = new Date();
       return false;
     }
 
@@ -179,7 +178,7 @@ function Root({ open: openProp, defaultOpen, onOpenChange, children, shouldScale
         },
         true,
       );
-	  
+
       if (wrapper && overlayRef.current && shouldScaleBackground) {
         // Calculate percentageDragged as a fraction (0 to 1)
 
@@ -226,7 +225,7 @@ function Root({ open: openProp, defaultOpen, onOpenChange, children, shouldScale
 
     window.visualViewport.addEventListener('resize', onVisualViewportChange);
     return () => window.visualViewport.removeEventListener('resize', onVisualViewportChange);
-  });
+  }, []);
 
   function closeDrawer() {
     setIsOpen(false);
@@ -363,7 +362,6 @@ function Root({ open: openProp, defaultOpen, onOpenChange, children, shouldScale
     <DialogPrimitive.Root
       open={isOpen}
       onOpenChange={(o) => {
-        setIsDragging(false);
         setIsOpen(o);
       }}
     >
