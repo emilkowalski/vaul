@@ -105,7 +105,6 @@ function Root({ open: openProp, defaultOpen, onOpenChange, children, shouldScale
 
     // Don't drag if there's highlighted text
     if (highlightedText.length > 0) {
-      lastTimeDragPrevented.current = new Date();
       return false;
     }
 
