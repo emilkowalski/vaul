@@ -7,6 +7,7 @@ interface DrawerContextValue {
   onPress: (event: React.PointerEvent<HTMLDivElement>) => void;
   onRelease: (event: React.PointerEvent<HTMLDivElement>) => void;
   onMove: (event: React.PointerEvent<HTMLDivElement>) => void;
+  dismissible: boolean;
 }
 
 export const DrawerContext = React.createContext<DrawerContextValue>({
@@ -16,6 +17,7 @@ export const DrawerContext = React.createContext<DrawerContextValue>({
   onPress: () => {},
   onRelease: () => {},
   onMove: () => {},
+  dismissible: true,
 });
 
 export const useDrawerContext = () => React.useContext(DrawerContext);

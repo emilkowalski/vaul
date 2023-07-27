@@ -63,9 +63,17 @@ interface DialogProps {
   defaultOpen?: boolean;
   onOpenChange?(open: boolean): void;
   shouldScaleBackground?: boolean;
+  dismissible?: boolean;
 }
 
-function Root({ open: openProp, defaultOpen, onOpenChange, children, shouldScaleBackground }: DialogProps) {
+function Root({
+  open: openProp,
+  defaultOpen,
+  onOpenChange,
+  children,
+  shouldScaleBackground,
+  dismissible = true,
+}: DialogProps) {
   const [isOpen = false, setIsOpen] = useControllableState({
     prop: openProp,
     defaultProp: defaultOpen,
@@ -89,6 +97,7 @@ function Root({ open: openProp, defaultOpen, onOpenChange, children, shouldScale
   }
 
   function onPress(event: React.PointerEvent<HTMLDivElement>) {
+    if (!dismissible) return;
     setIsDragging(true);
     dragStartTime.current = new Date();
 
@@ -228,6 +237,7 @@ function Root({ open: openProp, defaultOpen, onOpenChange, children, shouldScale
   }, []);
 
   function closeDrawer() {
+    if (!dismissible) return;
     setIsOpen(false);
     const drawerHeight = drawerRef.current?.getBoundingClientRect().height || 0;
 
@@ -373,6 +383,7 @@ function Root({ open: openProp, defaultOpen, onOpenChange, children, shouldScale
           onPress,
           onRelease,
           onMove,
+          dismissible,
         }}
       >
         {children}
@@ -391,8 +402,8 @@ const Overlay = React.forwardRef<HTMLDivElement, React.ComponentPropsWithoutRef<
 );
 
 const Content = React.forwardRef<HTMLDivElement, React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content>>(
-  function ({ children, onOpenAutoFocus, ...rest }, ref) {
-    const { drawerRef, onPress, onRelease, onAnimationStart, onMove } = useDrawerContext();
+  function ({ children, onOpenAutoFocus, onPointerDownOutside, ...rest }, ref) {
+    const { drawerRef, onPress, onRelease, onAnimationStart, onMove, dismissible } = useDrawerContext();
     const composedRef = useComposedRefs(ref, drawerRef);
 
     return (
@@ -407,6 +418,13 @@ const Content = React.forwardRef<HTMLDivElement, React.ComponentPropsWithoutRef<
           } else {
             e.preventDefault();
           }
+        }}
+        onPointerDownOutside={(e) => {
+          if (!dismissible) {
+            e.preventDefault();
+          }
+
+          onPointerDownOutside?.(e);
         }}
         ref={composedRef}
         {...rest}
