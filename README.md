@@ -1,8 +1,4 @@
-
-
-
 https://github.com/emilkowalski/vaul/assets/36730035/fdf8c5e8-ade8-433b-8bb0-4ce10e722516
-
 
 Vaul is an unstyled drawer component for React that can be used as a Dialog replacement on tablet and mobile devices. It uses [Radix's Dialog primitive](https://www.radix-ui.com/docs/primitives/components/dialog#trigger) under the hood and is inspired by [this tweet](https://twitter.com/devongovett/status/1674470185783402496).
 
@@ -36,7 +32,7 @@ function MyComponent() {
 
 ## Examples
 
-Play around with the examples on codesandbox: 
+Play around with the examples on codesandbox:
 
 - [With scaled background](https://codesandbox.io/p/sandbox/drawer-with-scale-g24vvh?file=%2Fapp%2Fmy-drawer.tsx%3A1%2C1)
 - [Without scaled background](https://codesandbox.io/p/sandbox/drawer-with-scale-forked-nx2glp?file=%2Fapp%2Fmy-drawer.tsx%3A4%2C1)
@@ -49,6 +45,10 @@ Play around with the examples on codesandbox:
 
 Contains all parts of a dialog. Use `shouldScaleBackground` to enable background scaling, it requires an element with `[vaul-drawer-wrapper]` data attribute to scale its background.
 Can be controlled with the `value` and `onOpenChange` props. Can be opened by default via `defaultOpen` prop.
+
+Additional props:
+
+`fixedHeight`: Height won't be auto adjusted when the `visualViewportHeight` changes.
 
 ### Trigger
 

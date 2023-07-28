@@ -64,6 +64,7 @@ interface DialogProps {
   onOpenChange?(open: boolean): void;
   shouldScaleBackground?: boolean;
   dismissible?: boolean;
+  fixedHeight?: boolean;
 }
 
 function Root({
@@ -72,6 +73,7 @@ function Root({
   onOpenChange,
   children,
   shouldScaleBackground,
+  fixedHeight,
   dismissible = true,
 }: DialogProps) {
   const [isOpen = false, setIsOpen] = useControllableState({
@@ -89,7 +91,7 @@ function Root({
   const initialViewportHeight = React.useRef(0);
 
   usePreventScroll({
-    isDisabled: !isOpen || isDragging,
+    isDisabled: !isOpen || isDragging || fixedHeight,
   });
 
   function getScale() {
@@ -127,7 +129,7 @@ function Root({
     while (element) {
       // Check if the element is scrollable
       if (element.scrollHeight > element.clientHeight) {
-        if (element.role === 'dialog') return true;
+        if (element.role === 'dialog' || element.getAttribute('vaul-drawer')) return true;
 
         if (element.scrollTop > 0) {
           lastTimeDragPrevented.current = new Date();
@@ -154,7 +156,7 @@ function Root({
   function onMove(event: React.PointerEvent<HTMLDivElement>) {
     // We need to know how much of the drawer has been dragged in percentages so that we can transform background accordingly
     if (isDragging) {
-      const draggedDistance = pointerStartY.current - (event as unknown as React.PointerEvent<HTMLDivElement>).clientY;
+      const draggedDistance = pointerStartY.current - event.clientY;
       const isDraggingDown = draggedDistance > 0;
 
       if (!shouldDrag(event.target, isDraggingDown)) return;
@@ -217,14 +219,15 @@ function Root({
     initialViewportHeight.current = window.visualViewport.height;
 
     function onVisualViewportChange() {
-      if (!drawerRef.current) return;
+      if (!drawerRef.current || fixedHeight) return;
 
       const visualViewportHeight = window.visualViewport.height;
       const diffFromInitial = initialViewportHeight.current - visualViewportHeight;
       const drawerHeight = drawerRef.current?.getBoundingClientRect().height || 0;
+      const offsetFromTop = drawerRef.current?.getBoundingClientRect().top;
 
       if (drawerHeight > visualViewportHeight) {
-        drawerRef.current.style.height = `${visualViewportHeight - 72}px`;
+        drawerRef.current.style.height = `${visualViewportHeight - offsetFromTop}px`;
       } else {
         drawerRef.current.style.height = 'initial';
       }
