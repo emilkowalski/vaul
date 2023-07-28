@@ -64,6 +64,7 @@ interface DialogProps {
   onOpenChange?(open: boolean): void;
   shouldScaleBackground?: boolean;
   dismissible?: boolean;
+  fixedHeight?: boolean;
 }
 
 function Root({
@@ -72,6 +73,7 @@ function Root({
   onOpenChange,
   children,
   shouldScaleBackground,
+  fixedHeight,
   dismissible = true,
 }: DialogProps) {
   const [isOpen = false, setIsOpen] = useControllableState({
@@ -217,14 +219,15 @@ function Root({
     initialViewportHeight.current = window.visualViewport.height;
 
     function onVisualViewportChange() {
-      if (!drawerRef.current) return;
+      if (!drawerRef.current || fixedHeight) return;
 
       const visualViewportHeight = window.visualViewport.height;
       const diffFromInitial = initialViewportHeight.current - visualViewportHeight;
       const drawerHeight = drawerRef.current?.getBoundingClientRect().height || 0;
+      const offsetFromTop = drawerRef.current?.getBoundingClientRect().top;
 
       if (drawerHeight > visualViewportHeight) {
-        drawerRef.current.style.height = `${visualViewportHeight - 72}px`;
+        drawerRef.current.style.height = `${visualViewportHeight - offsetFromTop}px`;
       } else {
         drawerRef.current.style.height = 'initial';
       }
