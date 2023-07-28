@@ -127,7 +127,7 @@ function Root({
     while (element) {
       // Check if the element is scrollable
       if (element.scrollHeight > element.clientHeight) {
-        if (element.role === 'dialog') return true;
+        if (element.getAttribute('vaul-drawer')) return true;
 
         if (element.scrollTop > 0) {
           lastTimeDragPrevented.current = new Date();
@@ -154,7 +154,7 @@ function Root({
   function onMove(event: React.PointerEvent<HTMLDivElement>) {
     // We need to know how much of the drawer has been dragged in percentages so that we can transform background accordingly
     if (isDragging) {
-      const draggedDistance = pointerStartY.current - (event as unknown as React.PointerEvent<HTMLDivElement>).clientY;
+      const draggedDistance = pointerStartY.current - event.clientY;
       const isDraggingDown = draggedDistance > 0;
 
       if (!shouldDrag(event.target, isDraggingDown)) return;
