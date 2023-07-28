@@ -303,7 +303,9 @@ function scrollIntoView(target: Element) {
     if (scrollable !== document.documentElement && scrollable !== document.body && scrollable !== target) {
       let scrollableTop = scrollable.getBoundingClientRect().top;
       let targetTop = target.getBoundingClientRect().top;
-      if (targetTop > scrollableTop + target.clientHeight) {
+      const keyboardHeight = scrollable.getBoundingClientRect().bottom;
+
+      if (targetTop > keyboardHeight) {
         scrollable.scrollTop += targetTop - scrollableTop;
       }
     }
