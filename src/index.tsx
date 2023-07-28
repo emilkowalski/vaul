@@ -91,7 +91,7 @@ function Root({
   const initialViewportHeight = React.useRef(0);
 
   usePreventScroll({
-    isDisabled: !isOpen || isDragging,
+    isDisabled: !isOpen || isDragging || fixedHeight,
   });
 
   function getScale() {
@@ -129,7 +129,7 @@ function Root({
     while (element) {
       // Check if the element is scrollable
       if (element.scrollHeight > element.clientHeight) {
-        if (element.getAttribute('vaul-drawer')) return true;
+        if (element.role === 'dialog' || element.getAttribute('vaul-drawer')) return true;
 
         if (element.scrollTop > 0) {
           lastTimeDragPrevented.current = new Date();
