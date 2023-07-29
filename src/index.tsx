@@ -311,7 +311,7 @@ function Root({
 
     set(drawerRef.current, {
       '--swipe-amount': `${0}px`,
-      transition: `transform 500ms cubic-bezier(0.32, 0.72, 0, 1)`,
+      transition: `transform ${TRANSITIONS.DURATION}s cubic-bezier(${TRANSITIONS.EASE.join(',')})`,
     });
 
     // Don't reset background if swiped upwards
@@ -338,6 +338,7 @@ function Root({
     const nextSnapPointHeight = getSnapPointHeight(snapPoints[activeSnapPointIndex + 1], drawerRef);
     setActiveSnapPoint({ fraction: snapPoints[activeSnapPointIndex + 1], height: nextSnapPointHeight });
     set(drawerRef.current, {
+      transition: `transform ${TRANSITIONS.DURATION}s cubic-bezier(${TRANSITIONS.EASE.join(',')})`,
       '--show-to': `${nextSnapPointHeight}px`,
     });
   }
