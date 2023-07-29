@@ -479,18 +479,17 @@ const Content = React.forwardRef<HTMLDivElement, React.ComponentPropsWithoutRef<
       isDragging,
       activeSnapPoint,
     } = useDrawerContext();
-    const composedRef = useComposedRefs(ref, drawerRef);
     const [mounted, setMounted] = React.useState(false);
-
-    if (snapPoints?.length > 0 && activeSnapPoint.fraction === snapPoints[0]) {
-      set(drawerRef.current, {
-        '--show-to': `${getSnapPointHeight(activeSnapPoint, drawerRef)}px`,
-      });
-    }
+    const composedRef = useComposedRefs(ref, drawerRef);
 
     useEffect(() => {
       if (isOpen) {
         setMounted(true);
+        if (snapPoints?.length > 0 && activeSnapPoint.fraction === snapPoints[0]) {
+          set(drawerRef.current, {
+            '--show-to': `${getSnapPointHeight(activeSnapPoint, drawerRef)}px`,
+          });
+        }
       } else {
         setMounted(false);
       }
