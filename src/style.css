@@ -29,7 +29,7 @@
 }
 
 [vaul-drawer][data-state='closed'] {
-  animation: hide-dialog 0.5s cubic-bezier(0.32, 0.72, 0, 1) forwards;
+  animation: fake-hide-dialog 0.5s cubic-bezier(0.32, 0.72, 0, 1) forwards;
 }
 
 [vaul-overlay] {
@@ -39,7 +39,11 @@
 [vaul-overlay][data-state='closed'] {
   opacity: 0 !important;
   transition: opacity 0.5s cubic-bezier(0.32, 0.72, 0, 1);
-  animation: hide-overlay 0.5s cubic-bezier(0.32, 0.72, 0, 1) forwards;
+  animation: fake-hide-overlay 0.5s cubic-bezier(0.32, 0.72, 0, 1) forwards;
+}
+
+[vaul-drawer][vaul-drawer-has-snap-points='false'][data-state='closed'] {
+  animation: hide-dialog 0.5s cubic-bezier(0.32, 0.72, 0, 1) forwards;
 }
 
 @keyframes show-dialog {
@@ -51,8 +55,26 @@
   }
 }
 
-/** Fake keyframes to delay Radix's unmount */
 @keyframes hide-dialog {
+  from {
+    transform: translateY(var(--hide-from, 0));
+  }
+  to {
+    transform: translateY(100%);
+  }
+}
+
+@keyframes hide-overlay {
+  from {
+    opacity: var(--opacity-from, 1);
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+/** Fake keyframes to delay Radix's unmount */
+@keyframes fake-hide-dialog {
   from {
     opacity: 1;
   }
@@ -71,7 +93,7 @@
 }
 
 /** Fake keyframes to delay Radix's unmount */
-@keyframes hide-overlay {
+@keyframes fake-hide-overlay {
   from {
   }
   to {

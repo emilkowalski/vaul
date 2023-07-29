@@ -279,9 +279,11 @@ function Root({
     if (!dismissible) return;
     setIsOpen(false);
     const drawerHeight = drawerRef.current?.getBoundingClientRect().height || 0;
+    const swipeAmount = getComputedStyle(drawerRef.current).getPropertyValue('--swipe-amount').slice(0, -2);
 
     if (drawerRef.current) {
       set(drawerRef.current, {
+        '--hide-from': `${Number(swipeAmount).toFixed()}px`,
         '--hide-to': `${drawerHeight.toFixed()}px`,
       });
 
@@ -537,6 +539,7 @@ const Content = React.forwardRef<HTMLDivElement, React.ComponentPropsWithoutRef<
         {...rest}
         style={{ ...rest.style }}
         vaul-drawer=""
+        vaul-drawer-has-snap-points={snapPoints ? 'true' : 'false'}
         vaul-drawer-state={mounted ? 'open' : 'closed'}
         vaul-drawer-no-scroll={disableScroll ? 'true' : 'false'}
         vaul-drawer-is-dragging={isDragging ? 'true' : 'false'}
