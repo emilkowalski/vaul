@@ -76,6 +76,7 @@ interface DialogProps {
   dismissible?: boolean;
   fixedHeight?: boolean;
   snapPoints?: number[];
+  onSnapPointChange?(snapPoint: number): void;
 }
 
 function Root({
@@ -87,6 +88,7 @@ function Root({
   fixedHeight,
   dismissible = true,
   snapPoints,
+  onSnapPointChange,
 }: DialogProps) {
   const [isOpen = false, setIsOpen] = useControllableState({
     prop: openProp,
@@ -215,17 +217,18 @@ function Root({
       const percentageDragged = absDraggedDistance / drawerHeight;
       const opacityValue = 1 - percentageDragged;
 
-      set(
-        overlayRef.current,
-        {
-          opacity: `${opacityValue}`,
-        },
-        true,
-      );
+      if (!snapPoints) {
+        set(
+          overlayRef.current,
+          {
+            opacity: `${opacityValue}`,
+          },
+          true,
+        );
+      }
 
       if (wrapper && overlayRef.current && shouldScaleBackground) {
         // Calculate percentageDragged as a fraction (0 to 1)
-
         const scaleValue = Math.min(getScale() + percentageDragged * (1 - getScale()), 1);
         const borderRadiusValue = 8 - percentageDragged * 8;
 
@@ -241,7 +244,6 @@ function Root({
           true,
         );
       }
-      console.log(swipeFrom, draggedDistance);
 
       set(drawerRef.current, {
         '--swipe-amount': `${activeSnapPoint ? swipeFrom - draggedDistance : absDraggedDistance}px`,
@@ -336,6 +338,7 @@ function Root({
 
     const nextSnapPointHeight = getSnapPointHeight(snapPoints[activeSnapPointIndex + 1], drawerRef);
     setActiveSnapPoint({ fraction: snapPoints[activeSnapPointIndex + 1], height: nextSnapPointHeight });
+    onSnapPointChange?.(snapPoints[activeSnapPointIndex + 1]);
     set(drawerRef.current, {
       transition: `transform ${TRANSITIONS.DURATION}s cubic-bezier(${TRANSITIONS.EASE.join(',')})`,
       '--show-to': `${nextSnapPointHeight}px`,
@@ -348,6 +351,7 @@ function Root({
 
     const previousSnapPointHeight = getSnapPointHeight(snapPoints[activeSnapPointIndex - 1], drawerRef);
     setActiveSnapPoint({ fraction: snapPoints[activeSnapPointIndex - 1], height: previousSnapPointHeight });
+    onSnapPointChange?.(snapPoints[activeSnapPointIndex - 1]);
     set(drawerRef.current, {
       '--show-to': `${previousSnapPointHeight}px`,
       '--swipe-amount': `${previousSnapPointHeight}px`,
@@ -444,6 +448,7 @@ function Root({
 
         if (o && snapPoints) {
           setActiveSnapPoint({ fraction: snapPoints[0], height: getSnapPointHeight(snapPoints[0], drawerRef) });
+          onSnapPointChange?.(snapPoints[0]);
         }
       }}
     >
