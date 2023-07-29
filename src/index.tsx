@@ -279,10 +279,7 @@ function Root({
     const drawerHeight = drawerRef.current?.getBoundingClientRect().height || 0;
 
     if (drawerRef.current) {
-      const swipeAmount = getComputedStyle(drawerRef.current).getPropertyValue('--swipe-amount').slice(0, -2);
-
       set(drawerRef.current, {
-        '--hide-from': `${Number(swipeAmount).toFixed()}px`,
         '--hide-to': `${drawerHeight.toFixed()}px`,
       });
 
@@ -344,10 +341,6 @@ function Root({
       '--show-to': `${nextSnapPointHeight}px`,
       '--swipe-amount': `${nextSnapPointHeight}px`,
     });
-
-    set(drawerRef.current, {
-      '--hide-from': `${nextSnapPointHeight.toFixed()}px`,
-    });
   }
 
   function snapToPreviousPoint() {
@@ -359,10 +352,6 @@ function Root({
       '--show-to': `${previousSnapPointHeight}px`,
       '--swipe-amount': `${previousSnapPointHeight}px`,
       transition: `transform ${TRANSITIONS.DURATION}s cubic-bezier(${TRANSITIONS.EASE.join(',')})`,
-    });
-
-    set(drawerRef.current, {
-      '--hide-from': `${previousSnapPointHeight.toFixed()}px`,
     });
   }
 
@@ -452,6 +441,10 @@ function Root({
       open={isOpen}
       onOpenChange={(o) => {
         setIsOpen(o);
+
+        if (o && snapPoints) {
+          setActiveSnapPoint({ fraction: snapPoints[0], height: getSnapPointHeight(snapPoints[0], drawerRef) });
+        }
       }}
     >
       <DrawerContext.Provider
@@ -531,10 +524,6 @@ const Content = React.forwardRef<HTMLDivElement, React.ComponentPropsWithoutRef<
           if (!dismissible) {
             e.preventDefault();
           }
-          drawerRef.current.style.animation = 'none';
-          // Force a reflow, flushing the CSS changes
-          drawerRef.current.offsetHeight;
-          drawerRef.current.style.animation = null;
           onPointerDownOutside?.(e);
         }}
         ref={composedRef}
