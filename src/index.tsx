@@ -106,6 +106,7 @@ function Root({
   const dragStartTime = React.useRef<Date | null>(null);
   const dragEndTime = React.useRef<Date | null>(null);
   const lastTimeDragPrevented = React.useRef<Date | null>(null);
+  const isPointerDown = React.useRef(false);
   const pointerStartY = React.useRef(0);
   const drawerRef = React.useRef<HTMLDivElement>(null);
   const initialViewportHeight = React.useRef(0);
@@ -122,7 +123,7 @@ function Root({
 
   function onPress(event: React.PointerEvent<HTMLDivElement>) {
     if (!dismissible) return;
-    setIsDragging(true);
+    isPointerDown.current = true;
     if (snapPoints) {
       setActiveSnapPoint((s) => ({ ...s, height: getSnapPointHeight(activeSnapPoint, drawerRef) }));
     }
@@ -184,13 +185,13 @@ function Root({
 
   function onMove(event: React.PointerEvent<HTMLDivElement>) {
     // We need to know how much of the drawer has been dragged in percentages so that we can transform background accordingly
-    if (isDragging) {
+    if (isPointerDown.current) {
       const draggedDistance = pointerStartY.current - event.clientY;
 
       const isDraggingDown = draggedDistance > 0;
 
       if (!shouldDrag(event.target, isDraggingDown)) return;
-
+      setIsDragging(true);
       const swipeFrom = activeSnapPoint?.height || 0;
 
       const drawerHeight = drawerRef.current?.getBoundingClientRect().height || 0;
@@ -311,7 +312,7 @@ function Root({
     );
 
     set(drawerRef.current, {
-      //   '--swipe-amount': `${0}px`,
+      '--swipe-amount': `${0}px`,
       transition: `transform ${TRANSITIONS.DURATION}s cubic-bezier(${TRANSITIONS.EASE.join(',')})`,
     });
 
@@ -341,7 +342,7 @@ function Root({
     set(drawerRef.current, {
       transition: `transform ${TRANSITIONS.DURATION}s cubic-bezier(${TRANSITIONS.EASE.join(',')})`,
       '--show-to': `${nextSnapPointHeight}px`,
-	  '--swipe-amount': `${nextSnapPointHeight}px`,
+      '--swipe-amount': `${nextSnapPointHeight}px`,
     });
   }
 
@@ -352,13 +353,14 @@ function Root({
     setActiveSnapPoint({ fraction: snapPoints[activeSnapPointIndex - 1], height: previousSnapPointHeight });
     set(drawerRef.current, {
       '--show-to': `${previousSnapPointHeight}px`,
-	  '--swipe-amount': `${previousSnapPointHeight}px`,
+      '--swipe-amount': `${previousSnapPointHeight}px`,
       transition: `transform ${TRANSITIONS.DURATION}s cubic-bezier(${TRANSITIONS.EASE.join(',')})`,
     });
   }
 
   function onRelease(event: React.PointerEvent<HTMLDivElement>) {
     setIsDragging(false);
+    isPointerDown.current = false;
     dragEndTime.current = new Date();
     const swipeAmount = drawerRef.current
       ? getComputedStyle(drawerRef.current).getPropertyValue('--swipe-amount').slice(0, -2)
