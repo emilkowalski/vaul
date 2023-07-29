@@ -498,8 +498,10 @@ const Content = React.forwardRef<HTMLDivElement, React.ComponentPropsWithoutRef<
     } = useDrawerContext();
     const [mounted, setMounted] = React.useState(false);
     const composedRef = useComposedRefs(ref, drawerRef);
+    // Disable scroll if snap points are active and current one is not the last one
+    const disableScroll = snapPoints && activeSnapPoint?.fraction !== snapPoints?.[snapPoints?.length - 1];
 
-    useEffect(() => {
+    React.useEffect(() => {
       if (isOpen) {
         setMounted(true);
         if (snapPoints?.length > 0 && activeSnapPoint.fraction === snapPoints[0]) {
@@ -536,6 +538,7 @@ const Content = React.forwardRef<HTMLDivElement, React.ComponentPropsWithoutRef<
         style={{ ...rest.style }}
         vaul-drawer=""
         vaul-drawer-state={mounted ? 'open' : 'closed'}
+        vaul-drawer-no-scroll={disableScroll ? 'true' : 'false'}
         vaul-drawer-is-dragging={isDragging ? 'true' : 'false'}
       >
         {children}

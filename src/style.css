@@ -13,6 +13,10 @@
   transform: translateY(var(--swipe-amount, var(--show-to)));
 }
 
+[vaul-drawer][vaul-drawer-no-scroll='true'] * {
+  overflow: hidden;
+}
+
 [vaul-drawer]::after {
   content: '';
   position: absolute;
