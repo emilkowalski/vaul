@@ -11,6 +11,7 @@ interface DrawerContextValue {
   snapPoints: number[];
   isOpen: boolean;
   isDragging: boolean;
+  activeSnapPoint: number | undefined;
 }
 
 export const DrawerContext = React.createContext<DrawerContextValue>({
@@ -24,6 +25,7 @@ export const DrawerContext = React.createContext<DrawerContextValue>({
   snapPoints: [],
   isOpen: false,
   isDragging: false,
+  activeSnapPoint: undefined,
 });
 
 export const useDrawerContext = () => React.useContext(DrawerContext);

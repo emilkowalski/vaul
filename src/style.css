@@ -10,7 +10,7 @@
 
 [vaul-drawer][vaul-drawer-is-dragging='true'] {
   transition: none;
-  transform: translateY(var(--swipe-amount, 0));
+  transform: translateY(var(--swipe-amount, var(--show-to)));
 }
 
 [vaul-drawer]::after {

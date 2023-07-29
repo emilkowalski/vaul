@@ -57,6 +57,14 @@ function reset(el: Element | HTMLElement | null, prop?: string) {
   }
 }
 
+function getCurrentSnapPointHeight(snapPoint: number, drawerRef: React.RefObject<HTMLDivElement>) {
+  if (!drawerRef.current) return;
+  const drawerHeight = drawerRef.current.getBoundingClientRect().height;
+
+  const snapPointHeight = snapPoint * drawerHeight;
+  return drawerHeight - snapPointHeight;
+}
+
 interface DialogProps {
   children?: React.ReactNode;
   open?: boolean;
@@ -84,6 +92,8 @@ function Root({
     onChange: onOpenChange,
   });
   const [isDragging, setIsDragging] = React.useState(false);
+  const [activeSnapPoint, setActiveSnapPoint] = React.useState(snapPoints?.[0]);
+  const [activeSnapPointHeight, setActiveSnapPointHeight] = React.useState(0);
   const overlayRef = React.useRef<HTMLDivElement>(null);
   const dragStartTime = React.useRef<Date | null>(null);
   const dragEndTime = React.useRef<Date | null>(null);
@@ -91,9 +101,10 @@ function Root({
   const pointerStartY = React.useRef(0);
   const drawerRef = React.useRef<HTMLDivElement>(null);
   const initialViewportHeight = React.useRef(0);
-
+  const lastSnapPoint = snapPoints?.[snapPoints?.length - 1];
+  
   usePreventScroll({
-    isDisabled: !isOpen || isDragging || fixedHeight,
+    isDisabled: !isOpen || isDragging || fixedHeight || (isOpen && activeSnapPoint !== lastSnapPoint),
   });
 
   function getScale() {
@@ -103,6 +114,7 @@ function Root({
   function onPress(event: React.PointerEvent<HTMLDivElement>) {
     if (!dismissible) return;
     setIsDragging(true);
+    setActiveSnapPointHeight(getCurrentSnapPointHeight(activeSnapPoint, drawerRef));
     dragStartTime.current = new Date();
 
     // Ensure we maintain correct pointer capture even when going outside of the drawer
@@ -121,6 +133,9 @@ function Root({
       return false;
     }
 
+    // We don't want to scroll, but rather drag if the current snapPoint is not the last one
+    if (snapPoints && activeSnapPoint !== snapPoints[snapPoints?.length - 1]) return true;
+
     // Disallow dragging if drawer was scrolled within last second
     if (lastTimeDragPrevented.current && date.getTime() - lastTimeDragPrevented.current.getTime() < 1000) {
       lastTimeDragPrevented.current = new Date();
@@ -132,6 +147,7 @@ function Root({
       // Check if the element is scrollable
       if (element.scrollHeight > element.clientHeight) {
         if (element.role === 'dialog' || element.getAttribute('vaul-drawer')) return true;
+        // if (snapPoints && activeSnapPoint === snapPoints[snapPoints?.length - 1]) return false;
 
         if (element.scrollTop > 0) {
           lastTimeDragPrevented.current = new Date();
@@ -159,9 +175,12 @@ function Root({
     // We need to know how much of the drawer has been dragged in percentages so that we can transform background accordingly
     if (isDragging) {
       const draggedDistance = pointerStartY.current - event.clientY;
+
       const isDraggingDown = draggedDistance > 0;
 
       if (!shouldDrag(event.target, isDraggingDown)) return;
+
+      const swipeFrom = activeSnapPointHeight || 0;
 
       const drawerHeight = drawerRef.current?.getBoundingClientRect().height || 0;
 
@@ -170,12 +189,12 @@ function Root({
       });
 
       // Allow dragging upwards up to 40px
-      if (draggedDistance > 0) {
-        set(drawerRef.current, {
-          '--swipe-amount': `${Math.max(draggedDistance * -1, -40)}px`,
-        });
-        return;
-      }
+      //   if (draggedDistance > 0) {
+      //     set(drawerRef.current, {
+      //       '--swipe-amount': `${Math.max(draggedDistance * -1, -40)}px`,
+      //     });
+      //     return;
+      //   }
 
       // We need to capture last time when drag with scroll was triggered and have a timeout between
       const absDraggedDistance = Math.abs(draggedDistance);
@@ -212,7 +231,7 @@ function Root({
       }
 
       set(drawerRef.current, {
-        '--swipe-amount': `${absDraggedDistance}px`,
+        '--swipe-amount': `${swipeFrom - absDraggedDistance}px`,
       });
     }
   }
@@ -392,6 +411,7 @@ function Root({
           snapPoints,
           isOpen,
           isDragging,
+          activeSnapPoint,
         }}
       >
         {children}
@@ -411,15 +431,25 @@ const Overlay = React.forwardRef<HTMLDivElement, React.ComponentPropsWithoutRef<
 
 const Content = React.forwardRef<HTMLDivElement, React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content>>(
   function ({ children, onOpenAutoFocus, onPointerDownOutside, ...rest }, ref) {
-    const { drawerRef, onPress, onRelease, onAnimationStart, onMove, dismissible, snapPoints, isOpen, isDragging } =
-      useDrawerContext();
+    const {
+      drawerRef,
+      onPress,
+      onRelease,
+      onAnimationStart,
+      onMove,
+      dismissible,
+      snapPoints,
+      isOpen,
+      isDragging,
+      activeSnapPoint,
+    } = useDrawerContext();
     const composedRef = useComposedRefs(ref, drawerRef);
     const [mounted, setMounted] = React.useState(false);
     let style = {};
 
-    // if (snapPoints.length > 0) {
-    //   style['--show-to'] = `${100 - snapPoints[0] * 100}%`;
-    // }
+    if (snapPoints?.length > 0) {
+      style['--show-to'] = `${getCurrentSnapPointHeight(activeSnapPoint, drawerRef)}px`;
+    }
 
     useEffect(() => {
       if (isOpen) {

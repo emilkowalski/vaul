@@ -1,8 +1,11 @@
 'use client';
 
+import { usePathname } from 'next/navigation';
 import { Drawer } from 'vaul';
 
 export function Hero() {
+  const pathname = usePathname();
+
   return (
     <div className="relative">
       <div
@@ -40,7 +43,7 @@ export function Hero() {
           <p className="text-gray-600 text-xl">Drawer component for React.</p>
         </div>
         <div className="flex gap-4 justify-center mt-6">
-          <Drawer.Root snapPoints={[0.2, 0.5, 1]}>
+          <Drawer.Root snapPoints={pathname.includes('test') ? undefined : [0.2, 0.5, 1]}>
             <Drawer.Trigger asChild>
               <button
                 type="button"
@@ -52,7 +55,7 @@ export function Hero() {
             <Drawer.Overlay className="fixed inset-0 bg-black/40" />
             <Drawer.Portal>
               <Drawer.Content className="bg-white flex flex-col fixed bottom-0 left-0 right-0 max-h-[85vh] rounded-t-[10px]">
-                <div className="max-w-md w-full mx-auto flex flex-col overflow-auto p-4 rounded-t-[10px]">
+                <div className="max-w-md w-full mx-auto flex flex-col p-4 rounded-t-[10px]">
                   <input className="border border-gray-400 my-8" placeholder="Input" />
                   <p>
                     But I must explain to you how all this mistaken idea of denouncing pleasure and praising pain was
