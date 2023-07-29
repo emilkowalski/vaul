@@ -240,6 +240,7 @@ function Root({
           true,
         );
       }
+      console.log(swipeFrom, draggedDistance);
 
       set(drawerRef.current, {
         '--swipe-amount': `${activeSnapPoint ? swipeFrom - draggedDistance : absDraggedDistance}px`,
@@ -310,7 +311,7 @@ function Root({
     );
 
     set(drawerRef.current, {
-      '--swipe-amount': `${0}px`,
+      //   '--swipe-amount': `${0}px`,
       transition: `transform ${TRANSITIONS.DURATION}s cubic-bezier(${TRANSITIONS.EASE.join(',')})`,
     });
 
@@ -340,6 +341,7 @@ function Root({
     set(drawerRef.current, {
       transition: `transform ${TRANSITIONS.DURATION}s cubic-bezier(${TRANSITIONS.EASE.join(',')})`,
       '--show-to': `${nextSnapPointHeight}px`,
+	  '--swipe-amount': `${nextSnapPointHeight}px`,
     });
   }
 
@@ -350,6 +352,7 @@ function Root({
     setActiveSnapPoint({ fraction: snapPoints[activeSnapPointIndex - 1], height: previousSnapPointHeight });
     set(drawerRef.current, {
       '--show-to': `${previousSnapPointHeight}px`,
+	  '--swipe-amount': `${previousSnapPointHeight}px`,
       transition: `transform ${TRANSITIONS.DURATION}s cubic-bezier(${TRANSITIONS.EASE.join(',')})`,
     });
   }
@@ -372,7 +375,7 @@ function Root({
     const velocity = Math.abs(distMoved) / timeTaken;
 
     if (distMoved > 0) {
-      if (activeSnapPoint && !isLastSnapPoint && velocity > 0.1) {
+      if (activeSnapPoint && distMoved > 10 && !isLastSnapPoint && velocity > 0.1) {
         snapToNextPoint();
         return;
       }
@@ -391,7 +394,7 @@ function Root({
       return;
     }
 
-    if (y > window.innerHeight * 0.75) {
+    if (y > window.innerHeight * 0.75 && !snapPoints) {
       closeDrawer();
       return;
     }
