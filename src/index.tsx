@@ -65,6 +65,7 @@ interface DialogProps {
   shouldScaleBackground?: boolean;
   dismissible?: boolean;
   fixedHeight?: boolean;
+  snapPoints?: number[];
 }
 
 function Root({
@@ -75,6 +76,7 @@ function Root({
   shouldScaleBackground,
   fixedHeight,
   dismissible = true,
+  snapPoints,
 }: DialogProps) {
   const [isOpen = false, setIsOpen] = useControllableState({
     prop: openProp,
@@ -387,6 +389,9 @@ function Root({
           onRelease,
           onMove,
           dismissible,
+          snapPoints,
+          isOpen,
+          isDragging,
         }}
       >
         {children}
@@ -406,8 +411,23 @@ const Overlay = React.forwardRef<HTMLDivElement, React.ComponentPropsWithoutRef<
 
 const Content = React.forwardRef<HTMLDivElement, React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content>>(
   function ({ children, onOpenAutoFocus, onPointerDownOutside, ...rest }, ref) {
-    const { drawerRef, onPress, onRelease, onAnimationStart, onMove, dismissible } = useDrawerContext();
+    const { drawerRef, onPress, onRelease, onAnimationStart, onMove, dismissible, snapPoints, isOpen, isDragging } =
+      useDrawerContext();
     const composedRef = useComposedRefs(ref, drawerRef);
+    const [mounted, setMounted] = React.useState(false);
+    let style = {};
+
+    // if (snapPoints.length > 0) {
+    //   style['--show-to'] = `${100 - snapPoints[0] * 100}%`;
+    // }
+
+    useEffect(() => {
+      if (isOpen) {
+        setMounted(true);
+      } else {
+        setMounted(false);
+      }
+    }, [isOpen]);
 
     return (
       <DialogPrimitive.Content
@@ -431,7 +451,10 @@ const Content = React.forwardRef<HTMLDivElement, React.ComponentPropsWithoutRef<
         }}
         ref={composedRef}
         {...rest}
+        style={{ ...style, ...rest.style }}
         vaul-drawer=""
+        vaul-drawer-state={mounted ? 'open' : 'closed'}
+        vaul-drawer-is-dragging={isDragging ? 'true' : 'false'}
       >
         {children}
       </DialogPrimitive.Content>

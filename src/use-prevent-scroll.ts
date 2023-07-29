@@ -232,6 +232,9 @@ function preventScrollMobileSafari() {
     }
   };
 
+  // API
+  //   snapPoints={[0.2, 0.6, 1]}
+
   let onWindowScroll = () => {
     // Last resort. If the window scrolled, scroll it back to the top.
     // It should always be at the top because the body will have a negative margin (see below).

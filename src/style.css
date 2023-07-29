@@ -1,7 +1,16 @@
 [vaul-drawer] {
-  transform: translateY(var(--swipe-amount));
+  transform: translateY(100%);
+  transition: transform 0.5s cubic-bezier(0.32, 0.72, 0, 1);
   touch-action: none;
-  animation: show-dialog 0.5s cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+[vaul-drawer][vaul-drawer-state='open'] {
+  transform: translateY(var(--show-to, 0));
+}
+
+[vaul-drawer][vaul-drawer-is-dragging='true'] {
+  transition: none;
+  transform: translateY(var(--swipe-amount, 0));
 }
 
 [vaul-drawer]::after {
@@ -32,7 +41,7 @@
     transform: translateY(100%);
   }
   to {
-    transform: translateY(0);
+    transform: translateY(var(--show-to, 0));
   }
 }
 
