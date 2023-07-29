@@ -1,4 +1,5 @@
 import React from 'react';
+import { SnapPoint } from './types';
 
 interface DrawerContextValue {
   drawerRef: React.RefObject<HTMLDivElement>;
@@ -11,7 +12,7 @@ interface DrawerContextValue {
   snapPoints: number[];
   isOpen: boolean;
   isDragging: boolean;
-  activeSnapPoint: number | undefined;
+  activeSnapPoint: SnapPoint;
 }
 
 export const DrawerContext = React.createContext<DrawerContextValue>({
