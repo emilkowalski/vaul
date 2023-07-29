@@ -109,8 +109,8 @@ function Root({
   const pointerStartY = React.useRef(0);
   const drawerRef = React.useRef<HTMLDivElement>(null);
   const initialViewportHeight = React.useRef(0);
-  const lastSnapPointFraction = snapPoints?.[snapPoints?.length - 1];
-  const isLastSnapPoint = activeSnapPoint?.fraction === lastSnapPointFraction;
+  const isLastSnapPoint = activeSnapPoint?.fraction === snapPoints?.[snapPoints?.length - 1];
+  const isFirstSnapPoint = activeSnapPoint?.fraction === snapPoints?.[0];
 
   usePreventScroll({
     isDisabled: !isOpen || isDragging || fixedHeight,
@@ -242,7 +242,7 @@ function Root({
       }
 
       set(drawerRef.current, {
-        '--swipe-amount': `${activeSnapPoint ? swipeFrom - absDraggedDistance : absDraggedDistance}px`,
+        '--swipe-amount': `${activeSnapPoint ? swipeFrom - draggedDistance : absDraggedDistance}px`,
       });
     }
   }
@@ -350,6 +350,7 @@ function Root({
     setActiveSnapPoint({ fraction: snapPoints[activeSnapPointIndex - 1], height: previousSnapPointHeight });
     set(drawerRef.current, {
       '--show-to': `${previousSnapPointHeight}px`,
+      transition: `transform ${TRANSITIONS.DURATION}s cubic-bezier(${TRANSITIONS.EASE.join(',')})`,
     });
   }
 
@@ -371,12 +372,17 @@ function Root({
     const velocity = Math.abs(distMoved) / timeTaken;
 
     if (distMoved > 0) {
-      if (activeSnapPoint && !isLastSnapPoint) {
+      if (activeSnapPoint && !isLastSnapPoint && velocity > 0.1) {
         snapToNextPoint();
         return;
       }
 
       resetDrawer();
+      return;
+    }
+
+    if (distMoved < 0 && !isFirstSnapPoint && velocity > 0.1) {
+      snapToPreviousPoint();
       return;
     }
 
