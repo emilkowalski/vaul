@@ -94,10 +94,14 @@ function Root({
     onChange: onOpenChange,
   });
   const [isDragging, setIsDragging] = React.useState(false);
-  const [activeSnapPoint, setActiveSnapPoint] = React.useState<SnapPoint>({
-    fraction: snapPoints[0],
-    height: 0,
-  });
+  const [activeSnapPoint, setActiveSnapPoint] = React.useState<SnapPoint | null>(
+    snapPoints?.length > 0
+      ? {
+          fraction: snapPoints[0],
+          height: 0,
+        }
+      : null,
+  );
   const overlayRef = React.useRef<HTMLDivElement>(null);
   const dragStartTime = React.useRef<Date | null>(null);
   const dragEndTime = React.useRef<Date | null>(null);
@@ -106,7 +110,7 @@ function Root({
   const drawerRef = React.useRef<HTMLDivElement>(null);
   const initialViewportHeight = React.useRef(0);
   const lastSnapPointFraction = snapPoints?.[snapPoints?.length - 1];
-  const isLastSnapPoint = activeSnapPoint.fraction === lastSnapPointFraction;
+  const isLastSnapPoint = activeSnapPoint?.fraction === lastSnapPointFraction;
 
   usePreventScroll({
     isDisabled: !isOpen || isDragging || fixedHeight,
@@ -119,7 +123,9 @@ function Root({
   function onPress(event: React.PointerEvent<HTMLDivElement>) {
     if (!dismissible) return;
     setIsDragging(true);
-    setActiveSnapPoint((s) => ({ ...s, height: getSnapPointHeight(activeSnapPoint, drawerRef) }));
+    if (snapPoints) {
+      setActiveSnapPoint((s) => ({ ...s, height: getSnapPointHeight(activeSnapPoint, drawerRef) }));
+    }
     dragStartTime.current = new Date();
 
     // Ensure we maintain correct pointer capture even when going outside of the drawer
@@ -185,7 +191,7 @@ function Root({
 
       if (!shouldDrag(event.target, isDraggingDown)) return;
 
-      const swipeFrom = activeSnapPoint.height || 0;
+      const swipeFrom = activeSnapPoint?.height || 0;
 
       const drawerHeight = drawerRef.current?.getBoundingClientRect().height || 0;
 
@@ -236,7 +242,7 @@ function Root({
       }
 
       set(drawerRef.current, {
-        '--swipe-amount': `${swipeFrom - absDraggedDistance}px`,
+        '--swipe-amount': `${activeSnapPoint ? swipeFrom - absDraggedDistance : absDraggedDistance}px`,
       });
     }
   }
@@ -327,12 +333,22 @@ function Root({
   }
 
   function snapToNextPoint() {
-    const activeSnapPointIndex = snapPoints?.findIndex((snapPoint) => snapPoint === activeSnapPoint.fraction);
+    const activeSnapPointIndex = snapPoints?.findIndex((snapPoint) => snapPoint === activeSnapPoint?.fraction);
 
     const nextSnapPointHeight = getSnapPointHeight(snapPoints[activeSnapPointIndex + 1], drawerRef);
     setActiveSnapPoint({ fraction: snapPoints[activeSnapPointIndex + 1], height: nextSnapPointHeight });
     set(drawerRef.current, {
       '--show-to': `${nextSnapPointHeight}px`,
+    });
+  }
+
+  function snapToPreviousPoint() {
+    const activeSnapPointIndex = snapPoints?.findIndex((snapPoint) => snapPoint === activeSnapPoint?.fraction);
+
+    const previousSnapPointHeight = getSnapPointHeight(snapPoints[activeSnapPointIndex - 1], drawerRef);
+    setActiveSnapPoint({ fraction: snapPoints[activeSnapPointIndex - 1], height: previousSnapPointHeight });
+    set(drawerRef.current, {
+      '--show-to': `${previousSnapPointHeight}px`,
     });
   }
 
