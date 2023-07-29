@@ -33,6 +33,8 @@
 }
 
 [vaul-overlay][data-state='closed'] {
+  opacity: 0 !important;
+  transition: opacity 0.5s cubic-bezier(0.32, 0.72, 0, 1);
   animation: hide-overlay 0.5s cubic-bezier(0.32, 0.72, 0, 1) forwards;
 }
 
@@ -45,12 +47,13 @@
   }
 }
 
+/** Fake keyframes to delay Radix's unmount */
 @keyframes hide-dialog {
   from {
-    transform: translateY(var(--hide-from, 0));
+    opacity: 1;
   }
   to {
-    transform: translateY(100%);
+    opacity: 1;
   }
 }
 
@@ -63,12 +66,11 @@
   }
 }
 
+/** Fake keyframes to delay Radix's unmount */
 @keyframes hide-overlay {
   from {
-    opacity: var(--opacity-from, 1);
   }
   to {
-    opacity: 0;
   }
 }
 

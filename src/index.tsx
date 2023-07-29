@@ -344,6 +344,10 @@ function Root({
       '--show-to': `${nextSnapPointHeight}px`,
       '--swipe-amount': `${nextSnapPointHeight}px`,
     });
+
+    set(drawerRef.current, {
+      '--hide-from': `${nextSnapPointHeight.toFixed()}px`,
+    });
   }
 
   function snapToPreviousPoint() {
@@ -355,6 +359,10 @@ function Root({
       '--show-to': `${previousSnapPointHeight}px`,
       '--swipe-amount': `${previousSnapPointHeight}px`,
       transition: `transform ${TRANSITIONS.DURATION}s cubic-bezier(${TRANSITIONS.EASE.join(',')})`,
+    });
+
+    set(drawerRef.current, {
+      '--hide-from': `${previousSnapPointHeight.toFixed()}px`,
     });
   }
 
@@ -523,7 +531,10 @@ const Content = React.forwardRef<HTMLDivElement, React.ComponentPropsWithoutRef<
           if (!dismissible) {
             e.preventDefault();
           }
-
+          drawerRef.current.style.animation = 'none';
+          // Force a reflow, flushing the CSS changes
+          drawerRef.current.offsetHeight;
+          drawerRef.current.style.animation = null;
           onPointerDownOutside?.(e);
         }}
         ref={composedRef}
