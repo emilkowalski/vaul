@@ -359,6 +359,12 @@ function Root({
     const distMoved = pointerStartY.current - y;
     const velocity = Math.abs(distMoved) / timeTaken;
 
+    if (velocity > 0.9 && distMoved < 0) {
+      closeDrawer();
+      return;
+      ``;
+    }
+
     if (distMoved > 0) {
       if (activeSnapPoint && distMoved > 10 && !isLastSnapPoint && velocity > 0.1) {
         snapToPoint('next');
@@ -508,7 +514,7 @@ const Content = React.forwardRef<HTMLDivElement, React.ComponentPropsWithoutRef<
         setMounted(false);
       }
     }, [isOpen]);
-
+	
     return (
       <DialogPrimitive.Content
         onAnimationStart={onAnimationStart}

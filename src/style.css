@@ -29,6 +29,7 @@
 }
 
 [vaul-drawer][data-state='closed'] {
+  transition: transform 0.5s cubic-bezier(0.32, 0.72, 0, 1) !important;
   animation: fake-hide-dialog 0.5s cubic-bezier(0.32, 0.72, 0, 1) forwards;
 }
 
