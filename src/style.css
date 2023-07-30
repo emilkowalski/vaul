@@ -1,6 +1,7 @@
 [vaul-drawer] {
   transform: translateY(100%);
   transition: transform 0.5s cubic-bezier(0.32, 0.72, 0, 1);
+  animation: show-dialog 0.5s cubic-bezier(0.32, 0.72, 0, 1);
   touch-action: none;
 }
 
@@ -29,7 +30,6 @@
 }
 
 [vaul-drawer][data-state='closed'] {
-  transition: transform 0.5s cubic-bezier(0.32, 0.72, 0, 1) !important;
   animation: fake-hide-dialog 0.5s cubic-bezier(0.32, 0.72, 0, 1) forwards;
 }
 
@@ -49,7 +49,15 @@
 }
 
 [vaul-drawer][vaul-drawer-has-snap-points='false'][data-state='closed'] {
+  transition: none !important;
   animation: hide-dialog 0.5s cubic-bezier(0.32, 0.72, 0, 1) forwards;
+}
+
+@keyframes fake-show-dialog {
+  from {
+  }
+  to {
+  }
 }
 
 @keyframes show-dialog {

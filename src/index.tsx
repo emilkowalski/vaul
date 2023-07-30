@@ -416,7 +416,7 @@ function Root({
         transitionDuration: `${TRANSITIONS.DURATION}s`,
         transitionTimingFunction: `cubic-bezier(${TRANSITIONS.EASE.join(',')})`,
       });
-    } else if (e.animationName === 'hide-dialog') {
+    } else if (e.animationName === 'fake-hide-dialog' || e.animationName === 'hide-dialog') {
       // Exit
       reset(wrapper, 'transform');
       reset(wrapper, 'borderRadius');
@@ -514,7 +514,7 @@ const Content = React.forwardRef<HTMLDivElement, React.ComponentPropsWithoutRef<
         setMounted(false);
       }
     }, [isOpen]);
-	
+
     return (
       <DialogPrimitive.Content
         onAnimationStart={onAnimationStart}
