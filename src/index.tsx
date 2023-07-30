@@ -96,14 +96,7 @@ function Root({
     onChange: onOpenChange,
   });
   const [isDragging, setIsDragging] = React.useState(false);
-  const [activeSnapPoint, setActiveSnapPoint] = React.useState<SnapPoint | null>(
-    snapPoints?.length > 0
-      ? {
-          fraction: snapPoints[0],
-          height: 0,
-        }
-      : null,
-  );
+  const [activeSnapPoint, setActiveSnapPoint] = React.useState<SnapPoint | null>(null);
   const overlayRef = React.useRef<HTMLDivElement>(null);
   const dragStartTime = React.useRef<Date | null>(null);
   const dragEndTime = React.useRef<Date | null>(null);
@@ -335,29 +328,16 @@ function Root({
     }
   }
 
-  function snapToNextPoint() {
+  function snapToPoint(direction: 'next' | 'previous') {
     const activeSnapPointIndex = snapPoints?.findIndex((snapPoint) => snapPoint === activeSnapPoint?.fraction);
-
-    const nextSnapPointHeight = getSnapPointHeight(snapPoints[activeSnapPointIndex + 1], drawerRef);
-    setActiveSnapPoint({ fraction: snapPoints[activeSnapPointIndex + 1], height: nextSnapPointHeight });
-    onSnapPointChange?.(snapPoints[activeSnapPointIndex + 1]);
+    const indexChange = direction === 'next' ? 1 : -1;
+    const newSnapPointHeight = getSnapPointHeight(snapPoints[activeSnapPointIndex + indexChange], drawerRef);
+    setActiveSnapPoint({ fraction: snapPoints[activeSnapPointIndex + indexChange], height: newSnapPointHeight });
+    onSnapPointChange?.(snapPoints[activeSnapPointIndex + indexChange]);
     set(drawerRef.current, {
       transition: `transform ${TRANSITIONS.DURATION}s cubic-bezier(${TRANSITIONS.EASE.join(',')})`,
-      '--show-to': `${nextSnapPointHeight}px`,
-      '--swipe-amount': `${nextSnapPointHeight}px`,
-    });
-  }
-
-  function snapToPreviousPoint() {
-    const activeSnapPointIndex = snapPoints?.findIndex((snapPoint) => snapPoint === activeSnapPoint?.fraction);
-
-    const previousSnapPointHeight = getSnapPointHeight(snapPoints[activeSnapPointIndex - 1], drawerRef);
-    setActiveSnapPoint({ fraction: snapPoints[activeSnapPointIndex - 1], height: previousSnapPointHeight });
-    onSnapPointChange?.(snapPoints[activeSnapPointIndex - 1]);
-    set(drawerRef.current, {
-      '--show-to': `${previousSnapPointHeight}px`,
-      '--swipe-amount': `${previousSnapPointHeight}px`,
-      transition: `transform ${TRANSITIONS.DURATION}s cubic-bezier(${TRANSITIONS.EASE.join(',')})`,
+      '--show-to': `${newSnapPointHeight}px`,
+      '--swipe-amount': `${newSnapPointHeight}px`,
     });
   }
 
@@ -381,7 +361,7 @@ function Root({
 
     if (distMoved > 0) {
       if (activeSnapPoint && distMoved > 10 && !isLastSnapPoint && velocity > 0.1) {
-        snapToNextPoint();
+        snapToPoint('next');
         return;
       }
 
@@ -390,7 +370,7 @@ function Root({
     }
 
     if (distMoved < 0 && !isFirstSnapPoint && velocity > 0.1) {
-      snapToPreviousPoint();
+      snapToPoint('previous');
       return;
     }
 
