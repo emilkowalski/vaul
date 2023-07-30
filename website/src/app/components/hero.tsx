@@ -54,9 +54,9 @@ export function Hero() {
             </Drawer.Trigger>
             <Drawer.Overlay className="fixed inset-0 bg-black/40" />
             <Drawer.Portal>
-              <Drawer.Content className="bg-white flex flex-col fixed bottom-0 left-0 right-0 max-h-[85vh] rounded-t-[10px]">
+              <Drawer.Content className="bg-white border border-gray-200 flex flex-col fixed bottom-0 left-0 right-0 max-h-[85vh] rounded-t-[10px]">
                 <div className="max-w-md w-full mx-auto flex flex-col overflow-auto p-4 rounded-t-[10px]">
-                  <input className="border border-gray-400 my-8" placeholder="Input" />
+                  <input className="border border-gray-400 my-8 flex-shrink-0" placeholder="Input" />
                   <p>
                     But I must explain to you how all this mistaken idea of denouncing pleasure and praising pain was
                     born and I will give you a complete account of the system, and expound the actual teachings of the
@@ -69,7 +69,7 @@ export function Hero() {
                     from it? But who has any right to find fault with a man who chooses to enjoy a pleasure that has no
                     annoying consequences, or one who avoids a pain that produces no resultant pleasure?
                   </p>
-                  <input className="border border-gray-400 my-8" placeholder="Input" />
+                  <input className="border border-gray-400 my-8 flex-shrink-0" placeholder="Input" />
                   <p>
                     On the other hand, we denounce with righteous indignation and dislike men who are so beguiled and
                     demoralized by the charms of pleasure of the moment, so blinded by desire, that they cannot foresee
@@ -83,7 +83,7 @@ export function Hero() {
                     selection: he rejects pleasures to secure other greater pleasures, or else he endures pains to avoid
                     worse pains.
                   </p>
-                  <input className="border border-gray-400 my-8" placeholder="Input" />
+                  <input className="border border-gray-400 my-8 flex-shrink-0" placeholder="Input" />
                 </div>
               </Drawer.Content>
             </Drawer.Portal>

@@ -457,10 +457,23 @@ function Root({
 
 const Overlay = React.forwardRef<HTMLDivElement, React.ComponentPropsWithoutRef<typeof DialogPrimitive.Overlay>>(
   function ({ children, ...rest }, ref) {
-    const { overlayRef, onRelease } = useDrawerContext();
+    const { overlayRef, onRelease, snapPoints, activeSnapPoint } = useDrawerContext();
     const composedRef = useComposedRefs(ref, overlayRef);
 
-    return <DialogPrimitive.Overlay onMouseUp={onRelease} ref={composedRef} vaul-overlay="" {...rest} />;
+    return (
+      <DialogPrimitive.Overlay
+        onMouseUp={onRelease}
+        ref={composedRef}
+        vaul-overlay=""
+        // Show overlay only when the active snapPoint is last or there are no snapPoints
+        vaul-overlay-visible={
+          (snapPoints && activeSnapPoint?.fraction === snapPoints?.[snapPoints?.length - 1]) || !snapPoints
+            ? 'true'
+            : 'false'
+        }
+        {...rest}
+      />
+    );
   },
 );
 
