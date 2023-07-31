@@ -506,6 +506,8 @@ const Content = React.forwardRef<HTMLDivElement, React.ComponentPropsWithoutRef<
       if (isOpen) {
         setMounted(true);
         if (snapPoints?.length > 0 && activeSnapPoint.fraction === snapPoints[0]) {
+          console.log(getSnapPointHeight(activeSnapPoint, drawerRef));
+
           set(drawerRef.current, {
             '--show-to': `${getSnapPointHeight(activeSnapPoint, drawerRef)}px`,
           });
