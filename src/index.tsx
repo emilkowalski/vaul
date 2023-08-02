@@ -177,7 +177,7 @@ function Root({
 
       // We need to capture last time when drag with scroll was triggered and have a timeout between
       const absDraggedDistance = Math.abs(draggedDistance);
-      const wrapper = document.querySelector('[vaul-drawer-wrapper]');
+      const wrappers = document.querySelectorAll('[vaul-drawer-wrapper]');
 
       const percentageDragged = absDraggedDistance / drawerHeight;
       const opacityValue = 1 - percentageDragged;
@@ -190,23 +190,24 @@ function Root({
         true,
       );
 
-      if (wrapper && overlayRef.current && shouldScaleBackground) {
+      if (wrappers.length > 0 && overlayRef.current && shouldScaleBackground) {
         // Calculate percentageDragged as a fraction (0 to 1)
 
         const scaleValue = Math.min(getScale() + percentageDragged * (1 - getScale()), 1);
         const borderRadiusValue = 8 - percentageDragged * 8;
 
         const translateYValue = Math.max(0, 14 - percentageDragged * 14);
-
-        set(
-          wrapper,
-          {
-            borderRadius: `${borderRadiusValue}px`,
-            transform: `scale(${scaleValue}) translateY(${translateYValue}px)`,
-            transition: 'none',
-          },
-          true,
-        );
+        wrappers.forEach((wrapper) => {
+          set(
+            wrapper,
+            {
+              borderRadius: `${borderRadiusValue}px`,
+              transform: `scale(${scaleValue}) translateY(${translateYValue}px)`,
+              transition: 'none',
+            },
+            true,
+          );
+        });
       }
 
       set(drawerRef.current, {
@@ -272,7 +273,7 @@ function Root({
   }, [isOpen]);
 
   function resetDrawer() {
-    const wrapper = document.querySelector('[vaul-drawer-wrapper]');
+    const wrappers = document.querySelectorAll('[vaul-drawer-wrapper]');
     const currentSwipeAmount = Number(
       getComputedStyle(drawerRef.current).getPropertyValue('--swipe-amount').slice(0, -2),
     );
@@ -284,19 +285,21 @@ function Root({
 
     // Don't reset background if swiped upwards
     if (shouldScaleBackground && currentSwipeAmount > 0 && isOpen) {
-      set(
-        wrapper,
-        {
-          borderRadius: `${BORDER_RADIUS}px`,
-          overflow: 'hidden',
-          transform: `scale(${getScale()}) translateY(calc(env(safe-area-inset-top) + 14px))`,
-          transformOrigin: 'top',
-          transitionProperty: 'transform, border-radius',
-          transitionDuration: `${TRANSITIONS.DURATION}s`,
-          transitionTimingFunction: `cubic-bezier(${TRANSITIONS.EASE.join(',')})`,
-        },
-        true,
-      );
+      wrappers.forEach((wrapper) => {
+        set(
+          wrapper,
+          {
+            borderRadius: `${BORDER_RADIUS}px`,
+            overflow: 'hidden',
+            transform: `scale(${getScale()}) translateY(calc(env(safe-area-inset-top) + 14px))`,
+            transformOrigin: 'top',
+            transitionProperty: 'transform, border-radius',
+            transitionDuration: `${TRANSITIONS.DURATION}s`,
+            transitionTimingFunction: `cubic-bezier(${TRANSITIONS.EASE.join(',')})`,
+          },
+          true,
+        );
+      });
     }
   }
 
@@ -337,9 +340,9 @@ function Root({
   }
 
   function onAnimationStart(e: React.AnimationEvent<HTMLDivElement>) {
-    const wrapper = document.querySelector('[vaul-drawer-wrapper]');
+    const wrappers = document.querySelectorAll('[vaul-drawer-wrapper]');
 
-    if (!wrapper || !shouldScaleBackground) return;
+    if (wrappers.length === 0 || !shouldScaleBackground) return;
 
     if (e.animationName === 'show-dialog') {
       set(
@@ -349,24 +352,27 @@ function Root({
         },
         true,
       );
-
-      set(wrapper, {
-        borderRadius: `${BORDER_RADIUS}px`,
-        overflow: 'hidden',
-        transform: `scale(${getScale()}) translateY(calc(env(safe-area-inset-top) + 14px))`,
-        transformOrigin: 'top',
-        transitionProperty: 'transform, border-radius',
-        transitionDuration: `${TRANSITIONS.DURATION}s`,
-        transitionTimingFunction: `cubic-bezier(${TRANSITIONS.EASE.join(',')})`,
+      wrappers.forEach((wrapper) => {
+        set(wrapper, {
+          borderRadius: `${BORDER_RADIUS}px`,
+          overflow: 'hidden',
+          transform: `scale(${getScale()}) translateY(calc(env(safe-area-inset-top) + 14px))`,
+          transformOrigin: 'top',
+          transitionProperty: 'transform, border-radius',
+          transitionDuration: `${TRANSITIONS.DURATION}s`,
+          transitionTimingFunction: `cubic-bezier(${TRANSITIONS.EASE.join(',')})`,
+        });
       });
     } else if (e.animationName === 'hide-dialog') {
       // Exit
-      reset(wrapper, 'transform');
-      reset(wrapper, 'borderRadius');
-      set(wrapper, {
-        transitionProperty: 'transform, border-radius',
-        transitionDuration: `${TRANSITIONS.DURATION}s`,
-        transitionTimingFunction: `cubic-bezier(${TRANSITIONS.EASE.join(',')})`,
+      wrappers.forEach((wrapper) => {
+        reset(wrapper, 'transform');
+        reset(wrapper, 'borderRadius');
+        set(wrapper, {
+          transitionProperty: 'transform, border-radius',
+          transitionDuration: `${TRANSITIONS.DURATION}s`,
+          transitionTimingFunction: `cubic-bezier(${TRANSITIONS.EASE.join(',')})`,
+        });
       });
     }
   }
