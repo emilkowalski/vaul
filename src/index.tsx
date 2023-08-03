@@ -384,6 +384,11 @@ function Root({
       return;
     }
 
+    if (isFirstSnapPoint && y > window.innerHeight * (0.75 + activeSnapPoint.fraction)) {
+      closeDrawer();
+      return;
+    }
+
     if (y > window.innerHeight * 0.75 && !snapPoints) {
       closeDrawer();
       return;
