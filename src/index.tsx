@@ -328,13 +328,11 @@ function Root({
     }
   }
 
-  function snapToPoint(direction: 'next' | 'previous') {
-    const activeSnapPointIndex = snapPoints?.findIndex((snapPoint) => snapPoint === activeSnapPoint?.fraction);
-    const indexChange = direction === 'next' ? 1 : -1;
-    const newSnapPointHeight = getSnapPointHeight(snapPoints[activeSnapPointIndex + indexChange], drawerRef);
-    setActiveSnapPoint({ fraction: snapPoints[activeSnapPointIndex + indexChange], height: newSnapPointHeight });
+  function snapToPoint(index: number) {
+    const newSnapPointHeight = getSnapPointHeight(snapPoints[index], drawerRef);
+    setActiveSnapPoint({ fraction: snapPoints[index], height: newSnapPointHeight });
     if (isOpen) {
-      onSnapPointChange?.(snapPoints[activeSnapPointIndex + indexChange]);
+      onSnapPointChange?.(snapPoints[index]);
     }
     set(drawerRef.current, {
       transition: `transform ${TRANSITIONS.DURATION}s cubic-bezier(${TRANSITIONS.EASE.join(',')})`,
@@ -368,7 +366,12 @@ function Root({
 
     if (distMoved > 0) {
       if (activeSnapPoint && distMoved > 10 && !isLastSnapPoint && velocity > 0.1) {
-        snapToPoint('next');
+        if (distMoved > window.innerHeight * 0.5 || velocity > 0.9) {
+          snapToPoint(snapPoints.length - 1);
+          return;
+        }
+        const currentSnapPointIndex = snapPoints?.findIndex((snapPoint) => snapPoint === activeSnapPoint?.fraction);
+        snapToPoint(currentSnapPointIndex + 1);
         return;
       }
 
@@ -377,7 +380,8 @@ function Root({
     }
 
     if (distMoved < 0 && !isFirstSnapPoint && velocity > 0.1) {
-      snapToPoint('previous');
+      const currentSnapPointIndex = snapPoints?.findIndex((snapPoint) => snapPoint === activeSnapPoint?.fraction);
+      snapToPoint(currentSnapPointIndex - 1);
       return;
     }
 
@@ -433,7 +437,7 @@ function Root({
       });
     }
   }
-  
+
   return (
     <DialogPrimitive.Root
       open={isOpen}
