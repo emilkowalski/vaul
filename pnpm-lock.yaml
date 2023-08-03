@@ -27,6 +27,7 @@ importers:
       clsx: ^2.0.0
       eslint: 8.45.0
       eslint-config-next: 13.4.10
+      feather-icons-react: ^0.6.2
       next: 13.4.10
       postcss: 8.4.26
       react: 18.2.0
@@ -44,6 +45,7 @@ importers:
       clsx: 2.0.0
       eslint: 8.45.0
       eslint-config-next: 13.4.10_eslint@8.45.0+typescript@5.1.6
+      feather-icons-react: 0.6.2_react@18.2.0
       next: 13.4.10_react-dom@18.2.0+react@18.2.0
       postcss: 8.4.26
       react: 18.2.0
@@ -1866,6 +1868,14 @@ packages:
     resolution: {integrity: sha512-wBrocU2LCXXa+lWBt8RoIRD89Fi8OdABODa/kEnyeyjS5aZO5/GNvI5sEINADqP/h8M29UHTHUb53sUu5Ihqdw==}
     dependencies:
       reusify: 1.0.4
+
+  /feather-icons-react/0.6.2_react@18.2.0:
+    resolution: {integrity: sha512-G677Y5nc3HzP1f5NNb5LJuZwKrI58BK4+/9O8Bl4naF9JixC+YL4trVom1F2ajnilq/EbU8JETPTNqvCzwH1qA==}
+    peerDependencies:
+      react: '>= 16.8.4'
+    dependencies:
+      react: 18.2.0
+    dev: false
 
   /file-entry-cache/6.0.1:
     resolution: {integrity: sha512-7Gps/XWymbLk2QLYK4NzpMOrYjMhdIxXuIvy2QBsLE6ljuodKvdkWs/cpyJJ3CVIVpH0Oi1Hvg1ovbMzLdFBBg==}
