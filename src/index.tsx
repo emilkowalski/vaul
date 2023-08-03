@@ -370,6 +370,7 @@ function Root({
           snapToPoint(snapPoints.length - 1);
           return;
         }
+
         const currentSnapPointIndex = snapPoints?.findIndex((snapPoint) => snapPoint === activeSnapPoint?.fraction);
         snapToPoint(currentSnapPointIndex + 1);
         return;
@@ -472,7 +473,7 @@ function Root({
 
 const Overlay = React.forwardRef<HTMLDivElement, React.ComponentPropsWithoutRef<typeof DialogPrimitive.Overlay>>(
   function ({ children, ...rest }, ref) {
-    const { overlayRef, onRelease, snapPoints, activeSnapPoint } = useDrawerContext();
+    const { overlayRef, onRelease, snapPoints, activeSnapPoint, isOpen } = useDrawerContext();
     const composedRef = useComposedRefs(ref, overlayRef);
 
     return (
@@ -482,7 +483,7 @@ const Overlay = React.forwardRef<HTMLDivElement, React.ComponentPropsWithoutRef<
         vaul-overlay=""
         // Show overlay only when the active snapPoint is last or there are no snapPoints
         vaul-overlay-visible={
-          (snapPoints && activeSnapPoint?.fraction === snapPoints?.[snapPoints?.length - 1]) || !snapPoints
+          (snapPoints && activeSnapPoint?.fraction === snapPoints?.[snapPoints?.length - 1] && isOpen) || !snapPoints
             ? 'true'
             : 'false'
         }
