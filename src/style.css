@@ -29,10 +29,6 @@
   height: 200%;
 }
 
-[vaul-drawer][data-state='closed'] {
-  animation: fake-hide-dialog 0.5s cubic-bezier(0.32, 0.72, 0, 1) forwards;
-}
-
 [vaul-overlay][vaul-overlay-visible='true'] {
   animation: show-overlay 0.5s cubic-bezier(0.32, 0.72, 0, 1);
 }
@@ -43,18 +39,23 @@
 }
 
 [vaul-overlay][data-state='closed'] {
-  opacity: 0 !important;
+  opacity: 0;
   transition: opacity 0.5s cubic-bezier(0.32, 0.72, 0, 1);
   animation: fake-hide-overlay 0.5s cubic-bezier(0.32, 0.72, 0, 1) forwards;
 }
 
-[vaul-drawer][vaul-drawer-has-snap-points='false'][data-state='closed'] {
-  transition: none !important;
+[vaul-drawer][vaul-drawer-has-snap-points='true'] {
+  animation: fake-show-dialog 0.5s cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+[vaul-drawer][data-state='closed'][vaul-drawer-has-snap-points='false'] {
+  transition: none;
   animation: hide-dialog 0.5s cubic-bezier(0.32, 0.72, 0, 1) forwards;
 }
 
-[vaul-drawer][vaul-drawer-has-snap-points='true'] {
-  animation: fake-show-dialog 0.5s cubic-bezier(0.32, 0.72, 0, 1);
+[vaul-drawer][data-state='closed'][vaul-drawer-has-snap-points='true'] {
+  transition: transform 0.5s cubic-bezier(0.32, 0.72, 0, 1);
+  animation: fake-hide-dialog 0.5s cubic-bezier(0.32, 0.72, 0, 1) forwards;
 }
 
 @keyframes fake-show-dialog {

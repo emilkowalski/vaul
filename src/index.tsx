@@ -362,7 +362,6 @@ function Root({
     if (velocity > 0.9 && distMoved < 0) {
       closeDrawer();
       return;
-      ``;
     }
 
     if (distMoved > 0) {
