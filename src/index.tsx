@@ -333,7 +333,9 @@ function Root({
     const indexChange = direction === 'next' ? 1 : -1;
     const newSnapPointHeight = getSnapPointHeight(snapPoints[activeSnapPointIndex + indexChange], drawerRef);
     setActiveSnapPoint({ fraction: snapPoints[activeSnapPointIndex + indexChange], height: newSnapPointHeight });
-    onSnapPointChange?.(snapPoints[activeSnapPointIndex + indexChange]);
+    if (isOpen) {
+      onSnapPointChange?.(snapPoints[activeSnapPointIndex + indexChange]);
+    }
     set(drawerRef.current, {
       transition: `transform ${TRANSITIONS.DURATION}s cubic-bezier(${TRANSITIONS.EASE.join(',')})`,
       '--show-to': `${newSnapPointHeight}px`,
@@ -384,7 +386,7 @@ function Root({
       return;
     }
 
-    if (isFirstSnapPoint && y > window.innerHeight * (0.75 + activeSnapPoint.fraction)) {
+    if (snapPoints && isFirstSnapPoint && y > window.innerHeight * (0.75 + activeSnapPoint.fraction)) {
       closeDrawer();
       return;
     }
@@ -431,7 +433,7 @@ function Root({
       });
     }
   }
-
+  
   return (
     <DialogPrimitive.Root
       open={isOpen}
@@ -440,7 +442,6 @@ function Root({
 
         if (o && snapPoints) {
           setActiveSnapPoint({ fraction: snapPoints[0], height: getSnapPointHeight(snapPoints[0], drawerRef) });
-          onSnapPointChange?.(snapPoints[0]);
         }
       }}
     >
@@ -510,8 +511,6 @@ const Content = React.forwardRef<HTMLDivElement, React.ComponentPropsWithoutRef<
       if (isOpen) {
         setMounted(true);
         if (snapPoints?.length > 0 && activeSnapPoint.fraction === snapPoints[0]) {
-          console.log(getSnapPointHeight(activeSnapPoint, drawerRef));
-
           set(drawerRef.current, {
             '--show-to': `${getSnapPointHeight(activeSnapPoint, drawerRef)}px`,
           });

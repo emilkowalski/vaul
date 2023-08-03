@@ -43,7 +43,10 @@ export function Hero() {
           <p className="text-gray-600 text-xl">Drawer component for React.</p>
         </div>
         <div className="flex gap-4 justify-center mt-6">
-          <Drawer.Root snapPoints={pathname.includes('test') ? undefined : [0.2, 0.5, 1]}>
+          <Drawer.Root
+            snapPoints={pathname.includes('test') ? undefined : [0.2, 0.5, 1]}
+            onSnapPointChange={(snap) => console.log(snap)}
+          >
             <Drawer.Trigger asChild>
               <button
                 type="button"
