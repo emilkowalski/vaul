@@ -5,7 +5,7 @@ import { useControllableState } from './use-controllable-state';
 import { DrawerContext, useDrawerContext } from './context';
 import React, { useEffect } from 'react';
 import './style.css';
-import { usePreventScroll } from './use-prevent-scroll';
+import { usePreventScroll, isInput } from './use-prevent-scroll';
 import { useComposedRefs } from './use-composed-refs';
 
 const CLOSE_TRESHOLD = 0.75;
@@ -21,6 +21,18 @@ const cache = new Map();
 
 interface Style {
   [key: string]: string;
+}
+
+function isInView(el: HTMLElement): boolean {
+  const rect = el.getBoundingClientRect();
+
+  return (
+    rect.top >= 0 &&
+    rect.left >= 0 &&
+    // Need + 40 for safari detection
+    rect.bottom <= window.visualViewport.height + 40 &&
+    rect.right <= window.visualViewport.width
+  );
 }
 
 function set(el?: Element | HTMLElement | null, styles?: Style, ignoreCache = false) {
@@ -67,7 +79,6 @@ interface DialogProps {
   onOpenChange?(open: boolean): void;
   shouldScaleBackground?: boolean;
   dismissible?: boolean;
-  fixedHeight?: boolean;
 }
 
 function Root({
@@ -76,7 +87,6 @@ function Root({
   onOpenChange,
   children,
   shouldScaleBackground,
-  fixedHeight,
   closeTreshold = CLOSE_TRESHOLD,
   dismissible = true,
 }: DialogProps) {
@@ -91,11 +101,12 @@ function Root({
   const dragEndTime = React.useRef<Date | null>(null);
   const lastTimeDragPrevented = React.useRef<Date | null>(null);
   const pointerStartY = React.useRef(0);
+  const keyboardIsOpen = React.useRef(false);
   const drawerRef = React.useRef<HTMLDivElement>(null);
   const initialViewportHeight = React.useRef(0);
 
   usePreventScroll({
-    isDisabled: !isOpen || isDragging || fixedHeight,
+    isDisabled: !isOpen || isDragging,
   });
 
   function getScale() {
@@ -223,20 +234,24 @@ function Root({
     initialViewportHeight.current = window.visualViewport.height;
 
     function onVisualViewportChange() {
-      if (!drawerRef.current || fixedHeight) return;
+      if (!drawerRef.current) return;
+      const focusedElement = document.activeElement as HTMLElement;
 
-      const visualViewportHeight = window.visualViewport.height;
-      const diffFromInitial = initialViewportHeight.current - visualViewportHeight;
-      const drawerHeight = drawerRef.current?.getBoundingClientRect().height || 0;
-      const offsetFromTop = drawerRef.current?.getBoundingClientRect().top;
+      if ((!isInView(focusedElement) && isInput(focusedElement)) || keyboardIsOpen.current) {
+        const visualViewportHeight = window.visualViewport.height;
+        const diffFromInitial = initialViewportHeight.current - visualViewportHeight;
+        const drawerHeight = drawerRef.current?.getBoundingClientRect().height || 0;
+        const offsetFromTop = drawerRef.current?.getBoundingClientRect().top;
+        keyboardIsOpen.current = !keyboardIsOpen.current;
+        // We don't have to change the height if the input is in view, when we are here we are in the opened keyboard state so we can accuretly check if the input is in view
+        if (drawerHeight > visualViewportHeight) {
+          drawerRef.current.style.height = `${visualViewportHeight - offsetFromTop}px`;
+        } else {
+          drawerRef.current.style.height = 'initial';
+        }
 
-      if (drawerHeight > visualViewportHeight) {
-        drawerRef.current.style.height = `${visualViewportHeight - offsetFromTop}px`;
-      } else {
-        drawerRef.current.style.height = 'initial';
+        drawerRef.current.style.bottom = `${diffFromInitial}px`;
       }
-
-      drawerRef.current.style.bottom = `${diffFromInitial}px`;
     }
 
     window.visualViewport.addEventListener('resize', onVisualViewportChange);

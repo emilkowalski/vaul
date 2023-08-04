@@ -2,16 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
-html,
-body {
-  overflow: hidden;
-}
-
 body,
 main {
   min-height: 100vh;
   /* mobile viewport bug fix */
   min-height: -webkit-fill-available;
+  overflow-x: hidden;
 }
 
 html {

@@ -190,7 +190,7 @@ function preventScrollMobileSafari() {
     let target = e.target as HTMLElement;
 
     // Apply this change if we're not already focused on the target element
-    if (willOpenKeyboard(target) && target !== document.activeElement) {
+    if (isInput(target) && target !== document.activeElement) {
       e.preventDefault();
 
       // Apply a transform to trick Safari into thinking the input is at the top of the page
@@ -206,7 +206,7 @@ function preventScrollMobileSafari() {
 
   let onFocus = (e: FocusEvent) => {
     let target = e.target as HTMLElement;
-    if (willOpenKeyboard(target)) {
+    if (isInput(target)) {
       // Transform also needs to be applied in the focus event in cases where focus moves
       // other than tapping on an input directly, e.g. the next/previous buttons in the
       // software keyboard. In these cases, it seems applying the transform in the focus event
@@ -317,7 +317,7 @@ function scrollIntoView(target: Element) {
   }
 }
 
-function willOpenKeyboard(target: Element) {
+export function isInput(target: Element) {
   return (
     (target instanceof HTMLInputElement && !nonTextInputTypes.has(target.type)) ||
     target instanceof HTMLTextAreaElement ||
