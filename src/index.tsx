@@ -8,6 +8,8 @@ import './style.css';
 import { usePreventScroll } from './use-prevent-scroll';
 import { useComposedRefs } from './use-composed-refs';
 
+const CLOSE_TRESHOLD = 0.75;
+
 const TRANSITIONS = {
   DURATION: 0.5,
   EASE: [0.32, 0.72, 0, 1],
@@ -61,6 +63,7 @@ interface DialogProps {
   children?: React.ReactNode;
   open?: boolean;
   defaultOpen?: boolean;
+  closeTreshold?: number;
   onOpenChange?(open: boolean): void;
   shouldScaleBackground?: boolean;
   dismissible?: boolean;
@@ -74,6 +77,7 @@ function Root({
   children,
   shouldScaleBackground,
   fixedHeight,
+  closeTreshold = CLOSE_TRESHOLD,
   dismissible = true,
 }: DialogProps) {
   const [isOpen = false, setIsOpen] = useControllableState({
@@ -328,7 +332,7 @@ function Root({
       return;
     }
 
-    if (y > window.innerHeight * 0.75) {
+    if (y > window.innerHeight * closeTreshold) {
       closeDrawer();
       return;
     }
