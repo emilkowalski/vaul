@@ -1,6 +1,8 @@
 // This code comes from https://github.com/adobe/react-spectrum/blob/main/packages/%40react-aria/overlays/src/usePreventScroll.ts
 
-import { useLayoutEffect } from 'react';
+import { useEffect, useLayoutEffect } from 'react';
+
+export const useIsomorphicLayoutEffect = typeof window !== 'undefined' ? useLayoutEffect : useEffect;
 
 interface PreventScrollOptions {
   /** Whether the scroll lock is disabled. */
@@ -87,7 +89,7 @@ let restore;
 export function usePreventScroll(options: PreventScrollOptions = {}) {
   let { isDisabled } = options;
 
-  useLayoutEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     if (isDisabled) {
       return;
     }
