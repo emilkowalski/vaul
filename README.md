@@ -49,7 +49,8 @@ Can be controlled with the `value` and `onOpenChange` props. Can be opened by de
 Additional props:
 
 `fixedHeight`: Height won't be auto adjusted when the `visualViewportHeight` changes.
-`closeTreshold`: Number between 0 and 1 that determines when the drawer should be closed. Example: `closeTreshold`` of 0.5 would close the drawer if the user swiped for 50% of the height of the draewr or more.
+
+`closeTreshold`: Number between 0 and 1 that determines when the drawer should be closed. Example: `closeTreshold`` of 0.5 would close the drawer if the user swiped for 50% of the height of the drawer or more.
 
 ### Trigger
 
