@@ -48,8 +48,6 @@ Can be controlled with the `value` and `onOpenChange` props. Can be opened by de
 
 Additional props:
 
-`fixedHeight`: Height won't be auto adjusted when the `visualViewportHeight` changes.
-
 `closeTreshold`: Number between 0 and 1 that determines when the drawer should be closed. Example: `closeTreshold`` of 0.5 would close the drawer if the user swiped for 50% of the height of the drawer or more.
 
 ### Trigger
@@ -59,6 +57,10 @@ The button that opens the dialog. [Props](https://www.radix-ui.com/docs/primitiv
 ### Content
 
 Content that should be rendered in the drawer. [Props](https://www.radix-ui.com/docs/primitives/components/dialog#content).
+
+Additional props:
+
+`onAnimationEnd (open: boolean) => void`: Runs after enter or exit animation ends. Useful to reset the state and avoid flash of a different content when animating out.
 
 ### Overlay
 
