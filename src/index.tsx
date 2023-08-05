@@ -15,6 +15,8 @@ const TRANSITIONS = {
   EASE: [0.32, 0.72, 0, 1],
 };
 
+const ANIMATION_DURATION = 500;
+
 const BORDER_RADIUS = 8;
 
 const cache = new Map();
@@ -78,6 +80,7 @@ interface DialogProps {
   closeTreshold?: number;
   onOpenChange?(open: boolean): void;
   shouldScaleBackground?: boolean;
+  onAnimationEnd?(open: boolean): void;
   dismissible?: boolean;
 }
 
@@ -89,6 +92,7 @@ function Root({
   shouldScaleBackground,
   closeTreshold = CLOSE_TRESHOLD,
   dismissible = true,
+  onAnimationEnd,
 }: DialogProps) {
   const [isOpen = false, setIsOpen] = useControllableState({
     prop: openProp,
@@ -102,6 +106,7 @@ function Root({
   const lastTimeDragPrevented = React.useRef<Date | null>(null);
   const pointerStartY = React.useRef(0);
   const keyboardIsOpen = React.useRef(false);
+  const animationEndTimer = React.useRef<NodeJS.Timeout>(null);
   const drawerRef = React.useRef<HTMLDivElement>(null);
   const initialViewportHeight = React.useRef(0);
 
@@ -406,6 +411,7 @@ function Root({
           onRelease,
           onMove,
           dismissible,
+          isOpen,
         }}
       >
         {children}
@@ -423,40 +429,52 @@ const Overlay = React.forwardRef<HTMLDivElement, React.ComponentPropsWithoutRef<
   },
 );
 
-const Content = React.forwardRef<HTMLDivElement, React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content>>(
-  function ({ children, onOpenAutoFocus, onPointerDownOutside, ...rest }, ref) {
-    const { drawerRef, onPress, onRelease, onAnimationStart, onMove, dismissible } = useDrawerContext();
-    const composedRef = useComposedRefs(ref, drawerRef);
+type ContentProps = React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content> & {
+  onAnimationEnd?: (open: boolean) => void;
+};
 
-    return (
-      <DialogPrimitive.Content
-        onAnimationStart={onAnimationStart}
-        onPointerDown={onPress}
-        onPointerUp={onRelease}
-        onPointerMove={onMove}
-        onOpenAutoFocus={(e) => {
-          if (onOpenAutoFocus) {
-            onOpenAutoFocus(e);
-          } else {
-            e.preventDefault();
-          }
-        }}
-        onPointerDownOutside={(e) => {
-          if (!dismissible) {
-            e.preventDefault();
-          }
+const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
+  { children, onOpenAutoFocus, onPointerDownOutside, onAnimationEnd, ...rest },
+  ref,
+) {
+  const { drawerRef, onPress, onRelease, onAnimationStart, onMove, dismissible, isOpen } = useDrawerContext();
+  const composedRef = useComposedRefs(ref, drawerRef);
+  const animationEndTimer = React.useRef<NodeJS.Timeout>(null);
 
-          onPointerDownOutside?.(e);
-        }}
-        ref={composedRef}
-        {...rest}
-        vaul-drawer=""
-      >
-        {children}
-      </DialogPrimitive.Content>
-    );
-  },
-);
+  return (
+    <DialogPrimitive.Content
+      onAnimationStart={(e) => {
+        window.clearTimeout(animationEndTimer.current);
+        animationEndTimer.current = setTimeout(() => {
+          onAnimationEnd?.(isOpen);
+        }, ANIMATION_DURATION);
+        onAnimationStart(e);
+      }}
+      onPointerDown={onPress}
+      onPointerUp={onRelease}
+      onPointerMove={onMove}
+      onOpenAutoFocus={(e) => {
+        if (onOpenAutoFocus) {
+          onOpenAutoFocus(e);
+        } else {
+          e.preventDefault();
+        }
+      }}
+      onPointerDownOutside={(e) => {
+        if (!dismissible) {
+          e.preventDefault();
+        }
+
+        onPointerDownOutside?.(e);
+      }}
+      ref={composedRef}
+      {...rest}
+      vaul-drawer=""
+    >
+      {children}
+    </DialogPrimitive.Content>
+  );
+});
 export const Drawer = Object.assign(
   {},
   {
