@@ -107,7 +107,6 @@ function Root({
   const pointerStartY = React.useRef(0);
   const keyboardIsOpen = React.useRef(false);
   const drawerRef = React.useRef<HTMLDivElement>(null);
-  const wasOpen = React.useRef(false);
   const initialViewportHeight = React.useRef(0);
 
   usePreventScroll({
@@ -409,7 +408,13 @@ function Root({
   }
 
   function onNestedOpenChange(o: boolean) {
-    console.log(o);
+    const scale = o ? (window.innerWidth - 16) / window.innerWidth : 1;
+    const y = o ? -16 : 0;
+
+    set(drawerRef.current, {
+      transition: `transform ${TRANSITIONS.DURATION}s cubic-bezier(${TRANSITIONS.EASE.join(',')})`,
+      transform: `scale(${scale}) translateY(${y}px)`,
+    });
   }
 
   return (
