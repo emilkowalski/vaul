@@ -81,7 +81,7 @@ interface DialogProps {
   onOpenChange?(open: boolean): void;
   shouldScaleBackground?: boolean;
   dismissible?: boolean;
-  onDrag?(event: React.PointerEvent<HTMLDivElement>): void;
+  onDrag?(event: React.PointerEvent<HTMLDivElement>, percentageDragged: number): void;
 }
 
 function Root({
@@ -179,10 +179,6 @@ function Root({
     return true;
   }
 
-  function onNestedDrag(event: React.PointerEvent<HTMLDivElement>) {
-    console.log('onNestedDrag');
-  }
-
   function onDrag(event: React.PointerEvent<HTMLDivElement>) {
     // We need to know how much of the drawer has been dragged in percentages so that we can transform background accordingly
     if (isDragging) {
@@ -190,7 +186,7 @@ function Root({
       const isDraggingDown = draggedDistance > 0;
 
       if (!shouldDrag(event.target, isDraggingDown)) return;
-      onDragProp?.(event);
+
       const drawerHeight = drawerRef.current?.getBoundingClientRect().height || 0;
 
       set(drawerRef.current, {
@@ -211,7 +207,7 @@ function Root({
 
       const percentageDragged = absDraggedDistance / drawerHeight;
       const opacityValue = 1 - percentageDragged;
-
+      onDragProp?.(event, percentageDragged);
       set(
         overlayRef.current,
         {
@@ -222,7 +218,6 @@ function Root({
 
       if (wrapper && overlayRef.current && shouldScaleBackground) {
         // Calculate percentageDragged as a fraction (0 to 1)
-
         const scaleValue = Math.min(getScale() + percentageDragged * (1 - getScale()), 1);
         const borderRadiusValue = 8 - percentageDragged * 8;
 
@@ -415,6 +410,23 @@ function Root({
       transition: `transform ${TRANSITIONS.DURATION}s cubic-bezier(${TRANSITIONS.EASE.join(',')})`,
       transform: `scale(${scale}) translateY(${y}px)`,
     });
+
+    // TODO: clearTimeout
+    setTimeout(() => {
+      set(drawerRef.current, {
+        transition: 'none',
+      });
+    }, 500);
+  }
+
+  function onNestedDrag(event: React.PointerEvent<HTMLDivElement>, percentageDragged: number) {
+    const initialScale = (window.innerWidth - 16) / window.innerWidth;
+    const newScale = initialScale + percentageDragged * (1 - initialScale);
+    const newY = -16 + percentageDragged * 16;
+
+    set(drawerRef.current, {
+      transform: `scale(${newScale}) translateY(${newY}px)`,
+    });
   }
 
   return (
@@ -516,9 +528,9 @@ function NestedRoot({ children, onDrag, onOpenChange }: DialogProps) {
 
   return (
     <Root
-      onDrag={(e) => {
-        onNestedDrag(e);
-        onDrag?.(e);
+      onDrag={(e, p) => {
+        onNestedDrag(e, p);
+        onDrag?.(e, p);
       }}
       onOpenChange={(o) => {
         onNestedOpenChange(o);
