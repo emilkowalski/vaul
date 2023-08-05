@@ -80,8 +80,8 @@ interface DialogProps {
   closeTreshold?: number;
   onOpenChange?(open: boolean): void;
   shouldScaleBackground?: boolean;
-  onAnimationEnd?(open: boolean): void;
   dismissible?: boolean;
+  onDrag?(event: React.PointerEvent<HTMLDivElement>): void;
 }
 
 function Root({
@@ -90,9 +90,9 @@ function Root({
   onOpenChange,
   children,
   shouldScaleBackground,
+  onDrag: onDragProp,
   closeTreshold = CLOSE_TRESHOLD,
   dismissible = true,
-  onAnimationEnd,
 }: DialogProps) {
   const [isOpen = false, setIsOpen] = useControllableState({
     prop: openProp,
@@ -107,6 +107,7 @@ function Root({
   const pointerStartY = React.useRef(0);
   const keyboardIsOpen = React.useRef(false);
   const drawerRef = React.useRef<HTMLDivElement>(null);
+  const wasOpen = React.useRef(false);
   const initialViewportHeight = React.useRef(0);
 
   usePreventScroll({
@@ -119,6 +120,13 @@ function Root({
 
   function onPress(event: React.PointerEvent<HTMLDivElement>) {
     if (!dismissible) return;
+    if (
+      !drawerRef.current.contains(event.target as Node) ||
+      isInput(event.target as HTMLElement) ||
+      (event.target as HTMLElement).tagName === 'BUTTON'
+    )
+      return;
+
     setIsDragging(true);
     dragStartTime.current = new Date();
 
@@ -172,14 +180,18 @@ function Root({
     return true;
   }
 
-  function onMove(event: React.PointerEvent<HTMLDivElement>) {
+  function onNestedDrag(event: React.PointerEvent<HTMLDivElement>) {
+    console.log('onNestedDrag');
+  }
+
+  function onDrag(event: React.PointerEvent<HTMLDivElement>) {
     // We need to know how much of the drawer has been dragged in percentages so that we can transform background accordingly
     if (isDragging) {
       const draggedDistance = pointerStartY.current - event.clientY;
       const isDraggingDown = draggedDistance > 0;
 
       if (!shouldDrag(event.target, isDraggingDown)) return;
-
+      onDragProp?.(event);
       const drawerHeight = drawerRef.current?.getBoundingClientRect().height || 0;
 
       set(drawerRef.current, {
@@ -324,6 +336,8 @@ function Root({
   }
 
   function onRelease(event: React.PointerEvent<HTMLDivElement>) {
+    if (isInput(event.target as HTMLElement) || (event.target as HTMLElement).tagName === 'BUTTON' || !isDragging)
+      return;
     setIsDragging(false);
     dragEndTime.current = new Date();
     const swipeAmount = drawerRef.current
@@ -394,6 +408,10 @@ function Root({
     }
   }
 
+  function onNestedOpenChange(o: boolean) {
+    console.log(o);
+  }
+
   return (
     <DialogPrimitive.Root
       open={isOpen}
@@ -408,9 +426,11 @@ function Root({
           onAnimationStart,
           onPress,
           onRelease,
-          onMove,
+          onDrag,
           dismissible,
           isOpen,
+          onNestedDrag,
+          onNestedOpenChange,
           keyboardIsOpen,
         }}
       >
@@ -437,7 +457,7 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
   { children, onOpenAutoFocus, onPointerDownOutside, onAnimationEnd, ...rest },
   ref,
 ) {
-  const { drawerRef, onPress, onRelease, onAnimationStart, onMove, dismissible, isOpen, keyboardIsOpen } =
+  const { drawerRef, onPress, onRelease, onAnimationStart, onDrag, dismissible, isOpen, keyboardIsOpen } =
     useDrawerContext();
   const composedRef = useComposedRefs(ref, drawerRef);
   const animationEndTimer = React.useRef<NodeJS.Timeout>(null);
@@ -453,7 +473,7 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
       }}
       onPointerDown={onPress}
       onPointerUp={onRelease}
-      onPointerMove={onMove}
+      onPointerMove={onDrag}
       onOpenAutoFocus={(e) => {
         if (onOpenAutoFocus) {
           onOpenAutoFocus(e);
@@ -471,7 +491,6 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
         if (!dismissible) {
           e.preventDefault();
         }
-
         onPointerDownOutside?.(e);
       }}
       ref={composedRef}
@@ -482,10 +501,35 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
     </DialogPrimitive.Content>
   );
 });
+
+function NestedRoot({ children, onDrag, onOpenChange }: DialogProps) {
+  const { onNestedDrag, onNestedOpenChange } = useDrawerContext();
+
+  if (!onNestedDrag) {
+    throw new Error('NestedRoot must be placed in another drawer');
+  }
+
+  return (
+    <Root
+      onDrag={(e) => {
+        onNestedDrag(e);
+        onDrag?.(e);
+      }}
+      onOpenChange={(o) => {
+        onNestedOpenChange(o);
+        onOpenChange?.(o);
+      }}
+    >
+      {children}
+    </Root>
+  );
+}
+
 export const Drawer = Object.assign(
   {},
   {
     Root,
+    NestedRoot,
     Content,
     Overlay,
     Trigger: DialogPrimitive.Trigger,
