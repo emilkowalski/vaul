@@ -106,6 +106,7 @@ function Root({
   const dragStartTime = React.useRef<Date | null>(null);
   const dragEndTime = React.useRef<Date | null>(null);
   const lastTimeDragPrevented = React.useRef<Date | null>(null);
+  const nestedOpenChangeTimer = React.useRef<NodeJS.Timeout>(null);
   const pointerStartY = React.useRef(0);
   const keyboardIsOpen = React.useRef(false);
   const drawerRef = React.useRef<HTMLDivElement>(null);
@@ -411,14 +412,15 @@ function Root({
   function onNestedOpenChange(o: boolean) {
     const scale = o ? (window.innerWidth - 16) / window.innerWidth : 1;
     const y = o ? -16 : 0;
-
+    window.clearTimeout(nestedOpenChangeTimer.current);
+	
     set(drawerRef.current, {
       transition: `transform ${TRANSITIONS.DURATION}s cubic-bezier(${TRANSITIONS.EASE.join(',')})`,
       transform: `scale(${scale}) translateY(${y}px)`,
     });
 
     if (!o) {
-      setTimeout(() => {
+      nestedOpenChangeTimer.current = setTimeout(() => {
         set(drawerRef.current, {
           transition: 'none',
           transform: 'translateY(var(--swipe-amount))',
@@ -546,7 +548,7 @@ function NestedRoot({ children, onDrag, onOpenChange }: DialogProps) {
   const { onNestedDrag, onNestedOpenChange, onNestedRelease } = useDrawerContext();
 
   if (!onNestedDrag) {
-    throw new Error('NestedRoot must be placed in another drawer');
+    throw new Error('Drawer.NestedRoot must be placed in another drawer');
   }
 
   return (
