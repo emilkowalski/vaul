@@ -6,7 +6,10 @@ interface DrawerContextValue {
   onAnimationStart: (event: React.AnimationEvent<HTMLDivElement>) => void;
   onPress: (event: React.PointerEvent<HTMLDivElement>) => void;
   onRelease: (event: React.PointerEvent<HTMLDivElement>) => void;
-  onMove: (event: React.PointerEvent<HTMLDivElement>) => void;
+  onDrag: (event: React.PointerEvent<HTMLDivElement>) => void;
+  onNestedDrag: (event: React.PointerEvent<HTMLDivElement>, percentageDragged: number) => void;
+  onNestedOpenChange: (o: boolean) => void;
+  onNestedRelease: (event: React.PointerEvent<HTMLDivElement>, open: boolean) => void;
   dismissible: boolean;
   isOpen: boolean;
   keyboardIsOpen: React.MutableRefObject<boolean>;

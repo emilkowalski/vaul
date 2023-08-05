@@ -80,8 +80,9 @@ interface DialogProps {
   closeTreshold?: number;
   onOpenChange?(open: boolean): void;
   shouldScaleBackground?: boolean;
-  onAnimationEnd?(open: boolean): void;
   dismissible?: boolean;
+  onDrag?(event: React.PointerEvent<HTMLDivElement>, percentageDragged: number): void;
+  onRelease?(event: React.PointerEvent<HTMLDivElement>, open: boolean): void;
 }
 
 function Root({
@@ -90,9 +91,10 @@ function Root({
   onOpenChange,
   children,
   shouldScaleBackground,
+  onDrag: onDragProp,
+  onRelease: onReleaseProp,
   closeTreshold = CLOSE_TRESHOLD,
   dismissible = true,
-  onAnimationEnd,
 }: DialogProps) {
   const [isOpen = false, setIsOpen] = useControllableState({
     prop: openProp,
@@ -104,6 +106,7 @@ function Root({
   const dragStartTime = React.useRef<Date | null>(null);
   const dragEndTime = React.useRef<Date | null>(null);
   const lastTimeDragPrevented = React.useRef<Date | null>(null);
+  const nestedOpenChangeTimer = React.useRef<NodeJS.Timeout>(null);
   const pointerStartY = React.useRef(0);
   const keyboardIsOpen = React.useRef(false);
   const drawerRef = React.useRef<HTMLDivElement>(null);
@@ -119,6 +122,13 @@ function Root({
 
   function onPress(event: React.PointerEvent<HTMLDivElement>) {
     if (!dismissible) return;
+    if (
+      !drawerRef.current.contains(event.target as Node) ||
+      isInput(event.target as HTMLElement) ||
+      (event.target as HTMLElement).tagName === 'BUTTON'
+    )
+      return;
+
     setIsDragging(true);
     dragStartTime.current = new Date();
 
@@ -172,7 +182,7 @@ function Root({
     return true;
   }
 
-  function onMove(event: React.PointerEvent<HTMLDivElement>) {
+  function onDrag(event: React.PointerEvent<HTMLDivElement>) {
     // We need to know how much of the drawer has been dragged in percentages so that we can transform background accordingly
     if (isDragging) {
       const draggedDistance = pointerStartY.current - event.clientY;
@@ -200,7 +210,7 @@ function Root({
 
       const percentageDragged = absDraggedDistance / drawerHeight;
       const opacityValue = 1 - percentageDragged;
-
+      onDragProp?.(event, percentageDragged);
       set(
         overlayRef.current,
         {
@@ -211,7 +221,6 @@ function Root({
 
       if (wrapper && overlayRef.current && shouldScaleBackground) {
         // Calculate percentageDragged as a fraction (0 to 1)
-
         const scaleValue = Math.min(getScale() + percentageDragged * (1 - getScale()), 1);
         const borderRadiusValue = 8 - percentageDragged * 8;
 
@@ -324,6 +333,8 @@ function Root({
   }
 
   function onRelease(event: React.PointerEvent<HTMLDivElement>) {
+    if (isInput(event.target as HTMLElement) || (event.target as HTMLElement).tagName === 'BUTTON' || !isDragging)
+      return;
     setIsDragging(false);
     dragEndTime.current = new Date();
     const swipeAmount = drawerRef.current
@@ -343,19 +354,23 @@ function Root({
     // Moved upwards, don't do anything
     if (distMoved > 0) {
       resetDrawer();
+      onReleaseProp?.(event, false);
       return;
     }
 
     if (velocity > 0.4) {
       closeDrawer();
+      onReleaseProp?.(event, false);
       return;
     }
 
     if (y > window.innerHeight * closeTreshold) {
       closeDrawer();
+      onReleaseProp?.(event, false);
       return;
     }
 
+    onReleaseProp?.(event, true);
     resetDrawer();
   }
 
@@ -394,6 +409,50 @@ function Root({
     }
   }
 
+  function onNestedOpenChange(o: boolean) {
+    const scale = o ? (window.innerWidth - 16) / window.innerWidth : 1;
+    const y = o ? -16 : 0;
+    window.clearTimeout(nestedOpenChangeTimer.current);
+	
+    set(drawerRef.current, {
+      transition: `transform ${TRANSITIONS.DURATION}s cubic-bezier(${TRANSITIONS.EASE.join(',')})`,
+      transform: `scale(${scale}) translateY(${y}px)`,
+    });
+
+    if (!o) {
+      nestedOpenChangeTimer.current = setTimeout(() => {
+        set(drawerRef.current, {
+          transition: 'none',
+          transform: 'translateY(var(--swipe-amount))',
+        });
+      }, 500);
+    }
+  }
+
+  function onNestedDrag(event: React.PointerEvent<HTMLDivElement>, percentageDragged: number) {
+    if (percentageDragged < 0) return;
+    const initialScale = (window.innerWidth - 16) / window.innerWidth;
+    const newScale = initialScale + percentageDragged * (1 - initialScale);
+    const newY = -16 + percentageDragged * 16;
+
+    set(drawerRef.current, {
+      transform: `scale(${newScale}) translateY(${newY}px)`,
+      transition: 'none',
+    });
+  }
+
+  function onNestedRelease(event: React.PointerEvent<HTMLDivElement>, o: boolean) {
+    const scale = o ? (window.innerWidth - 16) / window.innerWidth : 1;
+    const y = o ? -16 : 0;
+
+    if (o) {
+      set(drawerRef.current, {
+        transition: `transform ${TRANSITIONS.DURATION}s cubic-bezier(${TRANSITIONS.EASE.join(',')})`,
+        transform: `scale(${scale}) translateY(${y}px)`,
+      });
+    }
+  }
+
   return (
     <DialogPrimitive.Root
       open={isOpen}
@@ -408,9 +467,12 @@ function Root({
           onAnimationStart,
           onPress,
           onRelease,
-          onMove,
+          onDrag,
           dismissible,
           isOpen,
+          onNestedDrag,
+          onNestedOpenChange,
+          onNestedRelease,
           keyboardIsOpen,
         }}
       >
@@ -437,7 +499,7 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
   { children, onOpenAutoFocus, onPointerDownOutside, onAnimationEnd, ...rest },
   ref,
 ) {
-  const { drawerRef, onPress, onRelease, onAnimationStart, onMove, dismissible, isOpen, keyboardIsOpen } =
+  const { drawerRef, onPress, onRelease, onAnimationStart, onDrag, dismissible, isOpen, keyboardIsOpen } =
     useDrawerContext();
   const composedRef = useComposedRefs(ref, drawerRef);
   const animationEndTimer = React.useRef<NodeJS.Timeout>(null);
@@ -453,7 +515,7 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
       }}
       onPointerDown={onPress}
       onPointerUp={onRelease}
-      onPointerMove={onMove}
+      onPointerMove={onDrag}
       onOpenAutoFocus={(e) => {
         if (onOpenAutoFocus) {
           onOpenAutoFocus(e);
@@ -471,7 +533,6 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
         if (!dismissible) {
           e.preventDefault();
         }
-
         onPointerDownOutside?.(e);
       }}
       ref={composedRef}
@@ -482,10 +543,36 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
     </DialogPrimitive.Content>
   );
 });
+
+function NestedRoot({ children, onDrag, onOpenChange }: DialogProps) {
+  const { onNestedDrag, onNestedOpenChange, onNestedRelease } = useDrawerContext();
+
+  if (!onNestedDrag) {
+    throw new Error('Drawer.NestedRoot must be placed in another drawer');
+  }
+
+  return (
+    <Root
+      onDrag={(e, p) => {
+        onNestedDrag(e, p);
+        onDrag?.(e, p);
+      }}
+      onOpenChange={(o) => {
+        onNestedOpenChange(o);
+        onOpenChange?.(o);
+      }}
+      onRelease={onNestedRelease}
+    >
+      {children}
+    </Root>
+  );
+}
+
 export const Drawer = Object.assign(
   {},
   {
     Root,
+    NestedRoot,
     Content,
     Overlay,
     Trigger: DialogPrimitive.Trigger,
