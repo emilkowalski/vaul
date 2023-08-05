@@ -41,7 +41,7 @@
     transform: translateY(var(--hide-from, 0));
   }
   to {
-    transform: translateY(100%);
+    transform: translateY(var(--hide-to, 100%));
   }
 }
 
