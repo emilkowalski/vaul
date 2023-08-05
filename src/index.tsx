@@ -428,6 +428,7 @@ function Root({
   }
 
   function onNestedDrag(event: React.PointerEvent<HTMLDivElement>, percentageDragged: number) {
+    if (percentageDragged < 0) return;
     const initialScale = (window.innerWidth - 16) / window.innerWidth;
     const newScale = initialScale + percentageDragged * (1 - initialScale);
     const newY = -16 + percentageDragged * 16;
@@ -442,7 +443,7 @@ function Root({
     const scale = o ? (window.innerWidth - 16) / window.innerWidth : 1;
     const y = o ? -16 : 0;
 
-    if (open) {
+    if (o) {
       set(drawerRef.current, {
         transition: `transform ${TRANSITIONS.DURATION}s cubic-bezier(${TRANSITIONS.EASE.join(',')})`,
         transform: `scale(${scale}) translateY(${y}px)`,
