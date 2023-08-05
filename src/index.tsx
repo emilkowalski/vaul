@@ -106,7 +106,6 @@ function Root({
   const lastTimeDragPrevented = React.useRef<Date | null>(null);
   const pointerStartY = React.useRef(0);
   const keyboardIsOpen = React.useRef(false);
-  const animationEndTimer = React.useRef<NodeJS.Timeout>(null);
   const drawerRef = React.useRef<HTMLDivElement>(null);
   const initialViewportHeight = React.useRef(0);
 
@@ -412,6 +411,7 @@ function Root({
           onMove,
           dismissible,
           isOpen,
+          keyboardIsOpen,
         }}
       >
         {children}
@@ -437,7 +437,8 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
   { children, onOpenAutoFocus, onPointerDownOutside, onAnimationEnd, ...rest },
   ref,
 ) {
-  const { drawerRef, onPress, onRelease, onAnimationStart, onMove, dismissible, isOpen } = useDrawerContext();
+  const { drawerRef, onPress, onRelease, onAnimationStart, onMove, dismissible, isOpen, keyboardIsOpen } =
+    useDrawerContext();
   const composedRef = useComposedRefs(ref, drawerRef);
   const animationEndTimer = React.useRef<NodeJS.Timeout>(null);
 
@@ -461,6 +462,12 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
         }
       }}
       onPointerDownOutside={(e) => {
+        if (keyboardIsOpen.current) {
+          keyboardIsOpen.current = false;
+          set(drawerRef.current, {
+            '--hide-to': `200%`,
+          });
+        }
         if (!dismissible) {
           e.preventDefault();
         }

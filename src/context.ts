@@ -9,17 +9,9 @@ interface DrawerContextValue {
   onMove: (event: React.PointerEvent<HTMLDivElement>) => void;
   dismissible: boolean;
   isOpen: boolean;
+  keyboardIsOpen: React.MutableRefObject<boolean>;
 }
 
-export const DrawerContext = React.createContext<DrawerContextValue>({
-  drawerRef: React.createRef(),
-  overlayRef: React.createRef(),
-  onAnimationStart: () => {},
-  onPress: () => {},
-  onRelease: () => {},
-  onMove: () => {},
-  dismissible: true,
-  isOpen: false,
-});
+export const DrawerContext = React.createContext<DrawerContextValue | undefined>(undefined);
 
 export const useDrawerContext = () => React.useContext(DrawerContext);

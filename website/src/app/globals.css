@@ -2,11 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-html,
-body {
-  overflow: hidden;
-}
-
 body,
 main {
   min-height: 100vh;
