@@ -82,6 +82,7 @@ interface DialogProps {
   shouldScaleBackground?: boolean;
   dismissible?: boolean;
   onDrag?(event: React.PointerEvent<HTMLDivElement>, percentageDragged: number): void;
+  onRelease?(event: React.PointerEvent<HTMLDivElement>, open: boolean): void;
 }
 
 function Root({
@@ -91,6 +92,7 @@ function Root({
   children,
   shouldScaleBackground,
   onDrag: onDragProp,
+  onRelease: onReleaseProp,
   closeTreshold = CLOSE_TRESHOLD,
   dismissible = true,
 }: DialogProps) {
@@ -351,19 +353,23 @@ function Root({
     // Moved upwards, don't do anything
     if (distMoved > 0) {
       resetDrawer();
+      onReleaseProp?.(event, false);
       return;
     }
 
     if (velocity > 0.4) {
       closeDrawer();
+      onReleaseProp?.(event, false);
       return;
     }
 
     if (y > window.innerHeight * closeTreshold) {
       closeDrawer();
+      onReleaseProp?.(event, false);
       return;
     }
 
+    onReleaseProp?.(event, true);
     resetDrawer();
   }
 
@@ -411,12 +417,14 @@ function Root({
       transform: `scale(${scale}) translateY(${y}px)`,
     });
 
-    // TODO: clearTimeout
-    setTimeout(() => {
-      set(drawerRef.current, {
-        transition: 'none',
-      });
-    }, 500);
+    if (!o) {
+      setTimeout(() => {
+        set(drawerRef.current, {
+          transition: 'none',
+          transform: 'translateY(var(--swipe-amount))',
+        });
+      }, 500);
+    }
   }
 
   function onNestedDrag(event: React.PointerEvent<HTMLDivElement>, percentageDragged: number) {
@@ -426,7 +434,20 @@ function Root({
 
     set(drawerRef.current, {
       transform: `scale(${newScale}) translateY(${newY}px)`,
+      transition: 'none',
     });
+  }
+
+  function onNestedRelease(event: React.PointerEvent<HTMLDivElement>, o: boolean) {
+    const scale = o ? (window.innerWidth - 16) / window.innerWidth : 1;
+    const y = o ? -16 : 0;
+
+    if (open) {
+      set(drawerRef.current, {
+        transition: `transform ${TRANSITIONS.DURATION}s cubic-bezier(${TRANSITIONS.EASE.join(',')})`,
+        transform: `scale(${scale}) translateY(${y}px)`,
+      });
+    }
   }
 
   return (
@@ -448,6 +469,7 @@ function Root({
           isOpen,
           onNestedDrag,
           onNestedOpenChange,
+          onNestedRelease,
           keyboardIsOpen,
         }}
       >
@@ -520,7 +542,7 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
 });
 
 function NestedRoot({ children, onDrag, onOpenChange }: DialogProps) {
-  const { onNestedDrag, onNestedOpenChange } = useDrawerContext();
+  const { onNestedDrag, onNestedOpenChange, onNestedRelease } = useDrawerContext();
 
   if (!onNestedDrag) {
     throw new Error('NestedRoot must be placed in another drawer');
@@ -536,6 +558,7 @@ function NestedRoot({ children, onDrag, onOpenChange }: DialogProps) {
         onNestedOpenChange(o);
         onOpenChange?.(o);
       }}
+      onRelease={onNestedRelease}
     >
       {children}
     </Root>
