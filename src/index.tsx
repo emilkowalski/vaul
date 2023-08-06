@@ -570,7 +570,7 @@ function NestedRoot({ children, onDrag, onOpenChange }: DialogProps) {
   );
 }
 
-export const Drawer: any = Object.assign(
+export const Drawer = Object.assign(
   {},
   {
     Root,
