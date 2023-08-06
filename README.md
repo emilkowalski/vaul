@@ -51,6 +51,8 @@ Additional props:
 
 `closeTreshold`: Number between 0 and 1 that determines when the drawer should be closed. Example: `closeTreshold`` of 0.5 would close the drawer if the user swiped for 50% of the height of the drawer or more.
 
+`scrollLockTimeout`: Duration for which the drawer is not draggable after scrolling content inside of the drawer. Defaults to 1000ms
+
 ### Trigger
 
 The button that opens the dialog. [Props](https://www.radix-ui.com/docs/primitives/components/dialog#trigger).
