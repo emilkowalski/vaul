@@ -196,6 +196,10 @@ function Root({
         transition: 'none',
       });
 
+      set(overlayRef.current, {
+        transition: 'none',
+      });
+
       // Allow dragging upwards up to 40px
       if (draggedDistance > 0) {
         set(drawerRef.current, {
@@ -314,6 +318,11 @@ function Root({
       transition: `transform 500ms cubic-bezier(0.32, 0.72, 0, 1)`,
     });
 
+    set(overlayRef.current, {
+      transition: `opacity ${TRANSITIONS.DURATION}s cubic-bezier(${TRANSITIONS.EASE.join(',')})`,
+      opacity: '1',
+    });
+
     // Don't reset background if swiped upwards
     if (shouldScaleBackground && currentSwipeAmount > 0 && isOpen) {
       set(
@@ -413,7 +422,7 @@ function Root({
     const scale = o ? (window.innerWidth - 16) / window.innerWidth : 1;
     const y = o ? -16 : 0;
     window.clearTimeout(nestedOpenChangeTimer.current);
-	
+
     set(drawerRef.current, {
       transition: `transform ${TRANSITIONS.DURATION}s cubic-bezier(${TRANSITIONS.EASE.join(',')})`,
       transform: `scale(${scale}) translateY(${y}px)`,
