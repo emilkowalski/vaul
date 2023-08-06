@@ -9,6 +9,7 @@ import { usePreventScroll, isInput } from './use-prevent-scroll';
 import { useComposedRefs } from './use-composed-refs';
 
 const CLOSE_TRESHOLD = 0.75;
+const SCROLL_LOCK_TIMEOUT = 1000;
 
 const TRANSITIONS = {
   DURATION: 0.5,
@@ -80,6 +81,7 @@ interface DialogProps {
   closeTreshold?: number;
   onOpenChange?(open: boolean): void;
   shouldScaleBackground?: boolean;
+  scrollLockTimeout?: number;
   dismissible?: boolean;
   onDrag?(event: React.PointerEvent<HTMLDivElement>, percentageDragged: number): void;
   onRelease?(event: React.PointerEvent<HTMLDivElement>, open: boolean): void;
@@ -94,6 +96,7 @@ function Root({
   onDrag: onDragProp,
   onRelease: onReleaseProp,
   closeTreshold = CLOSE_TRESHOLD,
+  scrollLockTimeout = SCROLL_LOCK_TIMEOUT,
   dismissible = true,
 }: DialogProps) {
   const [isOpen = false, setIsOpen] = useControllableState({
@@ -105,7 +108,7 @@ function Root({
   const overlayRef = React.useRef<HTMLDivElement>(null);
   const dragStartTime = React.useRef<Date | null>(null);
   const dragEndTime = React.useRef<Date | null>(null);
-  const lastTimeDragPrevented = React.useRef<Date | null>(null);
+  const lastTimeScrolled = React.useRef<Date | null>(null);
   const nestedOpenChangeTimer = React.useRef<NodeJS.Timeout>(null);
   const pointerStartY = React.useRef(0);
   const keyboardIsOpen = React.useRef(false);
@@ -149,8 +152,7 @@ function Root({
     }
 
     // Disallow dragging if drawer was scrolled within last second
-    if (lastTimeDragPrevented.current && date.getTime() - lastTimeDragPrevented.current.getTime() < 1000) {
-      lastTimeDragPrevented.current = new Date();
+    if (lastTimeScrolled.current && date.getTime() - lastTimeScrolled.current.getTime() < scrollLockTimeout) {
       return false;
     }
 
@@ -161,14 +163,14 @@ function Root({
         if (element.role === 'dialog' || element.getAttribute('vaul-drawer')) return true;
 
         if (element.scrollTop > 0) {
-          lastTimeDragPrevented.current = new Date();
+          lastTimeScrolled.current = new Date();
 
           // The element is scrollable and not scrolled to the top, so don't drag
           return false;
         }
 
         if (isDraggingDown && element !== document.body) {
-          lastTimeDragPrevented.current = new Date();
+          lastTimeScrolled.current = new Date();
           // Element is scrolled to the top, but we are dragging down so we should allow scrolling
           return false;
         }
@@ -413,7 +415,7 @@ function Root({
     const scale = o ? (window.innerWidth - 16) / window.innerWidth : 1;
     const y = o ? -16 : 0;
     window.clearTimeout(nestedOpenChangeTimer.current);
-	
+
     set(drawerRef.current, {
       transition: `transform ${TRANSITIONS.DURATION}s cubic-bezier(${TRANSITIONS.EASE.join(',')})`,
       transform: `scale(${scale}) translateY(${y}px)`,
