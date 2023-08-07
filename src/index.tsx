@@ -8,7 +8,6 @@ import './style.css';
 import { usePreventScroll, isInput } from './use-prevent-scroll';
 import { useComposedRefs } from './use-composed-refs';
 
-
 const CLOSE_THRESHOLD = 0.25;
 
 const SCROLL_LOCK_TIMEOUT = 1000;
@@ -127,12 +126,7 @@ function Root({
 
   function onPress(event: React.PointerEvent<HTMLDivElement>) {
     if (!dismissible) return;
-    if (
-      !drawerRef.current.contains(event.target as Node) ||
-      isInput(event.target as HTMLElement) ||
-      (event.target as HTMLElement).tagName === 'BUTTON'
-    )
-      return;
+    if (!drawerRef.current.contains(event.target as Node) || (event.target as HTMLElement).tagName === 'BUTTON') return;
 
     setIsDragging(true);
     dragStartTime.current = new Date();
@@ -346,8 +340,7 @@ function Root({
   }
 
   function onRelease(event: React.PointerEvent<HTMLDivElement>) {
-    if (isInput(event.target as HTMLElement) || (event.target as HTMLElement).tagName === 'BUTTON' || !isDragging)
-      return;
+    if ((event.target as HTMLElement).tagName === 'BUTTON' || !isDragging) return;
     setIsDragging(false);
     dragEndTime.current = new Date();
     const swipeAmount = drawerRef.current
@@ -377,9 +370,8 @@ function Root({
       return;
     }
 
-
     const visibleDrawerHeight = Math.min(drawerRef.current?.getBoundingClientRect().height || 0, window.innerHeight);
-    
+
     if (swipeAmount >= visibleDrawerHeight * closeThreshold) {
       closeDrawer();
       onReleaseProp?.(event, false);
