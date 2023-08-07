@@ -8,7 +8,7 @@ import './style.css';
 import { usePreventScroll, isInput } from './use-prevent-scroll';
 import { useComposedRefs } from './use-composed-refs';
 
-const CLOSE_TRESHOLD = 0.75;
+const CLOSE_THRESHOLD = 0.75;
 const SCROLL_LOCK_TIMEOUT = 1000;
 
 const TRANSITIONS = {
@@ -78,7 +78,7 @@ interface DialogProps {
   children?: React.ReactNode;
   open?: boolean;
   defaultOpen?: boolean;
-  closeTreshold?: number;
+  closeThreshold?: number;
   onOpenChange?(open: boolean): void;
   shouldScaleBackground?: boolean;
   scrollLockTimeout?: number;
@@ -95,7 +95,7 @@ function Root({
   shouldScaleBackground,
   onDrag: onDragProp,
   onRelease: onReleaseProp,
-  closeTreshold = CLOSE_TRESHOLD,
+  closeThreshold = CLOSE_THRESHOLD,
   scrollLockTimeout = SCROLL_LOCK_TIMEOUT,
   dismissible = true,
 }: DialogProps) {
@@ -375,7 +375,7 @@ function Root({
       return;
     }
 
-    if (y > window.innerHeight * closeTreshold) {
+    if (y > window.innerHeight * closeThreshold) {
       closeDrawer();
       onReleaseProp?.(event, false);
       return;
