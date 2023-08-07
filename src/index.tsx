@@ -349,16 +349,15 @@ function Root({
     setIsDragging(false);
     dragEndTime.current = new Date();
     const swipeAmount = drawerRef.current
-      ? getComputedStyle(drawerRef.current).getPropertyValue('--swipe-amount').slice(0, -2)
+      ? Number.parseInt(getComputedStyle(drawerRef.current).getPropertyValue('--swipe-amount').slice(0, -2), 10)
       : null;
 
-    if (!shouldDrag(event.target, false) || !swipeAmount) return;
+    if (!shouldDrag(event.target, false) || !swipeAmount || Number.isNaN(swipeAmount)) return;
 
     if (dragStartTime.current === null) return;
 
     const y = event.clientY;
 
-    const swipeAmountInt = Number.parseInt(swipeAmount, 10);
     const timeTaken = dragEndTime.current.getTime() - dragStartTime.current.getTime();
     const distMoved = pointerStartY.current - y;
     const velocity = Math.abs(distMoved) / timeTaken;
@@ -378,7 +377,7 @@ function Root({
 
     const visibleDrawerHeight = Math.min(drawerRef.current?.getBoundingClientRect().height || 0, window.innerHeight);
 
-    if (swipeAmountInt >= visibleDrawerHeight * closeTreshold) {
+    if (swipeAmount >= visibleDrawerHeight * closeTreshold) {
       closeDrawer();
       onReleaseProp?.(event, false);
       return;
