@@ -8,7 +8,7 @@ import './style.css';
 import { usePreventScroll, isInput } from './use-prevent-scroll';
 import { useComposedRefs } from './use-composed-refs';
 
-const CLOSE_TRESHOLD = 0.75;
+const CLOSE_TRESHOLD = 0.25;
 const SCROLL_LOCK_TIMEOUT = 1000;
 
 const TRANSITIONS = {
@@ -358,6 +358,7 @@ function Root({
 
     const y = event.clientY;
 
+    const swipeAmountInt = Number.parseInt(swipeAmount, 10);
     const timeTaken = dragEndTime.current.getTime() - dragStartTime.current.getTime();
     const distMoved = pointerStartY.current - y;
     const velocity = Math.abs(distMoved) / timeTaken;
@@ -375,7 +376,9 @@ function Root({
       return;
     }
 
-    if (y > window.innerHeight * closeTreshold) {
+    const visibleDrawerHeight = Math.min(drawerRef.current?.getBoundingClientRect().height || 0, window.innerHeight);
+
+    if (swipeAmountInt >= visibleDrawerHeight * closeTreshold) {
       closeDrawer();
       onReleaseProp?.(event, false);
       return;
