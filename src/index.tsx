@@ -8,7 +8,9 @@ import './style.css';
 import { usePreventScroll, isInput } from './use-prevent-scroll';
 import { useComposedRefs } from './use-composed-refs';
 
-const CLOSE_THRESHOLD = 0.75;
+
+const CLOSE_THRESHOLD = 0.25;
+
 const SCROLL_LOCK_TIMEOUT = 1000;
 
 const TRANSITIONS = {
@@ -349,10 +351,10 @@ function Root({
     setIsDragging(false);
     dragEndTime.current = new Date();
     const swipeAmount = drawerRef.current
-      ? getComputedStyle(drawerRef.current).getPropertyValue('--swipe-amount').slice(0, -2)
+      ? Number.parseInt(getComputedStyle(drawerRef.current).getPropertyValue('--swipe-amount').slice(0, -2), 10)
       : null;
 
-    if (!shouldDrag(event.target, false) || !swipeAmount) return;
+    if (!shouldDrag(event.target, false) || !swipeAmount || Number.isNaN(swipeAmount)) return;
 
     if (dragStartTime.current === null) return;
 
@@ -375,7 +377,10 @@ function Root({
       return;
     }
 
-    if (y > window.innerHeight * closeThreshold) {
+
+    const visibleDrawerHeight = Math.min(drawerRef.current?.getBoundingClientRect().height || 0, window.innerHeight);
+    
+    if (swipeAmount >= visibleDrawerHeight * closeThreshold) {
       closeDrawer();
       onReleaseProp?.(event, false);
       return;
