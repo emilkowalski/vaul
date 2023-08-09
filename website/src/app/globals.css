@@ -4,15 +4,15 @@
 
 html,
 body {
-  /* overflow: hidden; */
+  overflow: hidden;
 }
 
 body,
 main {
-  min-height: 200vh;
+  min-height: 100vh;
   /* mobile viewport bug fix */
-  /* min-height: -webkit-fill-available;
-  overflow-x: hidden; */
+  min-height: -webkit-fill-available;
+  overflow-x: hidden;
 }
 
 html {
