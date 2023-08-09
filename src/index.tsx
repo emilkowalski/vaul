@@ -17,7 +17,7 @@ const TRANSITIONS = {
   EASE: [0.32, 0.72, 0, 1],
 };
 
-const ANIMATION_DURATION = 500;
+const ANIMATION_DURATION = 501;
 
 const BORDER_RADIUS = 8;
 
@@ -106,6 +106,7 @@ function Root({
     onChange: onOpenChange,
   });
   const [isDragging, setIsDragging] = React.useState(false);
+  const [isAnimating, setIsAnimating] = React.useState(true);
   const overlayRef = React.useRef<HTMLDivElement>(null);
   const dragStartTime = React.useRef<Date | null>(null);
   const dragEndTime = React.useRef<Date | null>(null);
@@ -117,7 +118,7 @@ function Root({
   const initialViewportHeight = React.useRef(0);
 
   usePreventScroll({
-    isDisabled: !isOpen || isDragging,
+    isDisabled: !isOpen || isDragging || isAnimating,
   });
 
   function getScale() {
@@ -482,6 +483,7 @@ function Root({
           onNestedOpenChange,
           onNestedRelease,
           keyboardIsOpen,
+          setIsAnimating,
         }}
       >
         {children}
@@ -507,8 +509,17 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
   { children, onOpenAutoFocus, onPointerDownOutside, onAnimationEnd, ...rest },
   ref,
 ) {
-  const { drawerRef, onPress, onRelease, onAnimationStart, onDrag, dismissible, isOpen, keyboardIsOpen } =
-    useDrawerContext();
+  const {
+    drawerRef,
+    onPress,
+    onRelease,
+    onAnimationStart,
+    onDrag,
+    dismissible,
+    isOpen,
+    keyboardIsOpen,
+    setIsAnimating,
+  } = useDrawerContext();
   const composedRef = useComposedRefs(ref, drawerRef);
   const animationEndTimer = React.useRef<NodeJS.Timeout>(null);
 
@@ -516,7 +527,10 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
     <DialogPrimitive.Content
       onAnimationStart={(e) => {
         window.clearTimeout(animationEndTimer.current);
+        setIsAnimating(true);
+
         animationEndTimer.current = setTimeout(() => {
+          setIsAnimating(false);
           onAnimationEnd?.(isOpen);
         }, ANIMATION_DURATION);
         onAnimationStart(e);
