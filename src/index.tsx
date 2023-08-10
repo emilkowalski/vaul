@@ -503,7 +503,7 @@ function Root({
   }
 
   function restorePositionSetting() {
-    if (previousBodyPosition !== undefined) {
+    if (previousBodyPosition.current !== undefined) {
       // Convert the position from "px" to Int
       const y = -parseInt(document.body.style.top, 10);
       const x = -parseInt(document.body.style.left, 10);
