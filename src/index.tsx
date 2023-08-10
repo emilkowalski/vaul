@@ -254,19 +254,21 @@ function Root({
       const focusedElement = document.activeElement as HTMLElement;
 
       if ((!isInView(focusedElement) && isInput(focusedElement)) || keyboardIsOpen.current) {
-        const visualViewportHeight = window.visualViewport.height;
-        const diffFromInitial = initialViewportHeight.current - visualViewportHeight;
-        const drawerHeight = drawerRef.current?.getBoundingClientRect().height || 0;
-        const offsetFromTop = drawerRef.current?.getBoundingClientRect().top;
-        keyboardIsOpen.current = !keyboardIsOpen.current;
-        // We don't have to change the height if the input is in view, when we are here we are in the opened keyboard state so we can accuretly check if the input is in view
-        if (drawerHeight > visualViewportHeight) {
-          drawerRef.current.style.height = `${visualViewportHeight - offsetFromTop}px`;
-        } else {
-          drawerRef.current.style.height = 'initial';
-        }
+        window.requestAnimationFrame(() => {
+          const visualViewportHeight = window.visualViewport.height;
+          const diffFromInitial = initialViewportHeight.current - visualViewportHeight;
+          const drawerHeight = drawerRef.current.getBoundingClientRect().height || 0;
+          const offsetFromTop = drawerRef.current.getBoundingClientRect().top;
+          keyboardIsOpen.current = !keyboardIsOpen.current;
+          // We don't have to change the height if the input is in view, when we are here we are in the opened keyboard state so we can accuretly check if the input is in view
+          if (drawerHeight > visualViewportHeight) {
+            drawerRef.current.style.height = `${visualViewportHeight - offsetFromTop}px`;
+          } else {
+            drawerRef.current.style.height = 'initial';
+          }
 
-        drawerRef.current.style.bottom = `${diffFromInitial}px`;
+          drawerRef.current.style.bottom = `${Math.max(diffFromInitial, 0)}px`;
+        });
       }
     }
 
