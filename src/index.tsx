@@ -174,10 +174,10 @@ function Root({
           return false;
         }
 
-        if (isDraggingDown && element !== document.body) {
+        if (isDraggingDown && element !== document.body && (!swipeAmount || swipeAmount === 0)) {
           lastTimeScrolled.current = new Date();
           // Element is scrolled to the top, but we are dragging down so we should allow scrolling
-          return true;
+          return false;
         }
       }
 
