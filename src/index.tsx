@@ -116,7 +116,7 @@ function Root({
   const keyboardIsOpen = React.useRef(false);
   const drawerRef = React.useRef<HTMLDivElement>(null);
   const initialViewportHeight = React.useRef(0);
-  const vaulScaledBgWrapper = document.querySelector('[vaul-drawer-wrapper]');
+  const vaulScaledBgWrapper = typeof window !== 'undefined' ? document.querySelector('[vaul-drawer-wrapper]') : null;
   usePreventScroll({
     isDisabled: !isOpen || isDragging || isAnimating,
   });
@@ -472,7 +472,7 @@ function Root({
 
       // Update the dom inside an animation frame
       const { scrollY, scrollX, innerHeight } = window;
-      document.body.style.position = 'fixed';
+      document.body.style.setProperty('position', 'fixed', 'important');
       document.body.style.top = `${-scrollY}px`;
       document.body.style.left = `${-scrollX}px`;
 
