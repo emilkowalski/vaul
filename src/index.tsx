@@ -7,7 +7,6 @@ import React, { useEffect } from 'react';
 import './style.css';
 import { usePreventScroll, isInput } from './use-prevent-scroll';
 import { useComposedRefs } from './use-composed-refs';
-import { throttle } from './use-throttle';
 
 const CLOSE_THRESHOLD = 0.25;
 
@@ -189,7 +188,10 @@ function Root({
     if (isDragging) {
       const draggedDistance = Math.trunc(pointerStartY.current - event.clientY);
       const isDraggingDown = draggedDistance > 0;
+      console.log(isDraggingDown);
+
       if (!shouldDrag(event.target, isDraggingDown)) return;
+      console.log(draggedDistance);
 
       requestAnimationFrame(() => {
         set(drawerRef.current, {
