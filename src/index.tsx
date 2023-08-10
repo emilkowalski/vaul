@@ -7,6 +7,7 @@ import React, { useEffect } from 'react';
 import './style.css';
 import { usePreventScroll, isInput } from './use-prevent-scroll';
 import { useComposedRefs } from './use-composed-refs';
+import { throttle } from './use-throttle';
 
 const CLOSE_THRESHOLD = 0.25;
 
@@ -181,15 +182,15 @@ function Root({
     return true;
   }
 
+  const drawerHeight = drawerRef.current?.getBoundingClientRect().height || 0;
+
   function onDrag(event: React.PointerEvent<HTMLDivElement>) {
     // We need to know how much of the drawer has been dragged in percentages so that we can transform background accordingly
     if (isDragging) {
-      const draggedDistance = pointerStartY.current - event.clientY;
+      const draggedDistance = Math.trunc(pointerStartY.current - event.clientY);
       const isDraggingDown = draggedDistance > 0;
-
       if (!shouldDrag(event.target, isDraggingDown)) return;
 
-      const drawerHeight = drawerRef.current?.getBoundingClientRect().height || 0;
       requestAnimationFrame(() => {
         set(drawerRef.current, {
           transition: 'none',
@@ -204,15 +205,16 @@ function Root({
           set(drawerRef.current, {
             '--swipe-amount': `${Math.max(draggedDistance * -1, -40)}px`,
           });
+
           return;
         }
 
         // We need to capture last time when drag with scroll was triggered and have a timeout between
         const absDraggedDistance = Math.abs(draggedDistance);
-
         const percentageDragged = absDraggedDistance / drawerHeight;
         const opacityValue = 1 - percentageDragged;
         onDragProp?.(event, percentageDragged);
+
         set(
           overlayRef.current,
           {
@@ -475,6 +477,7 @@ function Root({
       document.body.style.setProperty('position', 'fixed', 'important');
       document.body.style.top = `${-scrollY}px`;
       document.body.style.left = `${-scrollX}px`;
+      document.body.style.right = '0px';
 
       setTimeout(
         () =>
@@ -501,6 +504,7 @@ function Root({
       document.body.style.position = previousBodyPosition.position;
       document.body.style.top = previousBodyPosition.top;
       document.body.style.left = previousBodyPosition.left;
+      document.body.style.right = 'unset';
 
       // Restore scroll
       requestAnimationFrame(() => {

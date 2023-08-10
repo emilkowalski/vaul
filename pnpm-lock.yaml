@@ -19,6 +19,7 @@ importers:
 
   website:
     specifiers:
+      '@heroicons/react': ^2.0.18
       '@types/node': 20.4.2
       '@types/react': 18.2.15
       '@types/react-dom': 18.2.7
@@ -36,6 +37,7 @@ importers:
       typescript: 5.1.6
       vaul: workspace:*
     dependencies:
+      '@heroicons/react': 2.0.18_react@18.2.0
       '@types/node': 20.4.2
       '@types/react': 18.2.15
       '@types/react-dom': 18.2.7
@@ -342,6 +344,14 @@ packages:
   /@eslint/js/8.44.0:
     resolution: {integrity: sha512-Ag+9YM4ocKQx9AarydN0KY2j0ErMHNIocPDrVo8zAE44xLTjEtz81OdR68/cydGtk6m6jDb5Za3r2useMzYmSw==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
+    dev: false
+
+  /@heroicons/react/2.0.18_react@18.2.0:
+    resolution: {integrity: sha512-7TyMjRrZZMBPa+/5Y8lN0iyvUU/01PeMGX2+RE7cQWpEUIcb4QotzUObFkJDejj/HUH4qjP/eQ0gzzKs2f+6Yw==}
+    peerDependencies:
+      react: '>= 16'
+    dependencies:
+      react: 18.2.0
     dev: false
 
   /@humanwhocodes/config-array/0.11.10:
