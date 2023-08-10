@@ -39,6 +39,16 @@ function isInView(el: HTMLElement): boolean {
   );
 }
 
+function getTranslateY(element: HTMLElement): null {
+  const style = window.getComputedStyle(element);
+  // @ts-ignore
+  const transform = style.transform || style.webkitTransform || style.mozTransform;
+  let mat = transform.match(/^matrix3d\((.+)\)$/);
+  if (mat) return parseFloat(mat[1].split(', ')[13]);
+  mat = transform.match(/^matrix\((.+)\)$/);
+  return mat ? parseFloat(mat[1].split(', ')[5]) : null;
+}
+
 function set(el?: Element | HTMLElement | null, styles?: Style, ignoreCache = false) {
   if (!el || !(el instanceof HTMLElement) || !styles) return;
   let originalStyles: Style = {};
@@ -142,9 +152,8 @@ function Root({
   function shouldDrag(el: EventTarget, isDraggingDown: boolean) {
     let element = el as HTMLElement;
     const date = new Date();
-    const swipeAmount = drawerRef.current
-      ? Number.parseInt(getComputedStyle(drawerRef.current).getPropertyValue('--swipe-amount').slice(0, -2), 10)
-      : null;
+
+    const swipeAmount = drawerRef.current ? getTranslateY(drawerRef.current) : null;
     const highlightedText = window.getSelection().toString();
 
     // Don't drag if there's highlighted text
@@ -212,7 +221,7 @@ function Root({
         // Allow dragging upwards up to 40px
         if (draggedDistance > 0) {
           set(drawerRef.current, {
-            '--swipe-amount': `${Math.max(draggedDistance * -1, -40)}px`,
+            transform: `translateY(${Math.max(draggedDistance * -1, -40)}px)`,
           });
 
           return;
@@ -293,9 +302,10 @@ function Root({
     const drawerHeight = drawerRef.current?.getBoundingClientRect().height || 0;
 
     if (drawerRef.current) {
-      const swipeAmount = getComputedStyle(drawerRef.current).getPropertyValue('--swipe-amount').slice(0, -2);
+      const swipeAmount = getTranslateY(drawerRef.current);
 
       set(drawerRef.current, {
+        transform: 'translateY(0px)',
         '--hide-from': `${Number(swipeAmount).toFixed()}px`,
         '--hide-to': `${drawerHeight.toFixed()}px`,
       });
@@ -320,9 +330,7 @@ function Root({
   }, [isOpen]);
 
   function resetDrawer() {
-    const currentSwipeAmount = Number(
-      getComputedStyle(drawerRef.current).getPropertyValue('--swipe-amount').slice(0, -2),
-    );
+    const currentSwipeAmount = getTranslateY(drawerRef.current);
 
     requestAnimationFrame(() => {
       set(drawerRef.current, {
@@ -336,7 +344,7 @@ function Root({
       });
 
       // Don't reset background if swiped upwards
-      if (shouldScaleBackground && currentSwipeAmount > 0 && isOpen) {
+      if (shouldScaleBackground && currentSwipeAmount && currentSwipeAmount > 0 && isOpen) {
         set(
           vaulScaledBgWrapper,
           {
@@ -358,9 +366,7 @@ function Root({
     if ((event.target as HTMLElement).tagName === 'BUTTON' || !isDragging) return;
     setIsDragging(false);
     dragEndTime.current = new Date();
-    const swipeAmount = drawerRef.current
-      ? Number.parseInt(getComputedStyle(drawerRef.current).getPropertyValue('--swipe-amount').slice(0, -2), 10)
-      : null;
+    const swipeAmount = getTranslateY(drawerRef.current);
 
     if (!shouldDrag(event.target, false) || !swipeAmount || Number.isNaN(swipeAmount)) return;
     if (dragStartTime.current === null) return;
