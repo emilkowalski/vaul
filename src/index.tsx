@@ -5,13 +5,13 @@ import { useControllableState } from './use-controllable-state';
 import { DrawerContext, useDrawerContext } from './context';
 import React, { useEffect } from 'react';
 import './style.css';
-import { usePreventScroll, isInput } from './use-prevent-scroll';
+import { usePreventScroll, isInput, isIOS } from './use-prevent-scroll';
 import { useComposedRefs } from './use-composed-refs';
 
 const CLOSE_THRESHOLD = 0.25;
 
 const SCROLL_LOCK_TIMEOUT = 1000;
-let previousBodyPosition;
+
 const TRANSITIONS = {
   DURATION: 0.5,
   EASE: [0.32, 0.72, 0, 1],
@@ -116,6 +116,7 @@ function Root({
   const keyboardIsOpen = React.useRef(false);
   const drawerRef = React.useRef<HTMLDivElement>(null);
   const initialViewportHeight = React.useRef(0);
+  const previousBodyPosition = React.useRef<Record<string, string>>({});
   const vaulScaledBgWrapper = typeof window !== 'undefined' ? document.querySelector('[vaul-drawer-wrapper]') : null;
   usePreventScroll({
     isDisabled: !isOpen || isDragging || isAnimating,
@@ -149,7 +150,11 @@ function Root({
     }
 
     // Disallow dragging if drawer was scrolled within last second
-    if (lastTimeScrolled.current && date.getTime() - lastTimeScrolled.current.getTime() < scrollLockTimeout) {
+    if (
+      lastTimeScrolled.current &&
+      date.getTime() - lastTimeScrolled.current.getTime() < scrollLockTimeout &&
+      !isDragging
+    ) {
       return false;
     }
 
@@ -187,11 +192,10 @@ function Root({
     // We need to know how much of the drawer has been dragged in percentages so that we can transform background accordingly
     if (isDragging) {
       const draggedDistance = Math.trunc(pointerStartY.current - event.clientY);
+
       const isDraggingDown = draggedDistance > 0;
-      console.log(isDraggingDown);
 
       if (!shouldDrag(event.target, isDraggingDown)) return;
-      console.log(draggedDistance);
 
       requestAnimationFrame(() => {
         set(drawerRef.current, {
@@ -470,7 +474,7 @@ function Root({
   function setPositionFixed() {
     // If previousBodyPosition is already set, don't set it again.
     if (previousBodyPosition === undefined) {
-      previousBodyPosition = {
+      previousBodyPosition.current = {
         position: document.body.style.position,
         top: document.body.style.top,
         left: document.body.style.left,
@@ -505,9 +509,9 @@ function Root({
       const x = -parseInt(document.body.style.left, 10);
 
       // Restore styles
-      document.body.style.position = previousBodyPosition.position;
-      document.body.style.top = previousBodyPosition.top;
-      document.body.style.left = previousBodyPosition.left;
+      document.body.style.position = previousBodyPosition.current.position;
+      document.body.style.top = previousBodyPosition.current.top;
+      document.body.style.left = previousBodyPosition.current.left;
       document.body.style.right = 'unset';
 
       // Restore scroll
@@ -515,12 +519,13 @@ function Root({
         window.scrollTo(x, y);
       });
 
-      previousBodyPosition = undefined;
+      previousBodyPosition.current = undefined;
     }
   }
 
   React.useEffect(() => {
-    if (isOpen) {
+    // This is needed to force Safari toolbar to show **before** the drawer starts animating to prevent a gnarly shift from happenning
+    if (isOpen && isIOS()) {
       setPositionFixed();
     } else {
       restorePositionSetting();
