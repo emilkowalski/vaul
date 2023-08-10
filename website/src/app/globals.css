@@ -4,14 +4,12 @@
 
 html,
 body {
-  overflow: hidden;
+  /* overflow: hidden; */
 }
 
 body,
 main {
-  min-height: 100vh;
-  /* mobile viewport bug fix */
-  min-height: -webkit-fill-available;
+  height: 200vh;
   overflow-x: hidden;
 }
 

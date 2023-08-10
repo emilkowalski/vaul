@@ -11,7 +11,7 @@ import { useComposedRefs } from './use-composed-refs';
 const CLOSE_THRESHOLD = 0.25;
 
 const SCROLL_LOCK_TIMEOUT = 1000;
-
+let previousBodyPosition;
 const TRANSITIONS = {
   DURATION: 0.5,
   EASE: [0.32, 0.72, 0, 1],
@@ -464,10 +464,73 @@ function Root({
     }
   }
 
+  function setPositionFixed() {
+    // If previousBodyPosition is already set, don't set it again.
+    if (previousBodyPosition === undefined) {
+      previousBodyPosition = {
+        position: document.body.style.position,
+        top: document.body.style.top,
+        left: document.body.style.left,
+      };
+
+      // Update the dom inside an animation frame
+      const { scrollY, scrollX, innerHeight } = window;
+      document.body.style.position = 'fixed';
+      document.body.style.top = `${-scrollY}px`;
+      document.body.style.left = `${-scrollX}px`;
+
+      setTimeout(
+        () =>
+          window.requestAnimationFrame(() => {
+            // Attempt to check if the bottom bar appeared due to the position change
+            const bottomBarHeight = innerHeight - window.innerHeight;
+            if (bottomBarHeight && scrollY >= innerHeight) {
+              // Move the content further up so that the bottom bar doesn't hide it
+              document.body.style.top = -(scrollY + bottomBarHeight);
+            }
+          }),
+        300,
+      );
+    }
+  }
+
+  function restorePositionSetting() {
+    if (previousBodyPosition !== undefined) {
+      // Convert the position from "px" to Int
+      const y = -parseInt(document.body.style.top, 10);
+      const x = -parseInt(document.body.style.left, 10);
+
+      // Restore styles
+      document.body.style.position = previousBodyPosition.position;
+      document.body.style.top = previousBodyPosition.top;
+      document.body.style.left = previousBodyPosition.left;
+
+      // Restore scroll
+      window.requestAnimationFrame(() => {
+        window.scrollTo(x, y);
+      });
+
+      previousBodyPosition = undefined;
+    }
+  }
+
+  React.useEffect(() => {
+    if (isOpen) {
+      setPositionFixed();
+    } else {
+      restorePositionSetting();
+    }
+  }, [isOpen]);
+
   return (
     <DialogPrimitive.Root
       open={isOpen}
       onOpenChange={(o) => {
+        if (o) {
+          setPositionFixed();
+        } else {
+          restorePositionSetting();
+        }
         setIsOpen(o);
       }}
     >
