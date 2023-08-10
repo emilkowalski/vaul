@@ -116,7 +116,7 @@ function Root({
   const keyboardIsOpen = React.useRef(false);
   const drawerRef = React.useRef<HTMLDivElement>(null);
   const initialViewportHeight = React.useRef(0);
-
+  const vaulScaledBgWrapper = document.querySelector('[vaul-drawer-wrapper]');
   usePreventScroll({
     isDisabled: !isOpen || isDragging || isAnimating,
   });
@@ -190,56 +190,55 @@ function Root({
       if (!shouldDrag(event.target, isDraggingDown)) return;
 
       const drawerHeight = drawerRef.current?.getBoundingClientRect().height || 0;
-
-      set(drawerRef.current, {
-        transition: 'none',
-      });
-
-      set(overlayRef.current, {
-        transition: 'none',
-      });
-
-      // Allow dragging upwards up to 40px
-      if (draggedDistance > 0) {
+      requestAnimationFrame(() => {
         set(drawerRef.current, {
-          '--swipe-amount': `${Math.max(draggedDistance * -1, -40)}px`,
+          transition: 'none',
         });
-        return;
-      }
 
-      // We need to capture last time when drag with scroll was triggered and have a timeout between
-      const absDraggedDistance = Math.abs(draggedDistance);
-      const wrapper = document.querySelector('[vaul-drawer-wrapper]');
+        set(overlayRef.current, {
+          transition: 'none',
+        });
 
-      const percentageDragged = absDraggedDistance / drawerHeight;
-      const opacityValue = 1 - percentageDragged;
-      onDragProp?.(event, percentageDragged);
-      set(
-        overlayRef.current,
-        {
-          opacity: `${opacityValue}`,
-        },
-        true,
-      );
+        // Allow dragging upwards up to 40px
+        if (draggedDistance > 0) {
+          set(drawerRef.current, {
+            '--swipe-amount': `${Math.max(draggedDistance * -1, -40)}px`,
+          });
+          return;
+        }
 
-      if (wrapper && overlayRef.current && shouldScaleBackground) {
-        // Calculate percentageDragged as a fraction (0 to 1)
-        const scaleValue = Math.min(getScale() + percentageDragged * (1 - getScale()), 1);
-        const borderRadiusValue = 8 - percentageDragged * 8;
+        // We need to capture last time when drag with scroll was triggered and have a timeout between
+        const absDraggedDistance = Math.abs(draggedDistance);
 
-        const translateYValue = Math.max(0, 14 - percentageDragged * 14);
-
+        const percentageDragged = absDraggedDistance / drawerHeight;
+        const opacityValue = 1 - percentageDragged;
+        onDragProp?.(event, percentageDragged);
         set(
-          wrapper,
+          overlayRef.current,
           {
-            borderRadius: `${borderRadiusValue}px`,
-            transform: `scale(${scaleValue}) translateY(${translateYValue}px)`,
-            transition: 'none',
+            opacity: `${opacityValue}`,
           },
           true,
         );
-      }
-      requestAnimationFrame(() => {
+
+        if (vaulScaledBgWrapper && overlayRef.current && shouldScaleBackground) {
+          // Calculate percentageDragged as a fraction (0 to 1)
+          const scaleValue = Math.min(getScale() + percentageDragged * (1 - getScale()), 1);
+          const borderRadiusValue = 8 - percentageDragged * 8;
+
+          const translateYValue = Math.max(0, 14 - percentageDragged * 14);
+
+          set(
+            vaulScaledBgWrapper,
+            {
+              borderRadius: `${borderRadiusValue}px`,
+              transform: `scale(${scaleValue}) translateY(${translateYValue}px)`,
+              transition: 'none',
+            },
+            true,
+          );
+        }
+
         set(drawerRef.current, {
           '--swipe-amount': `${absDraggedDistance}px`,
         });
@@ -310,7 +309,6 @@ function Root({
   }, [isOpen]);
 
   function resetDrawer() {
-    const wrapper = document.querySelector('[vaul-drawer-wrapper]');
     const currentSwipeAmount = Number(
       getComputedStyle(drawerRef.current).getPropertyValue('--swipe-amount').slice(0, -2),
     );
@@ -328,7 +326,7 @@ function Root({
     // Don't reset background if swiped upwards
     if (shouldScaleBackground && currentSwipeAmount > 0 && isOpen) {
       set(
-        wrapper,
+        vaulScaledBgWrapper,
         {
           borderRadius: `${BORDER_RADIUS}px`,
           overflow: 'hidden',
@@ -387,9 +385,7 @@ function Root({
   }
 
   function onAnimationStart(e: React.AnimationEvent<HTMLDivElement>) {
-    const wrapper = document.querySelector('[vaul-drawer-wrapper]');
-
-    if (!wrapper || !shouldScaleBackground) return;
+    if (!vaulScaledBgWrapper || !shouldScaleBackground) return;
 
     if (e.animationName === 'show-dialog') {
       set(
@@ -400,7 +396,7 @@ function Root({
         true,
       );
 
-      set(wrapper, {
+      set(vaulScaledBgWrapper, {
         borderRadius: `${BORDER_RADIUS}px`,
         overflow: 'hidden',
         transform: `scale(${getScale()}) translateY(calc(env(safe-area-inset-top) + 14px))`,
@@ -411,9 +407,9 @@ function Root({
       });
     } else if (e.animationName === 'hide-dialog') {
       // Exit
-      reset(wrapper, 'transform');
-      reset(wrapper, 'borderRadius');
-      set(wrapper, {
+      reset(vaulScaledBgWrapper, 'transform');
+      reset(vaulScaledBgWrapper, 'borderRadius');
+      set(vaulScaledBgWrapper, {
         transitionProperty: 'transform, border-radius',
         transitionDuration: `${TRANSITIONS.DURATION}s`,
         transitionTimingFunction: `cubic-bezier(${TRANSITIONS.EASE.join(',')})`,
@@ -482,12 +478,12 @@ function Root({
 
       setTimeout(
         () =>
-          window.requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
             // Attempt to check if the bottom bar appeared due to the position change
             const bottomBarHeight = innerHeight - window.innerHeight;
             if (bottomBarHeight && scrollY >= innerHeight) {
               // Move the content further up so that the bottom bar doesn't hide it
-              document.body.style.top = -(scrollY + bottomBarHeight);
+              document.body.style.top = `${-(scrollY + bottomBarHeight)}px`;
             }
           }),
         300,
@@ -507,7 +503,7 @@ function Root({
       document.body.style.left = previousBodyPosition.left;
 
       // Restore scroll
-      window.requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
         window.scrollTo(x, y);
       });
 
