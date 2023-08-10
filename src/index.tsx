@@ -315,32 +315,34 @@ function Root({
       getComputedStyle(drawerRef.current).getPropertyValue('--swipe-amount').slice(0, -2),
     );
 
-    set(drawerRef.current, {
-      '--swipe-amount': `${0}px`,
-      transition: `transform 500ms cubic-bezier(0.32, 0.72, 0, 1)`,
-    });
+    requestAnimationFrame(() => {
+      set(drawerRef.current, {
+        '--swipe-amount': '0px',
+        transition: `transform 500ms cubic-bezier(0.32, 0.72, 0, 1)`,
+      });
 
-    set(overlayRef.current, {
-      transition: `opacity ${TRANSITIONS.DURATION}s cubic-bezier(${TRANSITIONS.EASE.join(',')})`,
-      opacity: '1',
-    });
+      set(overlayRef.current, {
+        transition: `opacity ${TRANSITIONS.DURATION}s cubic-bezier(${TRANSITIONS.EASE.join(',')})`,
+        opacity: '1',
+      });
 
-    // Don't reset background if swiped upwards
-    if (shouldScaleBackground && currentSwipeAmount > 0 && isOpen) {
-      set(
-        vaulScaledBgWrapper,
-        {
-          borderRadius: `${BORDER_RADIUS}px`,
-          overflow: 'hidden',
-          transform: `scale(${getScale()}) translateY(calc(env(safe-area-inset-top) + 14px))`,
-          transformOrigin: 'top',
-          transitionProperty: 'transform, border-radius',
-          transitionDuration: `${TRANSITIONS.DURATION}s`,
-          transitionTimingFunction: `cubic-bezier(${TRANSITIONS.EASE.join(',')})`,
-        },
-        true,
-      );
-    }
+      // Don't reset background if swiped upwards
+      if (shouldScaleBackground && currentSwipeAmount > 0 && isOpen) {
+        set(
+          vaulScaledBgWrapper,
+          {
+            borderRadius: `${BORDER_RADIUS}px`,
+            overflow: 'hidden',
+            transform: `scale(${getScale()}) translateY(calc(env(safe-area-inset-top) + 14px))`,
+            transformOrigin: 'top',
+            transitionProperty: 'transform, border-radius',
+            transitionDuration: `${TRANSITIONS.DURATION}s`,
+            transitionTimingFunction: `cubic-bezier(${TRANSITIONS.EASE.join(',')})`,
+          },
+          true,
+        );
+      }
+    });
   }
 
   function onRelease(event: React.PointerEvent<HTMLDivElement>) {

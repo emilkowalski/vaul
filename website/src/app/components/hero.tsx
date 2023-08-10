@@ -52,7 +52,7 @@ export function Hero() {
             </Drawer.Trigger>
             <Drawer.Overlay className="fixed inset-0 bg-black/40" />
             <Drawer.Portal>
-              <Drawer.Content className="bg-white flex flex-col fixed bottom-0 left-0 right-0 h-full max-h-[82vh] rounded-t-[10px]">
+              <Drawer.Content className="bg-gray-100 flex flex-col rounded-t-[10px] h-full mt-24 max-h-[96%] fixed bottom-0 left-0 right-0">
                 <Example />
               </Drawer.Content>
             </Drawer.Portal>
