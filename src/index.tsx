@@ -209,59 +209,57 @@ function Root({
 
       if (!shouldDrag(event.target, isDraggingDown)) return;
 
-      requestAnimationFrame(() => {
+      set(drawerRef.current, {
+        transition: 'none',
+      });
+
+      set(overlayRef.current, {
+        transition: 'none',
+      });
+
+      // Allow dragging upwards up to 40px
+      if (draggedDistance > 0) {
         set(drawerRef.current, {
-          transition: 'none',
+          transform: `translateY(${Math.max(draggedDistance * -1, -40)}px)`,
         });
 
-        set(overlayRef.current, {
-          transition: 'none',
-        });
+        return;
+      }
 
-        // Allow dragging upwards up to 40px
-        if (draggedDistance > 0) {
-          set(drawerRef.current, {
-            transform: `translateY(${Math.max(draggedDistance * -1, -40)}px)`,
-          });
+      // We need to capture last time when drag with scroll was triggered and have a timeout between
+      const absDraggedDistance = Math.abs(draggedDistance);
+      const percentageDragged = absDraggedDistance / drawerHeight;
+      const opacityValue = 1 - percentageDragged;
+      onDragProp?.(event, percentageDragged);
 
-          return;
-        }
+      set(
+        overlayRef.current,
+        {
+          opacity: `${opacityValue}`,
+        },
+        true,
+      );
 
-        // We need to capture last time when drag with scroll was triggered and have a timeout between
-        const absDraggedDistance = Math.abs(draggedDistance);
-        const percentageDragged = absDraggedDistance / drawerHeight;
-        const opacityValue = 1 - percentageDragged;
-        onDragProp?.(event, percentageDragged);
+      if (vaulScaledBgWrapper && overlayRef.current && shouldScaleBackground) {
+        // Calculate percentageDragged as a fraction (0 to 1)
+        const scaleValue = Math.min(getScale() + percentageDragged * (1 - getScale()), 1);
+        const borderRadiusValue = 8 - percentageDragged * 8;
+
+        const translateYValue = Math.max(0, 14 - percentageDragged * 14);
 
         set(
-          overlayRef.current,
+          vaulScaledBgWrapper,
           {
-            opacity: `${opacityValue}`,
+            borderRadius: `${borderRadiusValue}px`,
+            transform: `scale(${scaleValue}) translateY(${translateYValue}px)`,
+            transition: 'none',
           },
           true,
         );
+      }
 
-        if (vaulScaledBgWrapper && overlayRef.current && shouldScaleBackground) {
-          // Calculate percentageDragged as a fraction (0 to 1)
-          const scaleValue = Math.min(getScale() + percentageDragged * (1 - getScale()), 1);
-          const borderRadiusValue = 8 - percentageDragged * 8;
-
-          const translateYValue = Math.max(0, 14 - percentageDragged * 14);
-
-          set(
-            vaulScaledBgWrapper,
-            {
-              borderRadius: `${borderRadiusValue}px`,
-              transform: `scale(${scaleValue}) translateY(${translateYValue}px)`,
-              transition: 'none',
-            },
-            true,
-          );
-        }
-
-        set(drawerRef.current, {
-          transform: `translateY(${absDraggedDistance}px)`,
-        });
+      set(drawerRef.current, {
+        transform: `translateY(${absDraggedDistance}px)`,
       });
     }
   }
@@ -332,34 +330,32 @@ function Root({
   function resetDrawer() {
     const currentSwipeAmount = getTranslateY(drawerRef.current);
 
-    requestAnimationFrame(() => {
-      set(drawerRef.current, {
-        transform: 'translateY(0px)',
-        transition: `transform 500ms cubic-bezier(0.32, 0.72, 0, 1)`,
-      });
-
-      set(overlayRef.current, {
-        transition: `opacity ${TRANSITIONS.DURATION}s cubic-bezier(${TRANSITIONS.EASE.join(',')})`,
-        opacity: '1',
-      });
-
-      // Don't reset background if swiped upwards
-      if (shouldScaleBackground && currentSwipeAmount && currentSwipeAmount > 0 && isOpen) {
-        set(
-          vaulScaledBgWrapper,
-          {
-            borderRadius: `${BORDER_RADIUS}px`,
-            overflow: 'hidden',
-            transform: `scale(${getScale()}) translateY(calc(env(safe-area-inset-top) + 14px))`,
-            transformOrigin: 'top',
-            transitionProperty: 'transform, border-radius',
-            transitionDuration: `${TRANSITIONS.DURATION}s`,
-            transitionTimingFunction: `cubic-bezier(${TRANSITIONS.EASE.join(',')})`,
-          },
-          true,
-        );
-      }
+    set(drawerRef.current, {
+      transform: 'translateY(0px)',
+      transition: `transform 500ms cubic-bezier(0.32, 0.72, 0, 1)`,
     });
+
+    set(overlayRef.current, {
+      transition: `opacity ${TRANSITIONS.DURATION}s cubic-bezier(${TRANSITIONS.EASE.join(',')})`,
+      opacity: '1',
+    });
+
+    // Don't reset background if swiped upwards
+    if (shouldScaleBackground && currentSwipeAmount && currentSwipeAmount > 0 && isOpen) {
+      set(
+        vaulScaledBgWrapper,
+        {
+          borderRadius: `${BORDER_RADIUS}px`,
+          overflow: 'hidden',
+          transform: `scale(${getScale()}) translateY(calc(env(safe-area-inset-top) + 14px))`,
+          transformOrigin: 'top',
+          transitionProperty: 'transform, border-radius',
+          transitionDuration: `${TRANSITIONS.DURATION}s`,
+          transitionTimingFunction: `cubic-bezier(${TRANSITIONS.EASE.join(',')})`,
+        },
+        true,
+      );
+    }
   }
 
   function onRelease(event: React.PointerEvent<HTMLDivElement>) {
