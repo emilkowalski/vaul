@@ -78,6 +78,3064 @@ export function Hero() {
                         this tweet.
                       </a>
                     </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                    </p>
+                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix's Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
                   </div>
                 </div>
                 <div className="p-4 bg-gray-100 border-t border-gray-200 mt-auto">

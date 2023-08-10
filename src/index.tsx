@@ -239,9 +239,10 @@ function Root({
           true,
         );
       }
-
-      set(drawerRef.current, {
-        '--swipe-amount': `${absDraggedDistance}px`,
+      requestAnimationFrame(() => {
+        set(drawerRef.current, {
+          '--swipe-amount': `${absDraggedDistance}px`,
+        });
       });
     }
   }
@@ -254,7 +255,7 @@ function Root({
       const focusedElement = document.activeElement as HTMLElement;
 
       if ((!isInView(focusedElement) && isInput(focusedElement)) || keyboardIsOpen.current) {
-        window.requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
           const visualViewportHeight = window.visualViewport.height;
           const diffFromInitial = initialViewportHeight.current - visualViewportHeight;
           const drawerHeight = drawerRef.current.getBoundingClientRect().height || 0;
