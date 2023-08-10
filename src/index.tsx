@@ -142,6 +142,9 @@ function Root({
   function shouldDrag(el: EventTarget, isDraggingDown: boolean) {
     let element = el as HTMLElement;
     const date = new Date();
+    const swipeAmount = drawerRef.current
+      ? Number.parseInt(getComputedStyle(drawerRef.current).getPropertyValue('--swipe-amount').slice(0, -2), 10)
+      : null;
     const highlightedText = window.getSelection().toString();
 
     // Don't drag if there's highlighted text
@@ -153,7 +156,7 @@ function Root({
     if (
       lastTimeScrolled.current &&
       date.getTime() - lastTimeScrolled.current.getTime() < scrollLockTimeout &&
-      !isDragging
+      swipeAmount === 0
     ) {
       return false;
     }
@@ -174,7 +177,7 @@ function Root({
         if (isDraggingDown && element !== document.body) {
           lastTimeScrolled.current = new Date();
           // Element is scrolled to the top, but we are dragging down so we should allow scrolling
-          return false;
+          return true;
         }
       }
 
@@ -194,6 +197,7 @@ function Root({
       const draggedDistance = Math.trunc(pointerStartY.current - event.clientY);
 
       const isDraggingDown = draggedDistance > 0;
+      console.log(shouldDrag(event.target, isDraggingDown));
 
       if (!shouldDrag(event.target, isDraggingDown)) return;
 
@@ -360,7 +364,6 @@ function Root({
       : null;
 
     if (!shouldDrag(event.target, false) || !swipeAmount || Number.isNaN(swipeAmount)) return;
-
     if (dragStartTime.current === null) return;
 
     const y = event.clientY;
