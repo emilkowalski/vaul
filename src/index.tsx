@@ -10,7 +10,7 @@ import { useComposedRefs } from './use-composed-refs';
 
 const CLOSE_THRESHOLD = 0.25;
 
-const SCROLL_LOCK_TIMEOUT = 1000;
+const SCROLL_LOCK_TIMEOUT = 500;
 
 const TRANSITIONS = {
   DURATION: 0.5,
@@ -110,7 +110,7 @@ function Root({
   const overlayRef = React.useRef<HTMLDivElement>(null);
   const dragStartTime = React.useRef<Date | null>(null);
   const dragEndTime = React.useRef<Date | null>(null);
-  const lastTimeScrolled = React.useRef<Date | null>(null);
+  const lastTimeDragPrevented = React.useRef<Date | null>(null);
   const nestedOpenChangeTimer = React.useRef<NodeJS.Timeout>(null);
   const pointerStartY = React.useRef(0);
   const keyboardIsOpen = React.useRef(false);
@@ -149,7 +149,8 @@ function Root({
     }
 
     // Disallow dragging if drawer was scrolled within last second
-    if (lastTimeScrolled.current && date.getTime() - lastTimeScrolled.current.getTime() < scrollLockTimeout) {
+    if (lastTimeDragPrevented.current && date.getTime() - lastTimeDragPrevented.current.getTime() < scrollLockTimeout) {
+      lastTimeDragPrevented.current = new Date();
       return false;
     }
 
@@ -160,14 +161,14 @@ function Root({
         if (element.role === 'dialog' || element.getAttribute('vaul-drawer')) return true;
 
         if (element.scrollTop > 0) {
-          lastTimeScrolled.current = new Date();
+          lastTimeDragPrevented.current = new Date();
 
           // The element is scrollable and not scrolled to the top, so don't drag
           return false;
         }
 
         if (isDraggingDown && element !== document.body) {
-          lastTimeScrolled.current = new Date();
+          lastTimeDragPrevented.current = new Date();
           // Element is scrolled to the top, but we are dragging down so we should allow scrolling
           return false;
         }
