@@ -197,7 +197,6 @@ function Root({
       const draggedDistance = Math.trunc(pointerStartY.current - event.clientY);
 
       const isDraggingDown = draggedDistance > 0;
-      console.log(shouldDrag(event.target, isDraggingDown));
 
       if (!shouldDrag(event.target, isDraggingDown)) return;
 
@@ -252,7 +251,7 @@ function Root({
         }
 
         set(drawerRef.current, {
-          '--swipe-amount': `${absDraggedDistance}px`,
+          transform: `translateY(${absDraggedDistance}px)`,
         });
       });
     }
@@ -327,7 +326,7 @@ function Root({
 
     requestAnimationFrame(() => {
       set(drawerRef.current, {
-        '--swipe-amount': '0px',
+        transform: 'translateY(0px)',
         transition: `transform 500ms cubic-bezier(0.32, 0.72, 0, 1)`,
       });
 
