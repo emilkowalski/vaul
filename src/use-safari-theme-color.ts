@@ -8,6 +8,8 @@ function extractRGBA(str: string): [number, number, number, number] {
   return [Number(match[1]), Number(match[2]), Number(match[3]), Number(match[4])];
 }
 
+// If the overlay is rgba(0, 0, 0, 0.4), we can't just use this value as the theme-color, as it will be pure black instead of grey-ish.
+// Instead, we assume the background is white (or black depending on the theme) and calculate the result of putting the overlay color on top of it.
 function getNonTrasparentOverlayColor(rgbaStr: string, background: RGB): string {
   const [r, g, b, a] = extractRGBA(rgbaStr);
 
