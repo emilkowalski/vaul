@@ -75,6 +75,16 @@ function reset(el: Element | HTMLElement | null, prop?: string) {
   }
 }
 
+function getTranslateY(element: HTMLElement): number | null {
+  const style = window.getComputedStyle(element);
+  // @ts-ignore
+  const transform = style.transform || style.webkitTransform || style.mozTransform;
+  let mat = transform.match(/^matrix3d\((.+)\)$/);
+  if (mat) return parseFloat(mat[1].split(', ')[13]);
+  mat = transform.match(/^matrix\((.+)\)$/);
+  return mat ? parseFloat(mat[1].split(', ')[5]) : null;
+}
+
 interface DialogProps {
   children?: React.ReactNode;
   open?: boolean;
@@ -204,6 +214,7 @@ function Root({
       if (draggedDistance > 0) {
         set(drawerRef.current, {
           '--swipe-amount': `${Math.max(draggedDistance * -1, -40)}px`,
+          transform: `translateY(${Math.max(draggedDistance * -1, -40)}px)`,
         });
         return;
       }
@@ -243,6 +254,7 @@ function Root({
 
       set(drawerRef.current, {
         '--swipe-amount': `${absDraggedDistance}px`,
+        transform: `translateY(${absDraggedDistance}px)`,
       });
     }
   }
@@ -281,7 +293,8 @@ function Root({
     const drawerHeight = drawerRef.current?.getBoundingClientRect().height || 0;
 
     if (drawerRef.current) {
-      const swipeAmount = getComputedStyle(drawerRef.current).getPropertyValue('--swipe-amount').slice(0, -2);
+      //   const swipeAmount = getComputedStyle(drawerRef.current).getPropertyValue('--swipe-amount').slice(0, -2);
+      const swipeAmount = getTranslateY(drawerRef.current);
 
       set(drawerRef.current, {
         '--hide-from': `${Number(swipeAmount).toFixed()}px`,

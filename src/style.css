@@ -1,5 +1,5 @@
 [vaul-drawer] {
-  transform: translateY(var(--swipe-amount));
+  /* transform: translateY(var(--swipe-amount)); */
   touch-action: none;
   animation: show-dialog 0.5s cubic-bezier(0.32, 0.72, 0, 1);
 }
