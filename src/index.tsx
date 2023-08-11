@@ -126,7 +126,7 @@ function Root({
   const keyboardIsOpen = React.useRef(false);
   const drawerRef = React.useRef<HTMLDivElement>(null);
   const initialViewportHeight = React.useRef(0);
-  const previousBodyPosition = React.useRef<Record<string, string>>({});
+  const previousBodyPosition = React.useRef<Record<string, string> | null>(null);
 
   usePreventScroll({
     isDisabled: !isOpen || isDragging || isAnimating,
@@ -477,7 +477,7 @@ function Root({
 
   function setPositionFixed() {
     // If previousBodyPosition is already set, don't set it again.
-    if (previousBodyPosition === undefined) {
+    if (previousBodyPosition === null) {
       previousBodyPosition.current = {
         position: document.body.style.position,
         top: document.body.style.top,
@@ -507,7 +507,7 @@ function Root({
   }
 
   function restorePositionSetting() {
-    if (previousBodyPosition.current !== undefined) {
+    if (previousBodyPosition.current !== null) {
       // Convert the position from "px" to Int
       const y = -parseInt(document.body.style.top, 10);
       const x = -parseInt(document.body.style.left, 10);
@@ -523,7 +523,7 @@ function Root({
         window.scrollTo(x, y);
       });
 
-      previousBodyPosition.current = undefined;
+      previousBodyPosition.current = null;
     }
   }
 
