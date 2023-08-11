@@ -125,7 +125,6 @@ function Root({
   const pointerStartY = React.useRef(0);
   const keyboardIsOpen = React.useRef(false);
   const drawerRef = React.useRef<HTMLDivElement>(null);
-  const initialViewportHeight = React.useRef(0);
   const previousBodyPosition = React.useRef<Record<string, string> | null>(null);
 
   usePreventScroll({
@@ -264,15 +263,15 @@ function Root({
   }
 
   useEffect(() => {
-    initialViewportHeight.current = window.visualViewport.height;
-
     function onVisualViewportChange() {
       if (!drawerRef.current) return;
+
       const focusedElement = document.activeElement as HTMLElement;
 
       if ((!isInView(focusedElement) && isInput(focusedElement)) || keyboardIsOpen.current) {
         const visualViewportHeight = window.visualViewport.height;
-        const diffFromInitial = initialViewportHeight.current - visualViewportHeight;
+        // This is the height of the keyboard
+        const diffFromInitial = window.innerHeight - visualViewportHeight;
         const drawerHeight = drawerRef.current?.getBoundingClientRect().height || 0;
         const offsetFromTop = drawerRef.current?.getBoundingClientRect().top;
         keyboardIsOpen.current = !keyboardIsOpen.current;
@@ -282,8 +281,8 @@ function Root({
         } else {
           drawerRef.current.style.height = 'initial';
         }
-
-        drawerRef.current.style.bottom = `${diffFromInitial}px`;
+        // Negative bottom value would never make sense
+        drawerRef.current.style.bottom = `${Math.max(diffFromInitial, 0)}px`;
       }
     }
 
@@ -537,12 +536,7 @@ function Root({
   }, [isOpen]);
 
   return (
-    <DialogPrimitive.Root
-      open={isOpen}
-      onOpenChange={(o) => {
-        setIsOpen(o);
-      }}
-    >
+    <DialogPrimitive.Root open={isOpen} onOpenChange={onOpenChange}>
       <DrawerContext.Provider
         value={{
           drawerRef,

@@ -59,7 +59,13 @@ export function Hero() {
                     <p className="text-gray-600 mb-2">
                       This component can be used as a Dialog replacement on mobile and tablet devices.
                     </p>
-                    <p className="text-gray-600 mb-2">It comes unstyled and has gesture-driven animations.</p>
+                    <p className="text-gray-600 mb-2">
+                      It comes unstyled, has gesture-driven animations, and is made by{' '}
+                      <a href="https://emilkowal.ski/" className="underline" target="_blank">
+                        Emil Kowalski
+                      </a>
+                      .
+                    </p>
                     <p className="text-gray-600 mb-8">
                       It uses{' '}
                       <a
