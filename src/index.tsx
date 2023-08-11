@@ -536,7 +536,12 @@ function Root({
   }, [isOpen]);
 
   return (
-    <DialogPrimitive.Root open={isOpen} onOpenChange={onOpenChange}>
+    <DialogPrimitive.Root
+      open={isOpen}
+      onOpenChange={(o) => {
+        setIsOpen(o);
+      }}
+    >
       <DrawerContext.Provider
         value={{
           drawerRef,
