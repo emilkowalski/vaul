@@ -5,7 +5,7 @@ import { useControllableState } from './use-controllable-state';
 import { DrawerContext, useDrawerContext } from './context';
 import React, { useEffect } from 'react';
 import './style.css';
-import { usePreventScroll, isInput } from './use-prevent-scroll';
+import { usePreventScroll, isInput, isIOS } from './use-prevent-scroll';
 import { useComposedRefs } from './use-composed-refs';
 
 const CLOSE_THRESHOLD = 0.25;
@@ -75,6 +75,16 @@ function reset(el: Element | HTMLElement | null, prop?: string) {
   }
 }
 
+function getTranslateY(element: HTMLElement): number | null {
+  const style = window.getComputedStyle(element);
+  // @ts-ignore
+  const transform = style.transform || style.webkitTransform || style.mozTransform;
+  let mat = transform.match(/^matrix3d\((.+)\)$/);
+  if (mat) return parseFloat(mat[1].split(', ')[13]);
+  mat = transform.match(/^matrix\((.+)\)$/);
+  return mat ? parseFloat(mat[1].split(', ')[5]) : null;
+}
+
 interface DialogProps {
   children?: React.ReactNode;
   open?: boolean;
@@ -116,6 +126,7 @@ function Root({
   const keyboardIsOpen = React.useRef(false);
   const drawerRef = React.useRef<HTMLDivElement>(null);
   const initialViewportHeight = React.useRef(0);
+  const previousBodyPosition = React.useRef<Record<string, string>>({});
 
   usePreventScroll({
     isDisabled: !isOpen || isDragging || isAnimating,
@@ -142,6 +153,7 @@ function Root({
     let element = el as HTMLElement;
     const date = new Date();
     const highlightedText = window.getSelection().toString();
+    const swipeAmount = drawerRef.current ? getTranslateY(drawerRef.current) : null;
 
     // Don't drag if there's highlighted text
     if (highlightedText.length > 0) {
@@ -149,7 +161,11 @@ function Root({
     }
 
     // Disallow dragging if drawer was scrolled within last second
-    if (lastTimeDragPrevented.current && date.getTime() - lastTimeDragPrevented.current.getTime() < scrollLockTimeout) {
+    if (
+      lastTimeDragPrevented.current &&
+      date.getTime() - lastTimeDragPrevented.current.getTime() < scrollLockTimeout &&
+      swipeAmount === 0
+    ) {
       lastTimeDragPrevented.current = new Date();
       return false;
     }
@@ -167,7 +183,7 @@ function Root({
           return false;
         }
 
-        if (isDraggingDown && element !== document.body) {
+        if (isDraggingDown && element !== document.body && (!swipeAmount || swipeAmount === 0)) {
           lastTimeDragPrevented.current = new Date();
           // Element is scrolled to the top, but we are dragging down so we should allow scrolling
           return false;
@@ -203,7 +219,7 @@ function Root({
       // Allow dragging upwards up to 40px
       if (draggedDistance > 0) {
         set(drawerRef.current, {
-          '--swipe-amount': `${Math.max(draggedDistance * -1, -40)}px`,
+          transform: `translateY(${Math.max(draggedDistance * -1, -40)}px)`,
         });
         return;
       }
@@ -242,7 +258,7 @@ function Root({
       }
 
       set(drawerRef.current, {
-        '--swipe-amount': `${absDraggedDistance}px`,
+        transform: `translateY(${absDraggedDistance}px)`,
       });
     }
   }
@@ -281,7 +297,7 @@ function Root({
     const drawerHeight = drawerRef.current?.getBoundingClientRect().height || 0;
 
     if (drawerRef.current) {
-      const swipeAmount = getComputedStyle(drawerRef.current).getPropertyValue('--swipe-amount').slice(0, -2);
+      const swipeAmount = getTranslateY(drawerRef.current);
 
       set(drawerRef.current, {
         '--hide-from': `${Number(swipeAmount).toFixed()}px`,
@@ -309,13 +325,11 @@ function Root({
 
   function resetDrawer() {
     const wrapper = document.querySelector('[vaul-drawer-wrapper]');
-    const currentSwipeAmount = Number(
-      getComputedStyle(drawerRef.current).getPropertyValue('--swipe-amount').slice(0, -2),
-    );
+    const currentSwipeAmount = getTranslateY(drawerRef.current);
 
     set(drawerRef.current, {
-      '--swipe-amount': `${0}px`,
-      transition: `transform 500ms cubic-bezier(0.32, 0.72, 0, 1)`,
+      transform: 'translateY(0px)',
+      transition: `transform ${TRANSITIONS.DURATION}s cubic-bezier(${TRANSITIONS.EASE.join(',')})`,
     });
 
     set(overlayRef.current, {
@@ -345,9 +359,7 @@ function Root({
     if ((event.target as HTMLElement).tagName === 'BUTTON' || !isDragging) return;
     setIsDragging(false);
     dragEndTime.current = new Date();
-    const swipeAmount = drawerRef.current
-      ? Number.parseInt(getComputedStyle(drawerRef.current).getPropertyValue('--swipe-amount').slice(0, -2), 10)
-      : null;
+    const swipeAmount = getTranslateY(drawerRef.current);
 
     if (!shouldDrag(event.target, false) || !swipeAmount || Number.isNaN(swipeAmount)) return;
 
@@ -433,7 +445,7 @@ function Root({
       nestedOpenChangeTimer.current = setTimeout(() => {
         set(drawerRef.current, {
           transition: 'none',
-          transform: 'translateY(var(--swipe-amount))',
+          transform: `translateY(${getTranslateY(drawerRef.current)}px)`,
         });
       }, 500);
     }
@@ -462,6 +474,67 @@ function Root({
       });
     }
   }
+
+  function setPositionFixed() {
+    // If previousBodyPosition is already set, don't set it again.
+    if (previousBodyPosition === undefined) {
+      previousBodyPosition.current = {
+        position: document.body.style.position,
+        top: document.body.style.top,
+        left: document.body.style.left,
+      };
+
+      // Update the dom inside an animation frame
+      const { scrollY, scrollX, innerHeight } = window;
+      document.body.style.setProperty('position', 'fixed', 'important');
+      document.body.style.top = `${-scrollY}px`;
+      document.body.style.left = `${-scrollX}px`;
+      document.body.style.right = '0px';
+
+      setTimeout(
+        () =>
+          requestAnimationFrame(() => {
+            // Attempt to check if the bottom bar appeared due to the position change
+            const bottomBarHeight = innerHeight - window.innerHeight;
+            if (bottomBarHeight && scrollY >= innerHeight) {
+              // Move the content further up so that the bottom bar doesn't hide it
+              document.body.style.top = `${-(scrollY + bottomBarHeight)}px`;
+            }
+          }),
+        300,
+      );
+    }
+  }
+
+  function restorePositionSetting() {
+    if (previousBodyPosition.current !== undefined) {
+      // Convert the position from "px" to Int
+      const y = -parseInt(document.body.style.top, 10);
+      const x = -parseInt(document.body.style.left, 10);
+
+      // Restore styles
+      document.body.style.position = previousBodyPosition.current.position;
+      document.body.style.top = previousBodyPosition.current.top;
+      document.body.style.left = previousBodyPosition.current.left;
+      document.body.style.right = 'unset';
+
+      // Restore scroll
+      requestAnimationFrame(() => {
+        window.scrollTo(x, y);
+      });
+
+      previousBodyPosition.current = undefined;
+    }
+  }
+
+  React.useEffect(() => {
+    // This is needed to force Safari toolbar to show **before** the drawer starts animating to prevent a gnarly shift from happenning
+    if (isOpen && isIOS()) {
+      setPositionFixed();
+    } else {
+      restorePositionSetting();
+    }
+  }, [isOpen]);
 
   return (
     <DialogPrimitive.Root

@@ -36,7 +36,7 @@ function isIPad(): boolean | undefined {
   );
 }
 
-function isIOS(): boolean | undefined {
+export function isIOS(): boolean | undefined {
   return isIPhone() || isIPad();
 }
 
