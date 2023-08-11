@@ -7,6 +7,7 @@ import React, { useEffect } from 'react';
 import './style.css';
 import { usePreventScroll, isInput, isIOS } from './use-prevent-scroll';
 import { useComposedRefs } from './use-composed-refs';
+import { useSafariThemeColor } from './use-safari-theme-color';
 
 const CLOSE_THRESHOLD = 0.25;
 
@@ -126,6 +127,7 @@ function Root({
   const keyboardIsOpen = React.useRef(false);
   const drawerRef = React.useRef<HTMLDivElement>(null);
   const previousBodyPosition = React.useRef<Record<string, string> | null>(null);
+  useSafariThemeColor(overlayRef);
 
   usePreventScroll({
     isDisabled: !isOpen || isDragging || isAnimating,
