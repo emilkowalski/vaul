@@ -3,10 +3,11 @@
 import * as DialogPrimitive from '@radix-ui/react-dialog';
 import { useControllableState } from './use-controllable-state';
 import { DrawerContext, useDrawerContext } from './context';
-import React, { useEffect } from 'react';
+import React from 'react';
 import './style.css';
-import { usePreventScroll, isInput, isIOS } from './use-prevent-scroll';
+import { usePreventScroll, isInput } from './use-prevent-scroll';
 import { useComposedRefs } from './use-composed-refs';
+import { usePositionFixed } from './use-position-fixed';
 
 const CLOSE_THRESHOLD = 0.25;
 
@@ -20,6 +21,12 @@ const TRANSITIONS = {
 const ANIMATION_DURATION = 501;
 
 const BORDER_RADIUS = 8;
+
+const VELOCITY_THRESHOLD = 0.4;
+
+const NESTED_DISPLACEMENT = 16;
+
+const WINDOW_TOP_OFFSET = 26;
 
 const cache = new Map();
 
@@ -125,14 +132,15 @@ function Root({
   const pointerStartY = React.useRef(0);
   const keyboardIsOpen = React.useRef(false);
   const drawerRef = React.useRef<HTMLDivElement>(null);
-  const previousBodyPosition = React.useRef<Record<string, string> | null>(null);
 
   usePreventScroll({
     isDisabled: !isOpen || isDragging || isAnimating,
   });
 
+  usePositionFixed(isOpen);
+
   function getScale() {
-    return (window.innerWidth - 26) / window.innerWidth;
+    return (window.innerWidth - WINDOW_TOP_OFFSET) / window.innerWidth;
   }
 
   function onPress(event: React.PointerEvent<HTMLDivElement>) {
@@ -182,7 +190,7 @@ function Root({
           return false;
         }
 
-        if (isDraggingDown && element !== document.body && (!swipeAmount || swipeAmount === 0)) {
+        if (isDraggingDown && element !== document.body && !swipeAmount) {
           lastTimeDragPrevented.current = new Date();
           // Element is scrolled to the top, but we are dragging down so we should allow scrolling
           return false;
@@ -262,7 +270,7 @@ function Root({
     }
   }
 
-  useEffect(() => {
+  React.useEffect(() => {
     function onVisualViewportChange() {
       if (!drawerRef.current) return;
 
@@ -377,7 +385,7 @@ function Root({
       return;
     }
 
-    if (velocity > 0.4) {
+    if (velocity > VELOCITY_THRESHOLD) {
       closeDrawer();
       onReleaseProp?.(event, false);
       return;
@@ -431,8 +439,8 @@ function Root({
   }
 
   function onNestedOpenChange(o: boolean) {
-    const scale = o ? (window.innerWidth - 16) / window.innerWidth : 1;
-    const y = o ? -16 : 0;
+    const scale = o ? (window.innerWidth - NESTED_DISPLACEMENT) / window.innerWidth : 1;
+    const y = o ? -NESTED_DISPLACEMENT : 0;
     window.clearTimeout(nestedOpenChangeTimer.current);
 
     set(drawerRef.current, {
@@ -452,9 +460,9 @@ function Root({
 
   function onNestedDrag(event: React.PointerEvent<HTMLDivElement>, percentageDragged: number) {
     if (percentageDragged < 0) return;
-    const initialScale = (window.innerWidth - 16) / window.innerWidth;
+    const initialScale = (window.innerWidth - NESTED_DISPLACEMENT) / window.innerWidth;
     const newScale = initialScale + percentageDragged * (1 - initialScale);
-    const newY = -16 + percentageDragged * 16;
+    const newY = -NESTED_DISPLACEMENT + percentageDragged * NESTED_DISPLACEMENT;
 
     set(drawerRef.current, {
       transform: `scale(${newScale}) translateY(${newY}px)`,
@@ -463,8 +471,8 @@ function Root({
   }
 
   function onNestedRelease(event: React.PointerEvent<HTMLDivElement>, o: boolean) {
-    const scale = o ? (window.innerWidth - 16) / window.innerWidth : 1;
-    const y = o ? -16 : 0;
+    const scale = o ? (window.innerWidth - NESTED_DISPLACEMENT) / window.innerWidth : 1;
+    const y = o ? -NESTED_DISPLACEMENT : 0;
 
     if (o) {
       set(drawerRef.current, {
@@ -473,67 +481,6 @@ function Root({
       });
     }
   }
-
-  function setPositionFixed() {
-    // If previousBodyPosition is already set, don't set it again.
-    if (previousBodyPosition === null) {
-      previousBodyPosition.current = {
-        position: document.body.style.position,
-        top: document.body.style.top,
-        left: document.body.style.left,
-      };
-
-      // Update the dom inside an animation frame
-      const { scrollY, scrollX, innerHeight } = window;
-      document.body.style.setProperty('position', 'fixed', 'important');
-      document.body.style.top = `${-scrollY}px`;
-      document.body.style.left = `${-scrollX}px`;
-      document.body.style.right = '0px';
-
-      setTimeout(
-        () =>
-          requestAnimationFrame(() => {
-            // Attempt to check if the bottom bar appeared due to the position change
-            const bottomBarHeight = innerHeight - window.innerHeight;
-            if (bottomBarHeight && scrollY >= innerHeight) {
-              // Move the content further up so that the bottom bar doesn't hide it
-              document.body.style.top = `${-(scrollY + bottomBarHeight)}px`;
-            }
-          }),
-        300,
-      );
-    }
-  }
-
-  function restorePositionSetting() {
-    if (previousBodyPosition.current !== null) {
-      // Convert the position from "px" to Int
-      const y = -parseInt(document.body.style.top, 10);
-      const x = -parseInt(document.body.style.left, 10);
-
-      // Restore styles
-      document.body.style.position = previousBodyPosition.current.position;
-      document.body.style.top = previousBodyPosition.current.top;
-      document.body.style.left = previousBodyPosition.current.left;
-      document.body.style.right = 'unset';
-
-      // Restore scroll
-      requestAnimationFrame(() => {
-        window.scrollTo(x, y);
-      });
-
-      previousBodyPosition.current = null;
-    }
-  }
-
-  React.useEffect(() => {
-    // This is needed to force Safari toolbar to show **before** the drawer starts animating to prevent a gnarly shift from happenning
-    if (isOpen && isIOS()) {
-      setPositionFixed();
-    } else {
-      restorePositionSetting();
-    }
-  }, [isOpen]);
 
   return (
     <DialogPrimitive.Root
