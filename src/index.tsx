@@ -191,7 +191,7 @@ function Root({
           return false;
         }
 
-        if (isDraggingDown && element !== document.body && (!swipeAmount || swipeAmount === 0)) {
+        if (isDraggingDown && element !== document.body && !swipeAmount) {
           lastTimeDragPrevented.current = new Date();
           // Element is scrolled to the top, but we are dragging down so we should allow scrolling
           return false;
