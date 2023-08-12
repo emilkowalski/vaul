@@ -127,7 +127,7 @@ function Root({
   const keyboardIsOpen = React.useRef(false);
   const drawerRef = React.useRef<HTMLDivElement>(null);
   const previousBodyPosition = React.useRef<Record<string, string> | null>(null);
-  useSafariThemeColor(overlayRef, isOpen);
+  const { changeThemeColorOnDrag } = useSafariThemeColor(overlayRef, isOpen);
 
   usePreventScroll({
     isDisabled: !isOpen || isDragging || isAnimating,
@@ -231,6 +231,7 @@ function Root({
 
       const percentageDragged = absDraggedDistance / drawerHeight;
       const opacityValue = 1 - percentageDragged;
+      changeThemeColorOnDrag(percentageDragged);
       onDragProp?.(event, percentageDragged);
       set(
         overlayRef.current,

@@ -26,24 +26,27 @@ function easeOutExpo(t: number): number {
   return t === 1 ? 1 : 1 - Math.pow(2, -10 * t);
 }
 
-function interpolateColor(color1: number[], color2: number[], factor: number) {
+function interpolateColor(color1: number[], color2: number[], factor: number, linear: boolean) {
   if (arguments.length < 3) {
     factor = 0.5;
   }
   let result = color1.slice();
   for (let i = 0; i < 3; i++) {
-    const newColorComponent = Math.round(result[i] + easeOutExpo(factor) * (color2[i] - color1[i]));
-    result[i] = color1[i] < color2[i] ? Math.max(result[i], newColorComponent) : Math.min(result[i], newColorComponent);
+    const delta = color2[i] - color1[i];
+    const newColorComponent = linear ? color1[i] + factor * delta : color1[i] + easeOutExpo(factor) * delta;
+    result[i] = Math.round(newColorComponent);
+    if (result[i] < 0) result[i] = 0;
+    if (result[i] > 255) result[i] = 255;
   }
   return result;
 }
 
-function interpolateColors(color1: number[], color2: number[], steps: number): number[][] {
+function interpolateColors(color1: number[], color2: number[], steps: number, linear?: boolean): number[][] {
   let stepFactor = 1 / (steps - 1),
     interpolatedColorArray = [];
 
   for (let i = 0; i < steps; i++) {
-    interpolatedColorArray.push(interpolateColor(color1, color2, stepFactor * i));
+    interpolatedColorArray.push(interpolateColor(color1, color2, stepFactor * i, linear));
   }
 
   return interpolatedColorArray;
@@ -64,6 +67,14 @@ export function useSafariThemeColor(overlay: MutableRefObject<HTMLDivElement>, i
     () =>
       backgroundColor && nonTransparentOverlayColor
         ? interpolateColors(nonTransparentOverlayColor, backgroundColor, 50)
+        : null,
+    [nonTransparentOverlayColor, backgroundColor],
+  );
+
+  const linearInterpolation = useMemo(
+    () =>
+      backgroundColor && nonTransparentOverlayColor
+        ? interpolateColors(nonTransparentOverlayColor, backgroundColor, 50, true)
         : null,
     [nonTransparentOverlayColor, backgroundColor],
   );
@@ -102,4 +113,23 @@ export function useSafariThemeColor(overlay: MutableRefObject<HTMLDivElement>, i
       }
     }
   }, [isOpen, interpolatedColorsEnter, interpolatedColorsExit]);
+
+  function changeThemeColorOnDrag(percentageDragged: number) {
+    const metaThemeColor = document.querySelector('meta[name="theme-color"]');
+    if (!metaThemeColor) return;
+
+    // Calculate the index of the color array by mapping the proportion to the array length
+    let colorIndex = Math.floor(percentageDragged * linearInterpolation.length);
+
+    // Ensure colorIndex is between 0 and array length - 1
+    colorIndex = Math.max(0, Math.min(linearInterpolation.length - 1, colorIndex));
+
+    // Get the color
+    const color = linearInterpolation[colorIndex];
+
+    // Set the meta theme color
+    metaThemeColor.setAttribute('content', `rgb(${color.join(',')})`);
+  }
+
+  return { changeThemeColorOnDrag };
 }
