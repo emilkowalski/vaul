@@ -28,7 +28,7 @@ const NESTED_DISPLACEMENT = 16;
 
 const WINDOW_TOP_OFFSET = 26;
 
-const cache = new Map();
+const cache = new WeakMap();
 
 interface Style {
   [key: string]: string;
