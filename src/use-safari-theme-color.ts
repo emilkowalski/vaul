@@ -1,4 +1,4 @@
-import { MutableRefObject } from 'react';
+import { MutableRefObject, useEffect, useState } from 'react';
 
 type RGB = [number, number, number];
 
@@ -33,7 +33,7 @@ function interpolateColor(color1: number[], color2: number[], factor: number) {
   return result;
 }
 
-function interpolateColors(color1: number[], color2: number[], steps: number) {
+function interpolateColors(color1: number[], color2: number[], steps: number): number[][] {
   let stepFactor = 1 / (steps - 1),
     interpolatedColorArray = [];
 
@@ -45,25 +45,36 @@ function interpolateColors(color1: number[], color2: number[], steps: number) {
 }
 
 export function useSafariThemeColor(overlay: MutableRefObject<HTMLDivElement>, isOpen: boolean) {
-  requestAnimationFrame(() => {
-    if (overlay.current) {
-      let metaThemeColor = document.querySelector('meta[name="theme-color"]');
-      const overlayColor = getComputedStyle(overlay.current).getPropertyValue('background-color');
-      const backgroundColor = getComputedStyle(document.documentElement)
-        .getPropertyValue('--vaul-theme-color')
-        .split(',')
-        .map((c) => Number(c));
-      const nonTrasparentOverlayColor = getNonTrasparentOverlayColor(overlayColor, backgroundColor as RGB);
-      const interpolatedColors = interpolateColors(nonTrasparentOverlayColor, backgroundColor, 20);
+  const [didRan, setDidRan] = useState(false);
 
-      if (!metaThemeColor) {
-        metaThemeColor = document.createElement('meta');
-        // @ts-ignore
-        metaThemeColor.name = 'theme-color';
-        document.getElementsByTagName('head')[0].appendChild(metaThemeColor);
+  useEffect(() => {
+    requestAnimationFrame(() => {
+      if (overlay.current) {
+        let metaThemeColor = document.querySelector('meta[name="theme-color"]');
+        const overlayColor = getComputedStyle(overlay.current).getPropertyValue('background-color');
+        const backgroundColor = getComputedStyle(document.documentElement)
+          .getPropertyValue('--vaul-theme-color')
+          .split(',')
+          .map((c) => Number(c));
+        const nonTrasparentOverlayColor = getNonTrasparentOverlayColor(overlayColor, backgroundColor as RGB);
+        const interpolatedColors = interpolateColors(backgroundColor, nonTrasparentOverlayColor, 50);
+
+        if (!metaThemeColor) {
+          metaThemeColor = document.createElement('meta');
+          // @ts-ignore
+          metaThemeColor.name = 'theme-color';
+          document.getElementsByTagName('head')[0].appendChild(metaThemeColor);
+        }
+
+        if (isOpen) {
+          for (let i = 0; i < interpolatedColors.length; i++) {
+            setTimeout(() => {
+              const currentColor = interpolatedColors[i];
+              metaThemeColor.setAttribute('content', `rgb(${currentColor.join(',')})`);
+            }, i * 5);
+          }
+        }
       }
-
-      //   metaThemeColor.setAttribute('content', nonTrasparentOverlayColor);
-    }
-  });
+    });
+  }, [isOpen]);
 }
