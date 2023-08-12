@@ -50,6 +50,8 @@ function interpolateColors(color1: number[], color2: number[], steps: number): n
 }
 export function useSafariThemeColor(overlay: MutableRefObject<HTMLDivElement>, isOpen: boolean) {
   const [didRan, setDidRan] = useState(false);
+  //   const [backgroundColor, setBackgroundColor] = useState<RGB>([0, 0, 0]);
+  //   const [nonTransparentOverlayColor, setNonTransparentOverlayColor] = useState<RGB>([0, 0, 0]);
 
   useEffect(() => {
     requestAnimationFrame(() => {
@@ -61,7 +63,8 @@ export function useSafariThemeColor(overlay: MutableRefObject<HTMLDivElement>, i
           .split(',')
           .map((c) => Number(c));
         const nonTrasparentOverlayColor = getNonTrasparentOverlayColor(overlayColor, backgroundColor as RGB);
-        const interpolatedColors = interpolateColors(backgroundColor, nonTrasparentOverlayColor, 50);
+        const interpolatedColorsEnter = interpolateColors(backgroundColor, nonTrasparentOverlayColor, 50);
+        const interpolatedColorsExit = interpolateColors(nonTrasparentOverlayColor, backgroundColor, 50);
 
         if (!metaThemeColor) {
           metaThemeColor = document.createElement('meta');
@@ -70,13 +73,11 @@ export function useSafariThemeColor(overlay: MutableRefObject<HTMLDivElement>, i
           document.getElementsByTagName('head')[0].appendChild(metaThemeColor);
         }
 
-        if (isOpen) {
-          for (let i = 0; i < interpolatedColors.length; i++) {
-            setTimeout(() => {
-              const currentColor = interpolatedColors[i];
-              metaThemeColor.setAttribute('content', `rgb(${currentColor.join(',')})`);
-            }, i * 5);
-          }
+        for (let i = 0; i < interpolatedColorsEnter.length; i++) {
+          setTimeout(() => {
+            const currentColor = isOpen ? interpolatedColorsEnter[i] : interpolatedColorsExit[i];
+            metaThemeColor.setAttribute('content', `rgb(${currentColor.join(',')})`);
+          }, i * 5);
         }
       }
     });
