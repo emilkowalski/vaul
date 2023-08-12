@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 :root {
-  --vaul-theme-color: 255, 0, 0;
+  --vaul-theme-color: 255, 255, 255;
 }
 
 html,
