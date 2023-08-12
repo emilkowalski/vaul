@@ -127,7 +127,10 @@ function Root({
   const keyboardIsOpen = React.useRef(false);
   const drawerRef = React.useRef<HTMLDivElement>(null);
   const previousBodyPosition = React.useRef<Record<string, string> | null>(null);
-  const { changeThemeColorOnDrag } = useSafariThemeColor(overlayRef, isOpen);
+  const { onDrag: changeThemeColorOnDrag, onRelease: themeTransitionOnRelease } = useSafariThemeColor(
+    overlayRef,
+    isOpen,
+  );
 
   usePreventScroll({
     isDisabled: !isOpen || isDragging || isAnimating,
@@ -377,12 +380,14 @@ function Root({
     if (distMoved > 0) {
       resetDrawer();
       onReleaseProp?.(event, false);
+      themeTransitionOnRelease(false);
       return;
     }
 
     if (velocity > 0.4) {
       closeDrawer();
       onReleaseProp?.(event, false);
+      themeTransitionOnRelease(false);
       return;
     }
 
@@ -391,10 +396,12 @@ function Root({
     if (swipeAmount >= visibleDrawerHeight * closeThreshold) {
       closeDrawer();
       onReleaseProp?.(event, false);
+      themeTransitionOnRelease(false);
       return;
     }
 
     onReleaseProp?.(event, true);
+    themeTransitionOnRelease(true);
     resetDrawer();
   }
 

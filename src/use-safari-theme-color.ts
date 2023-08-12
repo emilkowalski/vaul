@@ -54,6 +54,7 @@ function interpolateColors(color1: number[], color2: number[], steps: number, li
 export function useSafariThemeColor(overlay: MutableRefObject<HTMLDivElement>, isOpen: boolean) {
   const [backgroundColor, setBackgroundColor] = useState<RGB | null>(null);
   const [nonTransparentOverlayColor, setNonTransparentOverlayColor] = useState<RGB | null>(null);
+  const [releaseExit, setReleaseExit] = useState<boolean>(false);
 
   const interpolatedColorsEnter = useMemo(
     () =>
@@ -95,7 +96,7 @@ export function useSafariThemeColor(overlay: MutableRefObject<HTMLDivElement>, i
   }, [isOpen]);
 
   useEffect(() => {
-    if (overlay.current && interpolatedColorsEnter && interpolatedColorsExit) {
+    if (overlay.current && interpolatedColorsEnter && interpolatedColorsExit && !releaseExit) {
       let metaThemeColor = document.querySelector('meta[name="theme-color"]');
 
       if (!metaThemeColor) {
@@ -112,9 +113,13 @@ export function useSafariThemeColor(overlay: MutableRefObject<HTMLDivElement>, i
         }, i * 5);
       }
     }
-  }, [isOpen, interpolatedColorsEnter, interpolatedColorsExit]);
+	
+    if (isOpen) {
+      setReleaseExit(false);
+    }
+  }, [isOpen, interpolatedColorsEnter, interpolatedColorsExit, releaseExit]);
 
-  function changeThemeColorOnDrag(percentageDragged: number) {
+  function onDrag(percentageDragged: number) {
     const metaThemeColor = document.querySelector('meta[name="theme-color"]');
     if (!metaThemeColor) return;
 
@@ -131,5 +136,24 @@ export function useSafariThemeColor(overlay: MutableRefObject<HTMLDivElement>, i
     metaThemeColor.setAttribute('content', `rgb(${color.join(',')})`);
   }
 
-  return { changeThemeColorOnDrag };
+  function onRelease(isOpen: boolean) {
+    setReleaseExit(true);
+    // Get the current meta theme color and create color steps from it to nonTransparentOverlayColor with non-linear interpolation to ensure same easing as overlay.
+    const metaThemeColor = document.querySelector('meta[name="theme-color"]');
+    const rgbValues = metaThemeColor.getAttribute('content').match(/\d+/g).map(Number);
+    let colorSteps = interpolateColors(rgbValues, nonTransparentOverlayColor as RGB, 50);
+
+    if (!isOpen) {
+      colorSteps = interpolateColors(rgbValues, backgroundColor, 50);
+    }
+
+    for (let i = 0; i < interpolatedColorsEnter.length; i++) {
+      setTimeout(() => {
+        const currentColor = colorSteps[i];
+        metaThemeColor.setAttribute('content', `rgb(${currentColor.join(',')})`);
+      }, i * 5);
+    }
+  }
+
+  return { onDrag, onRelease };
 }
