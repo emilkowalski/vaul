@@ -22,29 +22,19 @@ function getNonTrasparentOverlayColor(rgbaStr: string, background: RGB): RGB {
   return rgb;
 }
 
-function cubicBezier(p1: number, p2: number, t: number): number {
-  const u = 1 - t;
-  return 3 * u * u * t * p1 + 3 * u * t * t * p2 + t * t * t;
+function easeOutExpo(t: number): number {
+  return t === 1 ? 1 : 1 - Math.pow(2, -10 * t);
 }
 
-function bezierEasing(p1: number, p2: number): (t: number) => number {
-  return function (t: number): number {
-    return cubicBezier(p1, p2, t);
-  };
-}
-
-let myBezier = bezierEasing(0.32, 0.72); // cubic Bézier curve with values (0.32, 0.72, 0, 1)
-
-function interpolateColor(color1: number[], color2: number[], factor: number, bezier: (t: number) => number) {
+function interpolateColor(color1: number[], color2: number[], factor: number) {
   if (arguments.length < 3) {
     factor = 0.5;
   }
-
   let result = color1.slice();
   for (let i = 0; i < 3; i++) {
-    result[i] = Math.round(result[i] + bezier(factor) * (color2[i] - color1[i]));
+    const newColorComponent = Math.round(result[i] + easeOutExpo(factor) * (color2[i] - color1[i]));
+    result[i] = color1[i] < color2[i] ? Math.max(result[i], newColorComponent) : Math.min(result[i], newColorComponent);
   }
-
   return result;
 }
 
@@ -53,12 +43,11 @@ function interpolateColors(color1: number[], color2: number[], steps: number): n
     interpolatedColorArray = [];
 
   for (let i = 0; i < steps; i++) {
-    interpolatedColorArray.push(interpolateColor(color1, color2, stepFactor * i, myBezier));
+    interpolatedColorArray.push(interpolateColor(color1, color2, stepFactor * i));
   }
 
   return interpolatedColorArray;
 }
-
 export function useSafariThemeColor(overlay: MutableRefObject<HTMLDivElement>, isOpen: boolean) {
   const [didRan, setDidRan] = useState(false);
 
@@ -86,7 +75,7 @@ export function useSafariThemeColor(overlay: MutableRefObject<HTMLDivElement>, i
             setTimeout(() => {
               const currentColor = interpolatedColors[i];
               metaThemeColor.setAttribute('content', `rgb(${currentColor.join(',')})`);
-            }, i * 100);
+            }, i * 5);
           }
         }
       }
