@@ -3,16 +3,7 @@
 import * as DialogPrimitive from '@radix-ui/react-dialog';
 import { useControllableState } from './use-controllable-state';
 import { DrawerContext, useDrawerContext } from './context';
-import React, {
-  useEffect,
-  useRef,
-  PointerEvent,
-  ReactNode,
-  useState,
-  AnimationEvent,
-  forwardRef,
-  ComponentPropsWithoutRef,
-} from 'react';
+import React from 'react';
 import './style.css';
 import { usePreventScroll, isInput } from './use-prevent-scroll';
 import { useComposedRefs } from './use-composed-refs';
@@ -34,6 +25,8 @@ const BORDER_RADIUS = 8;
 const VELOCITY_THRESHOLD = 0.4;
 
 const NESTED_DISPLACEMENT = 16;
+
+const WINDOW_TOP_OFFSET = 26;
 
 const cache = new Map();
 
@@ -100,7 +93,7 @@ function getTranslateY(element: HTMLElement): number | null {
 }
 
 interface DialogProps {
-  children?: ReactNode;
+  children?: React.ReactNode;
   open?: boolean;
   defaultOpen?: boolean;
   closeThreshold?: number;
@@ -108,8 +101,8 @@ interface DialogProps {
   shouldScaleBackground?: boolean;
   scrollLockTimeout?: number;
   dismissible?: boolean;
-  onDrag?(event: PointerEvent<HTMLDivElement>, percentageDragged: number): void;
-  onRelease?(event: PointerEvent<HTMLDivElement>, open: boolean): void;
+  onDrag?(event: React.PointerEvent<HTMLDivElement>, percentageDragged: number): void;
+  onRelease?(event: React.PointerEvent<HTMLDivElement>, open: boolean): void;
 }
 
 function Root({
@@ -129,26 +122,28 @@ function Root({
     defaultProp: defaultOpen,
     onChange: onOpenChange,
   });
-  const [isDragging, setIsDragging] = useState(false);
-  const [isAnimating, setIsAnimating] = useState(true);
-  const overlayRef = useRef<HTMLDivElement>(null);
-  const dragStartTime = useRef<Date | null>(null);
-  const dragEndTime = useRef<Date | null>(null);
-  const lastTimeDragPrevented = useRef<Date | null>(null);
-  const nestedOpenChangeTimer = useRef<NodeJS.Timeout>(null);
-  const pointerStartY = useRef(0);
-  const keyboardIsOpen = useRef(false);
-  const drawerRef = useRef<HTMLDivElement>(null);
+  const [isDragging, setIsDragging] = React.useState(false);
+  const [isAnimating, setIsAnimating] = React.useState(true);
+  const overlayRef = React.useRef<HTMLDivElement>(null);
+  const dragStartTime = React.useRef<Date | null>(null);
+  const dragEndTime = React.useRef<Date | null>(null);
+  const lastTimeDragPrevented = React.useRef<Date | null>(null);
+  const nestedOpenChangeTimer = React.useRef<NodeJS.Timeout>(null);
+  const pointerStartY = React.useRef(0);
+  const keyboardIsOpen = React.useRef(false);
+  const drawerRef = React.useRef<HTMLDivElement>(null);
 
   usePreventScroll({
     isDisabled: !isOpen || isDragging || isAnimating,
   });
 
+  usePositionFixed(isOpen);
+
   function getScale() {
-    return (window.innerWidth - 26) / window.innerWidth;
+    return (window.innerWidth - WINDOW_TOP_OFFSET) / window.innerWidth;
   }
 
-  function onPress(event: PointerEvent<HTMLDivElement>) {
+  function onPress(event: React.PointerEvent<HTMLDivElement>) {
     if (!dismissible) return;
     if (!drawerRef.current.contains(event.target as Node) || (event.target as HTMLElement).tagName === 'BUTTON') return;
 
@@ -210,7 +205,7 @@ function Root({
     return true;
   }
 
-  function onDrag(event: PointerEvent<HTMLDivElement>) {
+  function onDrag(event: React.PointerEvent<HTMLDivElement>) {
     // We need to know how much of the drawer has been dragged in percentages so that we can transform background accordingly
     if (isDragging) {
       const draggedDistance = pointerStartY.current - event.clientY;
@@ -275,7 +270,7 @@ function Root({
     }
   }
 
-  useEffect(() => {
+  React.useEffect(() => {
     function onVisualViewportChange() {
       if (!drawerRef.current) return;
 
@@ -324,7 +319,7 @@ function Root({
     }
   }
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (!isOpen && shouldScaleBackground) {
       // Can't use `onAnimationEnd` as the component will be unmounted by then
       const id = setTimeout(() => {
@@ -367,7 +362,7 @@ function Root({
     }
   }
 
-  function onRelease(event: PointerEvent<HTMLDivElement>) {
+  function onRelease(event: React.PointerEvent<HTMLDivElement>) {
     if ((event.target as HTMLElement).tagName === 'BUTTON' || !isDragging) return;
     setIsDragging(false);
     dragEndTime.current = new Date();
@@ -408,7 +403,7 @@ function Root({
     resetDrawer();
   }
 
-  function onAnimationStart(e: AnimationEvent<HTMLDivElement>) {
+  function onAnimationStart(e: React.AnimationEvent<HTMLDivElement>) {
     const wrapper = document.querySelector('[vaul-drawer-wrapper]');
 
     if (!wrapper || !shouldScaleBackground) return;
@@ -463,7 +458,7 @@ function Root({
     }
   }
 
-  function onNestedDrag(event: PointerEvent<HTMLDivElement>, percentageDragged: number) {
+  function onNestedDrag(event: React.PointerEvent<HTMLDivElement>, percentageDragged: number) {
     if (percentageDragged < 0) return;
     const initialScale = (window.innerWidth - NESTED_DISPLACEMENT) / window.innerWidth;
     const newScale = initialScale + percentageDragged * (1 - initialScale);
@@ -475,7 +470,7 @@ function Root({
     });
   }
 
-  function onNestedRelease(event: PointerEvent<HTMLDivElement>, o: boolean) {
+  function onNestedRelease(event: React.PointerEvent<HTMLDivElement>, o: boolean) {
     const scale = o ? (window.innerWidth - NESTED_DISPLACEMENT) / window.innerWidth : 1;
     const y = o ? -NESTED_DISPLACEMENT : 0;
 
@@ -486,8 +481,6 @@ function Root({
       });
     }
   }
-
-  usePositionFixed(isOpen);
 
   return (
     <DialogPrimitive.Root
@@ -519,21 +512,20 @@ function Root({
   );
 }
 
-const Overlay = forwardRef<HTMLDivElement, ComponentPropsWithoutRef<typeof DialogPrimitive.Overlay>>(function (
-  { children, ...rest },
-  ref,
-) {
-  const { overlayRef, onRelease } = useDrawerContext();
-  const composedRef = useComposedRefs(ref, overlayRef);
+const Overlay = React.forwardRef<HTMLDivElement, React.ComponentPropsWithoutRef<typeof DialogPrimitive.Overlay>>(
+  function ({ children, ...rest }, ref) {
+    const { overlayRef, onRelease } = useDrawerContext();
+    const composedRef = useComposedRefs(ref, overlayRef);
 
-  return <DialogPrimitive.Overlay onMouseUp={onRelease} ref={composedRef} vaul-overlay="" {...rest} />;
-});
+    return <DialogPrimitive.Overlay onMouseUp={onRelease} ref={composedRef} vaul-overlay="" {...rest} />;
+  },
+);
 
-type ContentProps = ComponentPropsWithoutRef<typeof DialogPrimitive.Content> & {
+type ContentProps = React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content> & {
   onAnimationEnd?: (open: boolean) => void;
 };
 
-const Content = forwardRef<HTMLDivElement, ContentProps>(function (
+const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
   { children, onOpenAutoFocus, onPointerDownOutside, onAnimationEnd, ...rest },
   ref,
 ) {
@@ -549,7 +541,7 @@ const Content = forwardRef<HTMLDivElement, ContentProps>(function (
     setIsAnimating,
   } = useDrawerContext();
   const composedRef = useComposedRefs(ref, drawerRef);
-  const animationEndTimer = useRef<NodeJS.Timeout>(null);
+  const animationEndTimer = React.useRef<NodeJS.Timeout>(null);
 
   return (
     <DialogPrimitive.Content
