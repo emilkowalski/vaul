@@ -127,7 +127,7 @@ function Root({
   const keyboardIsOpen = React.useRef(false);
   const drawerRef = React.useRef<HTMLDivElement>(null);
   const previousBodyPosition = React.useRef<Record<string, string> | null>(null);
-  useSafariThemeColor(overlayRef);
+  useSafariThemeColor(overlayRef, isOpen);
 
   usePreventScroll({
     isDisabled: !isOpen || isDragging || isAnimating,

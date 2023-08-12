@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --vaul-theme-color: 255, 0, 0;
+}
+
 html,
 body {
   overflow: hidden;
