@@ -21,7 +21,7 @@ const ANIMATION_DURATION = 501;
 
 const BORDER_RADIUS = 8;
 
-const cache = new Map();
+const cache = new WeakMap();
 
 interface Style {
   [key: string]: string;
