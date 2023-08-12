@@ -30,6 +30,10 @@ const ANIMATION_DURATION = 501;
 
 const BORDER_RADIUS = 8;
 
+const VELOCITY_THRESHOLD = 0.4;
+
+const NESTED_DISPLACEMENT = 16;
+
 const cache = new Map();
 
 interface Style {
@@ -386,7 +390,7 @@ function Root({
       return;
     }
 
-    if (velocity > 0.4) {
+    if (velocity > VELOCITY_THRESHOLD) {
       closeDrawer();
       onReleaseProp?.(event, false);
       return;
@@ -440,8 +444,8 @@ function Root({
   }
 
   function onNestedOpenChange(o: boolean) {
-    const scale = o ? (window.innerWidth - 16) / window.innerWidth : 1;
-    const y = o ? -16 : 0;
+    const scale = o ? (window.innerWidth - NESTED_DISPLACEMENT) / window.innerWidth : 1;
+    const y = o ? -NESTED_DISPLACEMENT : 0;
     window.clearTimeout(nestedOpenChangeTimer.current);
 
     set(drawerRef.current, {
@@ -461,9 +465,9 @@ function Root({
 
   function onNestedDrag(event: PointerEvent<HTMLDivElement>, percentageDragged: number) {
     if (percentageDragged < 0) return;
-    const initialScale = (window.innerWidth - 16) / window.innerWidth;
+    const initialScale = (window.innerWidth - NESTED_DISPLACEMENT) / window.innerWidth;
     const newScale = initialScale + percentageDragged * (1 - initialScale);
-    const newY = -16 + percentageDragged * 16;
+    const newY = -NESTED_DISPLACEMENT + percentageDragged * NESTED_DISPLACEMENT;
 
     set(drawerRef.current, {
       transform: `scale(${newScale}) translateY(${newY}px)`,
@@ -472,8 +476,8 @@ function Root({
   }
 
   function onNestedRelease(event: PointerEvent<HTMLDivElement>, o: boolean) {
-    const scale = o ? (window.innerWidth - 16) / window.innerWidth : 1;
-    const y = o ? -16 : 0;
+    const scale = o ? (window.innerWidth - NESTED_DISPLACEMENT) / window.innerWidth : 1;
+    const y = o ? -NESTED_DISPLACEMENT : 0;
 
     if (o) {
       set(drawerRef.current, {
