@@ -20,19 +20,11 @@
 }
 
 [vaul-overlay] {
-  opacity: 0;
-}
-
-[vaul-overlay] {
-  animation: show-overlay 0.5s cubic-bezier(0.32, 0.72, 0, 1) 0.01s forwards;
+  animation: show-overlay 0.5s cubic-bezier(0.32, 0.72, 0, 1);
 }
 
 [vaul-overlay][data-state='closed'] {
-  opacity: 1;
-}
-
-[vaul-overlay][data-state='closed'] {
-  animation: hide-overlay 0.5s cubic-bezier(0.32, 0.72, 0, 1) 0.01s forwards;
+  animation: hide-overlay 0.5s cubic-bezier(0.32, 0.72, 0, 1) forwards;
 }
 
 @keyframes show-dialog {

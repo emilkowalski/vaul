@@ -602,6 +602,7 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
     isOpen,
     keyboardIsOpen,
     setIsAnimating,
+    overlayRef,
   } = useDrawerContext();
   const composedRef = useComposedRefs(ref, drawerRef);
   const animationEndTimer = React.useRef<NodeJS.Timeout>(null);
@@ -617,6 +618,11 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
           onAnimationEnd?.(isOpen);
         }, ANIMATION_DURATION);
         onAnimationStart(e);
+      }}
+      onAnimationEnd={() => {
+        set(overlayRef.current, {
+          opacity: '1',
+        });
       }}
       onPointerDown={onPress}
       onPointerUp={onRelease}
