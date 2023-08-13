@@ -110,7 +110,7 @@ export function useSafariThemeColor(overlay: MutableRefObject<HTMLDivElement>, i
         setTimeout(() => {
           const currentColor = isOpen ? interpolatedColorsEnter[i] : interpolatedColorsExit[i];
           metaThemeColor.setAttribute('content', `rgb(${currentColor.join(',')})`);
-        }, i * 10.05);
+        }, i * 5);
       }
     }
 
@@ -151,7 +151,7 @@ export function useSafariThemeColor(overlay: MutableRefObject<HTMLDivElement>, i
       setTimeout(() => {
         const currentColor = colorSteps[i];
         metaThemeColor.setAttribute('content', `rgb(${currentColor.join(',')})`);
-      }, i * 10.05);
+      }, i * 5);
     }
   }
 
