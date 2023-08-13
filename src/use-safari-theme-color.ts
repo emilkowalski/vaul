@@ -51,7 +51,11 @@ function interpolateColors(color1: number[], color2: number[], steps: number, li
 
   return interpolatedColorArray;
 }
-export function useSafariThemeColor(overlay: MutableRefObject<HTMLDivElement>, isOpen: boolean) {
+export function useSafariThemeColor(
+  drawer: MutableRefObject<HTMLDivElement>,
+  overlay: MutableRefObject<HTMLDivElement>,
+  isOpen: boolean,
+) {
   const [backgroundColor, setBackgroundColor] = useState<RGB | null>(null);
   const [nonTransparentOverlayColor, setNonTransparentOverlayColor] = useState<RGB | null>(null);
   const [releaseExit, setReleaseExit] = useState<boolean>(false);
@@ -98,6 +102,10 @@ export function useSafariThemeColor(overlay: MutableRefObject<HTMLDivElement>, i
   useEffect(() => {
     if (overlay.current && interpolatedColorsEnter && interpolatedColorsExit && !releaseExit) {
       let metaThemeColor = document.querySelector('meta[name="theme-color"]');
+      if (drawer.current.style.transform === 'translateY(0px)') {
+        // It's resetting, so don't apply these styles
+        return;
+      }
 
       if (!metaThemeColor) {
         metaThemeColor = document.createElement('meta');
@@ -137,9 +145,11 @@ export function useSafariThemeColor(overlay: MutableRefObject<HTMLDivElement>, i
   }
 
   function onRelease(isOpen: boolean) {
+    console.log('onRelease');
     const metaThemeColor = document.querySelector('meta[name="theme-color"]');
     if (!metaThemeColor) return;
     setReleaseExit(true);
+
     // Get the current meta theme color and create color steps from it to nonTransparentOverlayColor with non-linear interpolation to ensure same easing as overlay.
     const rgbValues = metaThemeColor.getAttribute('content').match(/\d+/g).map(Number);
 
@@ -154,7 +164,7 @@ export function useSafariThemeColor(overlay: MutableRefObject<HTMLDivElement>, i
         const currentColor = colorSteps[i];
 
         metaThemeColor.setAttribute('content', `rgb(${currentColor.join(',')})`);
-      }, i * 10.05);
+      }, i * 5);
     }
   }
 

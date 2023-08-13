@@ -128,6 +128,7 @@ function Root({
   const drawerRef = React.useRef<HTMLDivElement>(null);
   const previousBodyPosition = React.useRef<Record<string, string> | null>(null);
   const { onDrag: changeThemeColorOnDrag, onRelease: themeTransitionOnRelease } = useSafariThemeColor(
+	drawerRef,
     overlayRef,
     isOpen,
   );
@@ -162,7 +163,7 @@ function Root({
     // Don't drag if there's highlighted text
     if (highlightedText.length > 0) {
       return false;
-    }
+    }	
 
     // Disallow dragging if drawer was scrolled within last second
     if (
