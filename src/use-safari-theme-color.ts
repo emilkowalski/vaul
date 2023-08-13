@@ -121,7 +121,7 @@ export function useSafariThemeColor(
         setTimeout(() => {
           const currentColor = isOpen ? interpolatedColorsEnter[i] : interpolatedColorsExit[i];
           metaThemeColor.setAttribute('content', `rgb(${currentColor.join(',')})`);
-        }, i * 10.5);
+        }, i * 5);
       }
     }
 
