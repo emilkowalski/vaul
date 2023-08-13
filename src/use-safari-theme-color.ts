@@ -123,6 +123,7 @@ export function useSafariThemeColor(
         document.getElementsByTagName('head')[0].appendChild(metaThemeColor);
       }
       const timer = isOpen ? 10.5 : 8;
+
       for (let i = 0; i < interpolatedColorsEnter.length; i++) {
         setTimeout(() => {
           const currentColor = isOpen ? interpolatedColorsEnter[i] : interpolatedColorsExit[i];
@@ -138,7 +139,7 @@ export function useSafariThemeColor(
 
   function onDrag(percentageDragged: number) {
     const metaThemeColor = document.querySelector('meta[name="theme-color"]');
-    if (!shouldRun && !metaThemeColor) return;
+    if (!shouldRun || !metaThemeColor) return;
 
     // Calculate the index of the color array by mapping the proportion to the array length
     let colorIndex = Math.floor(percentageDragged * linearInterpolation.length);
