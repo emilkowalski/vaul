@@ -1,4 +1,4 @@
-import { MutableRefObject, useEffect, useMemo, useState } from 'react';
+import React from 'react';
 import { isIOS, isSafari } from './use-prevent-scroll';
 
 type RGB = [number, number, number];
@@ -53,15 +53,15 @@ function interpolateColors(color1: number[], color2: number[], steps: number, li
   return interpolatedColorArray;
 }
 export function useSafariThemeColor(
-  drawer: MutableRefObject<HTMLDivElement>,
-  overlay: MutableRefObject<HTMLDivElement>,
+  drawer: React.MutableRefObject<HTMLDivElement>,
+  overlay: React.MutableRefObject<HTMLDivElement>,
   isOpen: boolean,
 ) {
-  const [backgroundColor, setBackgroundColor] = useState<RGB | null>(null);
-  const [nonTransparentOverlayColor, setNonTransparentOverlayColor] = useState<RGB | null>(null);
-  const [releaseExit, setReleaseExit] = useState<boolean>(false);
+  const [backgroundColor, setBackgroundColor] = React.useState<RGB | null>(null);
+  const [nonTransparentOverlayColor, setNonTransparentOverlayColor] = React.useState<RGB | null>(null);
+  const [releaseExit, setReleaseExit] = React.useState<boolean>(false);
   const shouldRun = isIOS() && isSafari();
-  const interpolatedColorsEnter = useMemo(
+  const interpolatedColorsEnter = React.useMemo(
     () =>
       backgroundColor && nonTransparentOverlayColor
         ? interpolateColors(backgroundColor, nonTransparentOverlayColor, 50)
@@ -69,7 +69,7 @@ export function useSafariThemeColor(
     [nonTransparentOverlayColor, backgroundColor],
   );
 
-  const interpolatedColorsExit = useMemo(
+  const interpolatedColorsExit = React.useMemo(
     () =>
       backgroundColor && nonTransparentOverlayColor
         ? interpolateColors(nonTransparentOverlayColor, backgroundColor, 50)
@@ -77,7 +77,7 @@ export function useSafariThemeColor(
     [nonTransparentOverlayColor, backgroundColor],
   );
 
-  const linearInterpolation = useMemo(
+  const linearInterpolation = React.useMemo(
     () =>
       backgroundColor && nonTransparentOverlayColor
         ? interpolateColors(nonTransparentOverlayColor, backgroundColor, 50, true)
@@ -85,7 +85,7 @@ export function useSafariThemeColor(
     [nonTransparentOverlayColor, backgroundColor],
   );
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (!shouldRun) return;
     requestAnimationFrame(() => {
       if (overlay.current) {
@@ -101,7 +101,7 @@ export function useSafariThemeColor(
     });
   }, [isOpen]);
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (!shouldRun) return;
 
     if (overlay.current && interpolatedColorsEnter && interpolatedColorsExit && !releaseExit) {

@@ -626,6 +626,9 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
           set(overlayRef.current, {
             opacity: '1',
           });
+          set(drawerRef.current, {
+            transform: 'translateY(0px)',
+          });
         }
       }}
       onPointerDown={onPress}
