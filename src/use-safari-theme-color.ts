@@ -1,4 +1,5 @@
 import { MutableRefObject, useEffect, useMemo, useState } from 'react';
+import { isIOS, isSafari } from './use-prevent-scroll';
 
 type RGB = [number, number, number];
 
@@ -59,11 +60,11 @@ export function useSafariThemeColor(
   const [backgroundColor, setBackgroundColor] = useState<RGB | null>(null);
   const [nonTransparentOverlayColor, setNonTransparentOverlayColor] = useState<RGB | null>(null);
   const [releaseExit, setReleaseExit] = useState<boolean>(false);
-
+  const shouldRun = isIOS() && isSafari();
   const interpolatedColorsEnter = useMemo(
     () =>
       backgroundColor && nonTransparentOverlayColor
-        ? interpolateColors(backgroundColor, nonTransparentOverlayColor, 80)
+        ? interpolateColors(backgroundColor, nonTransparentOverlayColor, 50)
         : null,
     [nonTransparentOverlayColor, backgroundColor],
   );
@@ -71,7 +72,7 @@ export function useSafariThemeColor(
   const interpolatedColorsExit = useMemo(
     () =>
       backgroundColor && nonTransparentOverlayColor
-        ? interpolateColors(nonTransparentOverlayColor, backgroundColor, 80)
+        ? interpolateColors(nonTransparentOverlayColor, backgroundColor, 50)
         : null,
     [nonTransparentOverlayColor, backgroundColor],
   );
@@ -85,6 +86,7 @@ export function useSafariThemeColor(
   );
 
   useEffect(() => {
+    if (!shouldRun) return;
     requestAnimationFrame(() => {
       if (overlay.current) {
         const overlayColor = getComputedStyle(overlay.current).getPropertyValue('background-color');
@@ -100,6 +102,7 @@ export function useSafariThemeColor(
   }, [isOpen]);
 
   useEffect(() => {
+    if (!shouldRun) return;
     if (overlay.current && interpolatedColorsEnter && interpolatedColorsExit && !releaseExit) {
       let metaThemeColor = document.querySelector('meta[name="theme-color"]');
       if (drawer.current.style.transform === 'translateY(0px)') {
@@ -118,7 +121,7 @@ export function useSafariThemeColor(
         setTimeout(() => {
           const currentColor = isOpen ? interpolatedColorsEnter[i] : interpolatedColorsExit[i];
           metaThemeColor.setAttribute('content', `rgb(${currentColor.join(',')})`);
-        }, i * 4);
+        }, i * 10.5);
       }
     }
 
@@ -129,7 +132,7 @@ export function useSafariThemeColor(
 
   function onDrag(percentageDragged: number) {
     const metaThemeColor = document.querySelector('meta[name="theme-color"]');
-    if (!metaThemeColor) return;
+    if (!shouldRun && !metaThemeColor) return;
 
     // Calculate the index of the color array by mapping the proportion to the array length
     let colorIndex = Math.floor(percentageDragged * linearInterpolation.length);
@@ -145,18 +148,17 @@ export function useSafariThemeColor(
   }
 
   function onRelease(isOpen: boolean) {
-    console.log('onRelease');
     const metaThemeColor = document.querySelector('meta[name="theme-color"]');
-    if (!metaThemeColor) return;
+    if (!metaThemeColor || !shouldRun) return;
     setReleaseExit(true);
 
     // Get the current meta theme color and create color steps from it to nonTransparentOverlayColor with non-linear interpolation to ensure same easing as overlay.
     const rgbValues = metaThemeColor.getAttribute('content').match(/\d+/g).map(Number);
 
-    let colorSteps = interpolateColors(rgbValues, nonTransparentOverlayColor as RGB, 100);
+    let colorSteps = interpolateColors(rgbValues, nonTransparentOverlayColor as RGB, 50);
 
     if (!isOpen) {
-      colorSteps = interpolateColors(rgbValues, backgroundColor, 100);
+      colorSteps = interpolateColors(rgbValues, backgroundColor, 50);
     }
 
     for (let i = 0; i < interpolatedColorsEnter.length; i++) {
@@ -164,7 +166,7 @@ export function useSafariThemeColor(
         const currentColor = colorSteps[i];
 
         metaThemeColor.setAttribute('content', `rgb(${currentColor.join(',')})`);
-      }, i * 5);
+      }, i * 10.5);
     }
   }
 

@@ -28,6 +28,10 @@ function isIPhone(): boolean | undefined {
   return testPlatform(/^iPhone/);
 }
 
+export function isSafari(): boolean | undefined {
+  return /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+}
+
 function isIPad(): boolean | undefined {
   return (
     testPlatform(/^iPad/) ||
