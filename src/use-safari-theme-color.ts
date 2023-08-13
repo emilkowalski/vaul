@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import { isIOS, isSafari } from './use-prevent-scroll';
 
 type RGB = [number, number, number];
@@ -61,7 +61,7 @@ export function useSafariThemeColor(
   const [backgroundColor, setBackgroundColor] = React.useState<RGB | null>(null);
   const [nonTransparentOverlayColor, setNonTransparentOverlayColor] = React.useState<RGB | null>(null);
   const [releaseExit, setReleaseExit] = React.useState<boolean>(false);
-  const shouldRun = useMemo(() => isIOS() && isSafari() && shouldAnimate, [shouldAnimate]);
+  const shouldRun = React.useMemo(() => isIOS() && isSafari() && shouldAnimate, [shouldAnimate]);
 
   const interpolatedColorsEnter = React.useMemo(
     () =>

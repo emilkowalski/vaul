@@ -3,7 +3,7 @@
 import * as DialogPrimitive from '@radix-ui/react-dialog';
 import { useControllableState } from './use-controllable-state';
 import { DrawerContext, useDrawerContext } from './context';
-import React, { useEffect } from 'react';
+import React from 'react';
 import './style.css';
 import { usePreventScroll, isInput, isIOS } from './use-prevent-scroll';
 import { useComposedRefs } from './use-composed-refs';
@@ -279,7 +279,7 @@ function Root({
     }
   }
 
-  useEffect(() => {
+  React.useEffect(() => {
     function onVisualViewportChange() {
       if (!drawerRef.current) return;
 
