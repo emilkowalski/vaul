@@ -103,6 +103,7 @@ export function useSafariThemeColor(
 
   useEffect(() => {
     if (!shouldRun) return;
+
     if (overlay.current && interpolatedColorsEnter && interpolatedColorsExit && !releaseExit) {
       let metaThemeColor = document.querySelector('meta[name="theme-color"]');
       if (drawer.current.style.transform === 'translateY(0px)') {
@@ -116,12 +117,12 @@ export function useSafariThemeColor(
         metaThemeColor.name = 'theme-color';
         document.getElementsByTagName('head')[0].appendChild(metaThemeColor);
       }
-
+      const timer = isOpen ? 10.5 : 8;
       for (let i = 0; i < interpolatedColorsEnter.length; i++) {
         setTimeout(() => {
           const currentColor = isOpen ? interpolatedColorsEnter[i] : interpolatedColorsExit[i];
           metaThemeColor.setAttribute('content', `rgb(${currentColor.join(',')})`);
-        }, i * 5);
+        }, i * timer);
       }
     }
 

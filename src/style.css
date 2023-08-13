@@ -20,7 +20,11 @@
 }
 
 [vaul-overlay] {
-  animation: show-overlay 0.5s cubic-bezier(0.32, 0.72, 0, 1);
+  opacity: 0;
+}
+
+[vaul-overlay] {
+  animation: show-overlay 0.5s cubic-bezier(0.32, 0.72, 0, 1) 0.022s;
 }
 
 [vaul-overlay][data-state='closed'] {

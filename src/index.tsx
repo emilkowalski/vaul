@@ -128,7 +128,7 @@ function Root({
   const drawerRef = React.useRef<HTMLDivElement>(null);
   const previousBodyPosition = React.useRef<Record<string, string> | null>(null);
   const { onDrag: changeThemeColorOnDrag, onRelease: themeTransitionOnRelease } = useSafariThemeColor(
-	drawerRef,
+    drawerRef,
     overlayRef,
     isOpen,
   );
@@ -163,7 +163,7 @@ function Root({
     // Don't drag if there's highlighted text
     if (highlightedText.length > 0) {
       return false;
-    }	
+    }
 
     // Disallow dragging if drawer was scrolled within last second
     if (
@@ -545,6 +545,7 @@ function Root({
       restorePositionSetting();
     }
   }, [isOpen]);
+  const currTime = new Date().getTime();
 
   return (
     <DialogPrimitive.Root
@@ -620,10 +621,12 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
         }, ANIMATION_DURATION);
         onAnimationStart(e);
       }}
-      onAnimationEnd={() => {
-        set(overlayRef.current, {
-          opacity: '1',
-        });
+      onAnimationEnd={(e) => {
+        if (e.animationName === 'show-dialog') {
+          set(overlayRef.current, {
+            opacity: '1',
+          });
+        }
       }}
       onPointerDown={onPress}
       onPointerUp={onRelease}
