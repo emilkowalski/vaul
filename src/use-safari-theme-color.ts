@@ -61,6 +61,7 @@ export function useSafariThemeColor(
   const [backgroundColor, setBackgroundColor] = React.useState<RGB | null>(null);
   const [nonTransparentOverlayColor, setNonTransparentOverlayColor] = React.useState<RGB | null>(null);
   const [releaseExit, setReleaseExit] = React.useState<boolean>(false);
+  const [initialMetaThemeColor, setInitialMetaThemeColor] = React.useState<string | null>(null);
   const shouldRun = React.useMemo(() => isIOS() && isSafari() && shouldAnimate, [shouldAnimate]);
 
   const interpolatedColorsEnter = React.useMemo(
@@ -122,13 +123,19 @@ export function useSafariThemeColor(
         // @ts-ignore
         metaThemeColor.name = 'theme-color';
         document.getElementsByTagName('head')[0].appendChild(metaThemeColor);
+      } else {
+        setInitialMetaThemeColor(metaThemeColor.getAttribute('content'));
       }
+
       const timer = isOpen ? 10.5 : 8;
 
       for (let i = 0; i < interpolatedColorsEnter.length; i++) {
         setTimeout(() => {
           const currentColor = isOpen ? interpolatedColorsEnter[i] : interpolatedColorsExit[i];
           metaThemeColor.setAttribute('content', `rgb(${currentColor.join(',')})`);
+          if (i === interpolatedColorsEnter.length - 1 && initialMetaThemeColor && !isOpen) {
+            metaThemeColor.setAttribute('content', initialMetaThemeColor as string);
+          }
         }, i * timer);
       }
     }
@@ -168,13 +175,16 @@ export function useSafariThemeColor(
     if (!isOpen) {
       colorSteps = interpolateColors(rgbValues, backgroundColor, 50);
     }
-    console.log(isOpen);
 
     for (let i = 0; i < interpolatedColorsEnter.length; i++) {
       setTimeout(() => {
         const currentColor = colorSteps[i];
 
         metaThemeColor.setAttribute('content', `rgb(${currentColor.join(',')})`);
+
+        if (i === interpolatedColorsEnter.length - 1 && initialMetaThemeColor && !isOpen) {
+          metaThemeColor.setAttribute('content', initialMetaThemeColor as string);
+        }
       }, i * 10.5);
     }
   }
