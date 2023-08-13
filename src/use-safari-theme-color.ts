@@ -137,19 +137,22 @@ export function useSafariThemeColor(overlay: MutableRefObject<HTMLDivElement>, i
   }
 
   function onRelease(isOpen: boolean) {
+    const metaThemeColor = document.querySelector('meta[name="theme-color"]');
+    if (!metaThemeColor) return;
     setReleaseExit(true);
     // Get the current meta theme color and create color steps from it to nonTransparentOverlayColor with non-linear interpolation to ensure same easing as overlay.
-    const metaThemeColor = document.querySelector('meta[name="theme-color"]');
     const rgbValues = metaThemeColor.getAttribute('content').match(/\d+/g).map(Number);
-    let colorSteps = interpolateColors(rgbValues, nonTransparentOverlayColor as RGB, 50);
+
+    let colorSteps = interpolateColors(rgbValues, nonTransparentOverlayColor as RGB, 100);
 
     if (!isOpen) {
-      colorSteps = interpolateColors(rgbValues, backgroundColor, 50);
+      colorSteps = interpolateColors(rgbValues, backgroundColor, 100);
     }
 
     for (let i = 0; i < interpolatedColorsEnter.length; i++) {
       setTimeout(() => {
         const currentColor = colorSteps[i];
+
         metaThemeColor.setAttribute('content', `rgb(${currentColor.join(',')})`);
       }, i * 10.05);
     }
