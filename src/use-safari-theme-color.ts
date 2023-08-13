@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { isIOS, isSafari } from './use-prevent-scroll';
 
 type RGB = [number, number, number];
@@ -61,7 +61,8 @@ export function useSafariThemeColor(
   const [backgroundColor, setBackgroundColor] = React.useState<RGB | null>(null);
   const [nonTransparentOverlayColor, setNonTransparentOverlayColor] = React.useState<RGB | null>(null);
   const [releaseExit, setReleaseExit] = React.useState<boolean>(false);
-  const shouldRun = isIOS() && isSafari() && shouldAnimate;
+  const shouldRun = useMemo(() => isIOS() && isSafari() && shouldAnimate, [shouldAnimate]);
+
   const interpolatedColorsEnter = React.useMemo(
     () =>
       backgroundColor && nonTransparentOverlayColor
@@ -100,7 +101,7 @@ export function useSafariThemeColor(
         setNonTransparentOverlayColor(nonTransparentOverlayColor);
       }
     });
-  }, [isOpen]);
+  }, [isOpen, shouldRun, overlay]);
 
   React.useEffect(() => {
     if (!shouldRun) return;
@@ -135,7 +136,7 @@ export function useSafariThemeColor(
     if (isOpen) {
       setReleaseExit(false);
     }
-  }, [isOpen, interpolatedColorsEnter, interpolatedColorsExit, releaseExit]);
+  }, [isOpen, interpolatedColorsEnter, interpolatedColorsExit, releaseExit, drawer, overlay, shouldRun]);
 
   function onDrag(percentageDragged: number) {
     const metaThemeColor = document.querySelector('meta[name="theme-color"]');

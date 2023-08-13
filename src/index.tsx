@@ -31,6 +31,8 @@ interface Style {
 function isInView(el: HTMLElement): boolean {
   const rect = el.getBoundingClientRect();
 
+  if (!window.visualViewport) return false;
+
   return (
     rect.top >= 0 &&
     rect.left >= 0 &&
@@ -78,8 +80,9 @@ function reset(el: Element | HTMLElement | null, prop?: string) {
 
 function getTranslateY(element: HTMLElement): number | null {
   const style = window.getComputedStyle(element);
-  // @ts-ignore
-  const transform = style.transform || style.webkitTransform || style.mozTransform;
+  const transform =
+    // @ts-ignore
+    style.transform || style.webkitTransform || style.mozTransform;
   let mat = transform.match(/^matrix3d\((.+)\)$/);
   if (mat) return parseFloat(mat[1].split(', ')[13]);
   mat = transform.match(/^matrix\((.+)\)$/);
@@ -146,7 +149,11 @@ function Root({
 
   function onPress(event: React.PointerEvent<HTMLDivElement>) {
     if (!dismissible) return;
-    if (!drawerRef.current.contains(event.target as Node) || (event.target as HTMLElement).tagName === 'BUTTON') return;
+    if (
+      (drawerRef.current && !drawerRef.current.contains(event.target as Node)) ||
+      (event.target as HTMLElement).tagName === 'BUTTON'
+    )
+      return;
 
     setIsDragging(true);
     dragStartTime.current = new Date();
@@ -330,7 +337,7 @@ function Root({
 
       return () => clearTimeout(id);
     }
-  }, [isOpen]);
+  }, [isOpen, shouldScaleBackground]);
 
   function resetDrawer() {
     const wrapper = document.querySelector('[vaul-drawer-wrapper]');
@@ -548,7 +555,6 @@ function Root({
       restorePositionSetting();
     }
   }, [isOpen]);
-  const currTime = new Date().getTime();
 
   return (
     <DialogPrimitive.Root
@@ -588,6 +594,8 @@ const Overlay = React.forwardRef<HTMLDivElement, React.ComponentPropsWithoutRef<
     return <DialogPrimitive.Overlay onMouseUp={onRelease} ref={composedRef} vaul-overlay="" {...rest} />;
   },
 );
+
+Overlay.displayName = 'Drawer.Overlay';
 
 type ContentProps = React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content> & {
   onAnimationEnd?: (open: boolean) => void;
@@ -665,6 +673,8 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
     </DialogPrimitive.Content>
   );
 });
+
+Content.displayName = 'Drawer.Content';
 
 function NestedRoot({ children, onDrag, onOpenChange }: DialogProps) {
   const { onNestedDrag, onNestedOpenChange, onNestedRelease } = useDrawerContext();
