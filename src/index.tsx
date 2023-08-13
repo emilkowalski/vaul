@@ -380,8 +380,8 @@ function Root({
     // Moved upwards, don't do anything
     if (distMoved > 0) {
       resetDrawer();
-      onReleaseProp?.(event, false);
-      themeTransitionOnRelease(false);
+      onReleaseProp?.(event, true);
+      themeTransitionOnRelease(true);
       return;
     }
 

@@ -161,6 +161,7 @@ export function useSafariThemeColor(
     if (!isOpen) {
       colorSteps = interpolateColors(rgbValues, backgroundColor, 50);
     }
+    console.log(isOpen);
 
     for (let i = 0; i < interpolatedColorsEnter.length; i++) {
       setTimeout(() => {
