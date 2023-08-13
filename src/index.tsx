@@ -7,6 +7,7 @@ import React from 'react';
 import './style.css';
 import { usePreventScroll, isInput } from './use-prevent-scroll';
 import { useComposedRefs } from './use-composed-refs';
+import { useSafariThemeColor } from './use-safari-theme-color';
 import { usePositionFixed } from './use-position-fixed';
 
 const CLOSE_THRESHOLD = 0.25;
@@ -36,6 +37,8 @@ interface Style {
 
 function isInView(el: HTMLElement): boolean {
   const rect = el.getBoundingClientRect();
+
+  if (!window.visualViewport) return false;
 
   return (
     rect.top >= 0 &&
@@ -84,8 +87,9 @@ function reset(el: Element | HTMLElement | null, prop?: string) {
 
 function getTranslateY(element: HTMLElement): number | null {
   const style = window.getComputedStyle(element);
-  // @ts-ignore
-  const transform = style.transform || style.webkitTransform || style.mozTransform;
+  const transform =
+    // @ts-ignore
+    style.transform || style.webkitTransform || style.mozTransform;
   let mat = transform.match(/^matrix3d\((.+)\)$/);
   if (mat) return parseFloat(mat[1].split(', ')[13]);
   mat = transform.match(/^matrix\((.+)\)$/);
@@ -103,6 +107,7 @@ interface DialogProps {
   dismissible?: boolean;
   onDrag?(event: React.PointerEvent<HTMLDivElement>, percentageDragged: number): void;
   onRelease?(event: React.PointerEvent<HTMLDivElement>, open: boolean): void;
+  experimentalSafariThemeAnimation?: boolean;
 }
 
 function Root({
@@ -113,6 +118,7 @@ function Root({
   shouldScaleBackground,
   onDrag: onDragProp,
   onRelease: onReleaseProp,
+  experimentalSafariThemeAnimation,
   closeThreshold = CLOSE_THRESHOLD,
   scrollLockTimeout = SCROLL_LOCK_TIMEOUT,
   dismissible = true,
@@ -132,6 +138,13 @@ function Root({
   const pointerStartY = React.useRef(0);
   const keyboardIsOpen = React.useRef(false);
   const drawerRef = React.useRef<HTMLDivElement>(null);
+  const { onDrag: changeThemeColorOnDrag, onRelease: themeTransitionOnRelease } = useSafariThemeColor(
+    drawerRef,
+    overlayRef,
+    isOpen,
+    experimentalSafariThemeAnimation,
+  );
+
 
   usePreventScroll({
     isDisabled: !isOpen || isDragging || isAnimating,
@@ -145,7 +158,11 @@ function Root({
 
   function onPress(event: React.PointerEvent<HTMLDivElement>) {
     if (!dismissible) return;
-    if (!drawerRef.current.contains(event.target as Node) || (event.target as HTMLElement).tagName === 'BUTTON') return;
+    if (
+      (drawerRef.current && !drawerRef.current.contains(event.target as Node)) ||
+      (event.target as HTMLElement).tagName === 'BUTTON'
+    )
+      return;
 
     setIsDragging(true);
     dragStartTime.current = new Date();
@@ -237,6 +254,7 @@ function Root({
 
       const percentageDragged = absDraggedDistance / drawerHeight;
       const opacityValue = 1 - percentageDragged;
+      changeThemeColorOnDrag(percentageDragged);
       onDragProp?.(event, percentageDragged);
       set(
         overlayRef.current,
@@ -328,7 +346,7 @@ function Root({
 
       return () => clearTimeout(id);
     }
-  }, [isOpen]);
+  }, [isOpen, shouldScaleBackground]);
 
   function resetDrawer() {
     const wrapper = document.querySelector('[vaul-drawer-wrapper]');
@@ -381,13 +399,15 @@ function Root({
     // Moved upwards, don't do anything
     if (distMoved > 0) {
       resetDrawer();
-      onReleaseProp?.(event, false);
+      onReleaseProp?.(event, true);
+      themeTransitionOnRelease(true);
       return;
     }
 
     if (velocity > VELOCITY_THRESHOLD) {
       closeDrawer();
       onReleaseProp?.(event, false);
+      themeTransitionOnRelease(false);
       return;
     }
 
@@ -396,10 +416,12 @@ function Root({
     if (swipeAmount >= visibleDrawerHeight * closeThreshold) {
       closeDrawer();
       onReleaseProp?.(event, false);
+      themeTransitionOnRelease(false);
       return;
     }
 
     onReleaseProp?.(event, true);
+    themeTransitionOnRelease(true);
     resetDrawer();
   }
 
@@ -521,6 +543,8 @@ const Overlay = React.forwardRef<HTMLDivElement, React.ComponentPropsWithoutRef<
   },
 );
 
+Overlay.displayName = 'Drawer.Overlay';
+
 type ContentProps = React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content> & {
   onAnimationEnd?: (open: boolean) => void;
 };
@@ -539,6 +563,7 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
     isOpen,
     keyboardIsOpen,
     setIsAnimating,
+    overlayRef,
   } = useDrawerContext();
   const composedRef = useComposedRefs(ref, drawerRef);
   const animationEndTimer = React.useRef<NodeJS.Timeout>(null);
@@ -554,6 +579,16 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
           onAnimationEnd?.(isOpen);
         }, ANIMATION_DURATION);
         onAnimationStart(e);
+      }}
+      onAnimationEnd={(e) => {
+        if (e.animationName === 'show-dialog') {
+          set(overlayRef.current, {
+            opacity: '1',
+          });
+          set(drawerRef.current, {
+            transform: 'translateY(0px)',
+          });
+        }
       }}
       onPointerDown={onPress}
       onPointerUp={onRelease}
@@ -575,6 +610,7 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
         if (!dismissible) {
           e.preventDefault();
         }
+        drawerRef.current.setAttribute('vaul-clicked-outside', 'true');
         onPointerDownOutside?.(e);
       }}
       ref={composedRef}
@@ -585,6 +621,8 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
     </DialogPrimitive.Content>
   );
 });
+
+Content.displayName = 'Drawer.Content';
 
 function NestedRoot({ children, onDrag, onOpenChange }: DialogProps) {
   const { onNestedDrag, onNestedOpenChange, onNestedRelease } = useDrawerContext();
