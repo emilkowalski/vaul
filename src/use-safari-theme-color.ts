@@ -59,7 +59,7 @@ export function useSafariThemeColor(overlay: MutableRefObject<HTMLDivElement>, i
   const interpolatedColorsEnter = useMemo(
     () =>
       backgroundColor && nonTransparentOverlayColor
-        ? interpolateColors(backgroundColor, nonTransparentOverlayColor, 50)
+        ? interpolateColors(backgroundColor, nonTransparentOverlayColor, 80)
         : null,
     [nonTransparentOverlayColor, backgroundColor],
   );
@@ -67,7 +67,7 @@ export function useSafariThemeColor(overlay: MutableRefObject<HTMLDivElement>, i
   const interpolatedColorsExit = useMemo(
     () =>
       backgroundColor && nonTransparentOverlayColor
-        ? interpolateColors(nonTransparentOverlayColor, backgroundColor, 50)
+        ? interpolateColors(nonTransparentOverlayColor, backgroundColor, 80)
         : null,
     [nonTransparentOverlayColor, backgroundColor],
   );
@@ -110,7 +110,7 @@ export function useSafariThemeColor(overlay: MutableRefObject<HTMLDivElement>, i
         setTimeout(() => {
           const currentColor = isOpen ? interpolatedColorsEnter[i] : interpolatedColorsExit[i];
           metaThemeColor.setAttribute('content', `rgb(${currentColor.join(',')})`);
-        }, i * 5);
+        }, i * 4);
       }
     }
 
@@ -151,7 +151,7 @@ export function useSafariThemeColor(overlay: MutableRefObject<HTMLDivElement>, i
       setTimeout(() => {
         const currentColor = colorSteps[i];
         metaThemeColor.setAttribute('content', `rgb(${currentColor.join(',')})`);
-      }, i * 5);
+      }, i * 10.05);
     }
   }
 
