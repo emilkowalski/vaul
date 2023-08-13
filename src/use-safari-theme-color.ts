@@ -96,6 +96,7 @@ export function useSafariThemeColor(overlay: MutableRefObject<HTMLDivElement>, i
   }, [isOpen]);
 
   useEffect(() => {
+    const startTime = Date.now();
     if (overlay.current && interpolatedColorsEnter && interpolatedColorsExit && !releaseExit) {
       let metaThemeColor = document.querySelector('meta[name="theme-color"]');
 
@@ -110,10 +111,15 @@ export function useSafariThemeColor(overlay: MutableRefObject<HTMLDivElement>, i
         setTimeout(() => {
           const currentColor = isOpen ? interpolatedColorsEnter[i] : interpolatedColorsExit[i];
           metaThemeColor.setAttribute('content', `rgb(${currentColor.join(',')})`);
-        }, i * 5);
+          if (i === interpolatedColorsEnter.length - 1) {
+            const endTime = Date.now();
+            const duration = endTime - startTime;
+            console.log(duration);
+          }
+        }, i * 10);
       }
     }
-	
+
     if (isOpen) {
       setReleaseExit(false);
     }

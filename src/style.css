@@ -20,11 +20,11 @@
 }
 
 [vaul-overlay] {
-  animation: show-overlay 0.5s cubic-bezier(0.32, 0.72, 0, 1);
+  animation: show-overlay 0.5s cubic-bezier(0.12, 0.48, 0.165, 1);
 }
 
 [vaul-overlay][data-state='closed'] {
-  animation: hide-overlay 0.5s cubic-bezier(0.32, 0.72, 0, 1) forwards;
+  animation: hide-overlay 0.5s cubic-bezier(0.12, 0.48, 0.165, 1) forwards;
 }
 
 @keyframes show-dialog {
