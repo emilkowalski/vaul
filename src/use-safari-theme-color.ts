@@ -106,7 +106,11 @@ export function useSafariThemeColor(
 
     if (overlay.current && interpolatedColorsEnter && interpolatedColorsExit && !releaseExit) {
       let metaThemeColor = document.querySelector('meta[name="theme-color"]');
-      if (drawer.current.style.transform === 'translateY(0px)') {
+
+      if (
+        drawer.current.style.transform === 'translateY(0px)' &&
+        drawer.current.getAttribute('vaul-clicked-outside') !== 'true'
+      ) {
         // It's resetting, so don't apply these styles
         return;
       }

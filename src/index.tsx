@@ -648,6 +648,7 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
         if (!dismissible) {
           e.preventDefault();
         }
+        drawerRef.current.setAttribute('vaul-clicked-outside', 'true');
         onPointerDownOutside?.(e);
       }}
       ref={composedRef}
