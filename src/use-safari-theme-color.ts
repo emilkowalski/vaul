@@ -22,8 +22,8 @@ function getNonTrasparentOverlayColor(rgbaStr: string, background: RGB): RGB {
   return rgb;
 }
 
-function easeOutExpo(t: number): number {
-  return t === 1 ? 1 : 1 - Math.pow(2, -10 * t);
+function easeOutCubic(t: number): number {
+  return 1 - Math.pow(1 - t, 3);
 }
 
 function interpolateColor(color1: number[], color2: number[], factor: number, linear: boolean) {
@@ -33,7 +33,7 @@ function interpolateColor(color1: number[], color2: number[], factor: number, li
   let result = color1.slice();
   for (let i = 0; i < 3; i++) {
     const delta = color2[i] - color1[i];
-    const newColorComponent = linear ? color1[i] + factor * delta : color1[i] + easeOutExpo(factor) * delta;
+    const newColorComponent = linear ? color1[i] + factor * delta : color1[i] + easeOutCubic(factor) * delta;
     result[i] = Math.round(newColorComponent);
     if (result[i] < 0) result[i] = 0;
     if (result[i] > 255) result[i] = 255;
@@ -116,7 +116,7 @@ export function useSafariThemeColor(overlay: MutableRefObject<HTMLDivElement>, i
             const duration = endTime - startTime;
             console.log(duration);
           }
-        }, i * 10);
+        }, i * 10.05);
       }
     }
 
@@ -157,7 +157,7 @@ export function useSafariThemeColor(overlay: MutableRefObject<HTMLDivElement>, i
       setTimeout(() => {
         const currentColor = colorSteps[i];
         metaThemeColor.setAttribute('content', `rgb(${currentColor.join(',')})`);
-      }, i * 5);
+      }, i * 10.05);
     }
   }
 
