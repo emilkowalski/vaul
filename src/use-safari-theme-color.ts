@@ -56,11 +56,12 @@ export function useSafariThemeColor(
   drawer: React.MutableRefObject<HTMLDivElement>,
   overlay: React.MutableRefObject<HTMLDivElement>,
   isOpen: boolean,
+  shouldAnimate: boolean,
 ) {
   const [backgroundColor, setBackgroundColor] = React.useState<RGB | null>(null);
   const [nonTransparentOverlayColor, setNonTransparentOverlayColor] = React.useState<RGB | null>(null);
   const [releaseExit, setReleaseExit] = React.useState<boolean>(false);
-  const shouldRun = isIOS() && isSafari();
+  const shouldRun = isIOS() && isSafari() && shouldAnimate;
   const interpolatedColorsEnter = React.useMemo(
     () =>
       backgroundColor && nonTransparentOverlayColor

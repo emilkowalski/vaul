@@ -97,6 +97,7 @@ interface DialogProps {
   dismissible?: boolean;
   onDrag?(event: React.PointerEvent<HTMLDivElement>, percentageDragged: number): void;
   onRelease?(event: React.PointerEvent<HTMLDivElement>, open: boolean): void;
+  experimentalSafariThemeAnimation?: boolean;
 }
 
 function Root({
@@ -107,6 +108,7 @@ function Root({
   shouldScaleBackground,
   onDrag: onDragProp,
   onRelease: onReleaseProp,
+  experimentalSafariThemeAnimation,
   closeThreshold = CLOSE_THRESHOLD,
   scrollLockTimeout = SCROLL_LOCK_TIMEOUT,
   dismissible = true,
@@ -131,6 +133,7 @@ function Root({
     drawerRef,
     overlayRef,
     isOpen,
+    experimentalSafariThemeAnimation,
   );
 
   usePreventScroll({
