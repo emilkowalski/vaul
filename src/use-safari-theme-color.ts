@@ -123,7 +123,7 @@ export function useSafariThemeColor(
         // @ts-ignore
         metaThemeColor.name = 'theme-color';
         document.getElementsByTagName('head')[0].appendChild(metaThemeColor);
-      } else {
+      } else if (!initialMetaThemeColor) {
         setInitialMetaThemeColor(metaThemeColor.getAttribute('content'));
       }
 

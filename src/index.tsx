@@ -145,7 +145,6 @@ function Root({
     experimentalSafariThemeAnimation,
   );
 
-
   usePreventScroll({
     isDisabled: !isOpen || isDragging || isAnimating,
   });
@@ -563,7 +562,6 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
     isOpen,
     keyboardIsOpen,
     setIsAnimating,
-    overlayRef,
   } = useDrawerContext();
   const composedRef = useComposedRefs(ref, drawerRef);
   const animationEndTimer = React.useRef<NodeJS.Timeout>(null);
@@ -579,16 +577,6 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
           onAnimationEnd?.(isOpen);
         }, ANIMATION_DURATION);
         onAnimationStart(e);
-      }}
-      onAnimationEnd={(e) => {
-        if (e.animationName === 'show-dialog') {
-          set(overlayRef.current, {
-            opacity: '1',
-          });
-          set(drawerRef.current, {
-            transform: 'translateY(0px)',
-          });
-        }
       }}
       onPointerDown={onPress}
       onPointerUp={onRelease}
