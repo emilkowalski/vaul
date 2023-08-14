@@ -20,7 +20,7 @@ export function Hero() {
                 Open Drawer
               </button>
             </Drawer.Trigger>
-            <Drawer.Overlay className="fixed inset-0" style={{ background: 'rgb(200, 200, 200)' }} />
+            <Drawer.Overlay className="fixed inset-0" style={{ background: 'rgba(0, 0, 0, 0.4)' }} />
             <Drawer.Portal>
               <Drawer.Content className="bg-gray-100 flex flex-col rounded-t-[10px] h-full mt-24 max-h-[96%] fixed bottom-0 left-0 right-0">
                 <div className="p-4 bg-white rounded-t-[10px] flex-1">

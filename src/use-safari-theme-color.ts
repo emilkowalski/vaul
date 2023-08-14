@@ -63,7 +63,7 @@ export function useSafariThemeColor(
   shouldAnimate: boolean,
 ) {
   const [backgroundColor, setBackgroundColor] = React.useState<RGB | null>([255, 255, 255]);
-  const [nonTransparentOverlayColor, setNonTransparentOverlayColor] = React.useState<RGB | null>([200, 200, 200]);
+  const [nonTransparentOverlayColor, setNonTransparentOverlayColor] = React.useState<RGB | null>([153, 153, 153]);
   const [releaseExit, setReleaseExit] = React.useState<boolean>(false);
   const [initialMetaThemeColor, setInitialMetaThemeColor] = React.useState<string | null>(null);
   const shouldRun = React.useMemo(() => isIOS() && isSafari() && shouldAnimate, [shouldAnimate]);
@@ -91,7 +91,7 @@ export function useSafariThemeColor(
         : null,
     [nonTransparentOverlayColor, backgroundColor],
   );
-
+  // TODO: Make it work
   //   React.useEffect(() => {
   //     if (!shouldRun) return;
   //     requestAnimationFrame(() => {
@@ -107,6 +107,7 @@ export function useSafariThemeColor(
   //       }
   //     });
   //   }, [isOpen, shouldRun, overlay]);
+  console.log(interpolatedColorsEnter);
 
   React.useEffect(() => {
     if (!shouldRun) return;
@@ -114,9 +115,11 @@ export function useSafariThemeColor(
     let start;
     let frameId;
 
+    // TODO: Extract into a function
     const draw = (timestamp) => {
       if (!start) start = timestamp;
-      const progress = timestamp - start;
+      const progress = timestamp - start + 5;
+
       // dividing by 10 will give us a total time of 500.
       const index = Math.floor(progress / 10);
 
@@ -202,7 +205,7 @@ export function useSafariThemeColor(
     if (!isOpen) {
       colorSteps = interpolateColors(rgbValues, backgroundColor, 50);
     }
-
+    // TODO: Replace with rAf
     for (let i = 0; i < interpolatedColorsEnter.length; i++) {
       setTimeout(() => {
         const currentColor = colorSteps[i];
