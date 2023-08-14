@@ -19,12 +19,26 @@
   animation: hide-dialog 0.5s cubic-bezier(0.32, 0.72, 0, 1) forwards;
 }
 
+[vaul-drawer][vaul-closed-by-dragging='true'] {
+  animation: fake-animation 0.5s cubic-bezier(0.32, 0.72, 0, 1) forwards;
+}
+
 [vaul-overlay] {
   animation: show-overlay 0.5s cubic-bezier(0.32, 0.72, 0, 1);
 }
 
 [vaul-overlay][data-state='closed'] {
   animation: hide-overlay 0.5s cubic-bezier(0.32, 0.72, 0, 1) forwards;
+}
+
+/* This will allow us to not animate via animation, but still benefit from delaying unmount via Radix. */
+@keyframes fake-animation {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes show-dialog {
