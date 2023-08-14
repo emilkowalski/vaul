@@ -317,15 +317,13 @@ function Root({
 
   function closeDrawer() {
     if (!dismissible) return;
+    drawerRef.current.setAttribute('vaul-closed-by-dragging', 'true');
     setIsOpen(false);
-    const drawerHeight = drawerRef.current?.getBoundingClientRect().height || 0;
 
     if (drawerRef.current) {
-      const swipeAmount = getTranslateY(drawerRef.current);
-
       set(drawerRef.current, {
-        '--hide-from': `${Number(swipeAmount).toFixed()}px`,
-        '--hide-to': `${drawerHeight.toFixed()}px`,
+        transform: `translateY(100%)`,
+        transition: `transform ${TRANSITIONS.DURATION}s cubic-bezier(${TRANSITIONS.EASE.join(',')})`,
       });
 
       const opacityValue = overlayRef.current?.style.opacity || 1;
