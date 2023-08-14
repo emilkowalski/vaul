@@ -1,5 +1,8 @@
 import React from 'react';
+import bezierEasing from 'bezier-easing';
 import { isIOS, isSafari } from './use-prevent-scroll';
+
+const easing = bezierEasing(0.32, 0.72, 0, 1);
 
 type RGB = [number, number, number];
 
@@ -22,9 +25,10 @@ function getNonTrasparentOverlayColor(rgbaStr: string, background: RGB): RGB {
 
   return rgb;
 }
+console.log(easing);
 
 function easeOutExpo(t: number): number {
-  return t === 1 ? 1 : 1 - Math.pow(2, -10 * t);
+  return easing(t);
 }
 
 function interpolateColor(color1: number[], color2: number[], factor: number, linear: boolean) {
@@ -58,8 +62,8 @@ export function useSafariThemeColor(
   isOpen: boolean,
   shouldAnimate: boolean,
 ) {
-  const [backgroundColor, setBackgroundColor] = React.useState<RGB | null>(null);
-  const [nonTransparentOverlayColor, setNonTransparentOverlayColor] = React.useState<RGB | null>(null);
+  const [backgroundColor, setBackgroundColor] = React.useState<RGB | null>([255, 255, 255]);
+  const [nonTransparentOverlayColor, setNonTransparentOverlayColor] = React.useState<RGB | null>([200, 200, 200]);
   const [releaseExit, setReleaseExit] = React.useState<boolean>(false);
   const [initialMetaThemeColor, setInitialMetaThemeColor] = React.useState<string | null>(null);
   const shouldRun = React.useMemo(() => isIOS() && isSafari() && shouldAnimate, [shouldAnimate]);
@@ -88,62 +92,85 @@ export function useSafariThemeColor(
     [nonTransparentOverlayColor, backgroundColor],
   );
 
-  React.useEffect(() => {
-    if (!shouldRun) return;
-    requestAnimationFrame(() => {
-      if (overlay.current) {
-        const overlayColor = getComputedStyle(overlay.current).getPropertyValue('background-color');
-        const backgroundColor = getComputedStyle(document.documentElement)
-          .getPropertyValue('--vaul-theme-color')
-          .split(',')
-          .map((c) => Number(c));
-        const nonTransparentOverlayColor = getNonTrasparentOverlayColor(overlayColor, backgroundColor as RGB);
-        setBackgroundColor(backgroundColor as RGB);
-        setNonTransparentOverlayColor(nonTransparentOverlayColor);
-      }
-    });
-  }, [isOpen, shouldRun, overlay]);
+  //   React.useEffect(() => {
+  //     if (!shouldRun) return;
+  //     requestAnimationFrame(() => {
+  //       if (overlay.current) {
+  //         const overlayColor = getComputedStyle(overlay.current).getPropertyValue('background-color');
+  //         const backgroundColor = getComputedStyle(document.documentElement)
+  //           .getPropertyValue('--vaul-theme-color')
+  //           .split(',')
+  //           .map((c) => Number(c));
+  //         const nonTransparentOverlayColor = getNonTrasparentOverlayColor(overlayColor, backgroundColor as RGB);
+  //         setBackgroundColor(backgroundColor as RGB);
+  //         setNonTransparentOverlayColor(nonTransparentOverlayColor);
+  //       }
+  //     });
+  //   }, [isOpen, shouldRun, overlay]);
 
   React.useEffect(() => {
     if (!shouldRun) return;
 
-    if (overlay.current && interpolatedColorsEnter && interpolatedColorsExit && !releaseExit) {
-      let metaThemeColor = document.querySelector('meta[name="theme-color"]');
+    let start;
+    let frameId;
 
-      if (
-        drawer.current.style.transform === 'translateY(0px)' &&
-        drawer.current.getAttribute('vaul-clicked-outside') !== 'true'
-      ) {
-        // It's resetting, so don't apply these styles
-        return;
-      }
+    const draw = (timestamp) => {
+      if (!start) start = timestamp;
+      const progress = timestamp - start;
+      // dividing by 10 will give us a total time of 500.
+      const index = Math.floor(progress / 10);
 
-      if (!metaThemeColor) {
-        metaThemeColor = document.createElement('meta');
-        // @ts-ignore
-        metaThemeColor.name = 'theme-color';
-        document.getElementsByTagName('head')[0].appendChild(metaThemeColor);
-      } else if (!initialMetaThemeColor) {
-        setInitialMetaThemeColor(metaThemeColor.getAttribute('content'));
-      }
+      if (overlay.current && interpolatedColorsEnter && interpolatedColorsExit && !releaseExit) {
+        let metaThemeColor = document.querySelector('meta[name="theme-color"]');
 
-      const timer = isOpen ? 10.5 : 8;
+        if (
+          drawer.current.style.transform === 'translateY(0px)' &&
+          drawer.current.getAttribute('vaul-clicked-outside') !== 'true'
+        ) {
+          // It's resetting, so don't apply these styles
+          return;
+        }
 
-      for (let i = 0; i < interpolatedColorsEnter.length; i++) {
-        setTimeout(() => {
-          const currentColor = isOpen ? interpolatedColorsEnter[i] : interpolatedColorsExit[i];
+        if (!metaThemeColor) {
+          metaThemeColor = document.createElement('meta');
+          metaThemeColor.name = 'theme-color';
+          document.getElementsByTagName('head')[0].appendChild(metaThemeColor);
+        } else if (!initialMetaThemeColor) {
+          setInitialMetaThemeColor(metaThemeColor.getAttribute('content'));
+        }
+
+        if (index < interpolatedColorsEnter.length) {
+          const currentColor = isOpen ? interpolatedColorsEnter[index] : interpolatedColorsExit[index];
           metaThemeColor.setAttribute('content', `rgb(${currentColor.join(',')})`);
-          if (i === interpolatedColorsEnter.length - 1 && initialMetaThemeColor && !isOpen) {
+
+          if (index === interpolatedColorsEnter.length - 1 && initialMetaThemeColor && !isOpen) {
             metaThemeColor.setAttribute('content', initialMetaThemeColor as string);
           }
-        }, i * timer);
+
+          frameId = requestAnimationFrame(draw);
+        }
       }
-    }
+    };
 
     if (isOpen) {
       setReleaseExit(false);
     }
-  }, [isOpen, interpolatedColorsEnter, interpolatedColorsExit, releaseExit, drawer, overlay, shouldRun]);
+
+    frameId = requestAnimationFrame(draw);
+
+    return () => {
+      if (frameId) cancelAnimationFrame(frameId);
+    };
+  }, [
+    isOpen,
+    interpolatedColorsEnter,
+    interpolatedColorsExit,
+    releaseExit,
+    drawer,
+    overlay,
+    shouldRun,
+    initialMetaThemeColor,
+  ]);
 
   function onDrag(percentageDragged: number) {
     const metaThemeColor = document.querySelector('meta[name="theme-color"]');
@@ -185,7 +212,7 @@ export function useSafariThemeColor(
         if (i === interpolatedColorsEnter.length - 1 && initialMetaThemeColor && !isOpen) {
           metaThemeColor.setAttribute('content', initialMetaThemeColor as string);
         }
-      }, i * 10.5);
+      }, i * 8.5);
     }
   }
 

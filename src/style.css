@@ -61,19 +61,19 @@
 
 @keyframes show-overlay {
   from {
-    opacity: 0;
+    background: rgba(255, 255, 255);
   }
   to {
-    opacity: 1;
+    background: rgba(200, 200, 200);
   }
 }
 
 @keyframes hide-overlay {
   from {
-    opacity: var(--opacity-from, 1);
+    background: rgba(200, 200, 200);
   }
   to {
-    opacity: 0;
+    background: rgba(255, 255, 255);
   }
 }
 

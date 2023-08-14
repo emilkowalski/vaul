@@ -5,6 +5,7 @@ importers:
   .:
     specifiers:
       '@radix-ui/react-dialog': ^1.0.4
+      bezier-easing: 2.1.0
       eslint: ^7.32.0
       prettier: ^2.5.1
       tsup: ^6.4.0
@@ -12,6 +13,7 @@ importers:
     dependencies:
       '@radix-ui/react-dialog': 1.0.4
     devDependencies:
+      bezier-easing: 2.1.0
       eslint: 7.32.0
       prettier: 2.8.8
       tsup: 6.7.0
@@ -1052,6 +1054,10 @@ packages:
 
   /balanced-match/1.0.2:
     resolution: {integrity: sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw==}
+
+  /bezier-easing/2.1.0:
+    resolution: {integrity: sha512-gbIqZ/eslnUFC1tjEvtz0sgx+xTK20wDnYMIA27VA04R7w6xxXQPZDbibjA9DTWZRA2CXtwHykkVzlCaAJAZig==}
+    dev: true
 
   /big-integer/1.6.51:
     resolution: {integrity: sha512-GPEid2Y9QU1Exl1rpO9B2IPJGHPSupF5GnVIP0blYvNOMer2bTvSWs1jGOUg04hTmu67nmLsQ9TBo1puaotBHg==}
