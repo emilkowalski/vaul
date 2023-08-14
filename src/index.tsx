@@ -445,7 +445,7 @@ function Root({
         transitionDuration: `${TRANSITIONS.DURATION}s`,
         transitionTimingFunction: `cubic-bezier(${TRANSITIONS.EASE.join(',')})`,
       });
-    } else if (e.animationName === 'hide-dialog') {
+    } else if (e.animationName === 'hide-dialog' || e.animationName === 'fake-animation') {
       // Exit
       reset(wrapper, 'transform');
       reset(wrapper, 'borderRadius');
