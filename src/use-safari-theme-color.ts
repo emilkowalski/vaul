@@ -2,7 +2,7 @@ import React, { useCallback } from 'react';
 import { bezier } from './bezier-easing';
 import { isIOS, isSafari } from './use-prevent-scroll';
 
-const easing = bezier(0.32, 0.72, 0, 1);
+const bezierEasing = bezier(0.32, 0.72, 0, 1);
 
 type RGB = [number, number, number];
 
@@ -26,8 +26,8 @@ function getNonTrasparentOverlayColor(rgbaStr: string, background: RGB): RGB {
   return rgb;
 }
 
-function easeOutExpo(t: number): number {
-  return easing(t);
+function easing(t: number): number {
+  return bezierEasing(t);
 }
 
 function interpolateColor(color1: number[], color2: number[], factor: number, linear: boolean) {
@@ -37,7 +37,7 @@ function interpolateColor(color1: number[], color2: number[], factor: number, li
   let result = color1.slice();
   for (let i = 0; i < 3; i++) {
     const delta = color2[i] - color1[i];
-    const newColorComponent = linear ? color1[i] + factor * delta : color1[i] + easeOutExpo(factor) * delta;
+    const newColorComponent = linear ? color1[i] + factor * delta : color1[i] + easing(factor) * delta;
     result[i] = Math.round(newColorComponent);
     if (result[i] < 0) result[i] = 0;
     if (result[i] > 255) result[i] = 255;
