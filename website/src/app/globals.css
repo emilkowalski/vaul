@@ -3,7 +3,9 @@
 @tailwind utilities;
 
 :root {
-  --vaul-theme-color: 255, 255, 255;
+  --vaul-overlay-background: 255, 255, 255;
+  --vaul-overlay-background-start: rgba(0, 0, 0, 0);
+  --vaul-overlay-background-end: rgba(0, 0, 0, 0.4);
 }
 
 html,
