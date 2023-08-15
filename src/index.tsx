@@ -523,6 +523,7 @@ function Root({
           onNestedRelease,
           keyboardIsOpen,
           setIsAnimating,
+          experimentalSafariThemeAnimation,
         }}
       >
         {children}
@@ -533,10 +534,18 @@ function Root({
 
 const Overlay = React.forwardRef<HTMLDivElement, React.ComponentPropsWithoutRef<typeof DialogPrimitive.Overlay>>(
   function ({ children, ...rest }, ref) {
-    const { overlayRef, onRelease } = useDrawerContext();
+    const { overlayRef, onRelease, experimentalSafariThemeAnimation } = useDrawerContext();
     const composedRef = useComposedRefs(ref, overlayRef);
 
-    return <DialogPrimitive.Overlay onMouseUp={onRelease} ref={composedRef} vaul-overlay="" {...rest} />;
+    return (
+      <DialogPrimitive.Overlay
+        onMouseUp={onRelease}
+        ref={composedRef}
+        vaul-overlay=""
+        vaul-theme-transition={experimentalSafariThemeAnimation ? 'true' : 'false'}
+        {...rest}
+      />
+    );
   },
 );
 

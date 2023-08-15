@@ -27,8 +27,16 @@
   animation: show-overlay 0.5s cubic-bezier(0.32, 0.72, 0, 1);
 }
 
+[vaul-overlay][vaul-theme-transition='true'] {
+  animation: show-theme-overlay 0.5s cubic-bezier(0.32, 0.72, 0, 1);
+}
+
 [vaul-overlay][data-state='closed'] {
   animation: hide-overlay 0.5s cubic-bezier(0.32, 0.72, 0, 1) forwards;
+}
+
+[vaul-overlay][vaul-theme-transition='true'][data-state='closed'] {
+  animation: hide-theme-overlay 0.5s cubic-bezier(0.32, 0.72, 0, 1) forwards;
 }
 
 /* This will allow us to not animate via animation, but still benefit from delaying unmount via Radix. */
@@ -61,19 +69,37 @@
 
 @keyframes show-overlay {
   from {
-    background: rgba(0, 0, 0, 0);
+    opacity: 0;
   }
   to {
-    background: rgba(0, 0, 0, 0.4);
+    opacity: 1;
   }
 }
 
 @keyframes hide-overlay {
   from {
-    background: rgba(0, 0, 0, 0.4);
+    opacity: var(--opacity-from, 1);
   }
   to {
-    background: rgba(0, 0, 0, 0);
+    opacity: 0;
+  }
+}
+
+@keyframes show-theme-overlay {
+  from {
+    background: var(--vaul-overlay-background-start);
+  }
+  to {
+    background: var(--vaul-overlay-background-end);
+  }
+}
+
+@keyframes hide-theme-overlay {
+  from {
+    background: var(--vaul-overlay-background-end);
+  }
+  to {
+    background: var(--vaul-overlay-background-start);
   }
 }
 

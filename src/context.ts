@@ -14,6 +14,7 @@ interface DrawerContextValue {
   isOpen: boolean;
   setIsAnimating: (o: boolean) => void;
   keyboardIsOpen: React.MutableRefObject<boolean>;
+  experimentalSafariThemeAnimation: boolean;
 }
 
 export const DrawerContext = React.createContext<DrawerContextValue | undefined>(undefined);

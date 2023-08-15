@@ -87,7 +87,7 @@ export function useSafariThemeColor(
     if (!shouldRun) return;
     const documentElementStyle = getComputedStyle(document.documentElement);
     const backgroundColor = documentElementStyle
-      .getPropertyValue('--vaul-overlay-background-start')
+      .getPropertyValue('--vaul-overlay-background')
       .split(',')
       .map((c) => Number(c));
 
