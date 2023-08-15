@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import bezierEasing from 'bezier-easing';
 import { isIOS, isSafari } from './use-prevent-scroll';
 
@@ -25,7 +25,6 @@ function getNonTrasparentOverlayColor(rgbaStr: string, background: RGB): RGB {
 
   return rgb;
 }
-console.log(easing);
 
 function easeOutExpo(t: number): number {
   return easing(t);
@@ -63,109 +62,102 @@ export function useSafariThemeColor(
   shouldAnimate: boolean,
 ) {
   const [backgroundColor, setBackgroundColor] = React.useState<RGB | null>([255, 255, 255]);
-  const [nonTransparentOverlayColor, setNonTransparentOverlayColor] = React.useState<RGB | null>([153, 153, 153]);
+  const [overlayColor, setOverlayColor] = React.useState<RGB | null>([153, 153, 153]);
   const [releaseExit, setReleaseExit] = React.useState<boolean>(false);
   const [initialMetaThemeColor, setInitialMetaThemeColor] = React.useState<string | null>(null);
   const [metaElement, setMetaElement] = React.useState<HTMLMetaElement | null>(null);
   const shouldRun = React.useMemo(() => isIOS() && isSafari() && shouldAnimate, [shouldAnimate]);
 
   const interpolatedColorsEnter = React.useMemo(
-    () =>
-      backgroundColor && nonTransparentOverlayColor
-        ? interpolateColors(backgroundColor, nonTransparentOverlayColor, 50)
-        : null,
-    [nonTransparentOverlayColor, backgroundColor],
+    () => (backgroundColor && overlayColor ? interpolateColors(backgroundColor, overlayColor, 50) : null),
+    [overlayColor, backgroundColor],
   );
 
   const interpolatedColorsExit = React.useMemo(
-    () =>
-      backgroundColor && nonTransparentOverlayColor
-        ? interpolateColors(nonTransparentOverlayColor, backgroundColor, 50)
-        : null,
-    [nonTransparentOverlayColor, backgroundColor],
+    () => (backgroundColor && overlayColor ? interpolateColors(overlayColor, backgroundColor, 50) : null),
+    [overlayColor, backgroundColor],
   );
 
   const linearInterpolation = React.useMemo(
-    () =>
-      backgroundColor && nonTransparentOverlayColor
-        ? interpolateColors(nonTransparentOverlayColor, backgroundColor, 50, true)
-        : null,
-    [nonTransparentOverlayColor, backgroundColor],
+    () => (backgroundColor && overlayColor ? interpolateColors(overlayColor, backgroundColor, 50, true) : null),
+    [overlayColor, backgroundColor],
   );
-  // TODO: Make it work
-  //   React.useEffect(() => {
-  //     if (!shouldRun) return;
-  //     requestAnimationFrame(() => {
-  //       if (overlay.current) {
-  //         const overlayColor = getComputedStyle(overlay.current).getPropertyValue('background-color');
-  //         const backgroundColor = getComputedStyle(document.documentElement)
-  //           .getPropertyValue('--vaul-theme-color')
-  //           .split(',')
-  //           .map((c) => Number(c));
-  //         const nonTransparentOverlayColor = getNonTrasparentOverlayColor(overlayColor, backgroundColor as RGB);
-  //         setBackgroundColor(backgroundColor as RGB);
-  //         setNonTransparentOverlayColor(nonTransparentOverlayColor);
-  //       }
-  //     });
-  //   }, [isOpen, shouldRun, overlay]);
 
   React.useEffect(() => {
     if (!shouldRun) return;
+    const documentElementStyle = getComputedStyle(document.documentElement);
+    const backgroundColor = documentElementStyle
+      .getPropertyValue('--vaul-overlay-background-start')
+      .split(',')
+      .map((c) => Number(c));
 
-    if (!initialMetaThemeColor) {
-      let metaThemeColor: HTMLMetaElement = document.querySelector('meta[name="theme-color"]');
+    const overlayColor = documentElementStyle.getPropertyValue('--vaul-overlay-background-end');
 
-      if (metaThemeColor) {
-        setInitialMetaThemeColor(metaThemeColor.getAttribute('content'));
-      } else {
-        metaThemeColor = document.createElement('meta');
-        metaThemeColor.name = 'theme-color';
-        document.getElementsByTagName('head')[0].appendChild(metaThemeColor);
-      }
-      setMetaElement(metaThemeColor);
-    }
-  }, [isOpen, initialMetaThemeColor]);
+    const nonTransparentOverlayColor = getNonTrasparentOverlayColor(overlayColor, backgroundColor as RGB);
 
-  function animate(colors: number[][]): number {
-    let start: number;
-    let frameId: number;
+    setBackgroundColor(backgroundColor as RGB);
+    setOverlayColor(nonTransparentOverlayColor);
+  }, [shouldRun]);
 
-    function draw(timeStamp: number) {
-      if (!start) start = timeStamp;
-      const elapsed = timeStamp - start;
-      // dividing by 10 will give us a total time of 500.
-      const index = Math.floor(elapsed / 10);
+  React.useEffect(() => {
+    if (!shouldRun) return;
+    requestAnimationFrame(() => {
+      if (!initialMetaThemeColor) {
+        let metaThemeColor: HTMLMetaElement | null = document.querySelector('meta[name="theme-color"]');
 
-      if (overlay.current && interpolatedColorsEnter && interpolatedColorsExit && !releaseExit) {
-        let metaThemeColor = document.querySelector('meta[name="theme-color"]');
-
-        if (
-          drawer.current.style.transform === 'translateY(0px)' &&
-          drawer.current.getAttribute('vaul-clicked-outside') !== 'true'
-        ) {
-          // It's resetting, so don't apply these styles
-          return;
+        if (metaThemeColor) {
+          setInitialMetaThemeColor(metaThemeColor.getAttribute('content'));
+        } else {
+          metaThemeColor = document.createElement('meta');
+          metaThemeColor.name = 'theme-color';
+          document.getElementsByTagName('head')[0].appendChild(metaThemeColor);
         }
+        setMetaElement(metaThemeColor);
+      }
+    });
+  }, [isOpen, initialMetaThemeColor, shouldRun]);
 
-        if (index < interpolatedColorsEnter.length) {
-          const currentColor = colors[index];
-          metaThemeColor.setAttribute('content', `rgb(${currentColor.join(',')})`);
+  const animate = useCallback(
+    (colors: number[][]): number => {
+      let start: number;
+      let frameId: number;
 
-          if (index === interpolatedColorsEnter.length - 1 && initialMetaThemeColor && !isOpen) {
-            metaThemeColor.setAttribute('content', initialMetaThemeColor as string);
+      function draw(timeStamp: number) {
+        if (!start) start = timeStamp;
+        const elapsed = timeStamp - start;
+        // dividing by 10 will give us a total time of 500.
+        const index = Math.floor(elapsed / 10);
+
+        if (overlay.current && colors && !releaseExit) {
+          if (
+            drawer.current.style.transform === 'translateY(0px)' &&
+            drawer.current.getAttribute('vaul-clicked-outside') !== 'true'
+          ) {
+            // It's resetting, so don't apply these styles
+            return;
           }
 
-          frameId = requestAnimationFrame(draw);
+          if (index < colors.length) {
+            const currentColor = colors[index];
+            metaElement?.setAttribute('content', `rgb(${currentColor.join(',')})`);
+
+            if (index === colors.length - 1 && initialMetaThemeColor && !isOpen) {
+              metaElement?.setAttribute('content', initialMetaThemeColor as string);
+            }
+
+            frameId = requestAnimationFrame(draw);
+          }
         }
       }
-    }
 
-    frameId = requestAnimationFrame(draw);
-    return frameId;
-  }
+      frameId = requestAnimationFrame(draw);
+      return frameId;
+    },
+    [drawer, overlay, releaseExit, isOpen, initialMetaThemeColor, metaElement],
+  );
 
   React.useEffect(() => {
-    if (!shouldRun) return;
+    if (!shouldRun || !interpolatedColorsEnter || !interpolatedColorsExit) return;
 
     const frameId = animate(isOpen ? interpolatedColorsEnter : interpolatedColorsExit);
 
@@ -178,6 +170,7 @@ export function useSafariThemeColor(
     };
   }, [
     isOpen,
+    animate,
     interpolatedColorsEnter,
     interpolatedColorsExit,
     releaseExit,
@@ -189,7 +182,7 @@ export function useSafariThemeColor(
 
   function onDrag(percentageDragged: number) {
     const metaThemeColor = document.querySelector('meta[name="theme-color"]');
-    if (!shouldRun || !metaThemeColor) return;
+    if (!shouldRun || !metaThemeColor || !linearInterpolation) return;
 
     // Calculate the index of the color array by mapping the proportion to the array length
     let colorIndex = Math.floor(percentageDragged * linearInterpolation.length);
@@ -209,12 +202,12 @@ export function useSafariThemeColor(
     if (!metaThemeColor || !shouldRun) return;
     setReleaseExit(true);
 
-    // Get the current meta theme color and create color steps from it to nonTransparentOverlayColor with non-linear interpolation to ensure same easing as overlay.
+    // Get the current meta theme color and create color steps from it to overlayColor with non-linear interpolation to ensure same easing as overlay.
     const rgbValues = metaThemeColor.getAttribute('content').match(/\d+/g).map(Number);
 
-    let colorSteps = interpolateColors(rgbValues, nonTransparentOverlayColor as RGB, 50);
+    let colorSteps = interpolateColors(rgbValues, overlayColor as RGB, 50);
 
-    if (!isOpen) {
+    if (!isOpen && backgroundColor) {
       colorSteps = interpolateColors(rgbValues, backgroundColor, 50);
     }
     // TODO: Replace with rAf
