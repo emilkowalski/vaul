@@ -1,8 +1,8 @@
 import React, { useCallback } from 'react';
-import bezierEasing from 'bezier-easing';
+import { bezier } from './bezier-easing';
 import { isIOS, isSafari } from './use-prevent-scroll';
 
-const easing = bezierEasing(0.32, 0.72, 0, 1);
+const easing = bezier(0.32, 0.72, 0, 1);
 
 type RGB = [number, number, number];
 
@@ -50,7 +50,7 @@ function interpolateColors(color1: number[], color2: number[], steps: number, li
     interpolatedColorArray = [];
 
   for (let i = 0; i < steps; i++) {
-    interpolatedColorArray.push(interpolateColor(color1, color2, stepFactor * i, linear));
+    interpolatedColorArray.push(interpolateColor(color1, color2, stepFactor * i, Boolean(linear)));
   }
 
   return interpolatedColorArray;
@@ -78,7 +78,7 @@ export function useSafariThemeColor(
     [overlayColor, backgroundColor],
   );
 
-  const linearInterpolation = React.useMemo(
+  const interpolatedColorsLinear = React.useMemo(
     () => (backgroundColor && overlayColor ? interpolateColors(overlayColor, backgroundColor, 50, true) : null),
     [overlayColor, backgroundColor],
   );
@@ -101,21 +101,20 @@ export function useSafariThemeColor(
 
   React.useEffect(() => {
     if (!shouldRun) return;
-    requestAnimationFrame(() => {
-      if (!initialMetaThemeColor) {
-        let metaThemeColor: HTMLMetaElement | null = document.querySelector('meta[name="theme-color"]');
 
-        if (metaThemeColor) {
-          setInitialMetaThemeColor(metaThemeColor.getAttribute('content'));
-        } else {
-          metaThemeColor = document.createElement('meta');
-          metaThemeColor.name = 'theme-color';
-          document.getElementsByTagName('head')[0].appendChild(metaThemeColor);
-        }
-        setMetaElement(metaThemeColor);
+    if (!initialMetaThemeColor) {
+      let metaThemeColor: HTMLMetaElement | null = document.querySelector('meta[name="theme-color"]');
+
+      if (metaThemeColor) {
+        setInitialMetaThemeColor(metaThemeColor.getAttribute('content'));
+      } else {
+        metaThemeColor = document.createElement('meta');
+        metaThemeColor.name = 'theme-color';
+        document.getElementsByTagName('head')[0].appendChild(metaThemeColor);
       }
-    });
-  }, [isOpen, initialMetaThemeColor, shouldRun]);
+      setMetaElement(metaThemeColor);
+    }
+  }, [initialMetaThemeColor, shouldRun]);
 
   const animate = useCallback(
     (colors: number[][]): number => {
@@ -153,7 +152,7 @@ export function useSafariThemeColor(
       frameId = requestAnimationFrame(draw);
       return frameId;
     },
-    [drawer, overlay, releaseExit, isOpen, initialMetaThemeColor, metaElement],
+    [drawer, isOpen, metaElement, releaseExit, initialMetaThemeColor, overlay],
   );
 
   React.useEffect(() => {
@@ -168,30 +167,20 @@ export function useSafariThemeColor(
     return () => {
       if (frameId) cancelAnimationFrame(frameId);
     };
-  }, [
-    isOpen,
-    animate,
-    interpolatedColorsEnter,
-    interpolatedColorsExit,
-    releaseExit,
-    drawer,
-    overlay,
-    shouldRun,
-    initialMetaThemeColor,
-  ]);
+  }, [isOpen, shouldRun, animate, interpolatedColorsEnter, interpolatedColorsExit]);
 
   function onDrag(percentageDragged: number) {
     const metaThemeColor = document.querySelector('meta[name="theme-color"]');
-    if (!shouldRun || !metaThemeColor || !linearInterpolation) return;
+    if (!shouldRun || !metaThemeColor || !interpolatedColorsLinear) return;
 
     // Calculate the index of the color array by mapping the proportion to the array length
-    let colorIndex = Math.floor(percentageDragged * linearInterpolation.length);
+    let colorIndex = Math.floor(percentageDragged * interpolatedColorsLinear.length);
 
     // Ensure colorIndex is between 0 and array length - 1
-    colorIndex = Math.max(0, Math.min(linearInterpolation.length - 1, colorIndex));
+    colorIndex = Math.max(0, Math.min(interpolatedColorsLinear.length - 1, colorIndex));
 
     // Get the color
-    const color = linearInterpolation[colorIndex];
+    const color = interpolatedColorsLinear[colorIndex];
 
     // Set the meta theme color
     metaThemeColor.setAttribute('content', `rgb(${color.join(',')})`);
@@ -210,18 +199,8 @@ export function useSafariThemeColor(
     if (!isOpen && backgroundColor) {
       colorSteps = interpolateColors(rgbValues, backgroundColor, 50);
     }
-    // TODO: Replace with rAf
-    for (let i = 0; i < interpolatedColorsEnter.length; i++) {
-      setTimeout(() => {
-        const currentColor = colorSteps[i];
 
-        metaThemeColor.setAttribute('content', `rgb(${currentColor.join(',')})`);
-
-        if (i === interpolatedColorsEnter.length - 1 && initialMetaThemeColor && !isOpen) {
-          metaThemeColor.setAttribute('content', initialMetaThemeColor as string);
-        }
-      }, i * 8.5);
-    }
+    animate(colorSteps);
   }
 
   return { onDrag, onRelease };

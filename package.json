@@ -36,7 +36,6 @@
     "@radix-ui/react-dialog": "^1.0.4",
     "eslint": "^7.32.0",
     "prettier": "^2.5.1",
-    "bezier-easing": "2.1.0",
     "tsup": "^6.4.0",
     "turbo": "1.6"
   },
