@@ -128,6 +128,7 @@ function Root({
     defaultProp: defaultOpen,
     onChange: onOpenChange,
   });
+  const [isFullyClosed, setIsFullyClosed] = React.useState(true);
   const [isDragging, setIsDragging] = React.useState(false);
   const [isAnimating, setIsAnimating] = React.useState(true);
   const overlayRef = React.useRef<HTMLDivElement>(null);
@@ -149,7 +150,7 @@ function Root({
     isDisabled: !isOpen || isDragging || isAnimating,
   });
 
-  usePositionFixed(isOpen);
+  usePositionFixed({ isOpen, isFullyClosed });
 
   function getScale() {
     return (window.innerWidth - WINDOW_TOP_OFFSET) / window.innerWidth;
@@ -314,6 +315,20 @@ function Root({
     window.visualViewport.addEventListener('resize', onVisualViewportChange);
     return () => window.visualViewport.removeEventListener('resize', onVisualViewportChange);
   }, []);
+
+  React.useEffect(() => {
+    if (isOpen) {
+      setIsFullyClosed(false);
+    }
+
+    if (!isOpen) {
+      let id = setTimeout(() => {
+        setIsFullyClosed(true);
+      }, ANIMATION_DURATION);
+
+      return () => clearTimeout(id);
+    }
+  }, [isOpen, isAnimating]);
 
   function closeDrawer() {
     if (!dismissible) return;
