@@ -1,9 +1,11 @@
-import { useEffect } from 'react';
+import React from 'react';
 import { isIOS } from './use-prevent-scroll';
 
 let previousBodyPosition = null;
 
 export function usePositionFixed({ isOpen, isFullyClosed }: { isOpen: boolean; isFullyClosed: boolean }) {
+  const scrollPos = React.useRef(0);
+
   function setPositionFixed() {
     // If previousBodyPosition is already set, don't set it again.
     if (previousBodyPosition === null) {
@@ -17,7 +19,7 @@ export function usePositionFixed({ isOpen, isFullyClosed }: { isOpen: boolean; i
       const { scrollY, scrollX, innerHeight } = window;
 
       document.body.style.setProperty('position', 'fixed', 'important');
-      document.body.style.top = `${-scrollY}px`;
+      document.body.style.top = `${-scrollPos.current}px`;
       document.body.style.left = `${-scrollX}px`;
       document.body.style.right = '0px';
 
@@ -28,7 +30,7 @@ export function usePositionFixed({ isOpen, isFullyClosed }: { isOpen: boolean; i
             const bottomBarHeight = innerHeight - window.innerHeight;
             if (bottomBarHeight && scrollY >= innerHeight) {
               // Move the content further up so that the bottom bar doesn't hide it
-              document.body.style.top = `${-(scrollY + bottomBarHeight)}px`;
+              document.body.style.top = `${-(scrollPos.current + bottomBarHeight)}px`;
             }
           }),
         300,
@@ -56,10 +58,22 @@ export function usePositionFixed({ isOpen, isFullyClosed }: { isOpen: boolean; i
     }
   }
 
-  useEffect(() => {
-    console.log({ isOpen, isFullyClosed });
+  React.useEffect(() => {
+    function onScroll() {
+      scrollPos.current = window.scrollY;
+    }
+
+    window.addEventListener('scroll', onScroll);
+
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+    };
+  }, []);
+
+  React.useEffect(() => {
+    if (!isIOS()) return;
     // This is needed to force Safari toolbar to show **before** the drawer starts animating to prevent a gnarly shift from happenning
-    if (isOpen && isIOS()) {
+    if (isOpen) {
       setPositionFixed();
     } else if (isFullyClosed) {
       restorePositionSetting();
