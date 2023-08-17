@@ -121,7 +121,7 @@ export function useSafariThemeColor(
       let start: number;
       let frameId: number;
 
-      function draw(timeStamp: number) {
+      function draw(timeStamp: number) {	
         if (!start) start = timeStamp;
         const elapsed = timeStamp - start;
         // dividing by 10 will give us a total time of 500.
