@@ -16,7 +16,7 @@ export function usePositionFixed({ isOpen, isFullyClosed }: { isOpen: boolean; i
       };
 
       // Update the dom inside an animation frame
-      const { scrollY, scrollX, innerHeight } = window;
+      const { scrollX, innerHeight } = window;
 
       document.body.style.setProperty('position', 'fixed', 'important');
       document.body.style.top = `${-scrollPos.current}px`;
@@ -28,7 +28,7 @@ export function usePositionFixed({ isOpen, isFullyClosed }: { isOpen: boolean; i
           requestAnimationFrame(() => {
             // Attempt to check if the bottom bar appeared due to the position change
             const bottomBarHeight = innerHeight - window.innerHeight;
-            if (bottomBarHeight && scrollY >= innerHeight) {
+            if (bottomBarHeight && scrollPos.current >= innerHeight) {
               // Move the content further up so that the bottom bar doesn't hide it
               document.body.style.top = `${-(scrollPos.current + bottomBarHeight)}px`;
             }
@@ -60,8 +60,11 @@ export function usePositionFixed({ isOpen, isFullyClosed }: { isOpen: boolean; i
 
   React.useEffect(() => {
     function onScroll() {
+      console.log(window.scrollY, 'coming from onScroll');
       scrollPos.current = window.scrollY;
     }
+
+    onScroll();
 
     window.addEventListener('scroll', onScroll);
 

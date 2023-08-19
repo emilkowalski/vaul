@@ -332,7 +332,7 @@ function Root({
     if (!isOpen) {
       let id = setTimeout(() => {
         setIsFullyClosed(true);
-      }, ANIMATION_DURATION);
+      }, 300);
 
       return () => clearTimeout(id);
     }
