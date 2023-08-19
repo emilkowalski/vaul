@@ -225,13 +225,16 @@ function preventScrollMobileSafari() {
           if (visualViewport.height < window.innerHeight) {
             // If the keyboard is already visible, do this after one additional frame
             // to wait for the transform to be removed.
+
             requestAnimationFrame(() => {
               scrollIntoView(target);
             });
           } else {
             // Otherwise, wait for the visual viewport to resize before scrolling so we can
             // measure the correct position to scroll to.
-            visualViewport.addEventListener('resize', () => scrollIntoView(target), { once: true });
+            visualViewport.addEventListener('resize', () => {
+              scrollIntoView(target), { once: true };
+            });
           }
         }
       });
@@ -308,11 +311,11 @@ function scrollIntoView(target: Element) {
     let scrollable = getScrollParent(target);
     if (scrollable !== document.documentElement && scrollable !== document.body && scrollable !== target) {
       let scrollableTop = scrollable.getBoundingClientRect().top;
-      let targetTop = target.getBoundingClientRect().top;
+      let targetBottom = target.getBoundingClientRect().bottom;
       const keyboardHeight = scrollable.getBoundingClientRect().bottom;
 
-      if (targetTop > keyboardHeight) {
-        scrollable.scrollTop += targetTop - scrollableTop;
+      if (targetBottom > keyboardHeight) {
+        scrollable.scrollTop += targetBottom - scrollableTop;
       }
     }
 
