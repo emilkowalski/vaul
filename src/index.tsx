@@ -302,7 +302,7 @@ function Root({
         const drawerHeight = drawerRef.current?.getBoundingClientRect().height || 0;
         const offsetFromTop = drawerRef.current?.getBoundingClientRect().top;
 
-        // visualViewport height may change duo to some subtle changes to the keyboard. Checking if the height changed by 60 or more will make sure that they keyboard is really closed.
+        // visualViewport height may change due to some subtle changes to the keyboard. Checking if the height changed by 60 or more will make sure that they keyboard really changed its open state.
         if (Math.abs(previousDiffFromInitial.current - diffFromInitial) > 60) {
           keyboardIsOpen.current = !keyboardIsOpen.current;
         }
@@ -310,7 +310,14 @@ function Root({
         previousDiffFromInitial.current = diffFromInitial;
         // We don't have to change the height if the input is in view, when we are here we are in the opened keyboard state so we can accuretly check if the input is in view
         if (drawerHeight > visualViewportHeight || keyboardIsOpen.current) {
-          drawerRef.current.style.height = `${visualViewportHeight - offsetFromTop}px`;
+          const height = drawerRef.current?.getBoundingClientRect().height;
+          let newDrawerHeight = height;
+
+          if (height > visualViewportHeight) {
+            newDrawerHeight = visualViewportHeight - WINDOW_TOP_OFFSET;
+          }
+
+          drawerRef.current.style.height = `${Math.max(newDrawerHeight, visualViewportHeight - offsetFromTop)}px`;
         } else {
           drawerRef.current.style.height = 'initial';
         }

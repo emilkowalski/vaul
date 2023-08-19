@@ -60,7 +60,6 @@ export function usePositionFixed({ isOpen, isFullyClosed }: { isOpen: boolean; i
 
   React.useEffect(() => {
     function onScroll() {
-      console.log(window.scrollY, 'coming from onScroll');
       scrollPos.current = window.scrollY;
     }
 
