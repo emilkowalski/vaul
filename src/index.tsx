@@ -138,6 +138,7 @@ function Root({
   const nestedOpenChangeTimer = React.useRef<NodeJS.Timeout>(null);
   const pointerStartY = React.useRef(0);
   const keyboardIsOpen = React.useRef(false);
+  const previousDiffFromInitial = React.useRef(0);
   const drawerRef = React.useRef<HTMLDivElement>(null);
   const { onDrag: changeThemeColorOnDrag, onRelease: themeTransitionOnRelease } = useSafariThemeColor(
     drawerRef,
@@ -300,13 +301,20 @@ function Root({
         const diffFromInitial = window.innerHeight - visualViewportHeight;
         const drawerHeight = drawerRef.current?.getBoundingClientRect().height || 0;
         const offsetFromTop = drawerRef.current?.getBoundingClientRect().top;
-        keyboardIsOpen.current = !keyboardIsOpen.current;
+
+        // visualViewport height may change duo to some subtle changes to the keyboard. Checking if the height changed by 60 or more will make sure that they keyboard is really closed.
+        if (Math.abs(previousDiffFromInitial.current - diffFromInitial) > 60) {
+          keyboardIsOpen.current = !keyboardIsOpen.current;
+        }
+
+        previousDiffFromInitial.current = diffFromInitial;
         // We don't have to change the height if the input is in view, when we are here we are in the opened keyboard state so we can accuretly check if the input is in view
-        if (drawerHeight > visualViewportHeight) {
+        if (drawerHeight > visualViewportHeight || keyboardIsOpen.current) {
           drawerRef.current.style.height = `${visualViewportHeight - offsetFromTop}px`;
         } else {
           drawerRef.current.style.height = 'initial';
         }
+
         // Negative bottom value would never make sense
         drawerRef.current.style.bottom = `${Math.max(diffFromInitial, 0)}px`;
       }
