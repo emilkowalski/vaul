@@ -40,8 +40,8 @@
     "turbo": "1.6"
   },
   "peerDependencies": {
-    "react": "^18.0.0",
-    "react-dom": "^18.0.0"
+    "react": "^16.8 || ^17.0 || ^18.0",
+    "react-dom": "^16.8 || ^17.0 || ^18.0"
   },
   "packageManager": "pnpm@6.32.11",
   "dependencies": {
