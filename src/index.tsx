@@ -9,6 +9,7 @@ import { usePreventScroll, isInput } from './use-prevent-scroll';
 import { useComposedRefs } from './use-composed-refs';
 import { useSafariThemeColor } from './use-safari-theme-color';
 import { usePositionFixed } from './use-position-fixed';
+import { damp } from './damp';
 
 const CLOSE_THRESHOLD = 0.25;
 
@@ -243,8 +244,10 @@ function Root({
 
       // Allow dragging upwards up to 40px
       if (draggedDistance > 0) {
+        const dampenedDraggedDistance = 8 * (Math.log(draggedDistance + 1) - 2);
+
         set(drawerRef.current, {
-          transform: `translateY(${Math.max(draggedDistance * -1, -40)}px)`,
+          transform: `translateY(${dampenedDraggedDistance * -1}px)`,
         });
         return;
       }
