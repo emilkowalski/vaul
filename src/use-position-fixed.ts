@@ -3,7 +3,7 @@ import { isIOS } from './use-prevent-scroll';
 
 let previousBodyPosition = null;
 
-export function usePositionFixed({ isOpen, isFullyClosed }: { isOpen: boolean; isFullyClosed: boolean }) {
+export function usePositionFixed({ isOpen }: { isOpen: boolean }) {
   const scrollPos = React.useRef(0);
 
   function setPositionFixed() {
@@ -74,11 +74,11 @@ export function usePositionFixed({ isOpen, isFullyClosed }: { isOpen: boolean; i
 
   React.useEffect(() => {
     if (!isIOS()) return;
-    // This is needed to force Safari toolbar to show **before** the drawer starts animating to prevent a gnarly shift from happenning
+    // This is needed to force Safari toolbar to show **before** the drawer starts animating to prevent a gnarly shift from happening
     if (isOpen) {
       setPositionFixed();
-    } else if (isFullyClosed) {
+    } else {
       restorePositionSetting();
     }
-  }, [isOpen, isFullyClosed]);
+  }, [isOpen]);
 }
