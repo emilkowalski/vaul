@@ -244,7 +244,6 @@ function Root({
       // Allow dragging upwards up to 40px
       if (draggedDistance > 0) {
         const dampenedDraggedDistance = 6 * (Math.log(draggedDistance + 1) - 2);
-        console.log(Math.log(draggedDistance));
 
         set(drawerRef.current, {
           transform: `translateY(${Math.min(dampenedDraggedDistance * -1, 0)}px)`,
