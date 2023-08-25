@@ -9,7 +9,6 @@ import { usePreventScroll, isInput } from './use-prevent-scroll';
 import { useComposedRefs } from './use-composed-refs';
 import { useSafariThemeColor } from './use-safari-theme-color';
 import { usePositionFixed } from './use-position-fixed';
-import { damp } from './damp';
 
 const CLOSE_THRESHOLD = 0.25;
 
