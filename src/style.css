@@ -1,7 +1,7 @@
 [vaul-drawer] {
   will-change: transform;
   touch-action: none;
-  animation: show-dialog 0.5s cubic-bezier(0.32, 0.72, 0, 1);
+  animation: show-dialog 0.5s cubic-bezier(0.32, 0.72, 0, 1) forwards;
 }
 
 [vaul-drawer]::after {
@@ -54,7 +54,7 @@
     transform: translateY(100%);
   }
   to {
-    transform: translateY(0);
+    transform: translateY(var(--show-to, 0));
   }
 }
 
