@@ -40,6 +40,7 @@ export function useSnapPoints({
 
   function snapToPoint(height: number) {
     const newSnapPointIndex = snapPointHeights?.findIndex((snapPointHeight) => snapPointHeight === height) ?? null;
+
     set(drawerRef.current, {
       transition: `transform ${TRANSITIONS.DURATION}s cubic-bezier(${TRANSITIONS.EASE.join(',')})`,
       transform: `translateY(${height}px)`,
@@ -52,6 +53,7 @@ export function useSnapPoints({
       });
     } else {
       set(overlayRef.current, {
+        transition: `opacity ${TRANSITIONS.DURATION}s cubic-bezier(${TRANSITIONS.EASE.join(',')})`,
         opacity: '1',
       });
     }
@@ -80,6 +82,12 @@ export function useSnapPoints({
     if (velocity > 2 && draggedDistance < 0) {
       closeDrawer();
       setActiveSnapPoint(snapPoints[0]);
+      return;
+    }
+
+    if (velocity > 2 && draggedDistance > 0) {
+      snapToPoint(snapPointHeights[snapPoints.length - 1]);
+      setActiveSnapPoint(snapPoints[snapPoints.length - 1]);
       return;
     }
 
