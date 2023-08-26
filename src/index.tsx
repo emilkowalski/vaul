@@ -62,7 +62,7 @@ function Root({
   closeThreshold = CLOSE_THRESHOLD,
   scrollLockTimeout = SCROLL_LOCK_TIMEOUT,
   dismissible = true,
-  fadeFromIndex,
+  fadeFromIndex = snapPoints?.length - 1,
 }: DialogProps) {
   const [isOpen = false, setIsOpen] = useControllableState({
     prop: openProp,
@@ -531,7 +531,8 @@ function Root({
 
 const Overlay = React.forwardRef<HTMLDivElement, React.ComponentPropsWithoutRef<typeof DialogPrimitive.Overlay>>(
   function ({ children, ...rest }, ref) {
-    const { overlayRef, snapPoints, onRelease, experimentalSafariThemeAnimation, shouldFade } = useDrawerContext();
+    const { overlayRef, snapPoints, onRelease, experimentalSafariThemeAnimation, shouldFade, isOpen } =
+      useDrawerContext();
     const composedRef = useComposedRefs(ref, overlayRef);
     const hasSnapPoints = snapPoints && snapPoints.length > 0;
 
@@ -540,9 +541,9 @@ const Overlay = React.forwardRef<HTMLDivElement, React.ComponentPropsWithoutRef<
         onMouseUp={onRelease}
         ref={composedRef}
         vaul-overlay=""
-        vaul-snap-points={hasSnapPoints ? 'true' : 'false'}
+        vaul-snap-points={isOpen && hasSnapPoints ? 'true' : 'false'}
         vaul-theme-transition={experimentalSafariThemeAnimation ? 'true' : 'false'}
-        vaul-snap-points-overlay={shouldFade ? 'true' : 'false'}
+        vaul-snap-points-overlay={isOpen && shouldFade ? 'true' : 'false'}
         {...rest}
       />
     );

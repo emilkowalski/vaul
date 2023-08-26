@@ -28,7 +28,7 @@
   animation: show-overlay 0.5s cubic-bezier(0.32, 0.72, 0, 1);
 }
 
-[vaul-overlay][vaul-snap-points='true']:not([vaul-snap-points-overlay='true']) {
+[vaul-overlay][vaul-snap-points='true']:not([vaul-snap-points-overlay='true']):not([data-state='closed']) {
   opacity: 0;
 }
 
@@ -42,7 +42,7 @@
 
 [vaul-overlay][data-state='closed']:not([vaul-snap-points='true']),
 [vaul-overlay][data-state='closed'][vaul-snap-points-overlay='true'] {
-  animation: hide-overlay 0.5s cubic-bezier(0.32, 0.72, 0, 1) forwards;
+  animation: hide-overlay 0.5s cubic-bezier(0.32, 0.72, 0, 1);
 }
 
 [vaul-overlay][vaul-theme-transition='true'][data-state='closed'] {

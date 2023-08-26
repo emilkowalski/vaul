@@ -6,10 +6,10 @@ export function useSnapPoints({
   snapPoints,
   drawerRef,
   overlayRef,
-  fadeFromIndex = snapPoints?.length - 1,
+  fadeFromIndex,
 }: {
   snapPoints?: number[];
-  fadeFromIndex?: number;
+  fadeFromIndex: number;
   drawerRef: React.RefObject<HTMLDivElement>;
   overlayRef: React.RefObject<HTMLDivElement>;
 }) {
