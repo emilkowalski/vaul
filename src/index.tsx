@@ -86,6 +86,7 @@ function Root({
     activeSnapPoint,
     onRelease: onReleaseSnapPoints,
     snapPointHeights,
+    onDrag: onDragSnapPoints,
   } = useSnapPoints({ snapPoints, drawerRef: drawerRef });
 
   usePreventScroll({
@@ -224,6 +225,11 @@ function Root({
           },
           true,
         );
+      }
+
+      if (snapPoints) {
+        onDragSnapPoints({ draggedDistance });
+        return;
       }
 
       set(drawerRef.current, {
@@ -579,7 +585,7 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
       style={
         snapPointHeights
           ? ({
-              '--show-to': `${snapPointHeights[0]}px`,
+              '--snap-point-height': `${snapPointHeights[0]}px`,
               ...style,
             } as React.CSSProperties)
           : style
