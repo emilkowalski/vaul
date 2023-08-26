@@ -25,7 +25,17 @@ const NESTED_DISPLACEMENT = 16;
 
 const WINDOW_TOP_OFFSET = 26;
 
-interface DialogProps {
+type WithFadeFromProps = {
+  snapPoints: number[];
+  fadeFrom: number;
+};
+
+type WithoutFadeFromProps = {
+  snapPoints?: number[];
+  fadeFrom?: never;
+};
+
+type DialogProps = {
   children?: React.ReactNode;
   open?: boolean;
   defaultOpen?: boolean;
@@ -37,8 +47,7 @@ interface DialogProps {
   onDrag?(event: React.PointerEvent<HTMLDivElement>, percentageDragged: number): void;
   onRelease?(event: React.PointerEvent<HTMLDivElement>, open: boolean): void;
   experimentalSafariThemeAnimation?: boolean;
-  snapPoints?: number[];
-}
+} & (WithFadeFromProps | WithoutFadeFromProps);
 
 function Root({
   open: openProp,
@@ -77,10 +86,12 @@ function Root({
     experimentalSafariThemeAnimation,
   );
   const {
+    isLastSnapPoint,
+    setActiveSnapPoint,
     onRelease: onReleaseSnapPoints,
     snapPointHeights,
     onDrag: onDragSnapPoints,
-  } = useSnapPoints({ snapPoints, drawerRef: drawerRef, isOpen });
+  } = useSnapPoints({ snapPoints, drawerRef: drawerRef });
 
   usePreventScroll({
     isDisabled: !isOpen || isDragging || isAnimating,
@@ -469,12 +480,16 @@ function Root({
     <DialogPrimitive.Root
       open={isOpen}
       onOpenChange={(o) => {
-        console.log('open!');
+        if (!o && snapPoints) {
+          closeDrawer();
+        }
         setIsOpen(o);
       }}
     >
       <DrawerContext.Provider
         value={{
+          snapPoints,
+          setActiveSnapPoint,
           drawerRef,
           overlayRef,
           onAnimationStart,
@@ -536,6 +551,8 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
     keyboardIsOpen,
     setIsAnimating,
     snapPointHeights,
+    setActiveSnapPoint,
+    snapPoints,
   } = useDrawerContext();
   const composedRef = useComposedRefs(ref, drawerRef);
   const animationEndTimer = React.useRef<NodeJS.Timeout>(null);
@@ -549,6 +566,7 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
         animationEndTimer.current = setTimeout(() => {
           setIsAnimating(false);
           onAnimationEnd?.(isOpen);
+          setActiveSnapPoint(snapPoints[0]);
         }, ANIMATION_DURATION);
         onAnimationStart(e);
       }}

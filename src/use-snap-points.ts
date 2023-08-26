@@ -1,19 +1,12 @@
 import React from 'react';
 import { dampenValue, set } from './helpers';
-import { TRANSITIONS } from './constants';
-
-function dampingFactor(draggedDistance) {
-  const decayRate = 0.01; // Adjust this to change the speed of decay
-  return Math.exp(-decayRate * draggedDistance);
-}
+import { TRANSITIONS, VELOCITY_THRESHOLD } from './constants';
 
 export function useSnapPoints({
   snapPoints,
   drawerRef,
-  isOpen,
 }: {
   snapPoints?: number[];
-  isOpen: boolean;
   drawerRef: React.RefObject<HTMLDivElement>;
 }) {
   const [activeSnapPoint, setActiveSnapPoint] = React.useState<number | null>(snapPoints?.[0] ?? null);
@@ -58,9 +51,19 @@ export function useSnapPoints({
   }) {
     const currentPosition = activeSnapPointHeight - draggedDistance;
 
-    if (velocity > 0.8 && draggedDistance < 0) {
+    if (velocity > 2 && draggedDistance < 0) {
       closeDrawer();
       setActiveSnapPoint(snapPoints[0]);
+      return;
+    }
+
+    if (velocity > VELOCITY_THRESHOLD) {
+      // -1 = down, 1 = up, might need a better name
+      const dragDirection = draggedDistance > 0 ? 1 : -1;
+      // Don't do anything if we swipe upwards while being on the last snap point
+      if (dragDirection > 0 && isLastSnapPoint) return;
+
+      snapToPoint(snapPointHeights[activeSnapPointIndex + dragDirection]);
       return;
     }
 
@@ -91,6 +94,8 @@ export function useSnapPoints({
 
   return {
     isLastSnapPoint,
+    activeSnapPoint,
+    setActiveSnapPoint,
     onRelease,
     onDrag,
     snapPointHeights,
