@@ -36,6 +36,8 @@ type WithoutFadeFromProps = {
 };
 
 type DialogProps = {
+  activeSnapPoint?: number | null;
+  setActiveSnapPoint?(snapPoint: number | null): void;
   children?: React.ReactNode;
   open?: boolean;
   defaultOpen?: boolean;
@@ -63,6 +65,8 @@ function Root({
   scrollLockTimeout = SCROLL_LOCK_TIMEOUT,
   dismissible = true,
   fadeFromIndex = snapPoints?.length - 1,
+  activeSnapPoint: activeSnapPointProp,
+  setActiveSnapPoint: setActiveSnapPointProp,
 }: DialogProps) {
   const [isOpen = false, setIsOpen] = useControllableState({
     prop: openProp,
@@ -95,7 +99,14 @@ function Root({
     onDrag: onDragSnapPoints,
     shouldFade,
     getPercentageDragged: getSnapPointsPercentageDragged,
-  } = useSnapPoints({ snapPoints, drawerRef: drawerRef, fadeFromIndex, overlayRef: overlayRef });
+  } = useSnapPoints({
+    snapPoints,
+    activeSnapPointProp,
+    setActiveSnapPointProp,
+    drawerRef: drawerRef,
+    fadeFromIndex,
+    overlayRef: overlayRef,
+  });
 
   usePreventScroll({
     isDisabled: !isOpen || isDragging || isAnimating,

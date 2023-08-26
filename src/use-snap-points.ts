@@ -1,19 +1,30 @@
 import React from 'react';
 import { dampenValue, set } from './helpers';
 import { TRANSITIONS, VELOCITY_THRESHOLD } from './constants';
+import { useControllableState } from './use-controllable-state';
 
 export function useSnapPoints({
+  activeSnapPointProp,
+  setActiveSnapPointProp,
   snapPoints,
   drawerRef,
   overlayRef,
   fadeFromIndex,
 }: {
+  activeSnapPointProp?: number | null;
+  setActiveSnapPointProp?(snapPoint: number | null): void;
   snapPoints?: number[];
   fadeFromIndex: number;
   drawerRef: React.RefObject<HTMLDivElement>;
   overlayRef: React.RefObject<HTMLDivElement>;
 }) {
-  const [activeSnapPoint, setActiveSnapPoint] = React.useState<number | null>(snapPoints?.[0] ?? null);
+  const [activeSnapPoint, setActiveSnapPoint] = useControllableState({
+    prop: activeSnapPointProp,
+    defaultProp: snapPoints?.[0] ?? null,
+    onChange: (s) => {
+      setActiveSnapPointProp(s);
+    },
+  });
   const hasWindow = typeof window !== 'undefined';
   const isLastSnapPoint = React.useMemo(
     () => activeSnapPoint === snapPoints?.[snapPoints.length - 1] ?? null,
@@ -60,6 +71,11 @@ export function useSnapPoints({
 
     setActiveSnapPoint(snapPoints?.[newSnapPointIndex] ?? null);
   }
+
+  React.useEffect(() => {
+    const newIndex = snapPoints?.findIndex((snapPoint) => snapPoint === activeSnapPointProp) ?? null;
+    snapToPoint(snapPointHeights[newIndex]);
+  }, [activeSnapPointProp]);
 
   function onRelease({
     draggedDistance,
