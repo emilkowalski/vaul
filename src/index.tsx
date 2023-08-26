@@ -62,6 +62,7 @@ function Root({
   closeThreshold = CLOSE_THRESHOLD,
   scrollLockTimeout = SCROLL_LOCK_TIMEOUT,
   dismissible = true,
+  fadeFrom,
 }: DialogProps) {
   const [isOpen = false, setIsOpen] = useControllableState({
     prop: openProp,
@@ -86,12 +87,13 @@ function Root({
     experimentalSafariThemeAnimation,
   );
   const {
-    isLastSnapPoint,
+    activeSnapPoint,
     setActiveSnapPoint,
     onRelease: onReleaseSnapPoints,
     snapPointHeights,
     onDrag: onDragSnapPoints,
-  } = useSnapPoints({ snapPoints, drawerRef: drawerRef });
+    shouldFade,
+  } = useSnapPoints({ snapPoints, drawerRef: drawerRef, fadeFrom, overlayRef: overlayRef });
 
   usePreventScroll({
     isDisabled: !isOpen || isDragging || isAnimating,
@@ -207,15 +209,17 @@ function Root({
 
       const percentageDragged = absDraggedDistance / drawerHeight;
       const opacityValue = 1 - percentageDragged;
-      changeThemeColorOnDrag(percentageDragged);
-      onDragProp?.(event, percentageDragged);
-      set(
-        overlayRef.current,
-        {
-          opacity: `${opacityValue}`,
-        },
-        true,
-      );
+      if (shouldFade) {
+        changeThemeColorOnDrag(percentageDragged);
+        onDragProp?.(event, percentageDragged);
+        set(
+          overlayRef.current,
+          {
+            opacity: `${opacityValue}`,
+          },
+          true,
+        );
+      }
 
       if (wrapper && overlayRef.current && shouldScaleBackground) {
         // Calculate percentageDragged as a fraction (0 to 1)
@@ -262,7 +266,7 @@ function Root({
         }
 
         previousDiffFromInitial.current = diffFromInitial;
-        // We don't have to change the height if the input is in view, when we are here we are in the opened keyboard state so we can accuretly check if the input is in view
+        // We don't have to change the height if the input is in view, when we are here we are in the opened keyboard state so we can correctly check if the input is in view
         if (drawerHeight > visualViewportHeight || keyboardIsOpen.current) {
           const height = drawerRef.current?.getBoundingClientRect().height;
           let newDrawerHeight = height;
@@ -488,6 +492,7 @@ function Root({
     >
       <DrawerContext.Provider
         value={{
+          activeSnapPoint,
           snapPoints,
           setActiveSnapPoint,
           drawerRef,
@@ -498,6 +503,7 @@ function Root({
           onDrag,
           dismissible,
           isOpen,
+          shouldFade,
           onNestedDrag,
           onNestedOpenChange,
           onNestedRelease,
@@ -515,15 +521,19 @@ function Root({
 
 const Overlay = React.forwardRef<HTMLDivElement, React.ComponentPropsWithoutRef<typeof DialogPrimitive.Overlay>>(
   function ({ children, ...rest }, ref) {
-    const { overlayRef, onRelease, experimentalSafariThemeAnimation } = useDrawerContext();
+    const { overlayRef, snapPoints, onRelease, experimentalSafariThemeAnimation, shouldFade, activeSnapPoint } =
+      useDrawerContext();
     const composedRef = useComposedRefs(ref, overlayRef);
+    const hasSnapPoints = snapPoints && snapPoints.length > 0;
 
     return (
       <DialogPrimitive.Overlay
         onMouseUp={onRelease}
         ref={composedRef}
         vaul-overlay=""
+        vaul-snap-points={hasSnapPoints ? 'true' : 'false'}
         vaul-theme-transition={experimentalSafariThemeAnimation ? 'true' : 'false'}
+        vaul-snap-points-overlay={shouldFade ? 'true' : 'false'}
         {...rest}
       />
     );

@@ -5,9 +5,13 @@ import { TRANSITIONS, VELOCITY_THRESHOLD } from './constants';
 export function useSnapPoints({
   snapPoints,
   drawerRef,
+  overlayRef,
+  fadeFrom,
 }: {
   snapPoints?: number[];
+  fadeFrom?: number;
   drawerRef: React.RefObject<HTMLDivElement>;
+  overlayRef: React.RefObject<HTMLDivElement>;
 }) {
   const [activeSnapPoint, setActiveSnapPoint] = React.useState<number | null>(snapPoints?.[0] ?? null);
   const hasWindow = typeof window !== 'undefined';
@@ -15,6 +19,15 @@ export function useSnapPoints({
     () => activeSnapPoint === snapPoints?.[snapPoints.length - 1] ?? null,
     [snapPoints, activeSnapPoint],
   );
+  const fadeFromSnapPoint = React.useMemo(() => {
+    if (!snapPoints) return null;
+    if (fadeFrom) {
+      return snapPoints?.findIndex((snapPoint) => snapPoint === fadeFrom) ?? null;
+    }
+    return snapPoints[snapPoints.length - 1];
+  }, [snapPoints, fadeFrom]);
+
+  const shouldFade = (snapPoints && snapPoints.length > 0 && fadeFromSnapPoint === activeSnapPoint) || !snapPoints;
 
   const activeSnapPointIndex = React.useMemo(
     () => snapPoints?.findIndex((snapPoint) => snapPoint === activeSnapPoint) ?? null,
@@ -37,6 +50,20 @@ export function useSnapPoints({
       transition: `transform ${TRANSITIONS.DURATION}s cubic-bezier(${TRANSITIONS.EASE.join(',')})`,
       transform: `translateY(${height}px)`,
     });
+
+    if (newSnapPointIndex !== snapPointHeights.length - 1) {
+      console.log('xpp?');
+
+      set(overlayRef.current, {
+        transition: `opacity ${TRANSITIONS.DURATION}s cubic-bezier(${TRANSITIONS.EASE.join(',')})`,
+        opacity: '0',
+      });
+    } else {
+      set(overlayRef.current, {
+        opacity: '1',
+      });
+    }
+
     setActiveSnapPoint(snapPoints?.[newSnapPointIndex] ?? null);
   }
 
@@ -95,6 +122,7 @@ export function useSnapPoints({
   return {
     isLastSnapPoint,
     activeSnapPoint,
+    shouldFade,
     setActiveSnapPoint,
     onRelease,
     onDrag,
