@@ -45,7 +45,7 @@ export function Hero() {
           <p className="text-gray-600 text-xl">Drawer component for React.</p>
         </div>
         <div className="flex gap-4 justify-center mt-6">
-          <Drawer.Root snapPoints={[0.37, 0.55, 1]} activeSnapPoint={snap} setActiveSnapPoint={setSnap}>
+          <Drawer.Root snapPoints={[0.37, 0.7, 1]} activeSnapPoint={snap} setActiveSnapPoint={setSnap}>
             <Drawer.Trigger asChild>
               <button
                 type="button"
@@ -109,11 +109,7 @@ export function Hero() {
                         <div className="sm:flex sm:px-6 sm:py-5">
                           <dt className="text-sm font-medium text-gray-500 sm:w-40 sm:flex-shrink-0 lg:w-48">Bio</dt>
                           <dd className="mt-1 text-sm text-gray-900 sm:col-span-2 sm:ml-6 sm:mt-0">
-                            <p>
-                              Enim feugiat ut ipsum, neque ut. Tristique mi id elementum praesent. Gravida in tempus
-                              feugiat netus enim aliquet a, quam scelerisque. Dictumst in convallis nec in bibendum
-                              aenean arcu.
-                            </p>
+                            <p>Enim feugiat ut ipsum, neque ut. Tristique mi id elementum praesent.</p>
                           </dd>
                         </div>
                         <div className="sm:flex sm:px-6 sm:py-5">
