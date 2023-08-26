@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { Drawer } from 'vaul';
 
 export function Hero() {
-  const [snap, setSnap] = useState<number | null>(0.2);
+  //   const [snap, setSnap] = useState<number | null>(0.2);
 
   return (
     <div className="relative">
@@ -43,7 +43,7 @@ export function Hero() {
           <p className="text-gray-600 text-xl">Drawer component for React.</p>
         </div>
         <div className="flex gap-4 justify-center mt-6">
-          <Drawer.Root snapPoints={[0.2, 0.5, 1]} activeSnapPoint={snap} setActiveSnapPoint={setSnap}>
+          <Drawer.Root snapPoints={[0.2, 0.5, 1]}>
             <Drawer.Trigger asChild>
               <button
                 type="button"
@@ -62,7 +62,6 @@ export function Hero() {
                     <p className="text-gray-600 mb-2">
                       This component can be used as a Dialog replacement on mobile and tablet devices.
                     </p>
-                    <button onClick={() => setSnap(1)}>xddd</button>
                     <p className="text-gray-600 mb-2">
                       It comes unstyled, has gesture-driven animations, and is made by{' '}
                       <a href="https://emilkowal.ski/" className="underline" target="_blank">

@@ -310,7 +310,7 @@ function Root({
     return () => window.visualViewport.removeEventListener('resize', onVisualViewportChange);
   }, []);
 
-  function closeDrawer() {
+  function closeDrawer(animateOpacity: boolean = true) {
     if (!dismissible) return;
     drawerRef.current.setAttribute('vaul-closed-by-dragging', 'true');
     setIsOpen(false);
@@ -324,7 +324,7 @@ function Root({
       const opacityValue = overlayRef.current?.style.opacity || 1;
 
       set(overlayRef.current, {
-        '--opacity-from': `${opacityValue}`,
+        '--opacity-from': `${animateOpacity ? opacityValue : 0}`,
       });
     }
   }

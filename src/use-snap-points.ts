@@ -20,11 +20,10 @@ export function useSnapPoints({
 }) {
   const [activeSnapPoint, setActiveSnapPoint] = useControllableState({
     prop: activeSnapPointProp,
-    defaultProp: snapPoints?.[0] ?? null,
-    onChange: (s) => {
-      setActiveSnapPointProp(s);
-    },
+    defaultProp: snapPoints?.[0],
+    onChange: setActiveSnapPointProp,
   });
+
   const hasWindow = typeof window !== 'undefined';
   const isLastSnapPoint = React.useMemo(
     () => activeSnapPoint === snapPoints?.[snapPoints.length - 1] ?? null,
@@ -73,8 +72,10 @@ export function useSnapPoints({
   }
 
   React.useEffect(() => {
-    const newIndex = snapPoints?.findIndex((snapPoint) => snapPoint === activeSnapPointProp) ?? null;
-    snapToPoint(snapPointHeights[newIndex]);
+    if (activeSnapPointProp) {
+      const newIndex = snapPoints?.findIndex((snapPoint) => snapPoint === activeSnapPointProp) ?? null;
+      snapToPoint(snapPointHeights[newIndex]);
+    }
   }, [activeSnapPointProp]);
 
   function onRelease({
@@ -83,11 +84,12 @@ export function useSnapPoints({
     velocity,
   }: {
     draggedDistance: number;
-    closeDrawer: () => void;
+    closeDrawer: (animateOpacity?: boolean) => void;
     velocity: number;
   }) {
     const currentPosition = activeSnapPointHeight - draggedDistance;
     const isOverlaySnapPoint = activeSnapPointIndex === fadeFromIndex - 1;
+    const isFirst = activeSnapPointIndex === 0;
 
     if (isOverlaySnapPoint) {
       set(overlayRef.current, {
@@ -112,6 +114,14 @@ export function useSnapPoints({
       const dragDirection = draggedDistance > 0 ? 1 : -1;
       // Don't do anything if we swipe upwards while being on the last snap point
       if (dragDirection > 0 && isLastSnapPoint) return;
+
+      if (isFirst && dragDirection < 0) {
+        if (!shouldFade) {
+          closeDrawer(false);
+        } else {
+          closeDrawer();
+        }
+      }
 
       snapToPoint(snapPointHeights[activeSnapPointIndex + dragDirection]);
       return;
