@@ -27,12 +27,12 @@ const WINDOW_TOP_OFFSET = 26;
 
 type WithFadeFromProps = {
   snapPoints: number[];
-  fadeFrom: number;
+  fadeFromIndex: number;
 };
 
 type WithoutFadeFromProps = {
   snapPoints?: number[];
-  fadeFrom?: never;
+  fadeFromIndex?: never;
 };
 
 type DialogProps = {
@@ -62,7 +62,7 @@ function Root({
   closeThreshold = CLOSE_THRESHOLD,
   scrollLockTimeout = SCROLL_LOCK_TIMEOUT,
   dismissible = true,
-  fadeFrom,
+  fadeFromIndex,
 }: DialogProps) {
   const [isOpen = false, setIsOpen] = useControllableState({
     prop: openProp,
@@ -95,7 +95,7 @@ function Root({
     onDrag: onDragSnapPoints,
     shouldFade,
     getPercentageDragged: getSnapPointsPercentageDragged,
-  } = useSnapPoints({ snapPoints, drawerRef: drawerRef, fadeFrom, overlayRef: overlayRef });
+  } = useSnapPoints({ snapPoints, drawerRef: drawerRef, fadeFromIndex, overlayRef: overlayRef });
 
   usePreventScroll({
     isDisabled: !isOpen || isDragging || isAnimating,
@@ -218,7 +218,7 @@ function Root({
 
       const opacityValue = 1 - percentageDragged;
 
-      if (shouldFade || activeSnapPointIndex === snapPoints.length - 2) {
+      if (shouldFade || activeSnapPointIndex === fadeFromIndex - 1) {
         changeThemeColorOnDrag(percentageDragged);
         onDragProp?.(event, percentageDragged);
         set(

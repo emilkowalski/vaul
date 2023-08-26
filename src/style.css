@@ -52,10 +52,8 @@
 /* This will allow us to not animate via animation, but still benefit from delaying unmount via Radix. */
 @keyframes fake-animation {
   from {
-    opacity: 1;
   }
   to {
-    opacity: 1;
   }
 }
 

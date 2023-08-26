@@ -6,10 +6,10 @@ export function useSnapPoints({
   snapPoints,
   drawerRef,
   overlayRef,
-  fadeFrom,
+  fadeFromIndex = snapPoints?.length - 1,
 }: {
   snapPoints?: number[];
-  fadeFrom?: number;
+  fadeFromIndex?: number;
   drawerRef: React.RefObject<HTMLDivElement>;
   overlayRef: React.RefObject<HTMLDivElement>;
 }) {
@@ -19,17 +19,9 @@ export function useSnapPoints({
     () => activeSnapPoint === snapPoints?.[snapPoints.length - 1] ?? null,
     [snapPoints, activeSnapPoint],
   );
-  const fadeFromSnapPointIndex = React.useMemo(() => {
-    if (!snapPoints) return null;
-
-    if (fadeFrom) {
-      return snapPoints?.findIndex((snapPoint) => snapPoint === fadeFrom) ?? null;
-    }
-    return snapPoints.length - 1;
-  }, [snapPoints, fadeFrom]);
 
   const shouldFade =
-    (snapPoints && snapPoints.length > 0 && snapPoints[fadeFromSnapPointIndex] === activeSnapPoint) || !snapPoints;
+    (snapPoints && snapPoints.length > 0 && snapPoints[fadeFromIndex] === activeSnapPoint) || !snapPoints;
 
   const activeSnapPointIndex = React.useMemo(
     () => snapPoints?.findIndex((snapPoint) => snapPoint === activeSnapPoint) ?? null,
@@ -53,7 +45,7 @@ export function useSnapPoints({
       transform: `translateY(${height}px)`,
     });
 
-    if (newSnapPointIndex !== snapPointHeights.length - 1) {
+    if (newSnapPointIndex !== snapPointHeights.length - 1 && newSnapPointIndex !== fadeFromIndex) {
       set(overlayRef.current, {
         transition: `opacity ${TRANSITIONS.DURATION}s cubic-bezier(${TRANSITIONS.EASE.join(',')})`,
         opacity: '0',
@@ -77,7 +69,7 @@ export function useSnapPoints({
     velocity: number;
   }) {
     const currentPosition = activeSnapPointHeight - draggedDistance;
-    const isOverlaySnapPoint = activeSnapPointIndex === fadeFromSnapPointIndex - 1;
+    const isOverlaySnapPoint = activeSnapPointIndex === fadeFromIndex - 1;
 
     if (isOverlaySnapPoint) {
       set(overlayRef.current, {
@@ -129,7 +121,13 @@ export function useSnapPoints({
   function getPercentageDragged(absDraggedDistance: number, isDraggingDown: boolean) {
     if (!snapPoints) return null;
     // If this is true we are dragging to a snap point that is supposed to have an overlay
-    const isOverlaySnapPoint = activeSnapPointIndex === fadeFromSnapPointIndex - 1;
+    const isOverlaySnapPoint = activeSnapPointIndex === fadeFromIndex - 1;
+    const isOverlaySnapPointOrHigher = activeSnapPointIndex >= fadeFromIndex;
+
+    if (isOverlaySnapPointOrHigher && isDraggingDown) {
+      return 0;
+    }
+
     // Don't animate, but still use this one if we are dragging away from the overlaySnapPoint
     if (isOverlaySnapPoint && !isDraggingDown) return 1;
     if (!shouldFade && !isOverlaySnapPoint) return null;
