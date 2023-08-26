@@ -126,9 +126,12 @@ export function useSnapPoints({
     });
   }
 
-  function getPercentageDragged(absDraggedDistance: number) {
+  function getPercentageDragged(absDraggedDistance: number, isDraggingDown: boolean) {
+    if (!snapPoints) return null;
     // If this is true we are dragging to a snap point that is supposed to have an overlay
     const isOverlaySnapPoint = activeSnapPointIndex === fadeFromSnapPointIndex - 1;
+    // Don't animate, but still use this one if we are dragging away from the overlaySnapPoint
+    if (isOverlaySnapPoint && !isDraggingDown) return 1;
     if (!shouldFade && !isOverlaySnapPoint) return null;
     // Either fadeFrom index or the one before
     const targetSnapPointIndex = isOverlaySnapPoint ? activeSnapPointIndex + 1 : activeSnapPointIndex - 1;

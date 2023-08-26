@@ -210,7 +210,7 @@ function Root({
       const wrapper = document.querySelector('[vaul-drawer-wrapper]');
 
       let percentageDragged = absDraggedDistance / drawerHeight;
-      const snapPointPercentageDragged = getSnapPointsPercentageDragged(absDraggedDistance);
+      const snapPointPercentageDragged = getSnapPointsPercentageDragged(absDraggedDistance, isDraggingDown);
 
       if (snapPointPercentageDragged !== null) {
         percentageDragged = snapPointPercentageDragged;
@@ -531,8 +531,7 @@ function Root({
 
 const Overlay = React.forwardRef<HTMLDivElement, React.ComponentPropsWithoutRef<typeof DialogPrimitive.Overlay>>(
   function ({ children, ...rest }, ref) {
-    const { overlayRef, snapPoints, onRelease, experimentalSafariThemeAnimation, shouldFade, activeSnapPoint } =
-      useDrawerContext();
+    const { overlayRef, snapPoints, onRelease, experimentalSafariThemeAnimation, shouldFade } = useDrawerContext();
     const composedRef = useComposedRefs(ref, overlayRef);
     const hasSnapPoints = snapPoints && snapPoints.length > 0;
 

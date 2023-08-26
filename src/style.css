@@ -40,7 +40,8 @@
   animation: show-theme-overlay 0.5s cubic-bezier(0.32, 0.72, 0, 1);
 }
 
-[vaul-overlay][data-state='closed'] {
+[vaul-overlay][data-state='closed']:not([vaul-snap-points='true']),
+[vaul-overlay][data-state='closed'][vaul-snap-points-overlay='true'] {
   animation: hide-overlay 0.5s cubic-bezier(0.32, 0.72, 0, 1) forwards;
 }
 
