@@ -566,7 +566,9 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
         animationEndTimer.current = setTimeout(() => {
           setIsAnimating(false);
           onAnimationEnd?.(isOpen);
-          setActiveSnapPoint(snapPoints[0]);
+          if (snapPoints && !isOpen) {
+            setActiveSnapPoint(snapPoints[0]);
+          }
         }, ANIMATION_DURATION);
         onAnimationStart(e);
       }}
