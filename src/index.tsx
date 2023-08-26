@@ -10,22 +10,16 @@ import { useComposedRefs } from './use-composed-refs';
 import { useSafariThemeColor } from './use-safari-theme-color';
 import { usePositionFixed } from './use-position-fixed';
 import { useSnapPoints } from './use-snap-points';
-import { set, reset, getTranslateY, isInView } from './helpers';
+import { set, reset, getTranslateY, isInView, dampenValue } from './helpers';
+import { TRANSITIONS, VELOCITY_THRESHOLD } from './constants';
 
 const CLOSE_THRESHOLD = 0.25;
 
 const SCROLL_LOCK_TIMEOUT = 500;
 
-const TRANSITIONS = {
-  DURATION: 0.5,
-  EASE: [0.32, 0.72, 0, 1],
-};
-
 const ANIMATION_DURATION = 501;
 
 const BORDER_RADIUS = 8;
-
-const VELOCITY_THRESHOLD = 0.4;
 
 const NESTED_DISPLACEMENT = 16;
 
@@ -83,11 +77,12 @@ function Root({
     experimentalSafariThemeAnimation,
   );
   const {
-    activeSnapPoint,
+    isLastSnapPoint,
+    setActiveSnapPoint,
     onRelease: onReleaseSnapPoints,
     snapPointHeights,
     onDrag: onDragSnapPoints,
-  } = useSnapPoints({ snapPoints, drawerRef: drawerRef });
+  } = useSnapPoints({ snapPoints, drawerRef: drawerRef, isOpen });
 
   usePreventScroll({
     isDisabled: !isOpen || isDragging || isAnimating,
@@ -183,9 +178,13 @@ function Root({
         transition: 'none',
       });
 
-      // Allow dragging upwards up to 40px
-      if (draggedDistance > 0) {
-        const dampenedDraggedDistance = 8 * (Math.log(draggedDistance + 1) - 2);
+      if (snapPoints) {
+        onDragSnapPoints({ draggedDistance });
+      }
+
+      // Run this only if snapPoints are not defined or if we are at the last snap point (highest one)
+      if (draggedDistance > 0 && !snapPoints) {
+        const dampenedDraggedDistance = dampenValue(draggedDistance);
 
         set(drawerRef.current, {
           transform: `translateY(${Math.min(dampenedDraggedDistance * -1, 0)}px)`,
@@ -227,14 +226,11 @@ function Root({
         );
       }
 
-      if (snapPoints) {
-        onDragSnapPoints({ draggedDistance });
-        return;
+      if (!snapPoints) {
+        set(drawerRef.current, {
+          transform: `translateY(${absDraggedDistance}px)`,
+        });
       }
-
-      set(drawerRef.current, {
-        transform: `translateY(${absDraggedDistance}px)`,
-      });
     }
   }
 
@@ -359,7 +355,7 @@ function Root({
     const velocity = Math.abs(distMoved) / timeTaken;
 
     if (snapPoints) {
-      onReleaseSnapPoints({ draggedDistance: distMoved });
+      onReleaseSnapPoints({ draggedDistance: distMoved, closeDrawer, velocity });
       return;
     }
 
@@ -485,6 +481,8 @@ function Root({
           overlayRef,
           onAnimationStart,
           onPress,
+          setActiveSnapPoint,
+          snapPoints,
           onRelease,
           onDrag,
           dismissible,
@@ -542,6 +540,8 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
     keyboardIsOpen,
     setIsAnimating,
     snapPointHeights,
+    setActiveSnapPoint,
+    snapPoints,
   } = useDrawerContext();
   const composedRef = useComposedRefs(ref, drawerRef);
   const animationEndTimer = React.useRef<NodeJS.Timeout>(null);
@@ -555,6 +555,7 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
         animationEndTimer.current = setTimeout(() => {
           setIsAnimating(false);
           onAnimationEnd?.(isOpen);
+          setActiveSnapPoint(snapPoints[0]);
         }, ANIMATION_DURATION);
         onAnimationStart(e);
       }}

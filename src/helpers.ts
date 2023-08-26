@@ -64,3 +64,7 @@ export function getTranslateY(element: HTMLElement): number | null {
   mat = transform.match(/^matrix\((.+)\)$/);
   return mat ? parseFloat(mat[1].split(', ')[5]) : null;
 }
+
+export function dampenValue(v: number) {
+  return 8 * (Math.log(v + 1) - 2);
+}
