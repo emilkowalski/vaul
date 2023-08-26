@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { Drawer } from 'vaul';
 
 export function Hero() {
-  const [snap, setSnap] = useState<number | null>(0.38);
+  const [snap, setSnap] = useState<number | null>(0.37);
 
   return (
     <div className="relative">
@@ -45,7 +45,7 @@ export function Hero() {
           <p className="text-gray-600 text-xl">Drawer component for React.</p>
         </div>
         <div className="flex gap-4 justify-center mt-6">
-          <Drawer.Root snapPoints={[0.38, 0.55, 1]} activeSnapPoint={snap} setActiveSnapPoint={setSnap}>
+          <Drawer.Root snapPoints={[0.37, 0.55, 1]} activeSnapPoint={snap} setActiveSnapPoint={setSnap}>
             <Drawer.Trigger asChild>
               <button
                 type="button"
@@ -58,16 +58,16 @@ export function Hero() {
               <Drawer.Overlay className="fixed inset-0 bg-black/40" />
               <Drawer.Content className="bg-gray-100 flex flex-col rounded-t-[10px] h-full mt-24 max-h-[96%] fixed bottom-0 left-0 right-0">
                 <div
-                  className={clsx('flex h-full flex-col bg-white shadow-xl rounded-t-[10px]', {
+                  className={clsx('flex h-full flex-col bg-slate-700 relative shadow-xl rounded-t-[10px]', {
                     'overflow-y-auto': snap === 1,
                     'overflow-hidden': snap !== 1,
                   })}
                 >
                   {/* Main */}
-                  <div className="divide-y divide-gray-200">
+                  <div className="divide-y divide-gray-200 bg-white rounded-t-[16px]">
                     <div className="pb-6">
-                      <div className="h-24 bg-blue-700 sm:h-20 lg:h-28 rounded-t-md" />
-                      <div className="-mt-12 flow-root px-4 sm:-mt-8 sm:flex sm:items-end sm:px-6 lg:-mt-16">
+                      <div className="h-24 bg-slate-700 sm:h-20 lg:h-28  rounded-t-[10px]" />
+                      <div className="-mt-12 flow-root px-4 sm:-mt-8 sm:flex sm:items-end sm:px-6 lg:-mt-16 relative">
                         <div>
                           <div className="-m-1 flex">
                             <div className="inline-flex overflow-hidden rounded-lg border-4 border-white">
@@ -89,7 +89,7 @@ export function Hero() {
                           <div className="mt-5 flex flex-wrap space-y-3 sm:space-x-3 sm:space-y-0">
                             <button
                               type="button"
-                              className="inline-flex w-full flex-shrink-0 items-center justify-center rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 sm:flex-1"
+                              className="inline-flex w-full flex-shrink-0 items-center justify-center rounded-md bg-slate-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-slate-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-600 sm:flex-1"
                             >
                               Message
                             </button>

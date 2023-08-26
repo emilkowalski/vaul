@@ -99,13 +99,11 @@ export function useSnapPoints({
 
     if (velocity > 2 && draggedDistance < 0) {
       closeDrawer();
-      setActiveSnapPoint(snapPoints[0]);
       return;
     }
 
     if (velocity > 2 && draggedDistance > 0) {
       snapToPoint(snapPointHeights[snapPoints.length - 1]);
-      setActiveSnapPoint(snapPoints[snapPoints.length - 1]);
       return;
     }
 
