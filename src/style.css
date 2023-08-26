@@ -2,6 +2,7 @@
   will-change: transform;
   touch-action: none;
   animation: show-dialog 0.5s cubic-bezier(0.32, 0.72, 0, 1);
+  transform: translateY(var(--snap-point-height, 0));
 }
 
 [vaul-drawer]::after {
@@ -23,16 +24,25 @@
   animation: fake-animation 0.5s cubic-bezier(0.32, 0.72, 0, 1) forwards;
 }
 
-[vaul-overlay] {
+[vaul-overlay]:not([vaul-snap-points='true']) {
   animation: show-overlay 0.5s cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+[vaul-overlay][vaul-snap-points='true']:not([vaul-snap-points-overlay='true']):not([data-state='closed']) {
+  opacity: 0;
+}
+
+[vaul-overlay][vaul-snap-points-overlay='true'] {
+  opacity: 1;
 }
 
 [vaul-overlay][vaul-theme-transition='true'] {
   animation: show-theme-overlay 0.5s cubic-bezier(0.32, 0.72, 0, 1);
 }
 
-[vaul-overlay][data-state='closed'] {
-  animation: hide-overlay 0.5s cubic-bezier(0.32, 0.72, 0, 1) forwards;
+[vaul-overlay][data-state='closed']:not([vaul-snap-points='true']),
+[vaul-overlay][data-state='closed'][vaul-snap-points-overlay='true'] {
+  animation: hide-overlay 0.5s cubic-bezier(0.32, 0.72, 0, 1);
 }
 
 [vaul-overlay][vaul-theme-transition='true'][data-state='closed'] {
@@ -42,10 +52,8 @@
 /* This will allow us to not animate via animation, but still benefit from delaying unmount via Radix. */
 @keyframes fake-animation {
   from {
-    opacity: 1;
   }
   to {
-    opacity: 1;
   }
 }
 
@@ -54,7 +62,7 @@
     transform: translateY(100%);
   }
   to {
-    transform: translateY(0);
+    transform: translateY(var(--snap-point-height, 0));
   }
 }
 

@@ -9,94 +9,35 @@ import { usePreventScroll, isInput } from './use-prevent-scroll';
 import { useComposedRefs } from './use-composed-refs';
 import { useSafariThemeColor } from './use-safari-theme-color';
 import { usePositionFixed } from './use-position-fixed';
+import { useSnapPoints } from './use-snap-points';
+import { set, reset, getTranslateY, isInView, dampenValue } from './helpers';
+import { TRANSITIONS, VELOCITY_THRESHOLD } from './constants';
 
 const CLOSE_THRESHOLD = 0.25;
 
 const SCROLL_LOCK_TIMEOUT = 500;
 
-const TRANSITIONS = {
-  DURATION: 0.5,
-  EASE: [0.32, 0.72, 0, 1],
-};
-
 const ANIMATION_DURATION = 501;
 
 const BORDER_RADIUS = 8;
-
-const VELOCITY_THRESHOLD = 0.4;
 
 const NESTED_DISPLACEMENT = 16;
 
 const WINDOW_TOP_OFFSET = 26;
 
-const cache = new WeakMap();
+type WithFadeFromProps = {
+  snapPoints: number[];
+  fadeFromIndex: number;
+};
 
-interface Style {
-  [key: string]: string;
-}
+type WithoutFadeFromProps = {
+  snapPoints?: number[];
+  fadeFromIndex?: never;
+};
 
-function isInView(el: HTMLElement): boolean {
-  const rect = el.getBoundingClientRect();
-
-  if (!window.visualViewport) return false;
-
-  return (
-    rect.top >= 0 &&
-    rect.left >= 0 &&
-    // Need + 40 for safari detection
-    rect.bottom <= window.visualViewport.height + 40 &&
-    rect.right <= window.visualViewport.width
-  );
-}
-
-function set(el?: Element | HTMLElement | null, styles?: Style, ignoreCache = false) {
-  if (!el || !(el instanceof HTMLElement) || !styles) return;
-  let originalStyles: Style = {};
-
-  Object.entries(styles).forEach(([key, value]: [string, string]) => {
-    if (key.startsWith('--')) {
-      el.style.setProperty(key, value);
-      return;
-    }
-
-    originalStyles[key] = (el.style as any)[key];
-    (el.style as any)[key] = value;
-  });
-
-  if (ignoreCache) return;
-  cache.set(el, originalStyles);
-}
-
-function reset(el: Element | HTMLElement | null, prop?: string) {
-  if (!el || !(el instanceof HTMLElement)) return;
-  let originalStyles = cache.get(el);
-
-  if (!originalStyles) {
-    (el.style as any) = {};
-    return;
-  }
-
-  if (prop) {
-    (el.style as any)[prop] = originalStyles[prop];
-  } else {
-    Object.entries(originalStyles).forEach(([key, value]) => {
-      (el.style as any)[key] = value;
-    });
-  }
-}
-
-function getTranslateY(element: HTMLElement): number | null {
-  const style = window.getComputedStyle(element);
-  const transform =
-    // @ts-ignore
-    style.transform || style.webkitTransform || style.mozTransform;
-  let mat = transform.match(/^matrix3d\((.+)\)$/);
-  if (mat) return parseFloat(mat[1].split(', ')[13]);
-  mat = transform.match(/^matrix\((.+)\)$/);
-  return mat ? parseFloat(mat[1].split(', ')[5]) : null;
-}
-
-interface DialogProps {
+type DialogProps = {
+  activeSnapPoint?: number | null;
+  setActiveSnapPoint?(snapPoint: number | null): void;
   children?: React.ReactNode;
   open?: boolean;
   defaultOpen?: boolean;
@@ -108,7 +49,7 @@ interface DialogProps {
   onDrag?(event: React.PointerEvent<HTMLDivElement>, percentageDragged: number): void;
   onRelease?(event: React.PointerEvent<HTMLDivElement>, open: boolean): void;
   experimentalSafariThemeAnimation?: boolean;
-}
+} & (WithFadeFromProps | WithoutFadeFromProps);
 
 function Root({
   open: openProp,
@@ -119,9 +60,13 @@ function Root({
   onDrag: onDragProp,
   onRelease: onReleaseProp,
   experimentalSafariThemeAnimation,
+  snapPoints,
   closeThreshold = CLOSE_THRESHOLD,
   scrollLockTimeout = SCROLL_LOCK_TIMEOUT,
   dismissible = true,
+  fadeFromIndex = snapPoints?.length - 1,
+  activeSnapPoint: activeSnapPointProp,
+  setActiveSnapPoint: setActiveSnapPointProp,
 }: DialogProps) {
   const [isOpen = false, setIsOpen] = useControllableState({
     prop: openProp,
@@ -145,6 +90,23 @@ function Root({
     isOpen,
     experimentalSafariThemeAnimation,
   );
+  const {
+    activeSnapPoint,
+    activeSnapPointIndex,
+    setActiveSnapPoint,
+    onRelease: onReleaseSnapPoints,
+    snapPointHeights,
+    onDrag: onDragSnapPoints,
+    shouldFade,
+    getPercentageDragged: getSnapPointsPercentageDragged,
+  } = useSnapPoints({
+    snapPoints,
+    activeSnapPointProp,
+    setActiveSnapPointProp,
+    drawerRef: drawerRef,
+    fadeFromIndex,
+    overlayRef: overlayRef,
+  });
 
   usePreventScroll({
     isDisabled: !isOpen || isDragging || isAnimating,
@@ -240,9 +202,13 @@ function Root({
         transition: 'none',
       });
 
-      // Allow dragging upwards up to 40px
-      if (draggedDistance > 0) {
-        const dampenedDraggedDistance = 8 * (Math.log(draggedDistance + 1) - 2);
+      if (snapPoints) {
+        onDragSnapPoints({ draggedDistance });
+      }
+
+      // Run this only if snapPoints are not defined or if we are at the last snap point (highest one)
+      if (draggedDistance > 0 && !snapPoints) {
+        const dampenedDraggedDistance = dampenValue(draggedDistance);
 
         set(drawerRef.current, {
           transform: `translateY(${Math.min(dampenedDraggedDistance * -1, 0)}px)`,
@@ -254,17 +220,27 @@ function Root({
       const absDraggedDistance = Math.abs(draggedDistance);
       const wrapper = document.querySelector('[vaul-drawer-wrapper]');
 
-      const percentageDragged = absDraggedDistance / drawerHeight;
+      let percentageDragged = absDraggedDistance / drawerHeight;
+      const snapPointPercentageDragged = getSnapPointsPercentageDragged(absDraggedDistance, isDraggingDown);
+
+      if (snapPointPercentageDragged !== null) {
+        percentageDragged = snapPointPercentageDragged;
+      }
+
       const opacityValue = 1 - percentageDragged;
-      changeThemeColorOnDrag(percentageDragged);
-      onDragProp?.(event, percentageDragged);
-      set(
-        overlayRef.current,
-        {
-          opacity: `${opacityValue}`,
-        },
-        true,
-      );
+
+      if (shouldFade || activeSnapPointIndex === fadeFromIndex - 1) {
+        changeThemeColorOnDrag(percentageDragged);
+        onDragProp?.(event, percentageDragged);
+        set(
+          overlayRef.current,
+          {
+            opacity: `${opacityValue}`,
+            transition: 'none',
+          },
+          true,
+        );
+      }
 
       if (wrapper && overlayRef.current && shouldScaleBackground) {
         // Calculate percentageDragged as a fraction (0 to 1)
@@ -284,9 +260,11 @@ function Root({
         );
       }
 
-      set(drawerRef.current, {
-        transform: `translateY(${absDraggedDistance}px)`,
-      });
+      if (!snapPoints) {
+        set(drawerRef.current, {
+          transform: `translateY(${absDraggedDistance}px)`,
+        });
+      }
     }
   }
 
@@ -309,7 +287,7 @@ function Root({
         }
 
         previousDiffFromInitial.current = diffFromInitial;
-        // We don't have to change the height if the input is in view, when we are here we are in the opened keyboard state so we can accuretly check if the input is in view
+        // We don't have to change the height if the input is in view, when we are here we are in the opened keyboard state so we can correctly check if the input is in view
         if (drawerHeight > visualViewportHeight || keyboardIsOpen.current) {
           const height = drawerRef.current?.getBoundingClientRect().height;
           let newDrawerHeight = height;
@@ -346,7 +324,7 @@ function Root({
       const opacityValue = overlayRef.current?.style.opacity || 1;
 
       set(overlayRef.current, {
-        '--opacity-from': `${opacityValue}`,
+        '--opacity-from': `${shouldFade ? opacityValue : 0}`,
       });
     }
   }
@@ -409,6 +387,11 @@ function Root({
     const timeTaken = dragEndTime.current.getTime() - dragStartTime.current.getTime();
     const distMoved = pointerStartY.current - y;
     const velocity = Math.abs(distMoved) / timeTaken;
+
+    if (snapPoints) {
+      onReleaseSnapPoints({ draggedDistance: distMoved, closeDrawer, velocity });
+      return;
+    }
 
     // Moved upwards, don't do anything
     if (distMoved > 0) {
@@ -522,11 +505,17 @@ function Root({
     <DialogPrimitive.Root
       open={isOpen}
       onOpenChange={(o) => {
+        if (!o && snapPoints) {
+          closeDrawer();
+        }
         setIsOpen(o);
       }}
     >
       <DrawerContext.Provider
         value={{
+          activeSnapPoint,
+          snapPoints,
+          setActiveSnapPoint,
           drawerRef,
           overlayRef,
           onAnimationStart,
@@ -535,11 +524,13 @@ function Root({
           onDrag,
           dismissible,
           isOpen,
+          shouldFade,
           onNestedDrag,
           onNestedOpenChange,
           onNestedRelease,
           keyboardIsOpen,
           setIsAnimating,
+          snapPointHeights,
           experimentalSafariThemeAnimation,
         }}
       >
@@ -551,15 +542,19 @@ function Root({
 
 const Overlay = React.forwardRef<HTMLDivElement, React.ComponentPropsWithoutRef<typeof DialogPrimitive.Overlay>>(
   function ({ children, ...rest }, ref) {
-    const { overlayRef, onRelease, experimentalSafariThemeAnimation } = useDrawerContext();
+    const { overlayRef, snapPoints, onRelease, experimentalSafariThemeAnimation, shouldFade, isOpen } =
+      useDrawerContext();
     const composedRef = useComposedRefs(ref, overlayRef);
+    const hasSnapPoints = snapPoints && snapPoints.length > 0;
 
     return (
       <DialogPrimitive.Overlay
         onMouseUp={onRelease}
         ref={composedRef}
         vaul-overlay=""
+        vaul-snap-points={isOpen && hasSnapPoints ? 'true' : 'false'}
         vaul-theme-transition={experimentalSafariThemeAnimation ? 'true' : 'false'}
+        vaul-snap-points-overlay={isOpen && shouldFade ? 'true' : 'false'}
         {...rest}
       />
     );
@@ -573,7 +568,7 @@ type ContentProps = React.ComponentPropsWithoutRef<typeof DialogPrimitive.Conten
 };
 
 const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
-  { children, onOpenAutoFocus, onPointerDownOutside, onAnimationEnd, ...rest },
+  { children, onOpenAutoFocus, onPointerDownOutside, onAnimationEnd, style, ...rest },
   ref,
 ) {
   const {
@@ -586,6 +581,9 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
     isOpen,
     keyboardIsOpen,
     setIsAnimating,
+    snapPointHeights,
+    setActiveSnapPoint,
+    snapPoints,
   } = useDrawerContext();
   const composedRef = useComposedRefs(ref, drawerRef);
   const animationEndTimer = React.useRef<NodeJS.Timeout>(null);
@@ -599,6 +597,9 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
         animationEndTimer.current = setTimeout(() => {
           setIsAnimating(false);
           onAnimationEnd?.(isOpen);
+          if (snapPoints && !isOpen) {
+            setActiveSnapPoint(snapPoints[0]);
+          }
         }, ANIMATION_DURATION);
         onAnimationStart(e);
       }}
@@ -626,6 +627,14 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
         onPointerDownOutside?.(e);
       }}
       ref={composedRef}
+      style={
+        snapPointHeights
+          ? ({
+              '--snap-point-height': `${snapPointHeights[0]}px`,
+              ...style,
+            } as React.CSSProperties)
+          : style
+      }
       {...rest}
       vaul-drawer=""
     >
