@@ -88,11 +88,13 @@ function Root({
   );
   const {
     activeSnapPoint,
+    activeSnapPointIndex,
     setActiveSnapPoint,
     onRelease: onReleaseSnapPoints,
     snapPointHeights,
     onDrag: onDragSnapPoints,
     shouldFade,
+    getPercentageDragged: getSnapPointsPercentageDragged,
   } = useSnapPoints({ snapPoints, drawerRef: drawerRef, fadeFrom, overlayRef: overlayRef });
 
   usePreventScroll({
@@ -207,15 +209,23 @@ function Root({
       const absDraggedDistance = Math.abs(draggedDistance);
       const wrapper = document.querySelector('[vaul-drawer-wrapper]');
 
-      const percentageDragged = absDraggedDistance / drawerHeight;
+      let percentageDragged = absDraggedDistance / drawerHeight;
+      const snapPointPercentageDragged = getSnapPointsPercentageDragged(absDraggedDistance);
+
+      if (snapPointPercentageDragged !== null) {
+        percentageDragged = snapPointPercentageDragged;
+      }
+
       const opacityValue = 1 - percentageDragged;
-      if (shouldFade) {
+
+      if (shouldFade || activeSnapPointIndex === snapPoints.length - 2) {
         changeThemeColorOnDrag(percentageDragged);
         onDragProp?.(event, percentageDragged);
         set(
           overlayRef.current,
           {
             opacity: `${opacityValue}`,
+            transition: 'none',
           },
           true,
         );
