@@ -77,8 +77,6 @@ function Root({
     experimentalSafariThemeAnimation,
   );
   const {
-    isLastSnapPoint,
-    setActiveSnapPoint,
     onRelease: onReleaseSnapPoints,
     snapPointHeights,
     onDrag: onDragSnapPoints,
@@ -481,8 +479,6 @@ function Root({
           overlayRef,
           onAnimationStart,
           onPress,
-          setActiveSnapPoint,
-          snapPoints,
           onRelease,
           onDrag,
           dismissible,
@@ -540,8 +536,6 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
     keyboardIsOpen,
     setIsAnimating,
     snapPointHeights,
-    setActiveSnapPoint,
-    snapPoints,
   } = useDrawerContext();
   const composedRef = useComposedRefs(ref, drawerRef);
   const animationEndTimer = React.useRef<NodeJS.Timeout>(null);
@@ -555,7 +549,6 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
         animationEndTimer.current = setTimeout(() => {
           setIsAnimating(false);
           onAnimationEnd?.(isOpen);
-          setActiveSnapPoint(snapPoints[0]);
         }, ANIMATION_DURATION);
         onAnimationStart(e);
       }}

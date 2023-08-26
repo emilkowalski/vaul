@@ -58,9 +58,9 @@ export function useSnapPoints({
   }) {
     const currentPosition = activeSnapPointHeight - draggedDistance;
 
-    if (velocity > 0.8) {
+    if (velocity > 0.8 && draggedDistance < 0) {
       closeDrawer();
-      setActiveSnapPoint(0);
+      setActiveSnapPoint(snapPoints[0]);
       return;
     }
 
@@ -90,8 +90,6 @@ export function useSnapPoints({
   }
 
   return {
-    activeSnapPoint,
-    setActiveSnapPoint,
     isLastSnapPoint,
     onRelease,
     onDrag,
