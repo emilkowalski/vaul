@@ -84,7 +84,7 @@ export function useSnapPoints({
     velocity,
   }: {
     draggedDistance: number;
-    closeDrawer: (animateOpacity?: boolean) => void;
+    closeDrawer: () => void;
     velocity: number;
   }) {
     const currentPosition = activeSnapPointHeight - draggedDistance;
@@ -114,11 +114,7 @@ export function useSnapPoints({
       if (dragDirection > 0 && isLastSnapPoint) return;
 
       if (isFirst && dragDirection < 0) {
-        if (!shouldFade) {
-          closeDrawer(false);
-        } else {
-          closeDrawer();
-        }
+        closeDrawer();
       }
 
       snapToPoint(snapPointHeights[activeSnapPointIndex + dragDirection]);
