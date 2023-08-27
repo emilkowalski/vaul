@@ -107,7 +107,12 @@ export function useSnapPoints({
       return;
     }
 
-    if (velocity > VELOCITY_THRESHOLD) {
+    // Find the closest snap point to the current position
+    const closestSnapPoint = snapPointHeights?.reduce((prev, curr) => {
+      return Math.abs(curr - currentPosition) < Math.abs(prev - currentPosition) ? curr : prev;
+    });
+
+    if (velocity > VELOCITY_THRESHOLD && Math.abs(draggedDistance) < window.innerHeight * 0.4) {
       // -1 = down, 1 = up, might need a better name
       const dragDirection = draggedDistance > 0 ? 1 : -1;
       // Don't do anything if we swipe upwards while being on the last snap point
@@ -120,11 +125,6 @@ export function useSnapPoints({
       snapToPoint(snapPointHeights[activeSnapPointIndex + dragDirection]);
       return;
     }
-
-    // Find the closest snap point to the current position
-    const closestSnapPoint = snapPointHeights?.reduce((prev, curr) => {
-      return Math.abs(curr - currentPosition) < Math.abs(prev - currentPosition) ? curr : prev;
-    });
 
     snapToPoint(closestSnapPoint);
   }

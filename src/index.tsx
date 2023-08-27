@@ -120,11 +120,7 @@ function Root({
 
   function onPress(event: React.PointerEvent<HTMLDivElement>) {
     if (!dismissible) return;
-    if (
-      (drawerRef.current && !drawerRef.current.contains(event.target as Node)) ||
-      (event.target as HTMLElement).tagName === 'BUTTON'
-    )
-      return;
+    if (drawerRef.current && !drawerRef.current.contains(event.target as Node)) return;
 
     setIsDragging(true);
     dragStartTime.current = new Date();
