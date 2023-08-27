@@ -77,6 +77,7 @@ function Root({
   });
   const [isDragging, setIsDragging] = React.useState(false);
   const [isAnimating, setIsAnimating] = React.useState(true);
+  const [justReleased, setJustReleased] = React.useState(false);
   const overlayRef = React.useRef<HTMLDivElement>(null);
   const dragStartTime = React.useRef<Date | null>(null);
   const dragEndTime = React.useRef<Date | null>(null);
@@ -111,7 +112,7 @@ function Root({
   });
 
   usePreventScroll({
-    isDisabled: !isOpen || isDragging || isAnimating || !modal,
+    isDisabled: !isOpen || isDragging || isAnimating || !modal || justReleased,
   });
 
   usePositionFixed({ isOpen, modal });
@@ -381,7 +382,15 @@ function Root({
 
   function onRelease(event: React.PointerEvent<HTMLDivElement>) {
     if (!isDragging) return;
+    event.preventDefault();
     setIsDragging(false);
+    // `justReleased` is needed to prevent the drawer from focusing on an input when the drag ends, as it's not the intent most of the time.
+    setJustReleased(true);
+
+    setTimeout(() => {
+      setJustReleased(false);
+    }, 200);
+
     dragEndTime.current = new Date();
     const swipeAmount = getTranslateY(drawerRef.current);
 
@@ -593,7 +602,6 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
     snapPointHeights,
     setActiveSnapPoint,
     snapPoints,
-    modal,
   } = useDrawerContext();
   const composedRef = useComposedRefs(ref, drawerRef);
   const animationEndTimer = React.useRef<NodeJS.Timeout>(null);

@@ -96,7 +96,12 @@ export function Hero() {
               <Drawer.Overlay className="fixed inset-0 bg-black/40" />
               <Drawer.Content className="bg-gray-100 flex flex-col rounded-t-[10px] h-full mt-24 max-h-[96%] fixed bottom-0 left-0 right-0 z-100">
                 <form className="flex h-full flex-col divide-y divide-gray-200 bg-white shadow-xl rounded-t-[10px] border-t border-gray-200">
-                  <div className="h-0 flex-1 overflow-y-auto">
+                  <div
+                    className={clsx('h-0 flex-1', {
+                      'overflow-y-auto': snap === 1,
+                      'overflow-hidden': snap !== 1,
+                    })}
+                  >
                     <div className="flex flex-1 flex-col justify-between">
                       <div className="divide-y divide-gray-200 px-4 sm:px-6">
                         <div className="space-y-6 pb-5 pt-6">
