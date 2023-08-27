@@ -79,7 +79,6 @@ function Root({
   const [isAnimating, setIsAnimating] = React.useState(true);
   const [justReleased, setJustReleased] = React.useState(false);
   const overlayRef = React.useRef<HTMLDivElement>(null);
-  const dragStartTimer = React.useRef(null);
   const dragStartTime = React.useRef<Date | null>(null);
   const dragEndTime = React.useRef<Date | null>(null);
   const lastTimeDragPrevented = React.useRef<Date | null>(null);
@@ -126,10 +125,8 @@ function Root({
     if (!dismissible) return;
 
     if (drawerRef.current && !drawerRef.current.contains(event.target as Node)) return;
-    // This is needed to prevent taps from triggering drag events
-    dragStartTimer.current = setTimeout(() => {
-      setIsDragging(true);
-    }, 10);
+
+    setIsDragging(true);
     dragStartTime.current = new Date();
 
     // Ensure we maintain correct pointer capture even when going outside of the drawer
@@ -385,12 +382,6 @@ function Root({
   }
 
   function onRelease(event: React.PointerEvent<HTMLDivElement>) {
-    // If the touch ends before the timeout, clear the timeout and treat it as a tap.
-    if (dragStartTimer.current !== null) {
-      clearTimeout(dragStartTimer.current);
-      dragStartTimer.current = null;
-    }
-
     if (!isDragging) return;
 
     event.preventDefault();
