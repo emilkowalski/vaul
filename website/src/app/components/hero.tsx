@@ -56,7 +56,7 @@ export function Hero() {
             </Drawer.Trigger>
             <Drawer.Portal>
               <Drawer.Overlay className="fixed inset-0 bg-black/40" />
-              <Drawer.Content className="bg-gray-100 flex flex-col rounded-t-[10px] h-full mt-24 max-h-[96%] fixed bottom-0 left-0 right-0">
+              <Drawer.Content className="bg-gray-100 flex flex-col rounded-t-[10px] h-full mt-24 max-h-[96%] fixed bottom-0 left-0 right-0 z-100">
                 <div
                   className={clsx('flex h-full flex-col bg-slate-700 relative shadow-xl rounded-t-[10px]', {
                     'overflow-y-auto': snap === 1,
