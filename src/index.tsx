@@ -110,7 +110,6 @@ function Root({
     fadeFromIndex,
     overlayRef: overlayRef,
   });
-  console.log({ activeSnapPointProp });
 
   usePreventScroll({
     isDisabled: !isOpen || isDragging || isAnimating || !modal || justReleased,
