@@ -77,6 +77,7 @@ function Root({
   });
   const [isDragging, setIsDragging] = React.useState(false);
   const [isAnimating, setIsAnimating] = React.useState(true);
+  const [justReleased, setJustReleased] = React.useState(false);
   const overlayRef = React.useRef<HTMLDivElement>(null);
   const dragStartTime = React.useRef<Date | null>(null);
   const dragEndTime = React.useRef<Date | null>(null);
@@ -111,7 +112,7 @@ function Root({
   });
 
   usePreventScroll({
-    isDisabled: !isOpen || isDragging || isAnimating || !modal,
+    isDisabled: !isOpen || isDragging || isAnimating || !modal || justReleased,
   });
 
   usePositionFixed({ isOpen, modal });
@@ -124,6 +125,7 @@ function Root({
     if (!dismissible) return;
 
     if (drawerRef.current && !drawerRef.current.contains(event.target as Node)) return;
+
     setIsDragging(true);
     dragStartTime.current = new Date();
 
@@ -272,17 +274,21 @@ function Root({
       if (!drawerRef.current) return;
 
       const focusedElement = document.activeElement as HTMLElement;
-
       if ((!isInView(focusedElement) && isInput(focusedElement)) || keyboardIsOpen.current) {
         const visualViewportHeight = window.visualViewport.height;
         // This is the height of the keyboard
-        const diffFromInitial = window.innerHeight - visualViewportHeight;
+        let diffFromInitial = window.innerHeight - visualViewportHeight;
         const drawerHeight = drawerRef.current?.getBoundingClientRect().height || 0;
         const offsetFromTop = drawerRef.current?.getBoundingClientRect().top;
 
         // visualViewport height may change due to some subtle changes to the keyboard. Checking if the height changed by 60 or more will make sure that they keyboard really changed its open state.
         if (Math.abs(previousDiffFromInitial.current - diffFromInitial) > 60) {
           keyboardIsOpen.current = !keyboardIsOpen.current;
+        }
+
+        if (snapPoints && snapPoints.length > 0) {
+          const activeSnapPointHeight = snapPointHeights[activeSnapPointIndex];
+          diffFromInitial += activeSnapPointHeight;
         }
 
         previousDiffFromInitial.current = diffFromInitial;
@@ -300,14 +306,18 @@ function Root({
           drawerRef.current.style.height = 'initial';
         }
 
-        // Negative bottom value would never make sense
-        drawerRef.current.style.bottom = `${Math.max(diffFromInitial, 0)}px`;
+        if (snapPoints && snapPoints.length > 0 && !keyboardIsOpen.current) {
+          drawerRef.current.style.bottom = `0px`;
+        } else {
+          // Negative bottom value would never make sense
+          drawerRef.current.style.bottom = `${Math.max(diffFromInitial, 0)}px`;
+        }
       }
     }
 
     window.visualViewport.addEventListener('resize', onVisualViewportChange);
     return () => window.visualViewport.removeEventListener('resize', onVisualViewportChange);
-  }, []);
+  }, [activeSnapPointIndex]);
 
   function closeDrawer() {
     if (!dismissible) return;
@@ -373,7 +383,10 @@ function Root({
 
   function onRelease(event: React.PointerEvent<HTMLDivElement>) {
     if (!isDragging) return;
+
+    event.preventDefault();
     setIsDragging(false);
+
     dragEndTime.current = new Date();
     const swipeAmount = getTranslateY(drawerRef.current);
 
@@ -386,6 +399,15 @@ function Root({
     const timeTaken = dragEndTime.current.getTime() - dragStartTime.current.getTime();
     const distMoved = pointerStartY.current - y;
     const velocity = Math.abs(distMoved) / timeTaken;
+
+    if (velocity > 0.05) {
+      // `justReleased` is needed to prevent the drawer from focusing on an input when the drag ends, as it's not the intent most of the time.
+      setJustReleased(true);
+
+      setTimeout(() => {
+        setJustReleased(false);
+      }, 200);
+    }
 
     if (snapPoints) {
       onReleaseSnapPoints({ draggedDistance: distMoved, closeDrawer, velocity });
@@ -585,7 +607,6 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
     snapPointHeights,
     setActiveSnapPoint,
     snapPoints,
-    modal,
   } = useDrawerContext();
   const composedRef = useComposedRefs(ref, drawerRef);
   const animationEndTimer = React.useRef<NodeJS.Timeout>(null);
