@@ -17,6 +17,7 @@ interface DrawerContextValue {
   experimentalSafariThemeAnimation: boolean;
   snapPointHeights: number[] | null;
   snapPoints: number[] | null;
+  modal: boolean;
   shouldFade: boolean;
   activeSnapPoint: number | null;
   setActiveSnapPoint: (o: number | null) => void;

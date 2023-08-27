@@ -49,6 +49,7 @@ type DialogProps = {
   onDrag?(event: React.PointerEvent<HTMLDivElement>, percentageDragged: number): void;
   onRelease?(event: React.PointerEvent<HTMLDivElement>, open: boolean): void;
   experimentalSafariThemeAnimation?: boolean;
+  modal?: boolean;
 } & (WithFadeFromProps | WithoutFadeFromProps);
 
 function Root({
@@ -67,6 +68,7 @@ function Root({
   fadeFromIndex = snapPoints?.length - 1,
   activeSnapPoint: activeSnapPointProp,
   setActiveSnapPoint: setActiveSnapPointProp,
+  modal = true,
 }: DialogProps) {
   const [isOpen = false, setIsOpen] = useControllableState({
     prop: openProp,
@@ -109,10 +111,10 @@ function Root({
   });
 
   usePreventScroll({
-    isDisabled: !isOpen || isDragging || isAnimating,
+    isDisabled: !isOpen || isDragging || isAnimating || !modal,
   });
 
-  usePositionFixed({ isOpen });
+  usePositionFixed({ isOpen, modal });
 
   function getScale() {
     return (window.innerWidth - WINDOW_TOP_OFFSET) / window.innerWidth;
@@ -120,12 +122,8 @@ function Root({
 
   function onPress(event: React.PointerEvent<HTMLDivElement>) {
     if (!dismissible) return;
-    if (
-      (drawerRef.current && !drawerRef.current.contains(event.target as Node)) ||
-      (event.target as HTMLElement).tagName === 'BUTTON'
-    )
-      return;
 
+    if (drawerRef.current && !drawerRef.current.contains(event.target as Node)) return;
     setIsDragging(true);
     dragStartTime.current = new Date();
 
@@ -232,6 +230,7 @@ function Root({
       if (shouldFade || activeSnapPointIndex === fadeFromIndex - 1) {
         changeThemeColorOnDrag(percentageDragged);
         onDragProp?.(event, percentageDragged);
+
         set(
           overlayRef.current,
           {
@@ -373,7 +372,7 @@ function Root({
   }
 
   function onRelease(event: React.PointerEvent<HTMLDivElement>) {
-    if ((event.target as HTMLElement).tagName === 'BUTTON' || !isDragging) return;
+    if (!isDragging) return;
     setIsDragging(false);
     dragEndTime.current = new Date();
     const swipeAmount = getTranslateY(drawerRef.current);
@@ -510,6 +509,7 @@ function Root({
         }
         setIsOpen(o);
       }}
+      modal={modal}
     >
       <DrawerContext.Provider
         value={{
@@ -530,6 +530,7 @@ function Root({
           onNestedRelease,
           keyboardIsOpen,
           setIsAnimating,
+          modal,
           snapPointHeights,
           experimentalSafariThemeAnimation,
         }}
@@ -541,7 +542,7 @@ function Root({
 }
 
 const Overlay = React.forwardRef<HTMLDivElement, React.ComponentPropsWithoutRef<typeof DialogPrimitive.Overlay>>(
-  function ({ children, ...rest }, ref) {
+  function ({ children, style, ...rest }, ref) {
     const { overlayRef, snapPoints, onRelease, experimentalSafariThemeAnimation, shouldFade, isOpen } =
       useDrawerContext();
     const composedRef = useComposedRefs(ref, overlayRef);
@@ -584,6 +585,7 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
     snapPointHeights,
     setActiveSnapPoint,
     snapPoints,
+    modal,
   } = useDrawerContext();
   const composedRef = useComposedRefs(ref, drawerRef);
   const animationEndTimer = React.useRef<NodeJS.Timeout>(null);
