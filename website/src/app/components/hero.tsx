@@ -43,7 +43,7 @@ const team = [
 ];
 
 export function Hero() {
-  const [snap, setSnap] = useState<number | null>(0.37);
+  const [snap, setSnap] = useState<number | null>(0.25);
 
   return (
     <div className="relative">
@@ -83,7 +83,7 @@ export function Hero() {
           <p className="text-gray-600 text-xl">Drawer component for React.</p>
         </div>
         <div className="flex gap-4 justify-center mt-6">
-          <Drawer.Root snapPoints={[0.21, 0.7, 1]} activeSnapPoint={snap} setActiveSnapPoint={setSnap}>
+          <Drawer.Root snapPoints={[0.25, 0.7, 1]} activeSnapPoint={snap} setActiveSnapPoint={setSnap}>
             <Drawer.Trigger asChild>
               <button
                 type="button"
@@ -94,8 +94,9 @@ export function Hero() {
             </Drawer.Trigger>
             <Drawer.Portal>
               <Drawer.Overlay className="fixed inset-0 bg-black/40" />
-              <Drawer.Content className="bg-gray-100 flex flex-col rounded-t-[10px] h-full mt-24 max-h-[96%] fixed bottom-0 left-0 right-0 z-100">
-                <form className="flex h-full flex-col divide-y divide-gray-200 bg-white shadow-xl rounded-t-[10px] border-t border-gray-200">
+              <Drawer.Content className="border bg-white border-t border-gray-200 flex flex-col rounded-t-[10px] h-full mt-24 max-h-[96%] fixed bottom-0 left-0 right-0 z-100">
+                <div aria-hidden className="mx-auto mt-2 w-10 h-1 flex-shrink-0 rounded-full bg-zinc-200 mb-2" />
+                <form className="flex h-full flex-col divide-y divide-gray-200 bg-white border-gray-200">
                   <div
                     className={clsx('h-0 flex-1', {
                       'overflow-y-auto': snap === 1,
@@ -111,7 +112,9 @@ export function Hero() {
                             </label>
                             <div className="mt-2">
                               <input
-                                onFocus={() => setSnap(1)}
+                                onFocus={() => {
+                                  setSnap(1);
+                                }}
                                 type="text"
                                 name="project-name"
                                 id="project-name"
