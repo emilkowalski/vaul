@@ -74,7 +74,6 @@ export function useSnapPoints({
   React.useEffect(() => {
     if (activeSnapPointProp) {
       const newIndex = snapPoints?.findIndex((snapPoint) => snapPoint === activeSnapPointProp) ?? null;
-      console.log(newIndex);
 
       snapToPoint(snapPointHeights[newIndex]);
     }

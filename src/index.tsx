@@ -110,6 +110,7 @@ function Root({
     fadeFromIndex,
     overlayRef: overlayRef,
   });
+  console.log({ activeSnapPointProp });
 
   usePreventScroll({
     isDisabled: !isOpen || isDragging || isAnimating || !modal || justReleased,
@@ -390,15 +391,6 @@ function Root({
     dragEndTime.current = new Date();
     const swipeAmount = getTranslateY(drawerRef.current);
 
-    if (swipeAmount !== 0) {
-      // `justReleased` is needed to prevent the drawer from focusing on an input when the drag ends, as it's not the intent most of the time.
-      setJustReleased(true);
-
-      setTimeout(() => {
-        setJustReleased(false);
-      }, 200);
-    }
-
     if (!shouldDrag(event.target, false) || !swipeAmount || Number.isNaN(swipeAmount)) return;
 
     if (dragStartTime.current === null) return;
@@ -408,6 +400,15 @@ function Root({
     const timeTaken = dragEndTime.current.getTime() - dragStartTime.current.getTime();
     const distMoved = pointerStartY.current - y;
     const velocity = Math.abs(distMoved) / timeTaken;
+
+    if (velocity > 0.05) {
+      // `justReleased` is needed to prevent the drawer from focusing on an input when the drag ends, as it's not the intent most of the time.
+      setJustReleased(true);
+
+      setTimeout(() => {
+        setJustReleased(false);
+      }, 200);
+    }
 
     if (snapPoints) {
       onReleaseSnapPoints({ draggedDistance: distMoved, closeDrawer, velocity });
