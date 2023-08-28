@@ -145,11 +145,11 @@ export function useSnapPoints({
   function onDrag({ draggedDistance }: { draggedDistance: number }) {
     const newYValue = activeSnapPointHeight - draggedDistance;
 
-    if (isLastSnapPoint && newYValue < activeSnapPointHeight) {
+    if (newYValue < snapPointHeights[snapPointHeights.length - 1]) {
       const dampenedDraggedDistance = dampenValue(draggedDistance);
 
       set(drawerRef.current, {
-        transform: `translateY(${Math.min(activeSnapPointHeight - dampenedDraggedDistance, activeSnapPointHeight)}px)`,
+        transform: `translateY(${Math.min(snapPointHeights[snapPointHeights.length - 1] - dampenedDraggedDistance)}px)`,
       });
       return;
     }

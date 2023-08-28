@@ -153,6 +153,7 @@ function Root({
       swipeAmount === 0
     ) {
       lastTimeDragPrevented.current = new Date();
+
       return false;
     }
 
@@ -162,7 +163,7 @@ function Root({
       if (element.scrollHeight > element.clientHeight) {
         if (element.role === 'dialog' || element.getAttribute('vaul-drawer')) return true;
 
-        if (element.scrollTop > 0) {
+        if (element.scrollTop !== 0) {
           lastTimeDragPrevented.current = new Date();
 
           // The element is scrollable and not scrolled to the top, so don't drag
@@ -171,6 +172,7 @@ function Root({
 
         if (isDraggingDown && element !== document.body && !swipeAmount) {
           lastTimeDragPrevented.current = new Date();
+
           // Element is scrolled to the top, but we are dragging down so we should allow scrolling
           return false;
         }
@@ -384,7 +386,6 @@ function Root({
   function onRelease(event: React.PointerEvent<HTMLDivElement>) {
     if (!isDragging) return;
 
-    event.preventDefault();
     setIsDragging(false);
 
     dragEndTime.current = new Date();

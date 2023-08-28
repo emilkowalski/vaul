@@ -6,7 +6,6 @@ import { Drawer } from 'vaul';
 
 export function Hero() {
   const [snap, setSnap] = useState<number | string | null>('148px');
-  console.log(snap, 'marcin majkut');
 
   return (
     <div className="relative">
