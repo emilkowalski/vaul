@@ -26,18 +26,18 @@ const NESTED_DISPLACEMENT = 16;
 const WINDOW_TOP_OFFSET = 26;
 
 type WithFadeFromProps = {
-  snapPoints: number[];
+  snapPoints: (number | string)[];
   fadeFromIndex: number;
 };
 
 type WithoutFadeFromProps = {
-  snapPoints?: number[];
+  snapPoints?: (number | string)[];
   fadeFromIndex?: never;
 };
 
 type DialogProps = {
-  activeSnapPoint?: number | null;
-  setActiveSnapPoint?(snapPoint: number | null): void;
+  activeSnapPoint?: number | string | null;
+  setActiveSnapPoint?(snapPoint: number | string | null): void;
   children?: React.ReactNode;
   open?: boolean;
   defaultOpen?: boolean;

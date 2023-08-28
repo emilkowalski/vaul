@@ -16,11 +16,11 @@ interface DrawerContextValue {
   keyboardIsOpen: React.MutableRefObject<boolean>;
   experimentalSafariThemeAnimation: boolean;
   snapPointHeights: number[] | null;
-  snapPoints: number[] | null;
+  snapPoints: (number | string)[] | null;
   modal: boolean;
   shouldFade: boolean;
-  activeSnapPoint: number | null;
-  setActiveSnapPoint: (o: number | null) => void;
+  activeSnapPoint: number | string | null;
+  setActiveSnapPoint: (o: number | string | null) => void;
 }
 
 export const DrawerContext = React.createContext<DrawerContextValue | undefined>(undefined);
