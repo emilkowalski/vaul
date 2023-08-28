@@ -12,11 +12,4 @@ module.exports = {
   future: {
     hoverOnlyWhenSupported: true,
   },
-  theme: {
-    extend: {
-      colors: {
-        gray: { ...colors.zinc },
-      },
-    },
-  },
 };
