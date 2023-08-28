@@ -11,9 +11,9 @@ export function useSnapPoints({
   overlayRef,
   fadeFromIndex,
 }: {
-  activeSnapPointProp?: number | null;
+  activeSnapPointProp?: number | string | null;
   setActiveSnapPointProp?(snapPoint: number | null): void;
-  snapPoints?: number[];
+  snapPoints?: (number | string)[];
   fadeFromIndex: number;
   drawerRef: React.RefObject<HTMLDivElement>;
   overlayRef: React.RefObject<HTMLDivElement>;
@@ -39,7 +39,19 @@ export function useSnapPoints({
   );
 
   const snapPointHeights = React.useMemo(
-    () => snapPoints?.map((snapPoint) => hasWindow && window.innerHeight - snapPoint * window.innerHeight) ?? null,
+    () =>
+      snapPoints?.map((snapPoint) => {
+        const isPx = typeof snapPoint === 'string';
+        let snapPointAsNumber = 0;
+
+        if (isPx) {
+          snapPointAsNumber = parseInt(snapPoint, 10);
+        }
+
+        const height = isPx ? snapPointAsNumber : snapPoint * window.innerHeight;
+
+        return hasWindow && window.innerHeight - height;
+      }) ?? null,
     [snapPoints],
   );
 
