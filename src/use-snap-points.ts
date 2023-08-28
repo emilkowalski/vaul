@@ -146,10 +146,14 @@ export function useSnapPoints({
     const newYValue = activeSnapPointHeight - draggedDistance;
 
     if (newYValue < snapPointHeights[snapPointHeights.length - 1]) {
+      // The thing here is that we don't need to dampen the whole value, only additional 40px above the last snap point, figure this out
       const dampenedDraggedDistance = dampenValue(draggedDistance);
 
       set(drawerRef.current, {
-        transform: `translateY(${Math.min(snapPointHeights[snapPointHeights.length - 1] - dampenedDraggedDistance)}px)`,
+        transform: `translateY(${Math.min(
+          snapPointHeights[snapPointHeights.length - 1] - dampenedDraggedDistance,
+          Math.min(snapPointHeights[snapPointHeights.length - 1]),
+        )}px)`,
       });
       return;
     }
