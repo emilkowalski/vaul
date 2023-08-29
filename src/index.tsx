@@ -65,7 +65,7 @@ function Root({
   closeThreshold = CLOSE_THRESHOLD,
   scrollLockTimeout = SCROLL_LOCK_TIMEOUT,
   dismissible = true,
-  fadeFromIndex = snapPoints?.length - 1,
+  fadeFromIndex = snapPoints && snapPoints?.length - 1,
   activeSnapPoint: activeSnapPointProp,
   setActiveSnapPoint: setActiveSnapPointProp,
   modal = true,
@@ -82,7 +82,7 @@ function Root({
   const dragStartTime = React.useRef<Date | null>(null);
   const dragEndTime = React.useRef<Date | null>(null);
   const lastTimeDragPrevented = React.useRef<Date | null>(null);
-  const nestedOpenChangeTimer = React.useRef<NodeJS.Timeout>(null);
+  const nestedOpenChangeTimer = React.useRef<NodeJS.Timeout | null>(null);
   const pointerStartY = React.useRef(0);
   const keyboardIsOpen = React.useRef(false);
   const previousDiffFromInitial = React.useRef(0);
@@ -138,11 +138,11 @@ function Root({
   function shouldDrag(el: EventTarget, isDraggingDown: boolean) {
     let element = el as HTMLElement;
     const date = new Date();
-    const highlightedText = window.getSelection().toString();
+    const highlightedText = window.getSelection()?.toString();
     const swipeAmount = drawerRef.current ? getTranslateY(drawerRef.current) : null;
 
     // Don't drag if there's highlighted text
-    if (highlightedText.length > 0) {
+    if (highlightedText && highlightedText.length > 0) {
       return false;
     }
 
@@ -231,7 +231,7 @@ function Root({
 
       const opacityValue = 1 - percentageDragged;
 
-      if (shouldFade || activeSnapPointIndex === fadeFromIndex - 1) {
+      if (shouldFade || (fadeFromIndex && activeSnapPointIndex === fadeFromIndex - 1)) {
         changeThemeColorOnDrag(percentageDragged);
         onDragProp?.(event, percentageDragged);
 
@@ -277,7 +277,7 @@ function Root({
 
       const focusedElement = document.activeElement as HTMLElement;
       if ((!isInView(focusedElement) && isInput(focusedElement)) || keyboardIsOpen.current) {
-        const visualViewportHeight = window.visualViewport.height;
+        const visualViewportHeight = window.visualViewport?.height || 0;
         // This is the height of the keyboard
         let diffFromInitial = window.innerHeight - visualViewportHeight;
         const drawerHeight = drawerRef.current?.getBoundingClientRect().height || 0;
@@ -288,8 +288,8 @@ function Root({
           keyboardIsOpen.current = !keyboardIsOpen.current;
         }
 
-        if (snapPoints && snapPoints.length > 0) {
-          const activeSnapPointHeight = snapPointsOffset[activeSnapPointIndex];
+        if (snapPoints && snapPoints.length > 0 && snapPointsOffset && activeSnapPointIndex) {
+          const activeSnapPointHeight = snapPointsOffset[activeSnapPointIndex] || 0;
           diffFromInitial += activeSnapPointHeight;
         }
 
@@ -317,12 +317,12 @@ function Root({
       }
     }
 
-    window.visualViewport.addEventListener('resize', onVisualViewportChange);
-    return () => window.visualViewport.removeEventListener('resize', onVisualViewportChange);
-  }, [activeSnapPointIndex]);
+    window.visualViewport?.addEventListener('resize', onVisualViewportChange);
+    return () => window.visualViewport?.removeEventListener('resize', onVisualViewportChange);
+  }, [activeSnapPointIndex, snapPoints, snapPointsOffset]);
 
   function closeDrawer() {
-    if (!dismissible) return;
+    if (!dismissible || !drawerRef.current) return;
     drawerRef.current.setAttribute('vaul-closed-by-dragging', 'true');
     setIsOpen(false);
 
@@ -352,6 +352,7 @@ function Root({
   }, [isOpen, shouldScaleBackground]);
 
   function resetDrawer() {
+    if (!drawerRef.current) return;
     const wrapper = document.querySelector('[vaul-drawer-wrapper]');
     const currentSwipeAmount = getTranslateY(drawerRef.current);
 
@@ -366,7 +367,7 @@ function Root({
     });
 
     // Don't reset background if swiped upwards
-    if (shouldScaleBackground && currentSwipeAmount > 0 && isOpen) {
+    if (shouldScaleBackground && currentSwipeAmount && currentSwipeAmount > 0 && isOpen) {
       set(
         wrapper,
         {
@@ -384,7 +385,7 @@ function Root({
   }
 
   function onRelease(event: React.PointerEvent<HTMLDivElement>) {
-    if (!isDragging) return;
+    if (!isDragging || !drawerRef.current) return;
 
     setIsDragging(false);
 
@@ -411,7 +412,11 @@ function Root({
     }
 
     if (snapPoints) {
-      onReleaseSnapPoints({ draggedDistance: distMoved, closeDrawer, velocity });
+      onReleaseSnapPoints({
+        draggedDistance: distMoved,
+        closeDrawer,
+        velocity,
+      });
       return;
     }
 
@@ -482,14 +487,17 @@ function Root({
   function onNestedOpenChange(o: boolean) {
     const scale = o ? (window.innerWidth - NESTED_DISPLACEMENT) / window.innerWidth : 1;
     const y = o ? -NESTED_DISPLACEMENT : 0;
-    window.clearTimeout(nestedOpenChangeTimer.current);
+
+    if (nestedOpenChangeTimer.current) {
+      window.clearTimeout(nestedOpenChangeTimer.current);
+    }
 
     set(drawerRef.current, {
       transition: `transform ${TRANSITIONS.DURATION}s cubic-bezier(${TRANSITIONS.EASE.join(',')})`,
       transform: `scale(${scale}) translateY(${y}px)`,
     });
 
-    if (!o) {
+    if (!o && drawerRef.current) {
       nestedOpenChangeTimer.current = setTimeout(() => {
         set(drawerRef.current, {
           transition: 'none',
@@ -526,7 +534,7 @@ function Root({
   return (
     <DialogPrimitive.Root
       open={isOpen}
-      onOpenChange={(o) => {
+      onOpenChange={(o: boolean) => {
         if (!o && snapPoints) {
           closeDrawer();
         }
@@ -610,12 +618,14 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
     snapPoints,
   } = useDrawerContext();
   const composedRef = useComposedRefs(ref, drawerRef);
-  const animationEndTimer = React.useRef<NodeJS.Timeout>(null);
+  const animationEndTimer = React.useRef<NodeJS.Timeout | null>(null);
 
   return (
     <DialogPrimitive.Content
       onAnimationStart={(e) => {
-        window.clearTimeout(animationEndTimer.current);
+        if (animationEndTimer.current) {
+          window.clearTimeout(animationEndTimer.current);
+        }
         setIsAnimating(true);
 
         animationEndTimer.current = setTimeout(() => {
