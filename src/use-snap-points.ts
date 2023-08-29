@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 import { set } from './helpers';
 import { TRANSITIONS, VELOCITY_THRESHOLD } from './constants';
 import { useControllableState } from './use-controllable-state';
@@ -24,7 +24,6 @@ export function useSnapPoints({
     onChange: setActiveSnapPointProp,
   });
 
-  const hasWindow = typeof window !== 'undefined';
   const isLastSnapPoint = React.useMemo(
     () => activeSnapPoint === snapPoints?.[snapPoints.length - 1] ?? null,
     [snapPoints, activeSnapPoint],
@@ -61,7 +60,7 @@ export function useSnapPoints({
     [snapPointsOffset, activeSnapPointIndex],
   );
 
-  const snapToPoint = useCallback(
+  const snapToPoint = React.useCallback(
     (height: number) => {
       const newSnapPointIndex = snapPointsOffset?.findIndex((snapPointHeight) => snapPointHeight === height) ?? null;
 
