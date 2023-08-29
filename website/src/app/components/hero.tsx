@@ -57,7 +57,7 @@ export function Hero() {
             <Drawer.Portal>
               <Drawer.Content className="fixed flex flex-col bg-white border border-gray-200 border-b-none rounded-t-[10px] bottom-0 left-0 right-0 h-full max-h-[97%] mx-[-1px]">
                 <div
-                  className={clsx('flex flex-col max-w-md w-full p-4 pt-5', {
+                  className={clsx('flex flex-col max-w-md mx-auto w-full p-4 pt-5', {
                     'overflow-y-auto': snap === 1,
                     'overflow-hidden': snap !== 1,
                   })}
@@ -133,7 +133,7 @@ export function Hero() {
                   <button className="bg-black text-gray-50 mt-8 rounded-md h-[48px] flex-shrink-0 font-medium">
                     Buy for $199
                   </button>
-                  <div className="mt-8">
+                  <div className="mt-12">
                     <h2 className="text-xl font-medium">Module 01. The Details</h2>
                     <div className="space-y-4 mt-4">
                       <div>
