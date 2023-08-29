@@ -56,7 +56,7 @@ Additional props:
 
 `snapPoints`: Array of numbers from 0 to 100 that corresponds to % of the screen a given snap point should take up. Should go from least visible. Example `[0.2, 0.5, 0.8]`.
 
-`fadeFromIndex`: Index of a snapPoint from which the overlay fade should be applied. Defaults to the last snap point.
+`fadeFromIndex`: Index of a `snapPoint` from which the overlay fade should be applied. Defaults to the last snap point.
 
 `modal`: When `false`it allows to interact with elements outside of the drawer without closing it. Defaults to`true`.
 

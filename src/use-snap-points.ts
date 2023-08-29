@@ -112,7 +112,9 @@ export function useSnapPoints({
     closeDrawer: () => void;
     velocity: number;
   }) {
+
     if (typeof activeSnapPointOffset !== 'number' || fadeFromIndex === undefined) return;
+
     const currentPosition = activeSnapPointOffset - draggedDistance;
     const isOverlaySnapPoint = activeSnapPointIndex === fadeFromIndex - 1;
     const isFirst = activeSnapPointIndex === 0;
@@ -178,6 +180,7 @@ export function useSnapPoints({
 
   function getPercentageDragged(absDraggedDistance: number, isDraggingDown: boolean) {
     if (!snapPoints || !activeSnapPointIndex || !snapPointsOffset || fadeFromIndex === undefined) return null;
+
     // If this is true we are dragging to a snap point that is supposed to have an overlay
     const isOverlaySnapPoint = activeSnapPointIndex === fadeFromIndex - 1;
     const isOverlaySnapPointOrHigher = activeSnapPointIndex >= fadeFromIndex;
