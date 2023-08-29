@@ -98,7 +98,7 @@ function Root({
     activeSnapPointIndex,
     setActiveSnapPoint,
     onRelease: onReleaseSnapPoints,
-    snapPointHeights,
+    snapPointsOffset,
     onDrag: onDragSnapPoints,
     shouldFade,
     getPercentageDragged: getSnapPointsPercentageDragged,
@@ -289,7 +289,7 @@ function Root({
         }
 
         if (snapPoints && snapPoints.length > 0) {
-          const activeSnapPointHeight = snapPointHeights[activeSnapPointIndex];
+          const activeSnapPointHeight = snapPointsOffset[activeSnapPointIndex];
           diffFromInitial += activeSnapPointHeight;
         }
 
@@ -554,7 +554,7 @@ function Root({
           keyboardIsOpen,
           setIsAnimating,
           modal,
-          snapPointHeights,
+          snapPointsOffset,
           experimentalSafariThemeAnimation,
         }}
       >
@@ -605,7 +605,7 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
     isOpen,
     keyboardIsOpen,
     setIsAnimating,
-    snapPointHeights,
+    snapPointsOffset,
     setActiveSnapPoint,
     snapPoints,
   } = useDrawerContext();
@@ -652,9 +652,9 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
       }}
       ref={composedRef}
       style={
-        snapPointHeights
+        snapPointsOffset
           ? ({
-              '--snap-point-height': `${snapPointHeights[0]}px`,
+              '--snap-point-height': `${snapPointsOffset[0]}px`,
               ...style,
             } as React.CSSProperties)
           : style

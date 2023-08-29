@@ -15,7 +15,7 @@ interface DrawerContextValue {
   setIsAnimating: (o: boolean) => void;
   keyboardIsOpen: React.MutableRefObject<boolean>;
   experimentalSafariThemeAnimation: boolean;
-  snapPointHeights: number[] | null;
+  snapPointsOffset: number[] | null;
   snapPoints: (number | string)[] | null;
   modal: boolean;
   shouldFade: boolean;
