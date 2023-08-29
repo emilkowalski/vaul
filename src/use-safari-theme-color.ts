@@ -56,10 +56,10 @@ function interpolateColors(color1: number[], color2: number[], steps: number, li
   return interpolatedColorArray;
 }
 export function useSafariThemeColor(
-  drawer: React.MutableRefObject<HTMLDivElement>,
-  overlay: React.MutableRefObject<HTMLDivElement>,
+  drawer: React.RefObject<HTMLDivElement>,
+  overlay: React.RefObject<HTMLDivElement>,
   isOpen: boolean,
-  shouldAnimate: boolean,
+  shouldAnimate?: boolean,
 ) {
   const [backgroundColor, setBackgroundColor] = React.useState<RGB | null>([255, 255, 255]);
   const [overlayColor, setOverlayColor] = React.useState<RGB | null>([153, 153, 153]);
@@ -127,7 +127,7 @@ export function useSafariThemeColor(
         // dividing by 10 will give us a total time of 500.
         const index = Math.floor(elapsed / 10);
 
-        if (overlay.current && colors && !releaseExit) {
+        if (overlay.current && colors && !releaseExit && drawer.current) {
           if (
             drawer.current.style.transform === 'translateY(0px)' &&
             drawer.current.getAttribute('vaul-clicked-outside') !== 'true'
