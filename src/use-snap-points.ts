@@ -38,23 +38,6 @@ export function useSnapPoints({
     [snapPoints, activeSnapPoint],
   );
 
-  function getSnapPointHeight(snapPoint: string | number | null) {
-    if (!snapPoint) return null;
-
-    const isPx = typeof snapPoint === 'string';
-    let snapPointAsNumber = 0;
-
-    if (isPx) {
-      snapPointAsNumber = parseInt(snapPoint, 10);
-    }
-
-    if (snapPoint === 1) {
-      return drawerRef.current.clientHeight;
-    }
-
-    return isPx ? snapPointAsNumber : snapPoint * window.innerHeight;
-  }
-
   const snapPointsOffset = React.useMemo(
     () =>
       snapPoints?.map((snapPoint) => {
@@ -65,7 +48,7 @@ export function useSnapPoints({
           snapPointAsNumber = parseInt(snapPoint, 10);
         }
 
-        const height = isPx ? snapPointAsNumber : snapPoint * window.innerHeight;
+        const height = isPx ? snapPointAsNumber : hasWindow ? snapPoint * window.innerHeight : 0;
 
         return hasWindow && window.innerHeight - height;
       }) ?? null,
