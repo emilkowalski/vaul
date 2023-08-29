@@ -501,7 +501,7 @@ function Root({
       nestedOpenChangeTimer.current = setTimeout(() => {
         set(drawerRef.current, {
           transition: 'none',
-          transform: `translateY(${getTranslateY(drawerRef.current)}px)`,
+          transform: `translateY(${getTranslateY(drawerRef.current as HTMLElement)}px)`,
         });
       }, 500);
     }

@@ -14,12 +14,12 @@ interface DrawerContextValue {
   isOpen: boolean;
   setIsAnimating: (o: boolean) => void;
   keyboardIsOpen: React.MutableRefObject<boolean>;
-  experimentalSafariThemeAnimation: boolean;
+  experimentalSafariThemeAnimation?: boolean;
   snapPointsOffset: number[] | null;
-  snapPoints: (number | string)[] | null;
+  snapPoints?: (number | string)[] | null;
   modal: boolean;
   shouldFade: boolean;
-  activeSnapPoint: number | string | null;
+  activeSnapPoint?: number | string | null;
   setActiveSnapPoint: (o: number | string | null) => void;
 }
 

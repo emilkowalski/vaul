@@ -12,9 +12,9 @@ export function useSnapPoints({
   fadeFromIndex,
 }: {
   activeSnapPointProp?: number | string | null;
-  setActiveSnapPointProp?(snapPoint: number | null): void;
+  setActiveSnapPointProp?(snapPoint: number | null | string): void;
   snapPoints?: (number | string)[];
-  fadeFromIndex: number;
+  fadeFromIndex?: number;
   drawerRef: React.RefObject<HTMLDivElement>;
   overlayRef: React.RefObject<HTMLDivElement>;
 }) {
@@ -30,7 +30,8 @@ export function useSnapPoints({
   );
 
   const shouldFade =
-    (snapPoints && snapPoints.length > 0 && snapPoints[fadeFromIndex] === activeSnapPoint) || !snapPoints;
+    (snapPoints && snapPoints.length > 0 && fadeFromIndex && snapPoints[fadeFromIndex] === activeSnapPoint) ||
+    !snapPoints;
 
   const activeSnapPointIndex = React.useMemo(
     () => snapPoints?.findIndex((snapPoint) => snapPoint === activeSnapPoint) ?? null,
@@ -49,9 +50,12 @@ export function useSnapPoints({
         }
 
         const height = isPx ? snapPointAsNumber : hasWindow ? snapPoint * window.innerHeight : 0;
+        if (hasWindow) {
+          return window.innerHeight - height;
+        }
 
-        return hasWindow && window.innerHeight - height;
-      }) ?? null,
+        return height;
+      }) ?? [],
     [snapPoints],
   );
 
@@ -146,6 +150,8 @@ export function useSnapPoints({
         closeDrawer();
       }
 
+      if (activeSnapPointIndex === null) return;
+
       snapToPoint(snapPointsOffset[activeSnapPointIndex + dragDirection]);
       return;
     }
@@ -154,6 +160,7 @@ export function useSnapPoints({
   }
 
   function onDrag({ draggedDistance }: { draggedDistance: number }) {
+    if (activeSnapPointOffset === null) return;
     const newYValue = activeSnapPointOffset - draggedDistance;
 
     if (newYValue < snapPointsOffset[snapPointsOffset.length - 1]) {
