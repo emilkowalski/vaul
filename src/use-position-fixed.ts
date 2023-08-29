@@ -1,7 +1,7 @@
 import React from 'react';
 import { isIOS } from './use-prevent-scroll';
 
-let previousBodyPosition = null;
+let previousBodyPosition: Record<string, string> | null = null;
 
 export function usePositionFixed({ isOpen, modal }: { isOpen: boolean; modal: boolean }) {
   const scrollPos = React.useRef(0);
