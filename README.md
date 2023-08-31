@@ -68,10 +68,6 @@ The button that opens the dialog. [Props](https://www.radix-ui.com/docs/primitiv
 
 Content that should be rendered in the drawer. [Props](https://www.radix-ui.com/docs/primitives/components/dialog#content).
 
-Additional props:
-
-`onAnimationEnd (open: boolean) => void`: Runs after enter or exit animation ends. Useful to reset the state and avoid flash of a different content when animating out.
-
 ### Overlay
 
 A layer that covers the inert portion of the view when the dialog is open. [Props](https://www.radix-ui.com/docs/primitives/components/dialog#overlay).

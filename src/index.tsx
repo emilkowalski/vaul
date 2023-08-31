@@ -50,6 +50,7 @@ type DialogProps = {
   onRelease?(event: React.PointerEvent<HTMLDivElement>, open: boolean): void;
   experimentalSafariThemeAnimation?: boolean;
   modal?: boolean;
+  onClose?: () => void;
 } & (WithFadeFromProps | WithoutFadeFromProps);
 
 function Root({
@@ -69,14 +70,16 @@ function Root({
   activeSnapPoint: activeSnapPointProp,
   setActiveSnapPoint: setActiveSnapPointProp,
   modal = true,
+  onClose,
 }: DialogProps) {
   const [isOpen = false, setIsOpen] = useControllableState({
     prop: openProp,
     defaultProp: defaultOpen,
     onChange: onOpenChange,
   });
+  // Not visible = translateY(100%)
+  const [visible, setVisible] = React.useState(false);
   const [isDragging, setIsDragging] = React.useState(false);
-  const [isAnimating, setIsAnimating] = React.useState(true);
   const [justReleased, setJustReleased] = React.useState(false);
   const overlayRef = React.useRef<HTMLDivElement>(null);
   const dragStartTime = React.useRef<Date | null>(null);
@@ -112,7 +115,7 @@ function Root({
   });
 
   usePreventScroll({
-    isDisabled: !isOpen || isDragging || isAnimating || !modal || justReleased,
+    isDisabled: !isOpen || isDragging || !modal || justReleased,
   });
 
   usePositionFixed({ isOpen, modal });
@@ -211,9 +214,10 @@ function Root({
       // Run this only if snapPoints are not defined or if we are at the last snap point (highest one)
       if (draggedDistance > 0 && !snapPoints) {
         const dampenedDraggedDistance = dampenValue(draggedDistance);
+        console.log(Math.min(dampenedDraggedDistance * -1, 0), 0);
 
         set(drawerRef.current, {
-          transform: `translateY(${Math.min(dampenedDraggedDistance * -1, 0)}px)`,
+          transform: `translate3d(0, ${Math.min(dampenedDraggedDistance * -1, 0)}px, 0)`,
         });
         return;
       }
@@ -256,7 +260,7 @@ function Root({
           wrapper,
           {
             borderRadius: `${borderRadiusValue}px`,
-            transform: `scale(${scaleValue}) translateY(${translateYValue}px)`,
+            transform: `scale(${scaleValue}) translate3d(0, ${translateYValue}px, 0)`,
             transition: 'none',
           },
           true,
@@ -265,7 +269,7 @@ function Root({
 
       if (!snapPoints) {
         set(drawerRef.current, {
-          transform: `translateY(${absDraggedDistance}px)`,
+          transform: `translate3d(0, ${absDraggedDistance}px, 0)`,
         });
       }
     }
@@ -323,26 +327,35 @@ function Root({
 
   function closeDrawer() {
     if (!dismissible || !drawerRef.current) return;
-    drawerRef.current.setAttribute('vaul-closed-by-dragging', 'true');
-    setIsOpen(false);
 
+    onClose?.();
     if (drawerRef.current) {
       set(drawerRef.current, {
-        transform: `translateY(100%)`,
+        transform: `translate3d(0, 100%, 0)`,
         transition: `transform ${TRANSITIONS.DURATION}s cubic-bezier(${TRANSITIONS.EASE.join(',')})`,
       });
 
-      const opacityValue = overlayRef.current?.style.opacity || 1;
-
       set(overlayRef.current, {
-        '--opacity-from': `${shouldFade ? opacityValue : 0}`,
+        opacity: '0',
+        transition: `opacity ${TRANSITIONS.DURATION}s cubic-bezier(${TRANSITIONS.EASE.join(',')})`,
       });
+
+      scaleBackground(false);
     }
+
+    setTimeout(() => {
+      setIsOpen(false);
+      setVisible(false);
+
+      if (snapPoints) {
+        setActiveSnapPoint(snapPoints[0]);
+      }
+    }, ANIMATION_DURATION);
   }
 
   React.useEffect(() => {
     if (!isOpen && shouldScaleBackground) {
-      // Can't use `onAnimationEnd` as the component will be unmounted by then
+      // Can't use `onAnimationEnd` as the component will be invisible by then
       const id = setTimeout(() => {
         reset(document.body);
       }, 200);
@@ -357,7 +370,7 @@ function Root({
     const currentSwipeAmount = getTranslateY(drawerRef.current);
 
     set(drawerRef.current, {
-      transform: 'translateY(0px)',
+      transform: 'translate3d(0, 0, 0)',
       transition: `transform ${TRANSITIONS.DURATION}s cubic-bezier(${TRANSITIONS.EASE.join(',')})`,
     });
 
@@ -373,7 +386,7 @@ function Root({
         {
           borderRadius: `${BORDER_RADIUS}px`,
           overflow: 'hidden',
-          transform: `scale(${getScale()}) translateY(calc(env(safe-area-inset-top) + 14px))`,
+          transform: `scale(${getScale()}) translate3d(0, calc(env(safe-area-inset-top) + 14px), 0)`,
           transformOrigin: 'top',
           transitionProperty: 'transform, border-radius',
           transitionDuration: `${TRANSITIONS.DURATION}s`,
@@ -449,12 +462,12 @@ function Root({
     resetDrawer();
   }
 
-  function onAnimationStart(e: React.AnimationEvent<HTMLDivElement>) {
+  function scaleBackground(open: boolean) {
     const wrapper = document.querySelector('[vaul-drawer-wrapper]');
 
     if (!wrapper || !shouldScaleBackground) return;
 
-    if (e.animationName === 'show-dialog') {
+    if (open) {
       set(
         document.body,
         {
@@ -466,13 +479,13 @@ function Root({
       set(wrapper, {
         borderRadius: `${BORDER_RADIUS}px`,
         overflow: 'hidden',
-        transform: `scale(${getScale()}) translateY(calc(env(safe-area-inset-top) + 14px))`,
+        transform: `scale(${getScale()}) translate3d(0, calc(env(safe-area-inset-top) + 14px), 0)`,
         transformOrigin: 'top',
         transitionProperty: 'transform, border-radius',
         transitionDuration: `${TRANSITIONS.DURATION}s`,
         transitionTimingFunction: `cubic-bezier(${TRANSITIONS.EASE.join(',')})`,
       });
-    } else if (e.animationName === 'hide-dialog' || e.animationName === 'fake-animation') {
+    } else {
       // Exit
       reset(wrapper, 'transform');
       reset(wrapper, 'borderRadius');
@@ -494,14 +507,14 @@ function Root({
 
     set(drawerRef.current, {
       transition: `transform ${TRANSITIONS.DURATION}s cubic-bezier(${TRANSITIONS.EASE.join(',')})`,
-      transform: `scale(${scale}) translateY(${y}px)`,
+      transform: `scale(${scale}) translate3d(0, ${y}px, 0)`,
     });
 
     if (!o && drawerRef.current) {
       nestedOpenChangeTimer.current = setTimeout(() => {
         set(drawerRef.current, {
           transition: 'none',
-          transform: `translateY(${getTranslateY(drawerRef.current as HTMLElement)}px)`,
+          transform: `translate3d(0, ${getTranslateY(drawerRef.current as HTMLElement)}px, 0)`,
         });
       }, 500);
     }
@@ -514,7 +527,7 @@ function Root({
     const newY = -NESTED_DISPLACEMENT + percentageDragged * NESTED_DISPLACEMENT;
 
     set(drawerRef.current, {
-      transform: `scale(${newScale}) translateY(${newY}px)`,
+      transform: `scale(${newScale}) translate3d(0, ${newY}px, 0)`,
       transition: 'none',
     });
   }
@@ -526,7 +539,7 @@ function Root({
     if (o) {
       set(drawerRef.current, {
         transition: `transform ${TRANSITIONS.DURATION}s cubic-bezier(${TRANSITIONS.EASE.join(',')})`,
-        transform: `scale(${scale}) translateY(${y}px)`,
+        transform: `scale(${scale}) translate3d(0, ${y}px, 0)`,
       });
     }
   }
@@ -535,32 +548,35 @@ function Root({
     <DialogPrimitive.Root
       open={isOpen}
       onOpenChange={(o: boolean) => {
-        if (!o && snapPoints) {
+        if (!o) {
           closeDrawer();
+        } else {
+          setIsOpen(o);
         }
-        setIsOpen(o);
       }}
       modal={modal}
     >
       <DrawerContext.Provider
         value={{
+          visible,
           activeSnapPoint,
           snapPoints,
           setActiveSnapPoint,
           drawerRef,
           overlayRef,
-          onAnimationStart,
+          scaleBackground,
           onPress,
+          setVisible,
           onRelease,
           onDrag,
           dismissible,
           isOpen,
           shouldFade,
+          closeDrawer,
           onNestedDrag,
           onNestedOpenChange,
           onNestedRelease,
           keyboardIsOpen,
-          setIsAnimating,
           modal,
           snapPointsOffset,
           experimentalSafariThemeAnimation,
@@ -574,7 +590,7 @@ function Root({
 
 const Overlay = React.forwardRef<HTMLDivElement, React.ComponentPropsWithoutRef<typeof DialogPrimitive.Overlay>>(
   function ({ children, style, ...rest }, ref) {
-    const { overlayRef, snapPoints, onRelease, experimentalSafariThemeAnimation, shouldFade, isOpen } =
+    const { overlayRef, snapPoints, onRelease, experimentalSafariThemeAnimation, shouldFade, isOpen, visible } =
       useDrawerContext();
     const composedRef = useComposedRefs(ref, overlayRef);
     const hasSnapPoints = snapPoints && snapPoints.length > 0;
@@ -587,6 +603,7 @@ const Overlay = React.forwardRef<HTMLDivElement, React.ComponentPropsWithoutRef<
         vaul-snap-points={isOpen && hasSnapPoints ? 'true' : 'false'}
         vaul-theme-transition={experimentalSafariThemeAnimation ? 'true' : 'false'}
         vaul-snap-points-overlay={isOpen && shouldFade ? 'true' : 'false'}
+        vaul-drawer-visible={visible ? 'true' : 'false'}
         {...rest}
       />
     );
@@ -607,36 +624,26 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
     drawerRef,
     onPress,
     onRelease,
-    onAnimationStart,
     onDrag,
     dismissible,
     isOpen,
     keyboardIsOpen,
-    setIsAnimating,
     snapPointsOffset,
-    setActiveSnapPoint,
-    snapPoints,
+    visible,
+    setVisible,
+    closeDrawer,
+    scaleBackground,
   } = useDrawerContext();
   const composedRef = useComposedRefs(ref, drawerRef);
-  const animationEndTimer = React.useRef<NodeJS.Timeout | null>(null);
+
+  React.useEffect(() => {
+    // Trigger enter animation without using CSS animation
+    setVisible(true);
+    scaleBackground(true);
+  }, []);
 
   return (
     <DialogPrimitive.Content
-      onAnimationStart={(e) => {
-        if (animationEndTimer.current) {
-          window.clearTimeout(animationEndTimer.current);
-        }
-        setIsAnimating(true);
-
-        animationEndTimer.current = setTimeout(() => {
-          setIsAnimating(false);
-          onAnimationEnd?.(isOpen);
-          if (snapPoints && !isOpen) {
-            setActiveSnapPoint(snapPoints[0]);
-          }
-        }, ANIMATION_DURATION);
-        onAnimationStart(e);
-      }}
       onPointerDown={onPress}
       onPointerUp={onRelease}
       onPointerMove={onDrag}
@@ -650,14 +657,14 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
       onPointerDownOutside={(e) => {
         if (keyboardIsOpen.current) {
           keyboardIsOpen.current = false;
-          set(drawerRef.current, {
-            '--hide-to': `200%`,
-          });
         }
+        e.preventDefault();
+
         if (!dismissible) {
-          e.preventDefault();
+          return;
         }
-        drawerRef.current.setAttribute('vaul-clicked-outside', 'true');
+
+        closeDrawer();
         onPointerDownOutside?.(e);
       }}
       ref={composedRef}
@@ -671,6 +678,7 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
       }
       {...rest}
       vaul-drawer=""
+      vaul-drawer-visible={visible ? 'true' : 'false'}
     >
       {children}
     </DialogPrimitive.Content>
@@ -692,8 +700,13 @@ function NestedRoot({ children, onDrag, onOpenChange }: DialogProps) {
         onNestedDrag(e, p);
         onDrag?.(e, p);
       }}
+      onClose={() => {
+        onNestedOpenChange(false);
+      }}
       onOpenChange={(o) => {
-        onNestedOpenChange(o);
+        if (o) {
+          onNestedOpenChange(o);
+        }
         onOpenChange?.(o);
       }}
       onRelease={onNestedRelease}

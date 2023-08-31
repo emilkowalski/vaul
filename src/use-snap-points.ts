@@ -70,7 +70,7 @@ export function useSnapPoints({
 
       set(drawerRef.current, {
         transition: `transform ${TRANSITIONS.DURATION}s cubic-bezier(${TRANSITIONS.EASE.join(',')})`,
-        transform: `translateY(${height}px)`,
+        transform: `translate3d(0, ${height}px, 0)`,
       });
 
       if (
@@ -112,7 +112,6 @@ export function useSnapPoints({
     closeDrawer: () => void;
     velocity: number;
   }) {
-
     if (typeof activeSnapPointOffset !== 'number' || fadeFromIndex === undefined) return;
 
     const currentPosition = activeSnapPointOffset - draggedDistance;
@@ -168,13 +167,13 @@ export function useSnapPoints({
     if (newYValue < snapPointsOffset[snapPointsOffset.length - 1]) {
       setActiveSnapPoint(snapPoints?.[snapPoints.length - 1] ?? null);
       set(drawerRef.current, {
-        transform: `translateY(${0}px)`,
+        transform: `translate3d(0, ${0}px, 0)`,
       });
       return;
     }
 
     set(drawerRef.current, {
-      transform: `translateY(${newYValue}px)`,
+      transform: `translate3d(0, ${newYValue}px, 0)`,
     });
   }
 
