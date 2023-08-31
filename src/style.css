@@ -1,8 +1,7 @@
 [vaul-drawer] {
-  will-change: transform;
   touch-action: none;
   animation: show-dialog 0.5s cubic-bezier(0.32, 0.72, 0, 1);
-  transform: translateY(var(--snap-point-height, 0));
+  transform: translate3d(0, var(--snap-point-height, 0), 0);
 }
 
 [vaul-drawer]::after {
@@ -59,19 +58,19 @@
 
 @keyframes show-dialog {
   from {
-    transform: translateY(100%);
+    transform: translate3d(0, 100%, 0);
   }
   to {
-    transform: translateY(var(--snap-point-height, 0));
+    transform: translate3d(0, var(--snap-point-height, 0), 0);
   }
 }
 
 @keyframes hide-dialog {
   from {
-    transform: translateY(var(--hide-from, 0));
+    transform: translate3d(0, var(--hide-from, 0), 0);
   }
   to {
-    transform: translateY(var(--hide-to, 100%));
+    transform: translate3d(0, var(--hide-to, 100%), 0);
   }
 }
 

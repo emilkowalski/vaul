@@ -213,7 +213,7 @@ function Root({
         const dampenedDraggedDistance = dampenValue(draggedDistance);
 
         set(drawerRef.current, {
-          transform: `translateY(${Math.min(dampenedDraggedDistance * -1, 0)}px)`,
+          transform: `translate3d(0, ${(Math.min(dampenedDraggedDistance * -1, 0), 0)}px)`,
         });
         return;
       }
@@ -256,7 +256,7 @@ function Root({
           wrapper,
           {
             borderRadius: `${borderRadiusValue}px`,
-            transform: `scale(${scaleValue}) translateY(${translateYValue}px)`,
+            transform: `scale(${scaleValue}) translate3d(0, ${translateYValue}px, 0)`,
             transition: 'none',
           },
           true,
@@ -264,8 +264,10 @@ function Root({
       }
 
       if (!snapPoints) {
-        set(drawerRef.current, {
-          transform: `translateY(${absDraggedDistance}px)`,
+        requestAnimationFrame(() => {
+          set(drawerRef.current, {
+            transform: `translate3d(0, ${absDraggedDistance}px, 0)`,
+          });
         });
       }
     }
@@ -324,20 +326,23 @@ function Root({
   function closeDrawer() {
     if (!dismissible || !drawerRef.current) return;
     drawerRef.current.setAttribute('vaul-closed-by-dragging', 'true');
-    setIsOpen(false);
 
     if (drawerRef.current) {
-      set(drawerRef.current, {
-        transform: `translateY(100%)`,
-        transition: `transform ${TRANSITIONS.DURATION}s cubic-bezier(${TRANSITIONS.EASE.join(',')})`,
-      });
+      requestAnimationFrame(() => {
+        set(drawerRef.current, {
+          transform: `translate3d(0, 100%, 0)`,
+          transition: `transform ${TRANSITIONS.DURATION}s cubic-bezier(${TRANSITIONS.EASE.join(',')})`,
+        });
 
-      const opacityValue = overlayRef.current?.style.opacity || 1;
+        const opacityValue = overlayRef.current?.style.opacity || 1;
 
-      set(overlayRef.current, {
-        '--opacity-from': `${shouldFade ? opacityValue : 0}`,
+        set(overlayRef.current, {
+          '--opacity-from': `${shouldFade ? opacityValue : 0}`,
+        });
       });
     }
+
+    setIsOpen(false);
   }
 
   React.useEffect(() => {
@@ -357,7 +362,7 @@ function Root({
     const currentSwipeAmount = getTranslateY(drawerRef.current);
 
     set(drawerRef.current, {
-      transform: 'translateY(0px)',
+      transform: 'translate3d(0, 0, 0)',
       transition: `transform ${TRANSITIONS.DURATION}s cubic-bezier(${TRANSITIONS.EASE.join(',')})`,
     });
 
@@ -373,7 +378,7 @@ function Root({
         {
           borderRadius: `${BORDER_RADIUS}px`,
           overflow: 'hidden',
-          transform: `scale(${getScale()}) translateY(calc(env(safe-area-inset-top) + 14px))`,
+          transform: `scale(${getScale()}) translate3d(0, calc(env(safe-area-inset-top) + 14px), 0)`,
           transformOrigin: 'top',
           transitionProperty: 'transform, border-radius',
           transitionDuration: `${TRANSITIONS.DURATION}s`,
@@ -385,6 +390,8 @@ function Root({
   }
 
   function onRelease(event: React.PointerEvent<HTMLDivElement>) {
+    console.log(new Date().getTime());
+
     if (!isDragging || !drawerRef.current) return;
 
     setIsDragging(false);
@@ -466,7 +473,7 @@ function Root({
       set(wrapper, {
         borderRadius: `${BORDER_RADIUS}px`,
         overflow: 'hidden',
-        transform: `scale(${getScale()}) translateY(calc(env(safe-area-inset-top) + 14px))`,
+        transform: `scale(${getScale()}) translate3d(0, calc(env(safe-area-inset-top) + 14px), 0)`,
         transformOrigin: 'top',
         transitionProperty: 'transform, border-radius',
         transitionDuration: `${TRANSITIONS.DURATION}s`,
@@ -494,14 +501,14 @@ function Root({
 
     set(drawerRef.current, {
       transition: `transform ${TRANSITIONS.DURATION}s cubic-bezier(${TRANSITIONS.EASE.join(',')})`,
-      transform: `scale(${scale}) translateY(${y}px)`,
+      transform: `scale(${scale}) transform3d(0, ${y}px, 0)`,
     });
 
     if (!o && drawerRef.current) {
       nestedOpenChangeTimer.current = setTimeout(() => {
         set(drawerRef.current, {
           transition: 'none',
-          transform: `translateY(${getTranslateY(drawerRef.current as HTMLElement)}px)`,
+          transform: `translate3d(0, ${getTranslateY(drawerRef.current as HTMLElement)}px, 0)`,
         });
       }, 500);
     }
@@ -514,7 +521,7 @@ function Root({
     const newY = -NESTED_DISPLACEMENT + percentageDragged * NESTED_DISPLACEMENT;
 
     set(drawerRef.current, {
-      transform: `scale(${newScale}) translateY(${newY}px)`,
+      transform: `scale(${newScale}) translate3d(0, ${newY}px, 0)`,
       transition: 'none',
     });
   }
@@ -526,7 +533,7 @@ function Root({
     if (o) {
       set(drawerRef.current, {
         transition: `transform ${TRANSITIONS.DURATION}s cubic-bezier(${TRANSITIONS.EASE.join(',')})`,
-        transform: `scale(${scale}) translateY(${y}px)`,
+        transform: `scale(${scale}) translate3d(0, ${y}px, 0)`,
       });
     }
   }

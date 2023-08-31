@@ -8,16 +8,9 @@
   --vaul-overlay-background-end: rgba(0, 0, 0, 0.4);
 }
 
-html,
-body {
-  overflow: hidden;
-}
-
 body,
 main {
-  min-height: 100vh;
-  /* mobile viewport bug fix */
-  min-height: -webkit-fill-available;
+  min-height: 400vh;
   overflow-x: hidden;
 }
 
@@ -26,12 +19,7 @@ html {
 }
 
 main {
-  min-height: 100vh;
   background: white;
-}
-
-html {
-  height: -webkit-fill-available;
 }
 
 a {
