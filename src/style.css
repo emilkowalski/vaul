@@ -1,7 +1,20 @@
 [vaul-drawer] {
   touch-action: none;
-  animation: show-dialog 0.5s cubic-bezier(0.32, 0.72, 0, 1);
+  transform: translate3d(0, 100%, 0);
+  transition: transform 0.5s cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+[vaul-drawer][vaul-drawer-visible='true'] {
   transform: translate3d(0, var(--snap-point-height, 0), 0);
+}
+
+[vaul-overlay] {
+  opacity: 0;
+  transition: opacity 0.5s cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+[vaul-overlay][vaul-drawer-visible='true'] {
+  opacity: 1;
 }
 
 [vaul-drawer]::after {
@@ -16,79 +29,22 @@
 }
 
 [vaul-drawer][data-state='closed'] {
-  animation: hide-dialog 0.5s cubic-bezier(0.32, 0.72, 0, 1) forwards;
-}
-
-[vaul-drawer][vaul-closed-by-dragging='true'] {
   animation: fake-animation 0.5s cubic-bezier(0.32, 0.72, 0, 1) forwards;
 }
 
-[vaul-overlay]:not([vaul-snap-points='true']) {
-  animation: show-overlay 0.5s cubic-bezier(0.32, 0.72, 0, 1);
-}
-
-[vaul-overlay][vaul-snap-points='true']:not([vaul-snap-points-overlay='true']):not([data-state='closed']) {
+/* [vaul-overlay][vaul-snap-points='true']:not([vaul-snap-points-overlay='true']):not([data-state='closed']) {
   opacity: 0;
 }
 
 [vaul-overlay][vaul-snap-points-overlay='true'] {
   opacity: 1;
-}
-
-[vaul-overlay][vaul-theme-transition='true'] {
-  animation: show-theme-overlay 0.5s cubic-bezier(0.32, 0.72, 0, 1);
-}
-
-[vaul-overlay][data-state='closed']:not([vaul-snap-points='true']),
-[vaul-overlay][data-state='closed'][vaul-snap-points-overlay='true'] {
-  animation: hide-overlay 0.5s cubic-bezier(0.32, 0.72, 0, 1);
-}
-
-[vaul-overlay][vaul-theme-transition='true'][data-state='closed'] {
-  animation: hide-theme-overlay 0.5s cubic-bezier(0.32, 0.72, 0, 1) forwards;
-}
+} */
 
 /* This will allow us to not animate via animation, but still benefit from delaying unmount via Radix. */
 @keyframes fake-animation {
   from {
   }
   to {
-  }
-}
-
-@keyframes show-dialog {
-  from {
-    transform: translate3d(0, 100%, 0);
-  }
-  to {
-    transform: translate3d(0, var(--snap-point-height, 0), 0);
-  }
-}
-
-@keyframes hide-dialog {
-  from {
-    transform: translate3d(0, var(--hide-from, 0), 0);
-  }
-  to {
-    transform: translate3d(0, var(--hide-to, 100%), 0);
-  }
-}
-
-@keyframes show-overlay {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes hide-overlay {
-  from {
-    opacity: var(--opacity-from, 1);
-  }
-  to {
-    opacity: 0;
   }
 }
 

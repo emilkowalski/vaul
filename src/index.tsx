@@ -75,6 +75,8 @@ function Root({
     defaultProp: defaultOpen,
     onChange: onOpenChange,
   });
+  // Not visible = translateY(100%)
+  const [visible, setVisible] = React.useState(false);
   const [isDragging, setIsDragging] = React.useState(false);
   const [isAnimating, setIsAnimating] = React.useState(true);
   const [justReleased, setJustReleased] = React.useState(false);
@@ -264,10 +266,8 @@ function Root({
       }
 
       if (!snapPoints) {
-        requestAnimationFrame(() => {
-          set(drawerRef.current, {
-            transform: `translate3d(0, ${absDraggedDistance}px, 0)`,
-          });
+        set(drawerRef.current, {
+          transform: `translate3d(0, ${absDraggedDistance}px, 0)`,
         });
       }
     }
@@ -328,26 +328,26 @@ function Root({
     drawerRef.current.setAttribute('vaul-closed-by-dragging', 'true');
 
     if (drawerRef.current) {
-      requestAnimationFrame(() => {
-        set(drawerRef.current, {
-          transform: `translate3d(0, 100%, 0)`,
-          transition: `transform ${TRANSITIONS.DURATION}s cubic-bezier(${TRANSITIONS.EASE.join(',')})`,
-        });
+      set(drawerRef.current, {
+        transform: `translate3d(0, 100%, 0)`,
+        transition: `transform ${TRANSITIONS.DURATION}s cubic-bezier(${TRANSITIONS.EASE.join(',')})`,
+      });
 
-        const opacityValue = overlayRef.current?.style.opacity || 1;
-
-        set(overlayRef.current, {
-          '--opacity-from': `${shouldFade ? opacityValue : 0}`,
-        });
+      set(overlayRef.current, {
+        opacity: '0',
+        transition: `opacity ${TRANSITIONS.DURATION}s cubic-bezier(${TRANSITIONS.EASE.join(',')})`,
       });
     }
 
-    setIsOpen(false);
+    setTimeout(() => {
+      setIsOpen(false);
+      setVisible(false);
+    }, ANIMATION_DURATION);
   }
 
   React.useEffect(() => {
     if (!isOpen && shouldScaleBackground) {
-      // Can't use `onAnimationEnd` as the component will be unmounted by then
+      // Can't use `onAnimationEnd` as the component will be invisible by then
       const id = setTimeout(() => {
         reset(document.body);
       }, 200);
@@ -551,6 +551,7 @@ function Root({
     >
       <DrawerContext.Provider
         value={{
+          visible,
           activeSnapPoint,
           snapPoints,
           setActiveSnapPoint,
@@ -558,6 +559,7 @@ function Root({
           overlayRef,
           onAnimationStart,
           onPress,
+          setVisible,
           onRelease,
           onDrag,
           dismissible,
@@ -581,7 +583,7 @@ function Root({
 
 const Overlay = React.forwardRef<HTMLDivElement, React.ComponentPropsWithoutRef<typeof DialogPrimitive.Overlay>>(
   function ({ children, style, ...rest }, ref) {
-    const { overlayRef, snapPoints, onRelease, experimentalSafariThemeAnimation, shouldFade, isOpen } =
+    const { overlayRef, snapPoints, onRelease, experimentalSafariThemeAnimation, shouldFade, isOpen, visible } =
       useDrawerContext();
     const composedRef = useComposedRefs(ref, overlayRef);
     const hasSnapPoints = snapPoints && snapPoints.length > 0;
@@ -594,6 +596,7 @@ const Overlay = React.forwardRef<HTMLDivElement, React.ComponentPropsWithoutRef<
         vaul-snap-points={isOpen && hasSnapPoints ? 'true' : 'false'}
         vaul-theme-transition={experimentalSafariThemeAnimation ? 'true' : 'false'}
         vaul-snap-points-overlay={isOpen && shouldFade ? 'true' : 'false'}
+        vaul-drawer-visible={visible ? 'true' : 'false'}
         {...rest}
       />
     );
@@ -623,9 +626,16 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
     snapPointsOffset,
     setActiveSnapPoint,
     snapPoints,
+    visible,
+    setVisible,
   } = useDrawerContext();
   const composedRef = useComposedRefs(ref, drawerRef);
   const animationEndTimer = React.useRef<NodeJS.Timeout | null>(null);
+
+  React.useEffect(() => {
+    // Trigger enter animation without using CSS animation
+    setVisible(true);
+  }, []);
 
   return (
     <DialogPrimitive.Content
@@ -664,7 +674,7 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
         if (!dismissible) {
           e.preventDefault();
         }
-        drawerRef.current.setAttribute('vaul-clicked-outside', 'true');
+        drawerRef.current?.setAttribute('vaul-clicked-outside', 'true');
         onPointerDownOutside?.(e);
       }}
       ref={composedRef}
@@ -678,6 +688,7 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
       }
       {...rest}
       vaul-drawer=""
+      vaul-drawer-visible={visible ? 'true' : 'false'}
     >
       {children}
     </DialogPrimitive.Content>
