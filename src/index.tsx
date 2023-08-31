@@ -50,6 +50,7 @@ type DialogProps = {
   onRelease?(event: React.PointerEvent<HTMLDivElement>, open: boolean): void;
   experimentalSafariThemeAnimation?: boolean;
   modal?: boolean;
+  onClose?: () => void;
 } & (WithFadeFromProps | WithoutFadeFromProps);
 
 function Root({
@@ -69,6 +70,7 @@ function Root({
   activeSnapPoint: activeSnapPointProp,
   setActiveSnapPoint: setActiveSnapPointProp,
   modal = true,
+  onClose,
 }: DialogProps) {
   const [isOpen = false, setIsOpen] = useControllableState({
     prop: openProp,
@@ -326,6 +328,7 @@ function Root({
   function closeDrawer() {
     if (!dismissible || !drawerRef.current) return;
 
+    onClose?.();
     if (drawerRef.current) {
       set(drawerRef.current, {
         transform: `translate3d(0, 100%, 0)`,
@@ -504,7 +507,7 @@ function Root({
 
     set(drawerRef.current, {
       transition: `transform ${TRANSITIONS.DURATION}s cubic-bezier(${TRANSITIONS.EASE.join(',')})`,
-      transform: `scale(${scale}) transform3d(0, ${y}px, 0)`,
+      transform: `scale(${scale}) translate3d(0, ${y}px, 0)`,
     });
 
     if (!o && drawerRef.current) {
@@ -697,8 +700,13 @@ function NestedRoot({ children, onDrag, onOpenChange }: DialogProps) {
         onNestedDrag(e, p);
         onDrag?.(e, p);
       }}
+      onClose={() => {
+        onNestedOpenChange(false);
+      }}
       onOpenChange={(o) => {
-        onNestedOpenChange(o);
+        if (o) {
+          onNestedOpenChange(o);
+        }
         onOpenChange?.(o);
       }}
       onRelease={onNestedRelease}
