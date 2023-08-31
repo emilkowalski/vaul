@@ -164,7 +164,7 @@ function Root({
     while (element) {
       // Check if the element is scrollable
       if (element.scrollHeight > element.clientHeight) {
-        if (element.role === 'dialog' || element.getAttribute('vaul-drawer')) return true;
+        if (element.getAttribute('role') === 'dialog') return true;
 
         if (element.scrollTop !== 0) {
           lastTimeDragPrevented.current = new Date();
