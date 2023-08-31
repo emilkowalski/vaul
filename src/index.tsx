@@ -50,6 +50,7 @@ type DialogProps = {
   onRelease?(event: React.PointerEvent<HTMLDivElement>, open: boolean): void;
   experimentalSafariThemeAnimation?: boolean;
   modal?: boolean;
+  nested?: boolean;
   onClose?: () => void;
 } & (WithFadeFromProps | WithoutFadeFromProps);
 
@@ -63,6 +64,7 @@ function Root({
   onRelease: onReleaseProp,
   experimentalSafariThemeAnimation,
   snapPoints,
+  nested,
   closeThreshold = CLOSE_THRESHOLD,
   scrollLockTimeout = SCROLL_LOCK_TIMEOUT,
   dismissible = true,
@@ -118,7 +120,7 @@ function Root({
     isDisabled: !isOpen || isDragging || !modal || justReleased,
   });
 
-  usePositionFixed({ isOpen, modal });
+  usePositionFixed({ isOpen, modal, nested });
 
   function getScale() {
     return (window.innerWidth - WINDOW_TOP_OFFSET) / window.innerWidth;
@@ -703,6 +705,7 @@ function NestedRoot({ children, onDrag, onOpenChange }: DialogProps) {
       onClose={() => {
         onNestedOpenChange(false);
       }}
+      nested={true}
       onOpenChange={(o) => {
         if (o) {
           onNestedOpenChange(o);
