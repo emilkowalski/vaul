@@ -28,13 +28,13 @@
   height: 200%;
 }
 
-/* [vaul-overlay][vaul-snap-points='true']:not([vaul-snap-points-overlay='true']):not([data-state='closed']) {
+[vaul-overlay][vaul-snap-points='true']:not([vaul-snap-points-overlay='true']):not([data-state='closed']) {
   opacity: 0;
 }
 
-[vaul-overlay][vaul-snap-points-overlay='true'] {
+[vaul-overlay][vaul-snap-points-overlay='true']:not([vaul-drawer-visible='false']) {
   opacity: 1;
-} */
+}
 
 /* This will allow us to not animate via animation, but still benefit from delaying unmount via Radix. */
 @keyframes fake-animation {

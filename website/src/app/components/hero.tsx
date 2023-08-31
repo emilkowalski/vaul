@@ -1,9 +1,11 @@
 'use client';
 
+import { useState } from 'react';
 import { Drawer } from 'vaul';
-import { BigSvg } from './big-svg';
+import { clsx } from 'clsx';
 
 export function Hero() {
+  const [snap, setSnap] = useState<number | string | null>('148px');
   return (
     <div className="relative">
       <div
@@ -11,7 +13,6 @@ export function Hero() {
         className="absolute top-0 w-[1000px] z-10 h-[400px] left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-[0.15] pointer-events-none"
         style={{ backgroundImage: 'radial-gradient(#A4A4A3, transparent 50%)' }}
       />
-      <BigSvg />
       <svg
         className="absolute pointer-events-none inset-0 h-full w-full stroke-gray-200 opacity-50 [mask-image:radial-gradient(100%_100%_at_top_center,white,transparent)]"
         aria-hidden
@@ -44,45 +45,87 @@ export function Hero() {
         <div className="flex gap-4 justify-center mt-6">
           <Drawer.Root>
             <Drawer.Trigger asChild>
-              <button
-                type="button"
-                className="rounded-full bg-white px-4 py-2.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
-              >
-                Open Drawer
-              </button>
+              <button>Open Drawer</button>
             </Drawer.Trigger>
-            <Drawer.Overlay className="fixed inset-0 bg-black/40" />
             <Drawer.Portal>
-              <Drawer.Content className="bg-white flex flex-col fixed bottom-0 left-0 right-0 max-h-[82vh] rounded-t-[10px]">
-                <div className="max-w-md w-full mx-auto flex flex-col overflow-auto p-4 rounded-t-[10px]">
-                  <input className="border border-gray-400 my-8" placeholder="Input" />
-                  <p>
-                    But I must explain to you how all this mistaken idea of denouncing pleasure and praising pain was
-                    born and I will give you a complete account of the system, and expound the actual teachings of the
-                    great explorer of the truth, the master-builder of human happiness. No one rejects, dislikes, or
-                    avoids pleasure itself, because it is pleasure, but because those who do not know how to pursue
-                    pleasure rationally encounter consequences that are extremely painful. Nor again is there anyone who
-                    loves or pursues or desires to obtain pain of itself, because it is pain, but because occasionally
-                    circumstances occur in which toil and pain can procure him some great pleasure. To take a trivial
-                    example, which of us ever undertakes laborious physical exercise, except to obtain some advantage
-                    from it? But who has any right to find fault with a man who chooses to enjoy a pleasure that has no
-                    annoying consequences, or one who avoids a pain that produces no resultant pleasure?
-                  </p>
-                  <input className="border border-gray-400 my-8" placeholder="Input" />
-                  <p>
-                    On the other hand, we denounce with righteous indignation and dislike men who are so beguiled and
-                    demoralized by the charms of pleasure of the moment, so blinded by desire, that they cannot foresee
-                    the pain and trouble that are bound to ensue; and equal blame belongs to those who fail in their
-                    duty through weakness of will, which is the same as saying through shrinking from toil and pain.
-                    These cases are perfectly simple and easy to distinguish. In a free hour, when our power of choice
-                    is untrammelled and when nothing prevents our being able to do what we like best, every pleasure is
-                    to be welcomed and every pain avoided. But in certain circumstances and owing to the claims of duty
-                    or the obligations of business it will frequently occur that pleasures have to be repudiated and
-                    annoyances accepted. The wise man therefore always holds in these matters to this principle of
-                    selection: he rejects pleasures to secure other greater pleasures, or else he endures pains to avoid
-                    worse pains.
-                  </p>
-                  <input className="border border-gray-400 my-8" placeholder="Input" />
+              <Drawer.Overlay className="fixed inset-0 bg-black/40" />
+              <Drawer.Content className="bg-zinc-100 flex flex-col rounded-t-[10px] mt-24 fixed bottom-0 left-0 right-0">
+                <div className="p-4 bg-white rounded-t-[10px] flex-1">
+                  <div className="mx-auto w-12 h-1.5 flex-shrink-0 rounded-full bg-zinc-300 mb-8" />
+                  <div className="max-w-md mx-auto">
+                    <Drawer.Title className="font-medium mb-4">Unstyled drawer for React.</Drawer.Title>
+                    <p className="text-zinc-600 mb-2">
+                      This component can be used as a replacement for a Dialog on mobile and tablet devices.
+                    </p>
+                    <p className="text-zinc-600 mb-8">
+                      It uses{' '}
+                      <a
+                        href="https://www.radix-ui.com/docs/primitives/components/dialog"
+                        className="underline"
+                        target="_blank"
+                      >
+                        Radix&rsquo;s Dialog primitive
+                      </a>{' '}
+                      under the hood and is inspired by{' '}
+                      <a
+                        href="https://twitter.com/devongovett/status/1674470185783402496"
+                        className="underline"
+                        target="_blank"
+                      >
+                        this tweet.
+                      </a>
+                    </p>
+                  </div>
+                </div>
+                <div className="p-4 bg-zinc-100 border-t border-zinc-200 mt-auto">
+                  <div className="flex gap-6 justify-end max-w-md mx-auto">
+                    <a
+                      className="text-xs text-zinc-600 flex items-center gap-0.25"
+                      href="https://github.com/emilkowalski/vaul"
+                      target="_blank"
+                    >
+                      GitHub
+                      <svg
+                        fill="none"
+                        height="16"
+                        stroke="currentColor"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        viewBox="0 0 24 24"
+                        width="16"
+                        aria-hidden="true"
+                        className="w-3 h-3 ml-1"
+                      >
+                        <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"></path>
+                        <path d="M15 3h6v6"></path>
+                        <path d="M10 14L21 3"></path>
+                      </svg>
+                    </a>
+                    <a
+                      className="text-xs text-zinc-600 flex items-center gap-0.25"
+                      href="https://twitter.com/emilkowalski_"
+                      target="_blank"
+                    >
+                      Twitter
+                      <svg
+                        fill="none"
+                        height="16"
+                        stroke="currentColor"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        viewBox="0 0 24 24"
+                        width="16"
+                        aria-hidden="true"
+                        className="w-3 h-3 ml-1"
+                      >
+                        <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"></path>
+                        <path d="M15 3h6v6"></path>
+                        <path d="M10 14L21 3"></path>
+                      </svg>
+                    </a>
+                  </div>
                 </div>
               </Drawer.Content>
             </Drawer.Portal>
