@@ -3,7 +3,7 @@ import React from 'react';
 interface DrawerContextValue {
   drawerRef: React.RefObject<HTMLDivElement>;
   overlayRef: React.RefObject<HTMLDivElement>;
-  onAnimationStart: (event: React.AnimationEvent<HTMLDivElement>) => void;
+  scaleBackground: (open: boolean) => void;
   onPress: (event: React.PointerEvent<HTMLDivElement>) => void;
   onRelease: (event: React.PointerEvent<HTMLDivElement>) => void;
   onDrag: (event: React.PointerEvent<HTMLDivElement>) => void;
@@ -12,7 +12,6 @@ interface DrawerContextValue {
   onNestedRelease: (event: React.PointerEvent<HTMLDivElement>, open: boolean) => void;
   dismissible: boolean;
   isOpen: boolean;
-  setIsAnimating: (o: boolean) => void;
   keyboardIsOpen: React.MutableRefObject<boolean>;
   experimentalSafariThemeAnimation?: boolean;
   snapPointsOffset: number[] | null;
@@ -22,13 +21,14 @@ interface DrawerContextValue {
   activeSnapPoint?: number | string | null;
   setActiveSnapPoint: (o: number | string | null) => void;
   visible: boolean;
+  closeDrawer: () => void;
   setVisible: (o: boolean) => void;
 }
 
 export const DrawerContext = React.createContext<DrawerContextValue>({
   drawerRef: { current: null },
   overlayRef: { current: null },
-  onAnimationStart: () => {},
+  scaleBackground: () => {},
   onPress: () => {},
   onRelease: () => {},
   onDrag: () => {},
@@ -37,7 +37,6 @@ export const DrawerContext = React.createContext<DrawerContextValue>({
   onNestedRelease: () => {},
   dismissible: false,
   isOpen: false,
-  setIsAnimating: () => {},
   keyboardIsOpen: { current: false },
   experimentalSafariThemeAnimation: false,
   snapPointsOffset: null,
@@ -47,6 +46,7 @@ export const DrawerContext = React.createContext<DrawerContextValue>({
   activeSnapPoint: null,
   setActiveSnapPoint: () => {},
   visible: false,
+  closeDrawer: () => {},
   setVisible: () => {},
 });
 

@@ -78,7 +78,6 @@ function Root({
   // Not visible = translateY(100%)
   const [visible, setVisible] = React.useState(false);
   const [isDragging, setIsDragging] = React.useState(false);
-  const [isAnimating, setIsAnimating] = React.useState(true);
   const [justReleased, setJustReleased] = React.useState(false);
   const overlayRef = React.useRef<HTMLDivElement>(null);
   const dragStartTime = React.useRef<Date | null>(null);
@@ -114,7 +113,7 @@ function Root({
   });
 
   usePreventScroll({
-    isDisabled: !isOpen || isDragging || isAnimating || !modal || justReleased,
+    isDisabled: !isOpen || isDragging || !modal || justReleased,
   });
 
   usePositionFixed({ isOpen, modal });
@@ -325,7 +324,6 @@ function Root({
 
   function closeDrawer() {
     if (!dismissible || !drawerRef.current) return;
-    drawerRef.current.setAttribute('vaul-closed-by-dragging', 'true');
 
     if (drawerRef.current) {
       set(drawerRef.current, {
@@ -337,11 +335,17 @@ function Root({
         opacity: '0',
         transition: `opacity ${TRANSITIONS.DURATION}s cubic-bezier(${TRANSITIONS.EASE.join(',')})`,
       });
+
+      scaleBackground(false);
     }
 
     setTimeout(() => {
       setIsOpen(false);
       setVisible(false);
+
+      if (snapPoints && !isOpen) {
+        setActiveSnapPoint(snapPoints[0]);
+      }
     }, ANIMATION_DURATION);
   }
 
@@ -390,8 +394,6 @@ function Root({
   }
 
   function onRelease(event: React.PointerEvent<HTMLDivElement>) {
-    console.log(new Date().getTime());
-
     if (!isDragging || !drawerRef.current) return;
 
     setIsDragging(false);
@@ -456,12 +458,12 @@ function Root({
     resetDrawer();
   }
 
-  function onAnimationStart(e: React.AnimationEvent<HTMLDivElement>) {
+  function scaleBackground(open: boolean) {
     const wrapper = document.querySelector('[vaul-drawer-wrapper]');
 
     if (!wrapper || !shouldScaleBackground) return;
 
-    if (e.animationName === 'show-dialog') {
+    if (open) {
       set(
         document.body,
         {
@@ -479,7 +481,7 @@ function Root({
         transitionDuration: `${TRANSITIONS.DURATION}s`,
         transitionTimingFunction: `cubic-bezier(${TRANSITIONS.EASE.join(',')})`,
       });
-    } else if (e.animationName === 'hide-dialog' || e.animationName === 'fake-animation') {
+    } else {
       // Exit
       reset(wrapper, 'transform');
       reset(wrapper, 'borderRadius');
@@ -542,10 +544,11 @@ function Root({
     <DialogPrimitive.Root
       open={isOpen}
       onOpenChange={(o: boolean) => {
-        if (!o && snapPoints) {
+        if (!o) {
           closeDrawer();
+        } else {
+          setIsOpen(o);
         }
-        setIsOpen(o);
       }}
       modal={modal}
     >
@@ -557,7 +560,7 @@ function Root({
           setActiveSnapPoint,
           drawerRef,
           overlayRef,
-          onAnimationStart,
+          scaleBackground,
           onPress,
           setVisible,
           onRelease,
@@ -565,11 +568,11 @@ function Root({
           dismissible,
           isOpen,
           shouldFade,
+          closeDrawer,
           onNestedDrag,
           onNestedOpenChange,
           onNestedRelease,
           keyboardIsOpen,
-          setIsAnimating,
           modal,
           snapPointsOffset,
           experimentalSafariThemeAnimation,
@@ -617,43 +620,26 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
     drawerRef,
     onPress,
     onRelease,
-    onAnimationStart,
     onDrag,
     dismissible,
     isOpen,
     keyboardIsOpen,
-    setIsAnimating,
     snapPointsOffset,
-    setActiveSnapPoint,
-    snapPoints,
     visible,
     setVisible,
+    closeDrawer,
+    scaleBackground,
   } = useDrawerContext();
   const composedRef = useComposedRefs(ref, drawerRef);
-  const animationEndTimer = React.useRef<NodeJS.Timeout | null>(null);
 
   React.useEffect(() => {
     // Trigger enter animation without using CSS animation
     setVisible(true);
+    scaleBackground(true);
   }, []);
 
   return (
     <DialogPrimitive.Content
-      onAnimationStart={(e) => {
-        if (animationEndTimer.current) {
-          window.clearTimeout(animationEndTimer.current);
-        }
-        setIsAnimating(true);
-
-        animationEndTimer.current = setTimeout(() => {
-          setIsAnimating(false);
-          onAnimationEnd?.(isOpen);
-          if (snapPoints && !isOpen) {
-            setActiveSnapPoint(snapPoints[0]);
-          }
-        }, ANIMATION_DURATION);
-        onAnimationStart(e);
-      }}
       onPointerDown={onPress}
       onPointerUp={onRelease}
       onPointerMove={onDrag}
@@ -667,14 +653,14 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
       onPointerDownOutside={(e) => {
         if (keyboardIsOpen.current) {
           keyboardIsOpen.current = false;
-          set(drawerRef.current, {
-            '--hide-to': `200%`,
-          });
         }
+        e.preventDefault();
+
         if (!dismissible) {
-          e.preventDefault();
+          return;
         }
-        drawerRef.current?.setAttribute('vaul-clicked-outside', 'true');
+
+        closeDrawer();
         onPointerDownOutside?.(e);
       }}
       ref={composedRef}

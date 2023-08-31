@@ -801,11 +801,11 @@ export function Big() {
 export function BigSvg() {
   return (
     <>
+      {/* <Big />
       <Big />
       <Big />
       <Big />
-      <Big />
-      <Big />
+      <Big /> */}
     </>
   );
 }

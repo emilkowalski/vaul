@@ -28,10 +28,6 @@
   height: 200%;
 }
 
-[vaul-drawer][data-state='closed'] {
-  animation: fake-animation 0.5s cubic-bezier(0.32, 0.72, 0, 1) forwards;
-}
-
 /* [vaul-overlay][vaul-snap-points='true']:not([vaul-snap-points-overlay='true']):not([data-state='closed']) {
   opacity: 0;
 }
