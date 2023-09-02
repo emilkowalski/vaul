@@ -1,0 +1,28 @@
+# Vaul
+
+**Vaul** is an unstyled Drawer/Sheet component for React. It can be use as a Dialog replacementon touch devices to improve the UX. It uses [Radix's Dialog primitive](https://www.radix-ui.com/docs/primitives/components/dialog#trigger) under the hood and is inspired by [this tweet](https://twitter.com/devongovett/status/1674470185783402496).
+
+## Quick start
+
+```js copy
+npm i vaul
+```
+
+You can either copy the shell below or visit the [examples](/docs/examples) page for styled versions.
+
+```jsx copy
+<Drawer.Root>
+  <Drawer.Trigger />
+  <Drawer.Portal>
+    <Drawer.Overlay />
+    <Drawer.Content>
+      <Drawer.Title />
+      <Drawer.Close />
+    </Drawer.Content>
+  </Drawer.Portal>
+</Drawer.Root>
+```
+
+## Why?
+
+Using a drawer provides a better user experience on mobile devices. However, when the user focuses on an input, the browser will scroll upwards to make room for the keyboard, which can hide some important elements. This library solves this problem by disabling the default behavior, and applying its own logic.
