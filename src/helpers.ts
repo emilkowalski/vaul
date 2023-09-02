@@ -13,7 +13,7 @@ export function isInView(el: HTMLElement): boolean {
     rect.top >= 0 &&
     rect.left >= 0 &&
     // Need + 40 for safari detection
-    rect.bottom <= window.visualViewport.height + 40 &&
+    rect.bottom <= window.visualViewport.height - 40 &&
     rect.right <= window.visualViewport.width
   );
 }

@@ -175,7 +175,7 @@ function Root({
           return false;
         }
 
-        if (isDraggingDown && element !== document.body && !swipeAmount) {
+        if (isDraggingDown && element !== document.body && !swipeAmount && swipeAmount !== 0) {
           lastTimeDragPrevented.current = new Date();
 
           // Element is scrolled to the top, but we are dragging down so we should allow scrolling
@@ -282,7 +282,7 @@ function Root({
       if (!drawerRef.current) return;
 
       const focusedElement = document.activeElement as HTMLElement;
-      if ((!isInView(focusedElement) && isInput(focusedElement)) || keyboardIsOpen.current) {
+      if (isInput(focusedElement) || keyboardIsOpen.current) {
         const visualViewportHeight = window.visualViewport?.height || 0;
         // This is the height of the keyboard
         let diffFromInitial = window.innerHeight - visualViewportHeight;
