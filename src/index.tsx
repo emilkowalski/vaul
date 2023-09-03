@@ -216,7 +216,6 @@ function Root({
       // Run this only if snapPoints are not defined or if we are at the last snap point (highest one)
       if (draggedDistance > 0 && !snapPoints) {
         const dampenedDraggedDistance = dampenValue(draggedDistance);
-        console.log(Math.min(dampenedDraggedDistance * -1, 0), 0);
 
         set(drawerRef.current, {
           transform: `translate3d(0, ${Math.min(dampenedDraggedDistance * -1, 0)}px, 0)`,
