@@ -404,9 +404,13 @@ function Root({
 
   function onRelease(event: React.PointerEvent<HTMLDivElement>) {
     if (!isDragging || !drawerRef.current) return;
+    if (isAllowedToDrag.current && isInput(event.target as HTMLElement)) {
+      // If we were just dragging, prevent focusing on inputs etc. on release
+      (event.target as HTMLInputElement).blur();
+    }
+
     isAllowedToDrag.current = false;
     setIsDragging(false);
-
     dragEndTime.current = new Date();
     const swipeAmount = getTranslateY(drawerRef.current);
 
