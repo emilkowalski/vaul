@@ -164,7 +164,6 @@ function Root({
       swipeAmount === 0
     ) {
       lastTimeDragPrevented.current = new Date();
-
       return false;
     }
 
@@ -172,7 +171,16 @@ function Root({
     while (element) {
       // Check if the element is scrollable
       if (element.scrollHeight > element.clientHeight) {
-        if (element.getAttribute('role') === 'dialog') return true;
+        if (isDraggingDown && element !== document.body && !swipeAmount && swipeAmount >= 0) {
+          lastTimeDragPrevented.current = new Date();
+
+          // Element is scrolled to the top, but we are dragging down so we should allow scrolling
+          return false;
+        }
+
+        if (element.getAttribute('role') === 'dialog') {
+          return true;
+        }
 
         if (element.scrollTop !== 0) {
           lastTimeDragPrevented.current = new Date();
@@ -180,18 +188,12 @@ function Root({
           // The element is scrollable and not scrolled to the top, so don't drag
           return false;
         }
-
-        if (isDraggingDown && element !== document.body && typeof swipeAmount === 'number' && swipeAmount >= 0) {
-          lastTimeDragPrevented.current = new Date();
-
-          // Element is scrolled to the top, but we are dragging down so we should allow scrolling
-          return false;
-        }
       }
 
       // Move up to the parent element
       element = element.parentNode as HTMLElement;
     }
+
     // No scrollable parents not scrolled to the top found, so drag
     return true;
   }
@@ -203,6 +205,7 @@ function Root({
       const isDraggingDown = draggedDistance > 0;
 
       if (!isAllowedToDrag.current && !shouldDrag(event.target, isDraggingDown)) return;
+
       // If shouldDrag gave true once after pressing down on the drawer, we set isAllowedToDrag to true and it will remain true until we let go, there's no reason to disable dragging mid way, ever, and that's the solution to it
       isAllowedToDrag.current = true;
       set(drawerRef.current, {
