@@ -92,6 +92,7 @@ function Root({
   const keyboardIsOpen = React.useRef(false);
   const previousDiffFromInitial = React.useRef(0);
   const drawerRef = React.useRef<HTMLDivElement>(null);
+  const drawerHeightRef = React.useRef(drawerRef.current?.getBoundingClientRect().height || 0);
   const { onDrag: changeThemeColorOnDrag, onRelease: themeTransitionOnRelease } = useSafariThemeColor(
     drawerRef,
     overlayRef,
@@ -130,7 +131,7 @@ function Root({
     if (!dismissible) return;
 
     if (drawerRef.current && !drawerRef.current.contains(event.target as Node)) return;
-
+    drawerHeightRef.current = drawerRef.current?.getBoundingClientRect().height || 0;
     setIsDragging(true);
     dragStartTime.current = new Date();
 
@@ -145,6 +146,10 @@ function Root({
     const date = new Date();
     const highlightedText = window.getSelection()?.toString();
     const swipeAmount = drawerRef.current ? getTranslateY(drawerRef.current) : null;
+
+    if (swipeAmount > 0) {
+      return true;
+    }
 
     // Don't drag if there's highlighted text
     if (highlightedText && highlightedText.length > 0) {
@@ -175,7 +180,7 @@ function Root({
           return false;
         }
 
-        if (isDraggingDown && element !== document.body && !swipeAmount && swipeAmount !== 0) {
+        if (isDraggingDown && element !== document.body && !swipeAmount && swipeAmount >= 0) {
           lastTimeDragPrevented.current = new Date();
 
           // Element is scrolled to the top, but we are dragging down so we should allow scrolling
@@ -199,8 +204,6 @@ function Root({
 
       if (!shouldDrag(event.target, isDraggingDown)) return;
 
-      const drawerHeight = drawerRef.current?.getBoundingClientRect().height || 0;
-
       set(drawerRef.current, {
         transition: 'none',
       });
@@ -216,7 +219,6 @@ function Root({
       // Run this only if snapPoints are not defined or if we are at the last snap point (highest one)
       if (draggedDistance > 0 && !snapPoints) {
         const dampenedDraggedDistance = dampenValue(draggedDistance);
-        console.log(Math.min(dampenedDraggedDistance * -1, 0), 0);
 
         set(drawerRef.current, {
           transform: `translate3d(0, ${Math.min(dampenedDraggedDistance * -1, 0)}px, 0)`,
@@ -228,7 +230,7 @@ function Root({
       const absDraggedDistance = Math.abs(draggedDistance);
       const wrapper = document.querySelector('[vaul-drawer-wrapper]');
 
-      let percentageDragged = absDraggedDistance / drawerHeight;
+      let percentageDragged = absDraggedDistance / drawerHeightRef.current;
       const snapPointPercentageDragged = getSnapPointsPercentageDragged(absDraggedDistance, isDraggingDown);
 
       if (snapPointPercentageDragged !== null) {
