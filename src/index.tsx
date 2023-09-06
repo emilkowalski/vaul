@@ -171,15 +171,15 @@ function Root({
     while (element) {
       // Check if the element is scrollable
       if (element.scrollHeight > element.clientHeight) {
+        if (element.getAttribute('role') === 'dialog') {
+          return true;
+        }
+
         if (isDraggingDown && element !== document.body && !swipeAmount && swipeAmount >= 0) {
           lastTimeDragPrevented.current = new Date();
 
           // Element is scrolled to the top, but we are dragging down so we should allow scrolling
           return false;
-        }
-
-        if (element.getAttribute('role') === 'dialog') {
-          return true;
         }
 
         if (element.scrollTop !== 0) {
