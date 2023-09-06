@@ -1,9 +1,9 @@
 'use client';
 
 import * as DialogPrimitive from '@radix-ui/react-dialog';
+import React from 'react';
 import { useControllableState } from './use-controllable-state';
 import { DrawerContext, useDrawerContext } from './context';
-import React from 'react';
 import './style.css';
 import { usePreventScroll, isInput } from './use-prevent-scroll';
 import { useComposedRefs } from './use-composed-refs';
@@ -25,29 +25,29 @@ const NESTED_DISPLACEMENT = 16;
 
 const WINDOW_TOP_OFFSET = 26;
 
-type WithFadeFromProps = {
+interface WithFadeFromProps {
   snapPoints: (number | string)[];
   fadeFromIndex: number;
-};
+}
 
-type WithoutFadeFromProps = {
+interface WithoutFadeFromProps {
   snapPoints?: (number | string)[];
   fadeFromIndex?: never;
-};
+}
 
 type DialogProps = {
   activeSnapPoint?: number | string | null;
-  setActiveSnapPoint?(snapPoint: number | string | null): void;
+  setActiveSnapPoint?: (snapPoint: number | string | null) => void;
   children?: React.ReactNode;
   open?: boolean;
   defaultOpen?: boolean;
   closeThreshold?: number;
-  onOpenChange?(open: boolean): void;
+  onOpenChange?: (open: boolean) => void;
   shouldScaleBackground?: boolean;
   scrollLockTimeout?: number;
   dismissible?: boolean;
-  onDrag?(event: React.PointerEvent<HTMLDivElement>, percentageDragged: number): void;
-  onRelease?(event: React.PointerEvent<HTMLDivElement>, open: boolean): void;
+  onDrag?: (event: React.PointerEvent<HTMLDivElement>, percentageDragged: number) => void;
+  onRelease?: (event: React.PointerEvent<HTMLDivElement>, open: boolean) => void;
   experimentalSafariThemeAnimation?: boolean;
   modal?: boolean;
   nested?: boolean;
@@ -68,7 +68,7 @@ function Root({
   closeThreshold = CLOSE_THRESHOLD,
   scrollLockTimeout = SCROLL_LOCK_TIMEOUT,
   dismissible = true,
-  fadeFromIndex = snapPoints && snapPoints?.length - 1,
+  fadeFromIndex = snapPoints && snapPoints.length - 1,
   activeSnapPoint: activeSnapPointProp,
   setActiveSnapPoint: setActiveSnapPointProp,
   modal = true,
@@ -87,6 +87,7 @@ function Root({
   const dragStartTime = React.useRef<Date | null>(null);
   const dragEndTime = React.useRef<Date | null>(null);
   const lastTimeDragPrevented = React.useRef<Date | null>(null);
+  const isAllowedToDrag = React.useRef<boolean>(false);
   const nestedOpenChangeTimer = React.useRef<NodeJS.Timeout | null>(null);
   const pointerStartY = React.useRef(0);
   const keyboardIsOpen = React.useRef(false);
@@ -112,9 +113,9 @@ function Root({
     snapPoints,
     activeSnapPointProp,
     setActiveSnapPointProp,
-    drawerRef: drawerRef,
+    drawerRef,
     fadeFromIndex,
-    overlayRef: overlayRef,
+    overlayRef,
   });
 
   usePreventScroll({
@@ -163,7 +164,6 @@ function Root({
       swipeAmount === 0
     ) {
       lastTimeDragPrevented.current = new Date();
-
       return false;
     }
 
@@ -171,19 +171,21 @@ function Root({
     while (element) {
       // Check if the element is scrollable
       if (element.scrollHeight > element.clientHeight) {
-        if (element.getAttribute('role') === 'dialog') return true;
-
-        if (element.scrollTop !== 0) {
-          lastTimeDragPrevented.current = new Date();
-
-          // The element is scrollable and not scrolled to the top, so don't drag
-          return false;
+        if (element.getAttribute('role') === 'dialog') {
+          return true;
         }
 
         if (isDraggingDown && element !== document.body && !swipeAmount && swipeAmount >= 0) {
           lastTimeDragPrevented.current = new Date();
 
           // Element is scrolled to the top, but we are dragging down so we should allow scrolling
+          return false;
+        }
+
+        if (element.scrollTop !== 0) {
+          lastTimeDragPrevented.current = new Date();
+
+          // The element is scrollable and not scrolled to the top, so don't drag
           return false;
         }
       }
@@ -202,8 +204,10 @@ function Root({
       const draggedDistance = pointerStartY.current - event.clientY;
       const isDraggingDown = draggedDistance > 0;
 
-      if (!shouldDrag(event.target, isDraggingDown)) return;
+      if (!isAllowedToDrag.current && !shouldDrag(event.target, isDraggingDown)) return;
 
+      // If shouldDrag gave true once after pressing down on the drawer, we set isAllowedToDrag to true and it will remain true until we let go, there's no reason to disable dragging mid way, ever, and that's the solution to it
+      isAllowedToDrag.current = true;
       set(drawerRef.current, {
         transition: 'none',
       });
@@ -288,8 +292,8 @@ function Root({
         const visualViewportHeight = window.visualViewport?.height || 0;
         // This is the height of the keyboard
         let diffFromInitial = window.innerHeight - visualViewportHeight;
-        const drawerHeight = drawerRef.current?.getBoundingClientRect().height || 0;
-        const offsetFromTop = drawerRef.current?.getBoundingClientRect().top;
+        const drawerHeight = drawerRef.current.getBoundingClientRect().height || 0;
+        const offsetFromTop = drawerRef.current.getBoundingClientRect().top;
 
         // visualViewport height may change due to some subtle changes to the keyboard. Checking if the height changed by 60 or more will make sure that they keyboard really changed its open state.
         if (Math.abs(previousDiffFromInitial.current - diffFromInitial) > 60) {
@@ -304,7 +308,7 @@ function Root({
         previousDiffFromInitial.current = diffFromInitial;
         // We don't have to change the height if the input is in view, when we are here we are in the opened keyboard state so we can correctly check if the input is in view
         if (drawerHeight > visualViewportHeight || keyboardIsOpen.current) {
-          const height = drawerRef.current?.getBoundingClientRect().height;
+          const height = drawerRef.current.getBoundingClientRect().height;
           let newDrawerHeight = height;
 
           if (height > visualViewportHeight) {
@@ -403,9 +407,13 @@ function Root({
 
   function onRelease(event: React.PointerEvent<HTMLDivElement>) {
     if (!isDragging || !drawerRef.current) return;
+    if (isAllowedToDrag.current && isInput(event.target as HTMLElement)) {
+      // If we were just dragging, prevent focusing on inputs etc. on release
+      (event.target as HTMLInputElement).blur();
+    }
 
+    isAllowedToDrag.current = false;
     setIsDragging(false);
-
     dragEndTime.current = new Date();
     const swipeAmount = getTranslateY(drawerRef.current);
 
@@ -452,7 +460,7 @@ function Root({
       return;
     }
 
-    const visibleDrawerHeight = Math.min(drawerRef.current?.getBoundingClientRect().height || 0, window.innerHeight);
+    const visibleDrawerHeight = Math.min(drawerRef.current.getBoundingClientRect().height || 0, window.innerHeight);
 
     if (swipeAmount >= visibleDrawerHeight * closeThreshold) {
       closeDrawer();
@@ -550,7 +558,7 @@ function Root({
 
   return (
     <DialogPrimitive.Root
-      open={isOpen}
+      modal={modal}
       onOpenChange={(o: boolean) => {
         if (!o) {
           closeDrawer();
@@ -558,7 +566,7 @@ function Root({
           setIsOpen(o);
         }
       }}
-      modal={modal}
+      open={isOpen}
     >
       <DrawerContext.Provider
         value={{
@@ -603,11 +611,11 @@ const Overlay = React.forwardRef<HTMLDivElement, React.ComponentPropsWithoutRef<
       <DialogPrimitive.Overlay
         onMouseUp={onRelease}
         ref={composedRef}
+        vaul-drawer-visible={visible ? 'true' : 'false'}
         vaul-overlay=""
         vaul-snap-points={isOpen && hasSnapPoints ? 'true' : 'false'}
-        vaul-theme-transition={experimentalSafariThemeAnimation ? 'true' : 'false'}
         vaul-snap-points-overlay={isOpen && shouldFade ? 'true' : 'false'}
-        vaul-drawer-visible={visible ? 'true' : 'false'}
+        vaul-theme-transition={experimentalSafariThemeAnimation ? 'true' : 'false'}
         {...rest}
       />
     );
@@ -648,9 +656,6 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
 
   return (
     <DialogPrimitive.Content
-      onPointerDown={onPress}
-      onPointerUp={onRelease}
-      onPointerMove={onDrag}
       onOpenAutoFocus={(e) => {
         if (onOpenAutoFocus) {
           onOpenAutoFocus(e);
@@ -658,6 +663,7 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
           e.preventDefault();
         }
       }}
+      onPointerDown={onPress}
       onPointerDownOutside={(e) => {
         if (keyboardIsOpen.current) {
           keyboardIsOpen.current = false;
@@ -671,6 +677,8 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
         closeDrawer();
         onPointerDownOutside?.(e);
       }}
+      onPointerMove={onDrag}
+      onPointerUp={onRelease}
       ref={composedRef}
       style={
         snapPointsOffset
@@ -700,14 +708,14 @@ function NestedRoot({ children, onDrag, onOpenChange }: DialogProps) {
 
   return (
     <Root
+      nested
+      onClose={() => {
+        onNestedOpenChange(false);
+      }}
       onDrag={(e, p) => {
         onNestedDrag(e, p);
         onDrag?.(e, p);
       }}
-      onClose={() => {
-        onNestedOpenChange(false);
-      }}
-      nested={true}
       onOpenChange={(o) => {
         if (o) {
           onNestedOpenChange(o);
@@ -721,17 +729,14 @@ function NestedRoot({ children, onDrag, onOpenChange }: DialogProps) {
   );
 }
 
-export const Drawer = Object.assign(
-  {},
-  {
-    Root,
-    NestedRoot,
-    Content,
-    Overlay,
-    Trigger: DialogPrimitive.Trigger,
-    Portal: DialogPrimitive.Portal,
-    Close: DialogPrimitive.Close,
-    Title: DialogPrimitive.Title,
-    Description: DialogPrimitive.Description,
-  },
-);
+export const Drawer = {
+  Root,
+  NestedRoot,
+  Content,
+  Overlay,
+  Trigger: DialogPrimitive.Trigger,
+  Portal: DialogPrimitive.Portal,
+  Close: DialogPrimitive.Close,
+  Title: DialogPrimitive.Title,
+  Description: DialogPrimitive.Description,
+};
