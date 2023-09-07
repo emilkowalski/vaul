@@ -2,7 +2,6 @@
 
 import * as DialogPrimitive from '@radix-ui/react-dialog';
 import React from 'react';
-import { useControllableState } from './use-controllable-state';
 import { DrawerContext, useDrawerContext } from './context';
 import './style.css';
 import { usePreventScroll, isInput, isIOS } from './use-prevent-scroll';
@@ -10,7 +9,7 @@ import { useComposedRefs } from './use-composed-refs';
 import { useSafariThemeColor } from './use-safari-theme-color';
 import { usePositionFixed } from './use-position-fixed';
 import { useSnapPoints } from './use-snap-points';
-import { set, reset, getTranslateY, isInView, dampenValue } from './helpers';
+import { set, reset, getTranslateY, dampenValue } from './helpers';
 import { TRANSITIONS, VELOCITY_THRESHOLD } from './constants';
 
 const CLOSE_THRESHOLD = 0.25;
@@ -334,7 +333,7 @@ function Root({
   }, [activeSnapPointIndex, snapPoints, snapPointsOffset]);
 
   function closeDrawer() {
-    if (!dismissible || !drawerRef.current) return;
+    if (!drawerRef.current) return;
 
     onClose?.();
     if (drawerRef.current) {
@@ -652,7 +651,6 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
     onRelease,
     onDrag,
     dismissible,
-    isOpen,
     keyboardIsOpen,
     snapPointsOffset,
     visible,
