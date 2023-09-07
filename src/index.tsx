@@ -5,7 +5,7 @@ import React from 'react';
 import { useControllableState } from './use-controllable-state';
 import { DrawerContext, useDrawerContext } from './context';
 import './style.css';
-import { usePreventScroll, isInput } from './use-prevent-scroll';
+import { usePreventScroll, isInput, isIOS } from './use-prevent-scroll';
 import { useComposedRefs } from './use-composed-refs';
 import { useSafariThemeColor } from './use-safari-theme-color';
 import { usePositionFixed } from './use-position-fixed';
@@ -126,11 +126,15 @@ function Root({
 
   function onPress(event: React.PointerEvent<HTMLDivElement>) {
     if (!dismissible) return;
-
     if (drawerRef.current && !drawerRef.current.contains(event.target as Node)) return;
     drawerHeightRef.current = drawerRef.current?.getBoundingClientRect().height || 0;
     setIsDragging(true);
     dragStartTime.current = new Date();
+
+    // iOS doesn't trigger mouseUp after scrolling so we need to listen to touched in order to disallow dragging
+    if (isIOS()) {
+      window.addEventListener('touchend', () => (isAllowedToDrag.current = false), { once: true });
+    }
 
     // Ensure we maintain correct pointer capture even when going outside of the drawer
     (event.target as HTMLElement).setPointerCapture(event.pointerId);
