@@ -74,15 +74,11 @@ function Root({
   modal = true,
   onClose,
 }: DialogProps) {
-  const [isOpen = false, setIsOpen] = useControllableState({
-    prop: openProp,
-    defaultProp: defaultOpen,
-    onChange: onOpenChange,
-  });
+  const [isOpen = false, setIsOpen] = React.useState<boolean>(false);
   // Not visible = translateY(100%)
-  const [visible, setVisible] = React.useState(false);
-  const [isDragging, setIsDragging] = React.useState(false);
-  const [justReleased, setJustReleased] = React.useState(false);
+  const [visible, setVisible] = React.useState<boolean>(false);
+  const [isDragging, setIsDragging] = React.useState<boolean>(false);
+  const [justReleased, setJustReleased] = React.useState<boolean>(false);
   const overlayRef = React.useRef<HTMLDivElement>(null);
   const dragStartTime = React.useRef<Date | null>(null);
   const dragEndTime = React.useRef<Date | null>(null);
@@ -371,6 +367,20 @@ function Root({
       return () => clearTimeout(id);
     }
   }, [isOpen, shouldScaleBackground]);
+
+  // This can be done much better
+  React.useEffect(() => {
+    if (openProp) {
+      setIsOpen(true);
+    } else {
+      closeDrawer();
+    }
+  }, [openProp]);
+
+  // This can be done much better
+  React.useEffect(() => {
+    onOpenChange?.(isOpen);
+  }, [isOpen]);
 
   function resetDrawer() {
     if (!drawerRef.current) return;
