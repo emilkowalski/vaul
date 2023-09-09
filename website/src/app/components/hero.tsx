@@ -5,7 +5,6 @@ import { Drawer } from 'vaul';
 
 export function Hero() {
   const [open, setOpen] = useState(false);
-  console.log(open);
 
   return (
     <div className="relative">
