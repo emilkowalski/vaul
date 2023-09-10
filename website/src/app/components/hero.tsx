@@ -1,8 +1,16 @@
 'use client';
 
+import { useEffect } from 'react';
 import { Drawer } from 'vaul';
 
 export function Hero() {
+  useEffect(() => {
+    document.body.style.marginTop = '76px';
+    return () => {
+      document.body.style.marginTop = '';
+    };
+  }, []);
+
   return (
     <div className="relative">
       <div
