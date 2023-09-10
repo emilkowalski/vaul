@@ -76,6 +76,7 @@ function Root({
   const [isOpen = false, setIsOpen] = React.useState<boolean>(false);
   // Not visible = translateY(100%)
   const [visible, setVisible] = React.useState<boolean>(false);
+  const [mounted, setMounted] = React.useState<boolean>(false);
   const [isDragging, setIsDragging] = React.useState<boolean>(false);
   const [justReleased, setJustReleased] = React.useState<boolean>(false);
   const overlayRef = React.useRef<HTMLDivElement>(null);
@@ -382,8 +383,14 @@ function Root({
 
   // This can be done much better
   React.useEffect(() => {
-    onOpenChange?.(isOpen);
+    if (mounted) {
+      onOpenChange?.(isOpen);
+    }
   }, [isOpen]);
+
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
 
   function resetDrawer() {
     if (!drawerRef.current) return;
