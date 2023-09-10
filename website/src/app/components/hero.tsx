@@ -1,11 +1,8 @@
 'use client';
 
-import { useState } from 'react';
 import { Drawer } from 'vaul';
 
 export function Hero() {
-  const [open, setOpen] = useState(false);
-
   return (
     <div className="relative">
       <div
@@ -42,9 +39,16 @@ export function Hero() {
           <h1 className="text-7xl font-semibold mb-4 relative">Vaul</h1>
           <p className="text-gray-600 text-xl">Drawer component for React.</p>
         </div>
-        <button onClick={() => setOpen(true)}>Open</button>
         <div className="flex gap-4 justify-center mt-6">
-          <Drawer.Root shouldScaleBackground open={open} onOpenChange={setOpen}>
+          <Drawer.Root shouldScaleBackground>
+            <Drawer.Trigger asChild>
+              <button
+                type="button"
+                className="rounded-full bg-white px-4 py-2.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+              >
+                Open Drawer
+              </button>
+            </Drawer.Trigger>
             <Drawer.Portal>
               <Drawer.Overlay className="fixed inset-0 bg-black/40" />
               <Drawer.Content className="bg-gray-100 flex flex-col rounded-t-[10px] h-full mt-24 max-h-[96%] fixed bottom-0 left-0 right-0">
