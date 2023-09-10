@@ -97,7 +97,7 @@ export function useSnapPoints({
   React.useEffect(() => {
     if (activeSnapPointProp) {
       const newIndex = snapPoints?.findIndex((snapPoint) => snapPoint === activeSnapPointProp) ?? null;
-      if (snapPointsOffset && newIndex && snapPointsOffset[newIndex]) {
+      if (snapPointsOffset && newIndex && typeof snapPointsOffset[newIndex] === 'number') {
         snapToPoint(snapPointsOffset[newIndex] as number);
       }
     }
