@@ -584,7 +584,7 @@ function Root({
           setIsOpen(o);
         }
       }}
-      open={isOpen}
+      open={true}
     >
       <DrawerContext.Provider
         value={{
