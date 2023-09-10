@@ -39,7 +39,6 @@ type DialogProps = {
   setActiveSnapPoint?: (snapPoint: number | string | null) => void;
   children?: React.ReactNode;
   open?: boolean;
-  defaultOpen?: boolean;
   closeThreshold?: number;
   onOpenChange?: (open: boolean) => void;
   shouldScaleBackground?: boolean;
@@ -55,7 +54,6 @@ type DialogProps = {
 
 function Root({
   open: openProp,
-  defaultOpen,
   onOpenChange,
   children,
   shouldScaleBackground,
