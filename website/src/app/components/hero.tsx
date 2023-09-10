@@ -58,7 +58,7 @@ export function Hero() {
                 <div className="p-4 bg-white rounded-t-[10px] flex-1">
                   <div className="space-y-6">
                     <div>
-                      <label htmlFor="project-name" className="block text-sm font-medium leading-6 text-gray-900">
+                      <label htmlFor="project-name" className="block text-sm font-medium text-gray-900">
                         Project name
                       </label>
                       <input
@@ -68,7 +68,7 @@ export function Hero() {
                       />
                     </div>
                     <div>
-                      <label htmlFor="description" className="block text-sm font-medium leading-6 text-gray-900">
+                      <label htmlFor="description" className="block text-sm font-medium text-gray-900">
                         Description
                       </label>
                       <textarea
@@ -77,6 +77,10 @@ export function Hero() {
                         rows={4}
                         className="block mt-2 w-full rounded-md py-1.5 text-gray-900 placeholder:text-gray-400 border border-gray-200"
                       ></textarea>
+                    </div>
+                    <div>
+                      <p className="text-sm font-semibold leading-6 text-gray-900">Members</p>
+                      <p className="mt-1 text-sm leading-6 text-gray-600">Manage and invite project members.</p>
                     </div>
                   </div>
                 </div>
