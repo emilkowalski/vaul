@@ -41,7 +41,6 @@ export function reset(el: Element | HTMLElement | null, prop?: string) {
   let originalStyles = cache.get(el);
 
   if (!originalStyles) {
-    (el.style as any) = {};
     return;
   }
 
