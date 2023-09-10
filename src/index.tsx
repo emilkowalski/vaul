@@ -39,7 +39,6 @@ type DialogProps = {
   setActiveSnapPoint?: (snapPoint: number | string | null) => void;
   children?: React.ReactNode;
   open?: boolean;
-  defaultOpen?: boolean;
   closeThreshold?: number;
   onOpenChange?: (open: boolean) => void;
   shouldScaleBackground?: boolean;
@@ -55,7 +54,6 @@ type DialogProps = {
 
 function Root({
   open: openProp,
-  defaultOpen,
   onOpenChange,
   children,
   shouldScaleBackground,
@@ -362,7 +360,7 @@ function Root({
   }
 
   React.useEffect(() => {
-    if (!isOpen && shouldScaleBackground) {
+    if (!isOpen && shouldScaleBackground && mounted) {
       // Can't use `onAnimationEnd` as the component will be invisible by then
       const id = setTimeout(() => {
         reset(document.body);
