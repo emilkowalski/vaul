@@ -13,6 +13,7 @@ export function usePositionFixed({ isOpen, modal, nested }: { isOpen: boolean; m
         position: document.body.style.position,
         top: document.body.style.top,
         left: document.body.style.left,
+        height: document.body.style.height,
       };
 
       // Update the dom inside an animation frame
@@ -22,6 +23,7 @@ export function usePositionFixed({ isOpen, modal, nested }: { isOpen: boolean; m
       document.body.style.top = `${-scrollPos.current}px`;
       document.body.style.left = `${-scrollX}px`;
       document.body.style.right = '0px';
+      document.body.style.height = 'auto';
 
       setTimeout(
         () =>
@@ -48,6 +50,7 @@ export function usePositionFixed({ isOpen, modal, nested }: { isOpen: boolean; m
       document.body.style.position = previousBodyPosition.position;
       document.body.style.top = previousBodyPosition.top;
       document.body.style.left = previousBodyPosition.left;
+      document.body.style.height = previousBodyPosition.height;
       document.body.style.right = 'unset';
 
       requestAnimationFrame(() => {
@@ -73,7 +76,7 @@ export function usePositionFixed({ isOpen, modal, nested }: { isOpen: boolean; m
   }, []);
 
   React.useEffect(() => {
-    if (!isIOS() || nested) return;
+    if (nested) return;
     // This is needed to force Safari toolbar to show **before** the drawer starts animating to prevent a gnarly shift from happening
     if (isOpen) {
       setPositionFixed();
