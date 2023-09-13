@@ -8,10 +8,33 @@
   --vaul-overlay-background-end: rgba(0, 0, 0, 0.4);
 }
 
-html {
-  height: 100%;
+html,
+body {
+  overflow: hidden;
 }
 
-body {
-  height: 100%;
+body,
+main {
+  min-height: 100vh;
+  /* mobile viewport bug fix */
+  min-height: -webkit-fill-available;
+  overflow-x: hidden;
+}
+
+html {
+  background: black;
+}
+
+main {
+  min-height: 100vh;
+  background: white;
+}
+
+html {
+  height: -webkit-fill-available;
+}
+
+a {
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
 }
