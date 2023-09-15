@@ -10,11 +10,13 @@ export function useSnapPoints({
   drawerRef,
   overlayRef,
   fadeFromIndex,
+  drawerHeight = 0,
 }: {
   activeSnapPointProp?: number | string | null;
-  setActiveSnapPointProp?(snapPoint: number | null | string): void;
+  setActiveSnapPointProp?: (snapPoint: number | null | string) => void;
   snapPoints?: (number | string)[];
   fadeFromIndex?: number;
+  drawerHeight?: number;
   drawerRef: React.RefObject<HTMLDivElement>;
   overlayRef: React.RefObject<HTMLDivElement>;
 }) {
@@ -48,25 +50,27 @@ export function useSnapPoints({
         if (isPx) {
           snapPointAsNumber = parseInt(snapPoint, 10);
         }
+        console.log(drawerHeight);
 
-        const height = isPx ? snapPointAsNumber : hasWindow ? snapPoint * window.innerHeight : 0;
+        const height = isPx ? snapPointAsNumber : hasWindow ? snapPoint * drawerHeight : 0;
+
         if (hasWindow) {
-          return window.innerHeight - height;
+          return drawerHeight - height;
         }
 
         return height;
       }) ?? [],
-    [snapPoints],
+    [snapPoints, drawerHeight],
   );
 
   const activeSnapPointOffset = React.useMemo(
-    () => (activeSnapPointIndex !== null ? snapPointsOffset?.[activeSnapPointIndex] : null),
+    () => (activeSnapPointIndex !== null ? snapPointsOffset[activeSnapPointIndex] : null),
     [snapPointsOffset, activeSnapPointIndex],
   );
 
   const snapToPoint = React.useCallback(
     (height: number) => {
-      const newSnapPointIndex = snapPointsOffset?.findIndex((snapPointHeight) => snapPointHeight === height) ?? null;
+      const newSnapPointIndex = snapPointsOffset.findIndex((snapPointHeight) => snapPointHeight === height) ?? null;
 
       set(drawerRef.current, {
         transition: `transform ${TRANSITIONS.DURATION}s cubic-bezier(${TRANSITIONS.EASE.join(',')})`,
@@ -98,7 +102,7 @@ export function useSnapPoints({
     if (activeSnapPointProp) {
       const newIndex = snapPoints?.findIndex((snapPoint) => snapPoint === activeSnapPointProp) ?? null;
       if (snapPointsOffset && newIndex && typeof snapPointsOffset[newIndex] === 'number') {
-        snapToPoint(snapPointsOffset[newIndex] as number);
+        snapToPoint(snapPointsOffset[newIndex]!);
       }
     }
   }, [activeSnapPointProp, snapPoints, snapPointsOffset, snapToPoint]);
@@ -130,12 +134,12 @@ export function useSnapPoints({
     }
 
     if (velocity > 2 && draggedDistance > 0 && snapPointsOffset && snapPoints) {
-      snapToPoint(snapPointsOffset[snapPoints.length - 1] as number);
+      snapToPoint(snapPointsOffset[snapPoints.length - 1]!);
       return;
     }
 
     // Find the closest snap point to the current position
-    const closestSnapPoint = snapPointsOffset?.reduce((prev, curr) => {
+    const closestSnapPoint = snapPointsOffset.reduce((prev, curr) => {
       if (typeof prev !== 'number' || typeof curr !== 'number') return prev;
 
       return Math.abs(curr - currentPosition) < Math.abs(prev - currentPosition) ? curr : prev;
@@ -203,9 +207,8 @@ export function useSnapPoints({
 
     if (isOverlaySnapPoint) {
       return 1 - percentageDragged;
-    } else {
-      return percentageDragged;
     }
+    return percentageDragged;
   }
 
   return {

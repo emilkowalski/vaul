@@ -77,6 +77,7 @@ function Root({
   const [mounted, setMounted] = React.useState<boolean>(false);
   const [isDragging, setIsDragging] = React.useState<boolean>(false);
   const [justReleased, setJustReleased] = React.useState<boolean>(false);
+  const [drawerHeight, setDrawerHeight] = React.useState<number>(0);
   const overlayRef = React.useRef<HTMLDivElement>(null);
   const dragStartTime = React.useRef<Date | null>(null);
   const dragEndTime = React.useRef<Date | null>(null);
@@ -87,7 +88,7 @@ function Root({
   const keyboardIsOpen = React.useRef(false);
   const previousDiffFromInitial = React.useRef(0);
   const drawerRef = React.useRef<HTMLDivElement>(null);
-  const drawerHeightRef = React.useRef(drawerRef.current?.getBoundingClientRect().height || 0);
+
   const { onDrag: changeThemeColorOnDrag, onRelease: themeTransitionOnRelease } = useSafariThemeColor(
     drawerRef,
     overlayRef,
@@ -108,6 +109,7 @@ function Root({
     activeSnapPointProp,
     setActiveSnapPointProp,
     drawerRef,
+    drawerHeight,
     fadeFromIndex,
     overlayRef,
   });
@@ -116,7 +118,7 @@ function Root({
     isDisabled: !isOpen || isDragging || !modal || justReleased,
   });
 
-  usePositionFixed({ isOpen, modal, nested });
+  usePositionFixed({ isOpen, modal, nested: nested ?? false });
 
   function getScale() {
     return (window.innerWidth - WINDOW_TOP_OFFSET) / window.innerWidth;
@@ -125,7 +127,6 @@ function Root({
   function onPress(event: React.PointerEvent<HTMLDivElement>) {
     if (!dismissible) return;
     if (drawerRef.current && !drawerRef.current.contains(event.target as Node)) return;
-    drawerHeightRef.current = drawerRef.current?.getBoundingClientRect().height || 0;
     setIsDragging(true);
     dragStartTime.current = new Date();
 
@@ -146,7 +147,7 @@ function Root({
     const highlightedText = window.getSelection()?.toString();
     const swipeAmount = drawerRef.current ? getTranslateY(drawerRef.current) : null;
 
-    if (swipeAmount > 0) {
+    if (swipeAmount && swipeAmount > 0) {
       return true;
     }
 
@@ -232,7 +233,7 @@ function Root({
       const absDraggedDistance = Math.abs(draggedDistance);
       const wrapper = document.querySelector('[vaul-drawer-wrapper]');
 
-      let percentageDragged = absDraggedDistance / drawerHeightRef.current;
+      let percentageDragged = absDraggedDistance / drawerHeight;
       const snapPointPercentageDragged = getSnapPointsPercentageDragged(absDraggedDistance, isDraggingDown);
 
       if (snapPointPercentageDragged !== null) {
@@ -280,6 +281,14 @@ function Root({
       }
     }
   }
+
+  React.useEffect(() => {
+    if (!drawerHeight) {
+      requestAnimationFrame(() => {
+        setDrawerHeight(drawerRef.current?.getBoundingClientRect().height || 0);
+      });
+    }
+  }, [isOpen, drawerHeight]);
 
   React.useEffect(() => {
     function onVisualViewportChange() {
