@@ -352,11 +352,13 @@ function Root({
     setTimeout(() => {
       setIsOpen(false);
       setVisible(false);
+    }, 300);
 
+    setTimeout(() => {
       if (snapPoints) {
         setActiveSnapPoint(snapPoints[0]);
       }
-    }, ANIMATION_DURATION);
+    }, 500);
   }
 
   React.useEffect(() => {
