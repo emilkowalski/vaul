@@ -16,8 +16,6 @@ const CLOSE_THRESHOLD = 0.25;
 
 const SCROLL_LOCK_TIMEOUT = 500;
 
-const ANIMATION_DURATION = 501;
-
 const BORDER_RADIUS = 8;
 
 const NESTED_DISPLACEMENT = 16;
@@ -43,6 +41,7 @@ type DialogProps = {
   onOpenChange?: (open: boolean) => void;
   shouldScaleBackground?: boolean;
   scrollLockTimeout?: number;
+  fixed?: boolean;
   dismissible?: boolean;
   onDrag?: (event: React.PointerEvent<HTMLDivElement>, percentageDragged: number) => void;
   onRelease?: (event: React.PointerEvent<HTMLDivElement>, open: boolean) => void;
@@ -68,6 +67,7 @@ function Root({
   fadeFromIndex = snapPoints && snapPoints.length - 1,
   activeSnapPoint: activeSnapPointProp,
   setActiveSnapPoint: setActiveSnapPointProp,
+  fixed,
   modal = true,
   onClose,
 }: DialogProps) {
@@ -312,8 +312,12 @@ function Root({
           if (height > visualViewportHeight) {
             newDrawerHeight = visualViewportHeight - WINDOW_TOP_OFFSET;
           }
-
-          drawerRef.current.style.height = `${Math.max(newDrawerHeight, visualViewportHeight - offsetFromTop)}px`;
+          // When fixed, don't move the drawer upwards if there's space, but rather only change it's height so it's fully scrollable when the keyboard is open
+          if (fixed) {
+            drawerRef.current.style.height = `${height - Math.max(diffFromInitial, 0)}px`;
+          } else {
+            drawerRef.current.style.height = `${Math.max(newDrawerHeight, visualViewportHeight - offsetFromTop)}px`;
+          }
         } else {
           drawerRef.current.style.height = 'initial';
         }
