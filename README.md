@@ -50,7 +50,7 @@ Can be controlled with the `value` and `onOpenChange` props. Can be opened by de
 
 Additional props:
 
-`closeThreshold`: Number between 0 and 1 that determines when the drawer should be closed. Example: ` closeThreshold` of 0.5 would close the drawer if the user swiped for 50% of the height of the drawer or more.
+`closeThreshold`: Number between 0 and 1 that determines when the drawer should be closed. Example: threshold of 0.5 would close the drawer if the user swiped for 50% of the height of the drawer or more.
 
 `scrollLockTimeout`: Duration for which the drawer is not draggable after scrolling content inside of the drawer. Defaults to 500ms
 
