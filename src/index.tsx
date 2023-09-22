@@ -202,6 +202,7 @@ function Root({
       const draggedDistance = pointerStartY.current - event.clientY;
       const isDraggingDown = draggedDistance > 0;
 
+      // Disallow dragging down to close when first snap point is the active one and dismissible prop is set to false.
       if (snapPoints && activeSnapPointIndex === 0 && !dismissible) return;
 
       if (!isAllowedToDrag.current && !shouldDrag(event.target, isDraggingDown)) return;
