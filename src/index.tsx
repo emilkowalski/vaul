@@ -282,6 +282,16 @@ function Root({
   }
 
   React.useEffect(() => {
+    // Clean up the wrapper styles in case the drawer has been unmounted without closing it
+    const wrapper = document.querySelector('[vaul-drawer-wrapper]');
+    if (wrapper) {
+      return () => {
+        reset(wrapper);
+      };
+    }
+  }, []);
+
+  React.useEffect(() => {
     function onVisualViewportChange() {
       if (!drawerRef.current) return;
 
