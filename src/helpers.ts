@@ -33,7 +33,6 @@ export function set(el?: Element | HTMLElement | null, styles?: Style, ignoreCac
   });
 
   if (ignoreCache) return;
-  console.log(originalStyles);
 
   cache.set(el, originalStyles);
 }
@@ -41,7 +40,6 @@ export function set(el?: Element | HTMLElement | null, styles?: Style, ignoreCac
 export function reset(el: Element | HTMLElement | null, prop?: string) {
   if (!el || !(el instanceof HTMLElement)) return;
   let originalStyles = cache.get(el);
-  console.log(originalStyles);
 
   if (!originalStyles) {
     return;
