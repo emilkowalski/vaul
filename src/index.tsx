@@ -698,6 +698,7 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
           onOpenAutoFocus(e);
         } else {
           e.preventDefault();
+          drawerRef.current.focus();
         }
       }}
       onPointerDown={onPress}
