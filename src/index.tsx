@@ -123,7 +123,7 @@ function Root({
   }
 
   function onPress(event: React.PointerEvent<HTMLDivElement>) {
-    if (!dismissible) return;
+    if (!dismissible && !snapPoints) return;
     if (drawerRef.current && !drawerRef.current.contains(event.target as Node)) return;
     drawerHeightRef.current = drawerRef.current?.getBoundingClientRect().height || 0;
     setIsDragging(true);
@@ -201,6 +201,8 @@ function Root({
     if (isDragging) {
       const draggedDistance = pointerStartY.current - event.clientY;
       const isDraggingDown = draggedDistance > 0;
+
+      if (snapPoints && activeSnapPointIndex === 0 && !dismissible) return;
 
       if (!isAllowedToDrag.current && !shouldDrag(event.target, isDraggingDown)) return;
 
