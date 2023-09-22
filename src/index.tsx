@@ -78,6 +78,7 @@ function Root({
   const [isDragging, setIsDragging] = React.useState<boolean>(false);
   const [justReleased, setJustReleased] = React.useState<boolean>(false);
   const overlayRef = React.useRef<HTMLDivElement>(null);
+  const openTime = React.useRef<Date | null>(null);
   const dragStartTime = React.useRef<Date | null>(null);
   const dragEndTime = React.useRef<Date | null>(null);
   const lastTimeDragPrevented = React.useRef<Date | null>(null);
@@ -146,6 +147,11 @@ function Root({
     const highlightedText = window.getSelection()?.toString();
     const swipeAmount = drawerRef.current ? getTranslateY(drawerRef.current) : null;
 
+    // Allow scrolling when animating
+    if (openTime.current && date.getTime() - openTime.current.getTime() < 500) {
+      return false;
+    }
+
     if (swipeAmount > 0) {
       return true;
     }
@@ -155,7 +161,7 @@ function Root({
       return false;
     }
 
-    // Disallow dragging if drawer was scrolled within last second
+    // Disallow dragging if drawer was scrolled within `scrollLockTimeout`
     if (
       lastTimeDragPrevented.current &&
       date.getTime() - lastTimeDragPrevented.current.getTime() < scrollLockTimeout &&
@@ -514,6 +520,7 @@ function Root({
   React.useEffect(() => {
     // Trigger enter animation without using CSS animation
     if (isOpen) {
+      openTime.current = new Date();
       setVisible(true);
       scaleBackground(true);
     }
