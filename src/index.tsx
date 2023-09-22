@@ -508,6 +508,14 @@ function Root({
     resetDrawer();
   }
 
+  React.useEffect(() => {
+    // Trigger enter animation without using CSS animation
+    if (isOpen) {
+      setVisible(true);
+      scaleBackground(true);
+    }
+  }, [isOpen]);
+
   function scaleBackground(open: boolean) {
     const wrapper = document.querySelector('[vaul-drawer-wrapper]');
 
@@ -675,18 +683,10 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
     keyboardIsOpen,
     snapPointsOffset,
     visible,
-    setVisible,
     closeDrawer,
-    scaleBackground,
     modal,
   } = useDrawerContext();
   const composedRef = useComposedRefs(ref, drawerRef);
-
-  React.useEffect(() => {
-    // Trigger enter animation without using CSS animation
-    setVisible(true);
-    scaleBackground(true);
-  }, []);
 
   return (
     <DialogPrimitive.Content
