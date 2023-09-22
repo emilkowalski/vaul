@@ -33,6 +33,7 @@ export function set(el?: Element | HTMLElement | null, styles?: Style, ignoreCac
   });
 
   if (ignoreCache) return;
+
   cache.set(el, originalStyles);
 }
 
