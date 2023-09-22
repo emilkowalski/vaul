@@ -737,7 +737,7 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
 
 Content.displayName = 'Drawer.Content';
 
-function NestedRoot({ children, onDrag, onOpenChange }: DialogProps) {
+function NestedRoot({ children, onDrag, onOpenChange, ...rest }: DialogProps) {
   const { onNestedDrag, onNestedOpenChange, onNestedRelease } = useDrawerContext();
 
   if (!onNestedDrag) {
@@ -761,6 +761,7 @@ function NestedRoot({ children, onDrag, onOpenChange }: DialogProps) {
         onOpenChange?.(o);
       }}
       onRelease={onNestedRelease}
+      {...rest}
     >
       {children}
     </Root>
