@@ -668,6 +668,7 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
     setVisible,
     closeDrawer,
     scaleBackground,
+    modal,
   } = useDrawerContext();
   const composedRef = useComposedRefs(ref, drawerRef);
 
@@ -688,6 +689,10 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
       }}
       onPointerDown={onPress}
       onPointerDownOutside={(e) => {
+        if (!modal) {
+          e.preventDefault();
+          return;
+        }
         if (keyboardIsOpen.current) {
           keyboardIsOpen.current = false;
         }
