@@ -6,7 +6,6 @@ import { DrawerContext, useDrawerContext } from './context';
 import './style.css';
 import { usePreventScroll, isInput, isIOS } from './use-prevent-scroll';
 import { useComposedRefs } from './use-composed-refs';
-import { useSafariThemeColor } from './use-safari-theme-color';
 import { usePositionFixed } from './use-position-fixed';
 import { useSnapPoints } from './use-snap-points';
 import { set, reset, getTranslateY, dampenValue } from './helpers';
@@ -45,7 +44,6 @@ type DialogProps = {
   dismissible?: boolean;
   onDrag?: (event: React.PointerEvent<HTMLDivElement>, percentageDragged: number) => void;
   onRelease?: (event: React.PointerEvent<HTMLDivElement>, open: boolean) => void;
-  experimentalSafariThemeAnimation?: boolean;
   modal?: boolean;
   nested?: boolean;
   onClose?: () => void;
@@ -58,7 +56,6 @@ function Root({
   shouldScaleBackground,
   onDrag: onDragProp,
   onRelease: onReleaseProp,
-  experimentalSafariThemeAnimation,
   snapPoints,
   nested,
   closeThreshold = CLOSE_THRESHOLD,
@@ -89,12 +86,6 @@ function Root({
   const previousDiffFromInitial = React.useRef(0);
   const drawerRef = React.useRef<HTMLDivElement>(null);
   const drawerHeightRef = React.useRef(drawerRef.current?.getBoundingClientRect().height || 0);
-  const { onDrag: changeThemeColorOnDrag, onRelease: themeTransitionOnRelease } = useSafariThemeColor(
-    drawerRef,
-    overlayRef,
-    isOpen,
-    experimentalSafariThemeAnimation,
-  );
 
   const onSnapPointChange = useCallback((activeSnapPointIndex: number) => {
     // Change openTime ref when we reach the last snap point to prevent dragging for 500ms incase it's scrollable.
@@ -258,7 +249,6 @@ function Root({
       const opacityValue = 1 - percentageDragged;
 
       if (shouldFade || (fadeFromIndex && activeSnapPointIndex === fadeFromIndex - 1)) {
-        changeThemeColorOnDrag(percentageDragged);
         onDragProp?.(event, percentageDragged);
 
         set(
@@ -379,8 +369,8 @@ function Root({
     }
 
     setTimeout(() => {
-      setIsOpen(false);
       setVisible(false);
+      setIsOpen(false);
     }, 300);
 
     setTimeout(() => {
@@ -498,14 +488,12 @@ function Root({
     if (distMoved > 0) {
       resetDrawer();
       onReleaseProp?.(event, true);
-      themeTransitionOnRelease(true);
       return;
     }
 
     if (velocity > VELOCITY_THRESHOLD) {
       closeDrawer();
       onReleaseProp?.(event, false);
-      themeTransitionOnRelease(false);
       return;
     }
 
@@ -514,12 +502,10 @@ function Root({
     if (swipeAmount >= visibleDrawerHeight * closeThreshold) {
       closeDrawer();
       onReleaseProp?.(event, false);
-      themeTransitionOnRelease(false);
       return;
     }
 
     onReleaseProp?.(event, true);
-    themeTransitionOnRelease(true);
     resetDrawer();
   }
 
@@ -649,7 +635,6 @@ function Root({
           keyboardIsOpen,
           modal,
           snapPointsOffset,
-          experimentalSafariThemeAnimation,
         }}
       >
         {children}
@@ -660,8 +645,7 @@ function Root({
 
 const Overlay = React.forwardRef<HTMLDivElement, React.ComponentPropsWithoutRef<typeof DialogPrimitive.Overlay>>(
   function ({ children, style, ...rest }, ref) {
-    const { overlayRef, snapPoints, onRelease, experimentalSafariThemeAnimation, shouldFade, isOpen, visible } =
-      useDrawerContext();
+    const { overlayRef, snapPoints, onRelease, shouldFade, isOpen, visible } = useDrawerContext();
     const composedRef = useComposedRefs(ref, overlayRef);
     const hasSnapPoints = snapPoints && snapPoints.length > 0;
 
@@ -673,7 +657,6 @@ const Overlay = React.forwardRef<HTMLDivElement, React.ComponentPropsWithoutRef<
         vaul-overlay=""
         vaul-snap-points={isOpen && hasSnapPoints ? 'true' : 'false'}
         vaul-snap-points-overlay={isOpen && shouldFade ? 'true' : 'false'}
-        vaul-theme-transition={experimentalSafariThemeAnimation ? 'true' : 'false'}
         {...rest}
       />
     );

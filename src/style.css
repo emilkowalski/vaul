@@ -44,24 +44,6 @@
   }
 }
 
-@keyframes show-theme-overlay {
-  from {
-    background: var(--vaul-overlay-background-start);
-  }
-  to {
-    background: var(--vaul-overlay-background-end);
-  }
-}
-
-@keyframes hide-theme-overlay {
-  from {
-    background: var(--vaul-overlay-background-end);
-  }
-  to {
-    background: var(--vaul-overlay-background-start);
-  }
-}
-
 @media (hover: hover) and (pointer: fine) {
   [vaul-drawer] {
     user-select: none;
