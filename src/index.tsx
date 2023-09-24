@@ -367,9 +367,9 @@ function Root({
 
       scaleBackground(false);
     }
-    setVisible(false);
 
     setTimeout(() => {
+      setVisible(false);
       setIsOpen(false);
     }, 300);
 
