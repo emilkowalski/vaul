@@ -10,6 +10,7 @@ export function useSnapPoints({
   drawerRef,
   overlayRef,
   fadeFromIndex,
+  onSnapPointChange,
 }: {
   activeSnapPointProp?: number | string | null;
   setActiveSnapPointProp?(snapPoint: number | null | string): void;
@@ -17,6 +18,7 @@ export function useSnapPoints({
   fadeFromIndex?: number;
   drawerRef: React.RefObject<HTMLDivElement>;
   overlayRef: React.RefObject<HTMLDivElement>;
+  onSnapPointChange(activeSnapPointIndex: number): void;
 }) {
   const [activeSnapPoint, setActiveSnapPoint] = useControllableState<string | number | null>({
     prop: activeSnapPointProp,
@@ -68,7 +70,7 @@ export function useSnapPoints({
   const snapToPoint = React.useCallback(
     (height: number) => {
       const newSnapPointIndex = snapPointsOffset?.findIndex((snapPointHeight) => snapPointHeight === height) ?? null;
-
+      onSnapPointChange(newSnapPointIndex);
       set(drawerRef.current, {
         transition: `transform ${TRANSITIONS.DURATION}s cubic-bezier(${TRANSITIONS.EASE.join(',')})`,
         transform: `translate3d(0, ${height}px, 0)`,

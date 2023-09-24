@@ -7,7 +7,7 @@ import { clsx } from 'clsx';
 export function Hero() {
   const [snap, setSnap] = useState<number | string | null>('148px');
   return (
-    <Drawer.Root snapPoints={['148px', '355px']} activeSnapPoint={snap} setActiveSnapPoint={setSnap}>
+    <Drawer.Root snapPoints={['148px', '355px', 1]} activeSnapPoint={snap} setActiveSnapPoint={setSnap}>
       <Drawer.Trigger asChild>
         <button>Open Drawer</button>
       </Drawer.Trigger>

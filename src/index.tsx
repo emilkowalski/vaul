@@ -1,7 +1,7 @@
 'use client';
 
 import * as DialogPrimitive from '@radix-ui/react-dialog';
-import React from 'react';
+import React, { useCallback } from 'react';
 import { DrawerContext, useDrawerContext } from './context';
 import './style.css';
 import { usePreventScroll, isInput, isIOS } from './use-prevent-scroll';
@@ -95,6 +95,12 @@ function Root({
     isOpen,
     experimentalSafariThemeAnimation,
   );
+
+  const onSnapPointChange = useCallback((activeSnapPointIndex: number) => {
+    // Change openTime ref when we reach the last snap point to prevent dragging for 500ms incase it's scrollable.
+    if (snapPoints && activeSnapPointIndex === snapPointsOffset.length - 1) openTime.current = new Date();
+  }, []);
+
   const {
     activeSnapPoint,
     activeSnapPointIndex,
@@ -111,6 +117,7 @@ function Root({
     drawerRef,
     fadeFromIndex,
     overlayRef,
+    onSnapPointChange,
   });
 
   usePreventScroll({
