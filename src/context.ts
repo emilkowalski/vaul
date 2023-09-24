@@ -13,7 +13,6 @@ interface DrawerContextValue {
   dismissible: boolean;
   isOpen: boolean;
   keyboardIsOpen: React.MutableRefObject<boolean>;
-  experimentalSafariThemeAnimation?: boolean;
   snapPointsOffset: number[] | null;
   snapPoints?: (number | string)[] | null;
   modal: boolean;
@@ -38,7 +37,6 @@ export const DrawerContext = React.createContext<DrawerContextValue>({
   dismissible: false,
   isOpen: false,
   keyboardIsOpen: { current: false },
-  experimentalSafariThemeAnimation: false,
   snapPointsOffset: null,
   snapPoints: null,
   modal: false,
