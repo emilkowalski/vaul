@@ -50,6 +50,7 @@ export function useSnapPoints({
         }
 
         const height = isPx ? snapPointAsNumber : hasWindow ? snapPoint * window.innerHeight : 0;
+
         if (hasWindow) {
           return window.innerHeight - height;
         }
@@ -112,7 +113,7 @@ export function useSnapPoints({
     closeDrawer: () => void;
     velocity: number;
   }) {
-    if (typeof activeSnapPointOffset !== 'number' || fadeFromIndex === undefined) return;
+    if (fadeFromIndex === undefined) return;
 
     const currentPosition = activeSnapPointOffset - draggedDistance;
     const isOverlaySnapPoint = activeSnapPointIndex === fadeFromIndex - 1;
@@ -144,8 +145,12 @@ export function useSnapPoints({
     if (velocity > VELOCITY_THRESHOLD && Math.abs(draggedDistance) < window.innerHeight * 0.4) {
       // -1 = down, 1 = up, might need a better name
       const dragDirection = draggedDistance > 0 ? 1 : -1;
+
       // Don't do anything if we swipe upwards while being on the last snap point
-      if (dragDirection > 0 && isLastSnapPoint) return;
+      if (dragDirection > 0 && isLastSnapPoint) {
+        snapToPoint(snapPointsOffset[snapPoints.length - 1]);
+        return;
+      }
 
       if (isFirst && dragDirection < 0) {
         closeDrawer();
@@ -164,21 +169,14 @@ export function useSnapPoints({
     if (activeSnapPointOffset === null) return;
     const newYValue = activeSnapPointOffset - draggedDistance;
 
-    if (newYValue < snapPointsOffset[snapPointsOffset.length - 1]) {
-      setActiveSnapPoint(snapPoints?.[snapPoints.length - 1] ?? null);
-      set(drawerRef.current, {
-        transform: `translate3d(0, ${0}px, 0)`,
-      });
-      return;
-    }
-
     set(drawerRef.current, {
       transform: `translate3d(0, ${newYValue}px, 0)`,
     });
   }
 
   function getPercentageDragged(absDraggedDistance: number, isDraggingDown: boolean) {
-    if (!snapPoints || !activeSnapPointIndex || !snapPointsOffset || fadeFromIndex === undefined) return null;
+    if (!snapPoints || typeof activeSnapPointIndex !== 'number' || !snapPointsOffset || fadeFromIndex === undefined)
+      return null;
 
     // If this is true we are dragging to a snap point that is supposed to have an overlay
     const isOverlaySnapPoint = activeSnapPointIndex === fadeFromIndex - 1;
@@ -191,6 +189,7 @@ export function useSnapPoints({
     // Don't animate, but still use this one if we are dragging away from the overlaySnapPoint
     if (isOverlaySnapPoint && !isDraggingDown) return 1;
     if (!shouldFade && !isOverlaySnapPoint) return null;
+
     // Either fadeFrom index or the one before
     const targetSnapPointIndex = isOverlaySnapPoint ? activeSnapPointIndex + 1 : activeSnapPointIndex - 1;
 
