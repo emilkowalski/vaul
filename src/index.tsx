@@ -92,7 +92,7 @@ function Root({
   const { onDrag: changeThemeColorOnDrag, onRelease: themeTransitionOnRelease } = useSafariThemeColor(
     drawerRef,
     overlayRef,
-    isOpen,
+    visible,
     experimentalSafariThemeAnimation,
   );
 
@@ -377,10 +377,10 @@ function Root({
 
       scaleBackground(false);
     }
+    setVisible(false);
 
     setTimeout(() => {
       setIsOpen(false);
-      setVisible(false);
     }, 300);
 
     setTimeout(() => {

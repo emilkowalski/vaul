@@ -58,7 +58,7 @@ function interpolateColors(color1: number[], color2: number[], steps: number, li
 export function useSafariThemeColor(
   drawer: React.RefObject<HTMLDivElement>,
   overlay: React.RefObject<HTMLDivElement>,
-  isOpen: boolean,
+  visible: boolean,
   shouldAnimate?: boolean,
 ) {
   const [backgroundColor, setBackgroundColor] = React.useState<RGB | null>([255, 255, 255]);
@@ -140,7 +140,7 @@ export function useSafariThemeColor(
             const currentColor = colors[index];
             metaElement?.setAttribute('content', `rgb(${currentColor.join(',')})`);
 
-            if (index === colors.length - 1 && initialMetaThemeColor && !isOpen) {
+            if (index === colors.length - 1 && initialMetaThemeColor && !visible) {
               metaElement?.setAttribute('content', initialMetaThemeColor as string);
             }
 
@@ -152,22 +152,22 @@ export function useSafariThemeColor(
       frameId = requestAnimationFrame(draw);
       return frameId;
     },
-    [drawer, isOpen, metaElement, releaseExit, initialMetaThemeColor, overlay],
+    [drawer, visible, metaElement, releaseExit, initialMetaThemeColor, overlay],
   );
 
   React.useEffect(() => {
     if (!shouldRun || !interpolatedColorsEnter || !interpolatedColorsExit) return;
 
-    const frameId = animate(isOpen ? interpolatedColorsEnter : interpolatedColorsExit);
+    const frameId = animate(visible ? interpolatedColorsEnter : interpolatedColorsExit);
 
-    if (isOpen) {
+    if (visible) {
       setReleaseExit(false);
     }
 
     return () => {
       if (frameId) cancelAnimationFrame(frameId);
     };
-  }, [isOpen, shouldRun, animate, interpolatedColorsEnter, interpolatedColorsExit]);
+  }, [visible, shouldRun, animate, interpolatedColorsEnter, interpolatedColorsExit]);
 
   function onDrag(percentageDragged: number) {
     const metaThemeColor = document.querySelector('meta[name="theme-color"]');
@@ -186,7 +186,7 @@ export function useSafariThemeColor(
     metaThemeColor.setAttribute('content', `rgb(${color.join(',')})`);
   }
 
-  function onRelease(isOpen: boolean) {
+  function onRelease(visible: boolean) {
     const metaThemeColor = document.querySelector('meta[name="theme-color"]');
     if (!metaThemeColor || !shouldRun) return;
     setReleaseExit(true);
@@ -196,7 +196,7 @@ export function useSafariThemeColor(
 
     let colorSteps = interpolateColors(rgbValues, overlayColor as RGB, 50);
 
-    if (!isOpen && backgroundColor) {
+    if (!visible && backgroundColor) {
       colorSteps = interpolateColors(rgbValues, backgroundColor, 50);
     }
 

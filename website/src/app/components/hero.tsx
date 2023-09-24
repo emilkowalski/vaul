@@ -40,7 +40,7 @@ export function Hero() {
           <p className="text-gray-600 text-xl">Drawer component for React.</p>
         </div>
         <div className="flex gap-4 justify-center mt-6">
-          <Drawer.Root shouldScaleBackground>
+          <Drawer.Root experimentalSafariThemeAnimation>
             <Drawer.Trigger asChild>
               <button
                 type="button"
@@ -51,7 +51,7 @@ export function Hero() {
             </Drawer.Trigger>
             <Drawer.Portal>
               <Drawer.Overlay className="fixed inset-0 bg-black/40" />
-              <Drawer.Content className="bg-gray-100 flex flex-col rounded-t-[10px] h-full mt-24 max-h-[96%] fixed bottom-0 left-0 right-0">
+              <Drawer.Content className="bg-gray-100 flex flex-col rounded-t-[10px] mt-24 max-h-[96%] fixed bottom-0 left-0 right-0">
                 <div className="p-4 bg-white rounded-t-[10px] flex-1">
                   <div className="mx-auto w-12 h-1.5 flex-shrink-0 rounded-full bg-gray-300 mb-8" />
                   <div className="max-w-md mx-auto">
