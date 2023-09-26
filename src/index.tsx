@@ -513,7 +513,6 @@ function Root({
     // Trigger enter animation without using CSS animation
     if (isOpen) {
       openTime.current = new Date();
-      setVisible(true);
       scaleBackground(true);
     }
   }, [isOpen]);
@@ -684,8 +683,14 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
     visible,
     closeDrawer,
     modal,
+    setVisible,
   } = useDrawerContext();
   const composedRef = useComposedRefs(ref, drawerRef);
+
+  React.useEffect(() => {
+    // Trigger enter animation without using CSS animation
+    setVisible(true);
+  }, []);
 
   return (
     <DialogPrimitive.Content
