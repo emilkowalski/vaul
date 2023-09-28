@@ -608,6 +608,7 @@ function Root({
         if (!o) {
           closeDrawer();
         } else {
+          setHasBeenOpened(true);
           setIsOpen(o);
         }
       }}
