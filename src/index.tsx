@@ -69,6 +69,7 @@ function Root({
   onClose,
 }: DialogProps) {
   const [isOpen = false, setIsOpen] = React.useState<boolean>(false);
+  const [hasBeenOpened, setHasBeenOpened] = React.useState<boolean>(false);
   // Not visible = translateY(100%)
   const [visible, setVisible] = React.useState<boolean>(false);
   const [mounted, setMounted] = React.useState<boolean>(false);
@@ -112,10 +113,10 @@ function Root({
   });
 
   usePreventScroll({
-    isDisabled: !isOpen || isDragging || !modal || justReleased,
+    isDisabled: !isOpen || isDragging || !modal || justReleased || !hasBeenOpened,
   });
 
-  usePositionFixed({ isOpen, modal, nested });
+  usePositionFixed({ isOpen, modal, nested, hasBeenOpened });
 
   function getScale() {
     return (window.innerWidth - WINDOW_TOP_OFFSET) / window.innerWidth;
@@ -395,6 +396,7 @@ function Root({
   React.useEffect(() => {
     if (openProp) {
       setIsOpen(true);
+      setHasBeenOpened(true);
     } else {
       closeDrawer();
     }
@@ -606,6 +608,7 @@ function Root({
         if (!o) {
           closeDrawer();
         } else {
+          setHasBeenOpened(true);
           setIsOpen(o);
         }
       }}
