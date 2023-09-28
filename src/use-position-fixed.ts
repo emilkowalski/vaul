@@ -1,9 +1,18 @@
 import React from 'react';
-import { isIOS } from './use-prevent-scroll';
 
 let previousBodyPosition: Record<string, string> | null = null;
 
-export function usePositionFixed({ isOpen, modal, nested }: { isOpen: boolean; modal: boolean; nested: boolean }) {
+export function usePositionFixed({
+  isOpen,
+  modal,
+  nested,
+  hasBeenOpened,
+}: {
+  isOpen: boolean;
+  modal: boolean;
+  nested: boolean;
+  hasBeenOpened: boolean;
+}) {
   const scrollPos = React.useRef(0);
 
   function setPositionFixed() {
@@ -76,7 +85,7 @@ export function usePositionFixed({ isOpen, modal, nested }: { isOpen: boolean; m
   }, []);
 
   React.useEffect(() => {
-    if (nested) return;
+    if (nested || !hasBeenOpened) return;
     // This is needed to force Safari toolbar to show **before** the drawer starts animating to prevent a gnarly shift from happening
     if (isOpen) {
       setPositionFixed();
