@@ -6,7 +6,7 @@ test.beforeEach(async ({ page }) => {
   await page.goto('/non-dismissible');
 });
 
-test.describe.only('Non-dismissible', () => {
+test.describe('Non-dismissible', () => {
   test('should not close on background interaction', async ({ page }) => {
     await openDrawer(page);
     // Click on the background
