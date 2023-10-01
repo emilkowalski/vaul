@@ -1,18 +1,12 @@
-import { test, expect, Page } from '@playwright/test';
+import { test, expect } from '@playwright/test';
 import { ANIMATION_DURATION } from './constants';
+import { openDrawer } from './helpers';
 
 test.beforeEach(async ({ page }) => {
   await page.goto('/without-scaled-background');
 });
 
-async function openDrawer(page: Page) {
-  await expect(page.getByTestId('content')).not.toBeVisible();
-  await page.getByTestId('trigger').click();
-  await page.waitForTimeout(ANIMATION_DURATION);
-  await expect(page.getByTestId('content')).toBeVisible();
-}
-
-test.describe.only('Base tests', () => {
+test.describe('Base tests', () => {
   test('should open drawer', async ({ page }) => {
     await expect(page.getByTestId('content')).not.toBeVisible();
 
