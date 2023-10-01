@@ -12,7 +12,7 @@ export default function Page() {
           </button>
         </Drawer.Trigger>
         <Drawer.Portal>
-          <Drawer.Overlay data-testid="ovarlay" className="fixed inset-0 bg-black/40" />
+          <Drawer.Overlay data-testid="overlay" className="fixed inset-0 bg-black/40" />
           <Drawer.Content
             data-testid="content"
             className="bg-zinc-100 flex flex-col rounded-t-[10px] h-[96%] mt-24 fixed bottom-0 left-0 right-0"

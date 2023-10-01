@@ -1,22 +1,28 @@
 'use client';
 
+import { useState } from 'react';
 import { Drawer } from 'vaul';
 
 export default function Page() {
+  const [open, setOpen] = useState(false);
   return (
     <div className="w-screen h-screen bg-white p-8 flex justify-center items-center" vaul-drawer-wrapper="">
-      <Drawer.Root>
+      <Drawer.Root open={open} onOpenChange={setOpen}>
         <Drawer.Trigger asChild>
           <button data-testid="trigger" className="text-2xl">
             Open Drawer
           </button>
         </Drawer.Trigger>
         <Drawer.Portal>
-          <Drawer.Overlay data-testid="ovarlay" className="fixed inset-0 bg-black/40" />
+          <Drawer.Overlay data-testid="overlay" className="fixed inset-0 bg-black/40" />
           <Drawer.Content
             data-testid="content"
             className="bg-zinc-100 flex flex-col rounded-t-[10px] h-[96%] mt-24 fixed bottom-0 left-0 right-0"
           >
+            <Drawer.Close data-testid="drawer-close">Close</Drawer.Close>
+            <button data-testid="controlled-close" onClick={() => setOpen(false)} className="text-2xl">
+              Close
+            </button>
             <div className="p-4 bg-white rounded-t-[10px] flex-1">
               <div className="mx-auto w-12 h-1.5 flex-shrink-0 rounded-full bg-zinc-300 mb-8" />
               <div className="max-w-md mx-auto">

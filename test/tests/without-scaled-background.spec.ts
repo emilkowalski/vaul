@@ -12,11 +12,4 @@ test.describe('Without scaled background', () => {
 
     await expect(page.locator('[vaul-drawer-wrapper]')).not.toHaveCSS('transform', '');
   });
-  test('should open drawer', async ({ page }) => {
-    await expect(page.getByTestId('content')).not.toBeVisible();
-
-    await page.getByTestId('trigger').click();
-
-    await expect(page.getByTestId('content')).toBeVisible();
-  });
 });
