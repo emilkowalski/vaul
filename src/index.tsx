@@ -81,7 +81,7 @@ function Root({
   const dragEndTime = React.useRef<Date | null>(null);
   const lastTimeDragPrevented = React.useRef<Date | null>(null);
   const isAllowedToDrag = React.useRef<boolean>(false);
-  const nestedOpenChangeTimer = React.useRef<NodeJS.Timeout | null>(null);
+  const nestedOpenChangeTimer = React.useRef<number | null>(null);
   const pointerStartY = React.useRef(0);
   const keyboardIsOpen = React.useRef(false);
   const previousDiffFromInitial = React.useRef(0);
