@@ -780,20 +780,7 @@ function NestedRoot({ children, onDrag, onOpenChange, ...rest }: DialogProps) {
   );
 }
 
-type DrawerType = {
-  Root: DialogProps;
-  NestedRoot: DialogProps;
-  Content: ContentProps;
-  Overlay: React.ComponentPropsWithoutRef<typeof DialogPrimitive.Overlay>;
-  Trigger: typeof DialogPrimitive.Trigger;
-  Portal: typeof DialogPrimitive.Portal;
-  Close: typeof DialogPrimitive.Close;
-  Title: typeof DialogPrimitive.Title;
-  Description: typeof DialogPrimitive.Description;
-};
-
-// @ts-ignore
-export const Drawer: DrawerType = Object.assign(
+export const Drawer = Object.assign(
   {},
   {
     Root,
