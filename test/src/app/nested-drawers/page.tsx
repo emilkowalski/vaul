@@ -7,11 +7,14 @@ export default function Page() {
     <div className="w-screen h-screen bg-white p-8 flex justify-center items-center" vaul-drawer-wrapper="">
       <Drawer.Root shouldScaleBackground>
         <Drawer.Trigger asChild>
-          <button>Open Drawer</button>
+          <button data-testid="trigger">Open Drawer</button>
         </Drawer.Trigger>
         <Drawer.Portal>
           <Drawer.Overlay className="fixed inset-0 bg-black/40" />
-          <Drawer.Content className="bg-gray-100 flex flex-col rounded-t-[10px] h-full mt-24 max-h-[96%] fixed bottom-0 left-0 right-0">
+          <Drawer.Content
+            data-testid="content"
+            className="bg-gray-100 flex flex-col rounded-t-[10px] h-full mt-24 max-h-[96%] fixed bottom-0 left-0 right-0"
+          >
             <div className="p-4 bg-white rounded-t-[10px] flex-1">
               <div className="mx-auto w-12 h-1.5 flex-shrink-0 rounded-full bg-gray-300 mb-8" />
               <div className="max-w-md mx-auto">
@@ -39,12 +42,19 @@ export default function Page() {
                   </a>
                 </p>
                 <Drawer.NestedRoot>
-                  <Drawer.Trigger className="rounded-md mb-6 w-full bg-gray-900 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-gray-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-600">
+                  <Drawer.Trigger
+                    data-testid="nested-trigger"
+                    className="rounded-md mb-6 w-full bg-gray-900 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-gray-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-600"
+                  >
                     Open Second Drawer
                   </Drawer.Trigger>
                   <Drawer.Portal>
                     <Drawer.Overlay className="fixed inset-0 bg-black/40" />
-                    <Drawer.Content className="bg-gray-100 flex flex-col rounded-t-[10px] h-full mt-24 max-h-[94%] fixed bottom-0 left-0 right-0">
+                    <Drawer.Content
+                      data-testid="nested-content"
+                      className="bg-gray-100 flex flex-col rounded-t-[10px] h-full mt-24 max-h-[94%] fixed bottom-0 left-0 right-0"
+                    >
+                      <Drawer.Close data-testid="nested-close">Close</Drawer.Close>
                       <div className="p-4 bg-white rounded-t-[10px] flex-1">
                         <div className="mx-auto w-12 h-1.5 flex-shrink-0 rounded-full bg-gray-300 mb-8" />
                         <div className="max-w-md mx-auto">

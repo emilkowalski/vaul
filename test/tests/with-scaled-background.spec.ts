@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import { openDrawer } from './helpers';
 
 test.beforeEach(async ({ page }) => {
   await page.goto('/with-scaled-background');
@@ -12,11 +13,20 @@ test.describe('With scaled background', () => {
 
     await expect(page.locator('[vaul-drawer-wrapper]')).toHaveCSS('transform', /matrix/);
   });
-  test('should open drawer', async ({ page }) => {
-    await expect(page.getByTestId('content')).not.toBeVisible();
 
-    await page.getByTestId('trigger').click();
+  test('should scale background when dragging', async ({ page }) => {
+    await expect(page.locator('[vaul-drawer-wrapper]')).not.toHaveCSS('transform', '');
 
-    await expect(page.getByTestId('content')).toBeVisible();
+    await openDrawer(page);
+
+    await page.hover('[vaul-drawer]');
+    await page.mouse.down();
+    await page.mouse.move(0, 100);
+
+    await expect(page.locator('[vaul-drawer-wrapper]')).toHaveCSS('transform', /matrix/);
+
+    await page.mouse.up();
+
+    await expect(page.locator('[vaul-drawer-wrapper]')).not.toHaveCSS('transform', '');
   });
 });

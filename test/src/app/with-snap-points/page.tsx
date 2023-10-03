@@ -4,18 +4,26 @@ import { clsx } from 'clsx';
 import { useState } from 'react';
 import { Drawer } from 'vaul';
 
+const snapPoints = ['148px', '355px', 1];
+
 export default function Page() {
-  const [snap, setSnap] = useState<number | string | null>('148px');
+  const [snap, setSnap] = useState<number | string | null>(snapPoints[0]);
+
+  const activeSnapPointIndex = snapPoints.indexOf(snap as string);
 
   return (
     <div className="w-screen h-screen bg-white p-8 flex justify-center items-center">
-      <Drawer.Root snapPoints={['148px', '355px', 1]} activeSnapPoint={snap} setActiveSnapPoint={setSnap}>
+      <div data-testid="active-snap-index">{activeSnapPointIndex}</div>
+      <Drawer.Root snapPoints={snapPoints} activeSnapPoint={snap} setActiveSnapPoint={setSnap}>
         <Drawer.Trigger asChild>
-          <button>Open Drawer</button>
+          <button data-testid="trigger">Open Drawer</button>
         </Drawer.Trigger>
         <Drawer.Overlay className="fixed inset-0 bg-black/40" />
         <Drawer.Portal>
-          <Drawer.Content className="fixed flex flex-col bg-white border border-gray-200 border-b-none rounded-t-[10px] bottom-0 left-0 right-0 h-full max-h-[97%] mx-[-1px]">
+          <Drawer.Content
+            data-testid="content"
+            className="fixed flex flex-col bg-white border border-gray-200 border-b-none rounded-t-[10px] bottom-0 left-0 right-0 h-full max-h-[97%] mx-[-1px]"
+          >
             <div
               className={clsx('flex flex-col max-w-md mx-auto w-full p-4 pt-5', {
                 'overflow-y-auto': snap === 1,
