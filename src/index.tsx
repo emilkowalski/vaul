@@ -1,7 +1,7 @@
 'use client';
 
 import * as DialogPrimitive from '@radix-ui/react-dialog';
-import React, { useCallback } from 'react';
+import React from 'react';
 import { DrawerContext, useDrawerContext } from './context';
 import './style.css';
 import { usePreventScroll, isInput, isIOS } from './use-prevent-scroll';
@@ -87,8 +87,9 @@ function Root({
   const previousDiffFromInitial = React.useRef(0);
   const drawerRef = React.useRef<HTMLDivElement>(null);
   const drawerHeightRef = React.useRef(drawerRef.current?.getBoundingClientRect().height || 0);
+  const initialDrawerHeight = React.useRef(0);
 
-  const onSnapPointChange = useCallback((activeSnapPointIndex: number) => {
+  const onSnapPointChange = React.useCallback((activeSnapPointIndex: number) => {
     // Change openTime ref when we reach the last snap point to prevent dragging for 500ms incase it's scrollable.
     if (snapPoints && activeSnapPointIndex === snapPointsOffset.length - 1) openTime.current = new Date();
   }, []);
@@ -307,6 +308,9 @@ function Root({
         // This is the height of the keyboard
         let diffFromInitial = window.innerHeight - visualViewportHeight;
         const drawerHeight = drawerRef.current.getBoundingClientRect().height || 0;
+        if (!initialDrawerHeight.current) {
+          initialDrawerHeight.current = drawerHeight;
+        }
         const offsetFromTop = drawerRef.current.getBoundingClientRect().top;
 
         // visualViewport height may change due to some subtle changes to the keyboard. Checking if the height changed by 60 or more will make sure that they keyboard really changed its open state.
@@ -335,7 +339,7 @@ function Root({
             drawerRef.current.style.height = `${Math.max(newDrawerHeight, visualViewportHeight - offsetFromTop)}px`;
           }
         } else {
-          drawerRef.current.style.height = 'initial';
+          drawerRef.current.style.height = `${initialDrawerHeight.current}px`;
         }
 
         if (snapPoints && snapPoints.length > 0 && !keyboardIsOpen.current) {
@@ -727,9 +731,9 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
       onPointerUp={onRelease}
       ref={composedRef}
       style={
-        snapPointsOffset
+        snapPointsOffset && snapPointsOffset.length > 0
           ? ({
-              '--snap-point-height': `${snapPointsOffset[0]}px`,
+              '--snap-point-height': `${snapPointsOffset[0]!}px`,
               ...style,
             } as React.CSSProperties)
           : style
