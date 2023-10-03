@@ -572,7 +572,7 @@ function Root({
     });
 
     if (!o && drawerRef.current) {
-      nestedOpenChangeTimer.current = setTimeout(() => {
+      nestedOpenChangeTimer.current = window.setTimeout(() => {
         set(drawerRef.current, {
           transition: 'none',
           transform: `translate3d(0, ${getTranslateY(drawerRef.current as HTMLElement)}px, 0)`,
