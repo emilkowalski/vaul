@@ -780,14 +780,17 @@ function NestedRoot({ children, onDrag, onOpenChange, ...rest }: DialogProps) {
   );
 }
 
-export const Drawer = {
-  Root,
-  NestedRoot,
-  Content,
-  Overlay,
-  Trigger: DialogPrimitive.Trigger,
-  Portal: DialogPrimitive.Portal,
-  Close: DialogPrimitive.Close,
-  Title: DialogPrimitive.Title,
-  Description: DialogPrimitive.Description,
-};
+export const Drawer = Object.assign(
+  {},
+  {
+    Root,
+    NestedRoot,
+    Content,
+    Overlay,
+    Trigger: DialogPrimitive.Trigger,
+    Portal: DialogPrimitive.Portal,
+    Close: DialogPrimitive.Close,
+    Title: DialogPrimitive.Title,
+    Description: DialogPrimitive.Description,
+  },
+);
