@@ -6,7 +6,7 @@ test.beforeEach(async ({ page }) => {
   await page.goto('/nested-drawers');
 });
 
-test.describe.only('Nested tests', () => {
+test.describe('Nested tests', () => {
   test('should open and close nested drawer', async ({ page }) => {
     await openDrawer(page);
     await page.getByTestId('nested-trigger').click();
