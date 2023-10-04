@@ -81,7 +81,7 @@ function Root({
   const dragEndTime = React.useRef<Date | null>(null);
   const lastTimeDragPrevented = React.useRef<Date | null>(null);
   const isAllowedToDrag = React.useRef<boolean>(false);
-  const nestedOpenChangeTimer = React.useRef<number | null>(null);
+  const nestedOpenChangeTimer = React.useRef<NodeJS.Timeout | null>(null);
   const pointerStartY = React.useRef(0);
   const keyboardIsOpen = React.useRef(false);
   const previousDiffFromInitial = React.useRef(0);
@@ -572,7 +572,7 @@ function Root({
     });
 
     if (!o && drawerRef.current) {
-      nestedOpenChangeTimer.current = window.setTimeout(() => {
+      nestedOpenChangeTimer.current = setTimeout(() => {
         set(drawerRef.current, {
           transition: 'none',
           transform: `translate3d(0, ${getTranslateY(drawerRef.current as HTMLElement)}px, 0)`,
@@ -780,17 +780,14 @@ function NestedRoot({ children, onDrag, onOpenChange, ...rest }: DialogProps) {
   );
 }
 
-export const Drawer = Object.assign(
-  {},
-  {
-    Root,
-    NestedRoot,
-    Content,
-    Overlay,
-    Trigger: DialogPrimitive.Trigger,
-    Portal: DialogPrimitive.Portal,
-    Close: DialogPrimitive.Close,
-    Title: DialogPrimitive.Title,
-    Description: DialogPrimitive.Description,
-  },
-);
+export const Drawer = {
+  Root,
+  NestedRoot,
+  Content,
+  Overlay,
+  Trigger: DialogPrimitive.Trigger,
+  Portal: DialogPrimitive.Portal,
+  Close: DialogPrimitive.Close,
+  Title: DialogPrimitive.Title,
+  Description: DialogPrimitive.Description,
+};
