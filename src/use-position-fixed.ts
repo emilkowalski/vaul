@@ -99,4 +99,6 @@ export function usePositionFixed({
       restorePositionSetting();
     }
   }, [isOpen]);
+
+  return { restorePositionSetting };
 }

@@ -117,7 +117,7 @@ function Root({
     isDisabled: !isOpen || isDragging || !modal || justReleased || !hasBeenOpened,
   });
 
-  usePositionFixed({ isOpen, modal, nested, hasBeenOpened });
+  const { restorePositionSetting } = usePositionFixed({ isOpen, modal, nested, hasBeenOpened });
 
   function getScale() {
     return (window.innerWidth - WINDOW_TOP_OFFSET) / window.innerWidth;
@@ -294,8 +294,13 @@ function Root({
     const wrapper = document.querySelector('[vaul-drawer-wrapper]');
 
     if (wrapper) {
-      return () => scaleBackground(false);
+      return () => {
+        scaleBackground(false);
+        restorePositionSetting();
+      };
     }
+
+    return restorePositionSetting;
   }, []);
 
   React.useEffect(() => {
