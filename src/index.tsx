@@ -124,7 +124,7 @@ function Root({
   }
 
   function onPress(event: React.PointerEvent<HTMLDivElement>) {
-    if (!dismissible && !snapPoints) return;
+    if ((!dismissible && !snapPoints) || isDragging) return;
     if (drawerRef.current && !drawerRef.current.contains(event.target as Node)) return;
     drawerHeightRef.current = drawerRef.current?.getBoundingClientRect().height || 0;
     setIsDragging(true);
