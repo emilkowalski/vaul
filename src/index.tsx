@@ -655,7 +655,7 @@ function Root({
 }
 
 const Overlay = React.forwardRef<HTMLDivElement, React.ComponentPropsWithoutRef<typeof DialogPrimitive.Overlay>>(
-  function ({ children, style, ...rest }, ref) {
+  function ({ children, ...rest }, ref) {
     const { overlayRef, snapPoints, onRelease, shouldFade, isOpen, visible } = useDrawerContext();
     const composedRef = useComposedRefs(ref, overlayRef);
     const hasSnapPoints = snapPoints && snapPoints.length > 0;
