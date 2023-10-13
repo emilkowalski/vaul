@@ -11,6 +11,7 @@ export default function Page() {
       <Link href="/scrollable-with-inputs">Scrollable with inputs</Link>
       <Link href="/nested-drawers">Nested drawers</Link>
       <Link href="/non-dismissible">Non-dismissible</Link>
+      <Link href="/route-based-drawer">Route based drawer</Link>
     </div>
   );
 }
