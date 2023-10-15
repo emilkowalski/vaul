@@ -299,8 +299,6 @@ function Root({
         restorePositionSetting();
       };
     }
-
-    return restorePositionSetting;
   }, []);
 
   React.useEffect(() => {
@@ -553,6 +551,7 @@ function Root({
       });
     } else {
       // Exit
+      reset(wrapper, 'overflow');
       reset(wrapper, 'transform');
       reset(wrapper, 'borderRadius');
       set(wrapper, {
