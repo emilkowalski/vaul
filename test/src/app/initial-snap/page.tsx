@@ -1,33 +1,23 @@
 'use client';
 
-import clsx from 'clsx';
-import { useRouter } from 'next/navigation';
-import { useEffect, useLayoutEffect, useState } from 'react';
+import { clsx } from 'clsx';
+import { useState } from 'react';
 import { Drawer } from 'vaul';
 
+const snapPoints = [0, '148px', '355px', 1];
+
 export default function Page() {
-  const router = useRouter();
-  const [snap, setSnap] = useState<number | null | string>(0.4);
-  const [, setOpen] = useState(false);
+  const [snap, setSnap] = useState<number | string | null>(snapPoints[1]);
 
-  const setActiveSnapPoint = (snap: number | string | null) => {
-    if (snap === 0) {
-      router.back();
-      return;
-    }
-    setSnap(snap);
-  };
-
-  useEffect(() => {
-    window.setTimeout(() => {
-      setOpen(true);
-    }, 200);
-  }, []);
+  const activeSnapPointIndex = snapPoints.indexOf(snap as string);
 
   return (
     <div className="w-screen h-screen bg-white p-8 flex justify-center items-center">
-      <div data-testid="active-snap-index">{snap}</div>
-      <Drawer.Root open snapPoints={[0, 0.4, 1]} activeSnapPoint={snap} setActiveSnapPoint={setActiveSnapPoint}>
+      <div data-testid="active-snap-index">{activeSnapPointIndex}</div>
+      <Drawer.Root open snapPoints={snapPoints} activeSnapPoint={snap} setActiveSnapPoint={setSnap}>
+        <Drawer.Trigger asChild>
+          <button data-testid="trigger">Open Drawer</button>
+        </Drawer.Trigger>
         <Drawer.Overlay className="fixed inset-0 bg-black/40" />
         <Drawer.Portal>
           <Drawer.Content
