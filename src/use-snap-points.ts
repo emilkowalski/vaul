@@ -94,7 +94,7 @@ export function useSnapPoints({
 
       setActiveSnapPoint(newSnapPointIndex !== null ? snapPoints?.[newSnapPointIndex] : null);
     },
-    [drawerRef, snapPoints, snapPointsOffset, fadeFromIndex, overlayRef, setActiveSnapPoint],
+    [drawerRef.current, snapPoints, snapPointsOffset, fadeFromIndex, overlayRef, setActiveSnapPoint],
   );
 
   React.useEffect(() => {
