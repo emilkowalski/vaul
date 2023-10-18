@@ -17,7 +17,7 @@ export function usePositionFixed({
 
   function setPositionFixed() {
     // If previousBodyPosition is already set, don't set it again.
-    if (previousBodyPosition === null) {
+    if (previousBodyPosition === null && isOpen) {
       previousBodyPosition = {
         position: document.body.style.position,
         top: document.body.style.top,
@@ -98,7 +98,7 @@ export function usePositionFixed({
     } else {
       restorePositionSetting();
     }
-  }, [isOpen]);
+  }, [isOpen, hasBeenOpened]);
 
   return { restorePositionSetting };
 }
