@@ -138,7 +138,7 @@ function Root({
     // Ensure we maintain correct pointer capture even when going outside of the drawer
     (event.target as HTMLElement).setPointerCapture(event.pointerId);
 
-    pointerStartY.current = event.clientY;
+    pointerStartY.current = event.screenY;
   }
 
   function shouldDrag(el: EventTarget, isDraggingDown: boolean) {
@@ -205,7 +205,7 @@ function Root({
   function onDrag(event: React.PointerEvent<HTMLDivElement>) {
     // We need to know how much of the drawer has been dragged in percentages so that we can transform background accordingly
     if (isDragging) {
-      const draggedDistance = pointerStartY.current - event.clientY;
+      const draggedDistance = pointerStartY.current - event.screenY;
       const isDraggingDown = draggedDistance > 0;
 
       // Disallow dragging down to close when first snap point is the active one and dismissible prop is set to false.
@@ -464,7 +464,7 @@ function Root({
 
     if (dragStartTime.current === null) return;
 
-    const y = event.clientY;
+    const y = event.screenY;
 
     const timeTaken = dragEndTime.current.getTime() - dragStartTime.current.getTime();
     const distMoved = pointerStartY.current - y;
