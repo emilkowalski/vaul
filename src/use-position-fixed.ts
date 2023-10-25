@@ -13,6 +13,7 @@ export function usePositionFixed({
   nested: boolean;
   hasBeenOpened: boolean;
 }) {
+  const [activeUrl, setActiveUrl] = React.useState(typeof window !== 'undefined' ? window.location.href : '');
   const scrollPos = React.useRef(0);
 
   function setPositionFixed() {
@@ -63,6 +64,11 @@ export function usePositionFixed({
       document.body.style.right = 'unset';
 
       requestAnimationFrame(() => {
+        if (activeUrl !== window.location.href) {
+          setActiveUrl(window.location.href);
+          return;
+        }
+
         window.scrollTo(x, y);
       });
 
@@ -98,7 +104,7 @@ export function usePositionFixed({
     } else {
       restorePositionSetting();
     }
-  }, [isOpen, hasBeenOpened]);
+  }, [isOpen, hasBeenOpened, activeUrl]);
 
   return { restorePositionSetting };
 }
