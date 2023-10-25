@@ -117,14 +117,19 @@ function Root({
     isDisabled: !isOpen || isDragging || !modal || justReleased || !hasBeenOpened,
   });
 
-  const { restorePositionSetting } = usePositionFixed({ isOpen, modal, nested, hasBeenOpened });
+  const { restorePositionSetting } = usePositionFixed({
+    isOpen,
+    modal,
+    nested,
+    hasBeenOpened,
+  });
 
   function getScale() {
     return (window.innerWidth - WINDOW_TOP_OFFSET) / window.innerWidth;
   }
 
   function onPress(event: React.PointerEvent<HTMLDivElement>) {
-    if ((!dismissible && !snapPoints) || isDragging) return;
+    if (!dismissible && !snapPoints) return;
     if (drawerRef.current && !drawerRef.current.contains(event.target as Node)) return;
     drawerHeightRef.current = drawerRef.current?.getBoundingClientRect().height || 0;
     setIsDragging(true);
