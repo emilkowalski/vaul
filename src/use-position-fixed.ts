@@ -13,7 +13,7 @@ export function usePositionFixed({
   nested: boolean;
   hasBeenOpened: boolean;
 }) {
-  const [activeUrl, setActiveUrl] = React.useState(window.location.href);
+  const [activeUrl, setActiveUrl] = React.useState(typeof window !== 'undefined' ? window.location.href : '');
   const scrollPos = React.useRef(0);
 
   function setPositionFixed() {
