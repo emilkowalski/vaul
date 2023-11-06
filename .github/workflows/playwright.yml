@@ -16,6 +16,7 @@ jobs:
       - run: npm install -g pnpm@5.3
       - run: pnpm install
       - run: pnpm build
+      - run: npx playwright install --with-deps
       - run: pnpm test || exit 1
       - uses: actions/upload-artifact@v3
         if: always()
