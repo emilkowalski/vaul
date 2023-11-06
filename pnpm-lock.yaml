@@ -23,8 +23,8 @@ importers:
 
   test:
     specifiers:
-      '@types/node': 20.5.7
-      '@types/react': 18.2.21
+      '@types/node': 20.4.2
+      '@types/react': 18.2.13
       '@types/react-dom': 18.2.7
       autoprefixer: 10.4.15
       clsx: ^2.0.0
@@ -38,8 +38,8 @@ importers:
       typescript: 5.2.2
       vaul: workspace:^
     dependencies:
-      '@types/node': 20.5.7
-      '@types/react': 18.2.21
+      '@types/node': 20.4.2
+      '@types/react': 18.2.13
       '@types/react-dom': 18.2.7
       autoprefixer: 10.4.15_postcss@8.4.29
       clsx: 2.0.0
@@ -871,10 +871,6 @@ packages:
   /@types/node/20.4.2:
     resolution: {integrity: sha512-Dd0BYtWgnWJKwO1jkmTrzofjK2QXXcai0dmtzvIBhcA+RsG5h8R3xlyta0kGOZRNfL9GuRtb1knmPEhQrePCEw==}
 
-  /@types/node/20.5.7:
-    resolution: {integrity: sha512-dP7f3LdZIysZnmvP3ANJYTSwg+wLLl8p7RqniVlV7j+oXSXAbt9h0WIBFmJy5inWZoX9wZN6eXx+YXd9Rh3RBA==}
-    dev: false
-
   /@types/prop-types/15.7.5:
     resolution: {integrity: sha512-JCB8C6SnDoQf0cNycqd/35A7MjcnK+ZTqE7judS6o7utxUCg6imJg3QK2qzHKszlTjcj2cn+NwMB2i96ubpj7w==}
     dev: false
@@ -883,6 +879,14 @@ packages:
     resolution: {integrity: sha512-GRaAEriuT4zp9N4p1i8BDBYmEyfo+xQ3yHjJU4eiK5NDa1RmUZG+unZABUTK4/Ox/M+GaHwb6Ow8rUITrtjszA==}
     dependencies:
       '@types/react': 18.2.21
+    dev: false
+
+  /@types/react/18.2.13:
+    resolution: {integrity: sha512-vJ+zElvi/Zn9cVXB5slX2xL8PZodPCwPRDpittQdw43JR2AJ5k3vKdgJJyneV/cYgIbLQUwXa9JVDvUZXGba+Q==}
+    dependencies:
+      '@types/prop-types': 15.7.5
+      '@types/scheduler': 0.16.3
+      csstype: 3.1.2
     dev: false
 
   /@types/react/18.2.15:
