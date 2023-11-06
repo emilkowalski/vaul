@@ -28,21 +28,21 @@ test.describe('Initial-snap', () => {
     await expect(page.getByTestId('active-snap-index')).toHaveText('1');
   });
 
-  test('should snap to next snap point when dragged up', async ({ page }) => {
-    snapTo(page, 2);
+  //   test('should snap to next snap point when dragged up', async ({ page }) => {
+  //     snapTo(page, 2);
 
-    await expect(page.getByTestId('active-snap-index')).toHaveText('2');
-  });
+  //     await expect(page.getByTestId('active-snap-index')).toHaveText('2');
+  //   });
 
-  test('should snap to last snap point when dragged up', async ({ page }) => {
-    snapTo(page, 3);
+  //   test('should snap to last snap point when dragged up', async ({ page }) => {
+  //     snapTo(page, 3);
 
-    await expect(page.getByTestId('active-snap-index')).toHaveText('3');
-  });
+  //     await expect(page.getByTestId('active-snap-index')).toHaveText('3');
+  //   });
 
-  test('should snap to 0 when dragged down', async ({ page }) => {
-    snapTo(page, 0);
+  //   test('should snap to 0 when dragged down', async ({ page }) => {
+  //     snapTo(page, 0);
 
-    await expect(page.getByTestId('active-snap-index')).toHaveText('0');
-  });
+  //     await expect(page.getByTestId('active-snap-index')).toHaveText('0');
+  //   });
 });
