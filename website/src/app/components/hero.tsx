@@ -1,8 +1,11 @@
 'use client';
 
+import { useState } from 'react';
 import { Drawer } from 'vaul';
 
 export function Hero() {
+  const [open, setOpen] = useState(false);
+
   return (
     <div className="relative">
       <div

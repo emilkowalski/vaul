@@ -613,6 +613,11 @@ function Root({
     <DialogPrimitive.Root
       modal={modal}
       onOpenChange={(o: boolean) => {
+        if (openProp !== undefined) {
+          onOpenChange?.(o);
+          return;
+        }
+
         if (!o) {
           closeDrawer();
         } else {
@@ -631,6 +636,7 @@ function Root({
           drawerRef,
           overlayRef,
           scaleBackground,
+          onOpenChange,
           onPress,
           setVisible,
           onRelease,
@@ -643,6 +649,7 @@ function Root({
           onNestedOpenChange,
           onNestedRelease,
           keyboardIsOpen,
+          openProp,
           modal,
           snapPointsOffset,
         }}
@@ -694,6 +701,8 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
     visible,
     closeDrawer,
     modal,
+    openProp,
+    onOpenChange,
     setVisible,
   } = useDrawerContext();
   const composedRef = useComposedRefs(ref, drawerRef);
@@ -723,8 +732,8 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
           keyboardIsOpen.current = false;
         }
         e.preventDefault();
-
-        if (!dismissible) {
+        onOpenChange?.(false);
+        if (!dismissible || openProp !== undefined) {
           return;
         }
 
