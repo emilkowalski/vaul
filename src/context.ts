@@ -22,6 +22,8 @@ interface DrawerContextValue {
   visible: boolean;
   closeDrawer: () => void;
   setVisible: (o: boolean) => void;
+  openProp?: boolean;
+  onOpenChange?: (o: boolean) => void;
 }
 
 export const DrawerContext = React.createContext<DrawerContextValue>({
@@ -34,6 +36,7 @@ export const DrawerContext = React.createContext<DrawerContextValue>({
   onNestedDrag: () => {},
   onNestedOpenChange: () => {},
   onNestedRelease: () => {},
+  openProp: undefined,
   dismissible: false,
   isOpen: false,
   keyboardIsOpen: { current: false },
@@ -42,6 +45,7 @@ export const DrawerContext = React.createContext<DrawerContextValue>({
   modal: false,
   shouldFade: false,
   activeSnapPoint: null,
+  onOpenChange: () => {},
   setActiveSnapPoint: () => {},
   visible: false,
   closeDrawer: () => {},
