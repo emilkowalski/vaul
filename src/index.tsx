@@ -21,6 +21,8 @@ const NESTED_DISPLACEMENT = 16;
 
 const WINDOW_TOP_OFFSET = 26;
 
+const TOUCH_ACTION_CLASS = 'disableTouchAction';
+
 interface WithFadeFromProps {
   snapPoints: (number | string)[];
   fadeFromIndex: number;
@@ -139,7 +141,7 @@ function Root({
     if (isIOS()) {
       window.addEventListener('touchend', () => (isAllowedToDrag.current = false), { once: true });
     }
-
+    window.addEventListener('pointermove', () => console.log('xD'));
     // Ensure we maintain correct pointer capture even when going outside of the drawer
     (event.target as HTMLElement).setPointerCapture(event.pointerId);
 
@@ -217,7 +219,7 @@ function Root({
       if (snapPoints && activeSnapPointIndex === 0 && !dismissible) return;
 
       if (!isAllowedToDrag.current && !shouldDrag(event.target, isDraggingDown)) return;
-
+      drawerRef.current.classList.add(TOUCH_ACTION_CLASS);
       // If shouldDrag gave true once after pressing down on the drawer, we set isAllowedToDrag to true and it will remain true until we let go, there's no reason to disable dragging mid way, ever, and that's the solution to it
       isAllowedToDrag.current = true;
       set(drawerRef.current, {
@@ -459,7 +461,7 @@ function Root({
       // If we were just dragging, prevent focusing on inputs etc. on release
       (event.target as HTMLInputElement).blur();
     }
-
+    drawerRef.current.classList.remove(TOUCH_ACTION_CLASS);
     isAllowedToDrag.current = false;
     setIsDragging(false);
     dragEndTime.current = new Date();

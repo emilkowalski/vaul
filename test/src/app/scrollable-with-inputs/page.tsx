@@ -12,7 +12,7 @@ export default function Page() {
         <Drawer.Portal>
           <Drawer.Overlay className="fixed inset-0 bg-black/40" />
           <Drawer.Content className="bg-white flex flex-col fixed bottom-0 left-0 right-0 max-h-[82vh] rounded-t-[10px]">
-            <div className="max-w-md w-full mx-auto flex flex-col overflow-auto p-4 rounded-t-[10px]">
+            <div className="max-w-md w-full mx-auto overflow-auto p-4 rounded-t-[10px]">
               <input className="border border-gray-400 my-8" placeholder="Input" />
               <p>
                 But I must explain to you how all this mistaken idea of denouncing pleasure and praising pain was born
