@@ -12,6 +12,7 @@ export default function Page() {
       <Link href="/nested-drawers">Nested drawers</Link>
       <Link href="/non-dismissible">Non-dismissible</Link>
       <Link href="/initial-snap">Initial snap</Link>
+      <Link href="/controlled">Controlled</Link>
     </div>
   );
 }

@@ -724,6 +724,7 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
       }}
       onPointerDown={onPress}
       onPointerDownOutside={(e) => {
+        onPointerDownOutside?.(e);
         if (!modal) {
           e.preventDefault();
           return;
@@ -738,7 +739,6 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
         }
 
         closeDrawer();
-        onPointerDownOutside?.(e);
       }}
       onPointerMove={onDrag}
       onPointerUp={onRelease}
