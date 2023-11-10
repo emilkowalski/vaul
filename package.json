@@ -1,6 +1,6 @@
 {
   "name": "vaul",
-  "version": "0.7.8",
+  "version": "0.7.9",
   "description": "Drawer component for React.",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
