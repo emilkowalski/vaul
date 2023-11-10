@@ -13,7 +13,7 @@ import { TRANSITIONS, VELOCITY_THRESHOLD } from './constants';
 
 const CLOSE_THRESHOLD = 0.25;
 
-const SCROLL_LOCK_TIMEOUT = 0;
+const SCROLL_LOCK_TIMEOUT = 500;
 
 const BORDER_RADIUS = 8;
 
@@ -177,26 +177,26 @@ function Root({
       return false;
     }
 
+    if (isDraggingDown) {
+      lastTimeDragPrevented.current = new Date();
+
+      // We are dragging down so we should allow scrolling
+      return false;
+    }
+
     // Keep climbing up the DOM tree as long as there's a parent
     while (element) {
       // Check if the element is scrollable
       if (element.scrollHeight > element.clientHeight) {
-        if (element.getAttribute('role') === 'dialog') {
-          return true;
-        }
-
-        if (isDraggingDown && element !== document.body && !swipeAmount && swipeAmount >= 0) {
-          lastTimeDragPrevented.current = new Date();
-
-          // Element is scrolled to the top, but we are dragging down so we should allow scrolling
-          return false;
-        }
-
         if (element.scrollTop !== 0) {
           lastTimeDragPrevented.current = new Date();
 
           // The element is scrollable and not scrolled to the top, so don't drag
           return false;
+        }
+
+        if (element.getAttribute('role') === 'dialog') {
+          return true;
         }
       }
 
