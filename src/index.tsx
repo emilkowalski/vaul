@@ -13,13 +13,15 @@ import { TRANSITIONS, VELOCITY_THRESHOLD } from './constants';
 
 const CLOSE_THRESHOLD = 0.25;
 
-const SCROLL_LOCK_TIMEOUT = 500;
+const SCROLL_LOCK_TIMEOUT = 100;
 
 const BORDER_RADIUS = 8;
 
 const NESTED_DISPLACEMENT = 16;
 
 const WINDOW_TOP_OFFSET = 26;
+
+const DRAG_CLASS = 'vaul-dragging';
 
 interface WithFadeFromProps {
   snapPoints: (number | string)[];
@@ -139,7 +141,6 @@ function Root({
     if (isIOS()) {
       window.addEventListener('touchend', () => (isAllowedToDrag.current = false), { once: true });
     }
-
     // Ensure we maintain correct pointer capture even when going outside of the drawer
     (event.target as HTMLElement).setPointerCapture(event.pointerId);
 
@@ -176,26 +177,26 @@ function Root({
       return false;
     }
 
+    if (isDraggingDown) {
+      lastTimeDragPrevented.current = new Date();
+
+      // We are dragging down so we should allow scrolling
+      return false;
+    }
+
     // Keep climbing up the DOM tree as long as there's a parent
     while (element) {
       // Check if the element is scrollable
       if (element.scrollHeight > element.clientHeight) {
-        if (element.getAttribute('role') === 'dialog') {
-          return true;
-        }
-
-        if (isDraggingDown && element !== document.body && !swipeAmount && swipeAmount >= 0) {
-          lastTimeDragPrevented.current = new Date();
-
-          // Element is scrolled to the top, but we are dragging down so we should allow scrolling
-          return false;
-        }
-
         if (element.scrollTop !== 0) {
           lastTimeDragPrevented.current = new Date();
 
           // The element is scrollable and not scrolled to the top, so don't drag
           return false;
+        }
+
+        if (element.getAttribute('role') === 'dialog') {
+          return true;
         }
       }
 
@@ -217,7 +218,7 @@ function Root({
       if (snapPoints && activeSnapPointIndex === 0 && !dismissible) return;
 
       if (!isAllowedToDrag.current && !shouldDrag(event.target, isDraggingDown)) return;
-
+      drawerRef.current.classList.add(DRAG_CLASS);
       // If shouldDrag gave true once after pressing down on the drawer, we set isAllowedToDrag to true and it will remain true until we let go, there's no reason to disable dragging mid way, ever, and that's the solution to it
       isAllowedToDrag.current = true;
       set(drawerRef.current, {
@@ -459,7 +460,7 @@ function Root({
       // If we were just dragging, prevent focusing on inputs etc. on release
       (event.target as HTMLInputElement).blur();
     }
-
+    drawerRef.current.classList.remove(DRAG_CLASS);
     isAllowedToDrag.current = false;
     setIsDragging(false);
     dragEndTime.current = new Date();
@@ -525,6 +526,19 @@ function Root({
       scaleBackground(true);
     }
   }, [isOpen]);
+
+  React.useEffect(() => {
+    if (visible && visible) {
+      // Find all scrollable elements inside our drawer and assign a class to it so that we can disable overflow when dragging to prevent pointermove not being captured
+      const children = drawerRef.current.querySelectorAll('*');
+      children.forEach((child: Element) => {
+        const htmlChild = child as HTMLElement;
+        if (htmlChild.scrollHeight > htmlChild.clientHeight || htmlChild.scrollWidth > htmlChild.clientWidth) {
+          htmlChild.classList.add('vaul-scrollable');
+        }
+      });
+    }
+  }, [visible]);
 
   function scaleBackground(open: boolean) {
     const wrapper = document.querySelector('[vaul-drawer-wrapper]');

@@ -4,6 +4,10 @@
   transition: transform 0.5s cubic-bezier(0.32, 0.72, 0, 1);
 }
 
+.vaul-dragging .vaul-scrollable {
+  overflow-y: hidden !important;
+}
+
 [vaul-drawer][vaul-drawer-visible='true'] {
   transform: translate3d(0, var(--snap-point-height, 0), 0);
 }
