@@ -13,7 +13,7 @@ import { TRANSITIONS, VELOCITY_THRESHOLD } from './constants';
 
 const CLOSE_THRESHOLD = 0.25;
 
-const SCROLL_LOCK_TIMEOUT = 500;
+const SCROLL_LOCK_TIMEOUT = 100;
 
 const BORDER_RADIUS = 8;
 
