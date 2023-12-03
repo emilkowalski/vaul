@@ -149,9 +149,9 @@ function Root({
 
   function shouldDrag(el: EventTarget, isDraggingDown: boolean) {
     let element = el as HTMLElement;
-    const date = new Date();
     const highlightedText = window.getSelection()?.toString();
     const swipeAmount = drawerRef.current ? getTranslateY(drawerRef.current) : null;
+    const date = new Date();
 
     // Allow scrolling when animating
     if (openTime.current && date.getTime() - openTime.current.getTime() < 500) {
@@ -173,12 +173,12 @@ function Root({
       date.getTime() - lastTimeDragPrevented.current.getTime() < scrollLockTimeout &&
       swipeAmount === 0
     ) {
-      lastTimeDragPrevented.current = new Date();
+      lastTimeDragPrevented.current = date;
       return false;
     }
 
     if (isDraggingDown) {
-      lastTimeDragPrevented.current = new Date();
+      lastTimeDragPrevented.current = date;
 
       // We are dragging down so we should allow scrolling
       return false;
@@ -234,7 +234,7 @@ function Root({
       }
 
       // Run this only if snapPoints are not defined or if we are at the last snap point (highest one)
-      if (draggedDistance > 0 && !snapPoints) {
+      if (isDraggingDown && !snapPoints) {
         const dampenedDraggedDistance = dampenValue(draggedDistance);
 
         set(drawerRef.current, {
@@ -363,19 +363,17 @@ function Root({
     if (!drawerRef.current) return;
 
     onClose?.();
-    if (drawerRef.current) {
-      set(drawerRef.current, {
-        transform: `translate3d(0, 100%, 0)`,
-        transition: `transform ${TRANSITIONS.DURATION}s cubic-bezier(${TRANSITIONS.EASE.join(',')})`,
-      });
+    set(drawerRef.current, {
+      transform: `translate3d(0, 100%, 0)`,
+      transition: `transform ${TRANSITIONS.DURATION}s cubic-bezier(${TRANSITIONS.EASE.join(',')})`,
+    });
 
-      set(overlayRef.current, {
-        opacity: '0',
-        transition: `opacity ${TRANSITIONS.DURATION}s cubic-bezier(${TRANSITIONS.EASE.join(',')})`,
-      });
+    set(overlayRef.current, {
+      opacity: '0',
+      transition: `opacity ${TRANSITIONS.DURATION}s cubic-bezier(${TRANSITIONS.EASE.join(',')})`,
+    });
 
-      scaleBackground(false);
-    }
+    scaleBackground(false);
 
     setTimeout(() => {
       setVisible(false);
@@ -386,7 +384,7 @@ function Root({
       if (snapPoints) {
         setActiveSnapPoint(snapPoints[0]);
       }
-    }, 500);
+    }, TRANSITIONS.DURATION * 1000); // seconds to ms
   }
 
   React.useEffect(() => {
@@ -470,10 +468,8 @@ function Root({
 
     if (dragStartTime.current === null) return;
 
-    const y = event.screenY;
-
     const timeTaken = dragEndTime.current.getTime() - dragStartTime.current.getTime();
-    const distMoved = pointerStartY.current - y;
+    const distMoved = pointerStartY.current - event.screenY;
     const velocity = Math.abs(distMoved) / timeTaken;
 
     if (velocity > 0.05) {
@@ -507,7 +503,7 @@ function Root({
       return;
     }
 
-    const visibleDrawerHeight = Math.min(drawerRef.current.getBoundingClientRect().height || 0, window.innerHeight);
+    const visibleDrawerHeight = Math.min(drawerRef.current.getBoundingClientRect().height ?? 0, window.innerHeight);
 
     if (swipeAmount >= visibleDrawerHeight * closeThreshold) {
       closeDrawer();
@@ -528,7 +524,7 @@ function Root({
   }, [isOpen]);
 
   React.useEffect(() => {
-    if (visible && visible) {
+    if (visible) {
       // Find all scrollable elements inside our drawer and assign a class to it so that we can disable overflow when dragging to prevent pointermove not being captured
       const children = drawerRef.current.querySelectorAll('*');
       children.forEach((child: Element) => {
@@ -701,7 +697,7 @@ type ContentProps = React.ComponentPropsWithoutRef<typeof DialogPrimitive.Conten
 };
 
 const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
-  { children, onOpenAutoFocus, onPointerDownOutside, onAnimationEnd, style, ...rest },
+  { onOpenAutoFocus, onPointerDownOutside, onAnimationEnd, style, ...rest },
   ref,
 ) {
   const {
@@ -768,15 +764,13 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
       {...rest}
       vaul-drawer=""
       vaul-drawer-visible={visible ? 'true' : 'false'}
-    >
-      {children}
-    </DialogPrimitive.Content>
+    />
   );
 });
 
 Content.displayName = 'Drawer.Content';
 
-function NestedRoot({ children, onDrag, onOpenChange, ...rest }: DialogProps) {
+function NestedRoot({ onDrag, onOpenChange, ...rest }: DialogProps) {
   const { onNestedDrag, onNestedOpenChange, onNestedRelease } = useDrawerContext();
 
   if (!onNestedDrag) {
@@ -801,9 +795,7 @@ function NestedRoot({ children, onDrag, onOpenChange, ...rest }: DialogProps) {
       }}
       onRelease={onNestedRelease}
       {...rest}
-    >
-      {children}
-    </Root>
+    />
   );
 }
 
