@@ -490,6 +490,7 @@ function Root({
         draggedDistance: distMoved,
         closeDrawer,
         velocity,
+        dismissible,
       });
       return;
     }
