@@ -110,16 +110,19 @@ export function useSnapPoints({
     draggedDistance,
     closeDrawer,
     velocity,
+    dismissible,
   }: {
     draggedDistance: number;
     closeDrawer: () => void;
     velocity: number;
+    dismissible: boolean;
   }) {
     if (fadeFromIndex === undefined) return;
 
     const currentPosition = activeSnapPointOffset - draggedDistance;
     const isOverlaySnapPoint = activeSnapPointIndex === fadeFromIndex - 1;
     const isFirst = activeSnapPointIndex === 0;
+    const hasDraggedUp = draggedDistance > 0;
 
     if (isOverlaySnapPoint) {
       set(overlayRef.current, {
@@ -127,12 +130,13 @@ export function useSnapPoints({
       });
     }
 
-    if (velocity > 2 && draggedDistance < 0) {
-      closeDrawer();
+    if (velocity > 2 && !hasDraggedUp) {
+      if (dismissible) closeDrawer();
+      else snapToPoint(snapPointsOffset[0]); // snap to initial point
       return;
     }
 
-    if (velocity > 2 && draggedDistance > 0 && snapPointsOffset && snapPoints) {
+    if (velocity > 2 && hasDraggedUp && snapPointsOffset && snapPoints) {
       snapToPoint(snapPointsOffset[snapPoints.length - 1] as number);
       return;
     }
@@ -145,8 +149,7 @@ export function useSnapPoints({
     });
 
     if (velocity > VELOCITY_THRESHOLD && Math.abs(draggedDistance) < window.innerHeight * 0.4) {
-      // -1 = down, 1 = up, might need a better name
-      const dragDirection = draggedDistance > 0 ? 1 : -1;
+      const dragDirection = hasDraggedUp ? 1 : -1; // 1 = up, -1 = down
 
       // Don't do anything if we swipe upwards while being on the last snap point
       if (dragDirection > 0 && isLastSnapPoint) {
@@ -154,7 +157,7 @@ export function useSnapPoints({
         return;
       }
 
-      if (isFirst && dragDirection < 0) {
+      if (isFirst && dragDirection < 0 && dismissible) {
         closeDrawer();
       }
 

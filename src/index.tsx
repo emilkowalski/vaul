@@ -490,7 +490,9 @@ function Root({
         draggedDistance: distMoved,
         closeDrawer,
         velocity,
+        dismissible,
       });
+      onReleaseProp?.(event, true);
       return;
     }
 
