@@ -492,6 +492,7 @@ function Root({
         velocity,
         dismissible,
       });
+      onReleaseProp?.(event, true);
       return;
     }
 
