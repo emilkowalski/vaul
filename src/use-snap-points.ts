@@ -32,7 +32,11 @@ export function useSnapPoints({
   );
 
   const shouldFade =
-    (snapPoints && snapPoints.length > 0 && fadeFromIndex && snapPoints[fadeFromIndex] === activeSnapPoint) ||
+    (snapPoints &&
+        snapPoints.length > 0 &&
+        (fadeFromIndex || fadeFromIndex === 0) &&
+        !Number.isNaN(fadeFromIndex) &&
+        snapPoints[fadeFromIndex] === activeSnapPoint) ||
     !snapPoints;
 
   const activeSnapPointIndex = React.useMemo(
