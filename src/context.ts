@@ -12,6 +12,7 @@ interface DrawerContextValue {
   onNestedRelease: (event: React.PointerEvent<HTMLDivElement>, open: boolean) => void;
   dismissible: boolean;
   isOpen: boolean;
+  isDragging: false;
   keyboardIsOpen: React.MutableRefObject<boolean>;
   snapPointsOffset: number[] | null;
   snapPoints?: (number | string)[] | null;
@@ -39,6 +40,7 @@ export const DrawerContext = React.createContext<DrawerContextValue>({
   openProp: undefined,
   dismissible: false,
   isOpen: false,
+  isDragging: false,
   keyboardIsOpen: { current: false },
   snapPointsOffset: null,
   snapPoints: null,

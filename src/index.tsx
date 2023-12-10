@@ -655,6 +655,7 @@ function Root({
           onDrag,
           dismissible,
           isOpen,
+          isDragging,
           shouldFade,
           closeDrawer,
           onNestedDrag,
@@ -671,6 +672,42 @@ function Root({
     </DialogPrimitive.Root>
   );
 }
+
+type HandleProps = React.HTMLAttributes<HTMLSpanElement> & {
+  preventCycle?: boolean;
+};
+
+const Handle = React.forwardRef<HTMLSpanElement, HandleProps>(({ preventCycle = false, ...rest }, ref) => {
+  const { visible, closeDrawer, isDragging, snapPoints, activeSnapPoint, setActiveSnapPoint, dismissible } =
+    useDrawerContext();
+
+  function handleCycleSnapPoints() {
+    // Prevent accidental taps while resizing drawer
+    if (isDragging || preventCycle) return;
+
+    const isLastSnapPoint = activeSnapPoint === snapPoints?.[snapPoints?.length - 1] ?? null;
+    if (!snapPoints || (isLastSnapPoint && dismissible)) {
+      closeDrawer();
+      return;
+    }
+
+    const nextSnapPoint = snapPoints[snapPoints.findIndex((point) => point === activeSnapPoint) + 1];
+    setActiveSnapPoint(nextSnapPoint);
+  }
+
+  return (
+    <span
+      onClick={handleCycleSnapPoints}
+      onDoubleClick={closeDrawer}
+      ref={ref}
+      vaul-drawer-visible={visible ? 'true' : 'false'}
+      vaul-handle=""
+      aria-hidden="true"
+      {...rest}
+    />
+  );
+});
+Handle.displayName = 'Drawer.Handle';
 
 const Overlay = React.forwardRef<HTMLDivElement, React.ComponentPropsWithoutRef<typeof DialogPrimitive.Overlay>>(
   function ({ children, ...rest }, ref) {
@@ -805,6 +842,7 @@ export const Drawer = {
   Root,
   NestedRoot,
   Content,
+  Handle,
   Overlay,
   Trigger: DialogPrimitive.Trigger,
   Portal: DialogPrimitive.Portal,

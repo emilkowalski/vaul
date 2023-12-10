@@ -21,6 +21,7 @@ function MyComponent() {
       <Drawer.Trigger>Open</Drawer.Trigger>
       <Drawer.Portal>
         <Drawer.Content>
+          <Drawer.Handle />
           <p>Content</p>
         </Drawer.Content>
         <Drawer.Overlay />
@@ -52,13 +53,13 @@ Additional props:
 
 `closeThreshold`: Number between 0 and 1 that determines when the drawer should be closed. Example: threshold of 0.5 would close the drawer if the user swiped for 50% of the height of the drawer or more.
 
-`scrollLockTimeout`: Duration for which the drawer is not draggable after scrolling content inside of the drawer. Defaults to 500ms
+`scrollLockTimeout`: Duration for which the drawer is not draggable after scrolling content inside of the drawer. Defaults to 500ms.
 
 `snapPoints`: Array of numbers from 0 to 100 that corresponds to % of the screen a given snap point should take up. Should go from least visible. Example `[0.2, 0.5, 0.8]`. You can also use px values, which doesn't take screen height into account.
 
 `fadeFromIndex`: Index of a `snapPoint` from which the overlay fade should be applied. Defaults to the last snap point.
 
-`modal`: When `false`it allows to interact with elements outside of the drawer without closing it. Defaults to`true`.
+`modal`: When `false` it allows to interact with elements outside of the drawer without closing it. Defaults to `true`.
 
 ### Trigger
 
@@ -83,6 +84,10 @@ An optional accessible description to be announced when the dialog is opened. [P
 ### Close
 
 The button that closes the dialog. [Props](https://www.radix-ui.com/docs/primitives/components/dialog#close).
+
+### Handle
+
+A drag hint (also known as grabber). Shows people that they can drag the drawer to resize it; they can also tap it to cycle through the snap points, and double tap quickly to close the drawer. Set `preventCycle={false}` to stop this default behavior.
 
 ### Portal
 
