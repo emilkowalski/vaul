@@ -87,7 +87,7 @@ The button that closes the dialog. [Props](https://www.radix-ui.com/docs/primiti
 
 ### Handle
 
-A drag hint (also known as grabber). Shows people that they can drag the drawer to resize it; they can also tap it to cycle through the snap points, and double tap quickly to close the drawer. Set `preventCycle={false}` to stop this default behavior.
+A drag hint (also known as grabber). Shows people that they can drag the drawer to resize it; they can also tap it to cycle through the snap points, and double tap quickly to close the drawer. Set `preventCycle={true}` to stop this default behavior.
 
 ### Portal
 
