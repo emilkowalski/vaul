@@ -11,6 +11,7 @@ export function useSnapPoints({
   overlayRef,
   fadeFromIndex,
   onSnapPointChange,
+  direction = 'bottom',
 }: {
   activeSnapPointProp?: number | string | null;
   setActiveSnapPointProp?(snapPoint: number | null | string): void;
@@ -19,6 +20,7 @@ export function useSnapPoints({
   drawerRef: React.RefObject<HTMLDivElement>;
   overlayRef: React.RefObject<HTMLDivElement>;
   onSnapPointChange(activeSnapPointIndex: number): void;
+  direction?: 'top' | 'bottom';
 }) {
   const [activeSnapPoint, setActiveSnapPoint] = useControllableState<string | number | null>({
     prop: activeSnapPointProp,
@@ -58,7 +60,7 @@ export function useSnapPoints({
         const height = isPx ? snapPointAsNumber : hasWindow ? snapPoint * window.innerHeight : 0;
 
         if (hasWindow) {
-          return window.innerHeight - height;
+          return direction === 'bottom' ? window.innerHeight - height : -window.innerHeight + height;
         }
 
         return height;
@@ -123,7 +125,8 @@ export function useSnapPoints({
   }) {
     if (fadeFromIndex === undefined) return;
 
-    const currentPosition = activeSnapPointOffset - draggedDistance;
+    const currentPosition =
+      direction === 'bottom' ? activeSnapPointOffset - draggedDistance : activeSnapPointOffset + draggedDistance;
     const isOverlaySnapPoint = activeSnapPointIndex === fadeFromIndex - 1;
     const isFirst = activeSnapPointIndex === 0;
     const hasDraggedUp = draggedDistance > 0;
@@ -176,7 +179,8 @@ export function useSnapPoints({
 
   function onDrag({ draggedDistance }: { draggedDistance: number }) {
     if (activeSnapPointOffset === null) return;
-    const newYValue = activeSnapPointOffset - draggedDistance;
+    const newYValue =
+      direction === 'bottom' ? activeSnapPointOffset - draggedDistance : activeSnapPointOffset + draggedDistance;
 
     set(drawerRef.current, {
       transform: `translate3d(0, ${newYValue}px, 0)`,
