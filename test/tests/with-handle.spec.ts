@@ -21,6 +21,8 @@ test.describe('With handle', () => {
   });
 
   test('Double click should close the drawer', async ({ page }) => {
+    await page.waitForTimeout(ANIMATION_DURATION);
+
     await expect(page.getByTestId('content')).toBeVisible();
     await page.getByTestId('handle').dblclick();
 
