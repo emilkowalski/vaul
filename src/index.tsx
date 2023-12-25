@@ -8,7 +8,7 @@ import { usePreventScroll, isInput, isIOS } from './use-prevent-scroll';
 import { useComposedRefs } from './use-composed-refs';
 import { usePositionFixed } from './use-position-fixed';
 import { useSnapPoints } from './use-snap-points';
-import { set, reset, getTranslateY, dampenValue } from './helpers';
+import { set, reset, getTranslate, dampenValue, isVertical } from './helpers';
 import { TRANSITIONS, VELOCITY_THRESHOLD } from './constants';
 
 const CLOSE_THRESHOLD = 0.25;
@@ -49,6 +49,7 @@ type DialogProps = {
   modal?: boolean;
   nested?: boolean;
   onClose?: () => void;
+  direction?: 'top' | 'bottom' | 'left' | 'right';
 } & (WithFadeFromProps | WithoutFadeFromProps);
 
 function Root({
@@ -69,6 +70,7 @@ function Root({
   fixed,
   modal = true,
   onClose,
+  direction = 'bottom',
 }: DialogProps) {
   const [isOpen = false, setIsOpen] = React.useState<boolean>(false);
   const [hasBeenOpened, setHasBeenOpened] = React.useState<boolean>(false);
@@ -84,7 +86,7 @@ function Root({
   const lastTimeDragPrevented = React.useRef<Date | null>(null);
   const isAllowedToDrag = React.useRef<boolean>(false);
   const nestedOpenChangeTimer = React.useRef<NodeJS.Timeout | null>(null);
-  const pointerStartY = React.useRef(0);
+  const pointerStart = React.useRef(0);
   const keyboardIsOpen = React.useRef(false);
   const previousDiffFromInitial = React.useRef(0);
   const drawerRef = React.useRef<HTMLDivElement>(null);
@@ -113,6 +115,7 @@ function Root({
     fadeFromIndex,
     overlayRef,
     onSnapPointChange,
+    direction,
   });
 
   usePreventScroll({
@@ -144,13 +147,13 @@ function Root({
     // Ensure we maintain correct pointer capture even when going outside of the drawer
     (event.target as HTMLElement).setPointerCapture(event.pointerId);
 
-    pointerStartY.current = event.screenY;
+    pointerStart.current = isVertical(direction) ? event.screenY : event.screenX;
   }
 
-  function shouldDrag(el: EventTarget, isDraggingDown: boolean) {
+  function shouldDrag(el: EventTarget, isDraggingInDirection: boolean) {
     let element = el as HTMLElement;
     const highlightedText = window.getSelection()?.toString();
-    const swipeAmount = drawerRef.current ? getTranslateY(drawerRef.current) : null;
+    const swipeAmount = drawerRef.current ? getTranslate(drawerRef.current, direction) : null;
     const date = new Date();
 
     // Allow scrolling when animating
@@ -158,7 +161,7 @@ function Root({
       return false;
     }
 
-    if (swipeAmount > 0) {
+    if (direction === 'bottom' || direction === 'right' ? swipeAmount > 0 : swipeAmount < 0) {
       return true;
     }
 
@@ -177,7 +180,7 @@ function Root({
       return false;
     }
 
-    if (isDraggingDown) {
+    if (isDraggingInDirection) {
       lastTimeDragPrevented.current = date;
 
       // We are dragging down so we should allow scrolling
@@ -211,13 +214,15 @@ function Root({
   function onDrag(event: React.PointerEvent<HTMLDivElement>) {
     // We need to know how much of the drawer has been dragged in percentages so that we can transform background accordingly
     if (isDragging) {
-      const draggedDistance = pointerStartY.current - event.screenY;
-      const isDraggingDown = draggedDistance > 0;
+      const directionMultiplier = direction === 'bottom' || direction === 'right' ? 1 : -1;
+      const draggedDistance =
+        (pointerStart.current - (isVertical(direction) ? event.screenY : event.screenX)) * directionMultiplier;
+      const isDraggingInDirection = draggedDistance > 0;
 
       // Disallow dragging down to close when first snap point is the active one and dismissible prop is set to false.
       if (snapPoints && activeSnapPointIndex === 0 && !dismissible) return;
 
-      if (!isAllowedToDrag.current && !shouldDrag(event.target, isDraggingDown)) return;
+      if (!isAllowedToDrag.current && !shouldDrag(event.target, isDraggingInDirection)) return;
       drawerRef.current.classList.add(DRAG_CLASS);
       // If shouldDrag gave true once after pressing down on the drawer, we set isAllowedToDrag to true and it will remain true until we let go, there's no reason to disable dragging mid way, ever, and that's the solution to it
       isAllowedToDrag.current = true;
@@ -234,11 +239,14 @@ function Root({
       }
 
       // Run this only if snapPoints are not defined or if we are at the last snap point (highest one)
-      if (isDraggingDown && !snapPoints) {
+      if (isDraggingInDirection && !snapPoints) {
         const dampenedDraggedDistance = dampenValue(draggedDistance);
 
+        const translateValue = Math.min(dampenedDraggedDistance * -1, 0) * directionMultiplier;
         set(drawerRef.current, {
-          transform: `translate3d(0, ${Math.min(dampenedDraggedDistance * -1, 0)}px, 0)`,
+          transform: isVertical(direction)
+            ? `translate3d(0, ${translateValue}px, 0)`
+            : `translate3d(${translateValue}px, 0, 0)`,
         });
         return;
       }
@@ -248,7 +256,7 @@ function Root({
       const wrapper = document.querySelector('[vaul-drawer-wrapper]');
 
       let percentageDragged = absDraggedDistance / drawerHeightRef.current;
-      const snapPointPercentageDragged = getSnapPointsPercentageDragged(absDraggedDistance, isDraggingDown);
+      const snapPointPercentageDragged = getSnapPointsPercentageDragged(absDraggedDistance, isDraggingInDirection);
 
       if (snapPointPercentageDragged !== null) {
         percentageDragged = snapPointPercentageDragged;
@@ -274,13 +282,15 @@ function Root({
         const scaleValue = Math.min(getScale() + percentageDragged * (1 - getScale()), 1);
         const borderRadiusValue = 8 - percentageDragged * 8;
 
-        const translateYValue = Math.max(0, 14 - percentageDragged * 14);
+        const translateValue = Math.max(0, 14 - percentageDragged * 14);
 
         set(
           wrapper,
           {
             borderRadius: `${borderRadiusValue}px`,
-            transform: `scale(${scaleValue}) translate3d(0, ${translateYValue}px, 0)`,
+            transform: isVertical(direction)
+              ? `scale(${scaleValue}) translate3d(0, ${translateValue}px, 0)`
+              : `scale(${scaleValue}) translate3d(${translateValue}px, 0, 0)`,
             transition: 'none',
           },
           true,
@@ -288,8 +298,12 @@ function Root({
       }
 
       if (!snapPoints) {
+        const translateValue = absDraggedDistance * directionMultiplier;
+
         set(drawerRef.current, {
-          transform: `translate3d(0, ${absDraggedDistance}px, 0)`,
+          transform: isVertical(direction)
+            ? `translate3d(0, ${translateValue}px, 0)`
+            : `translate3d(${translateValue}px, 0, 0)`,
         });
       }
     }
@@ -364,7 +378,9 @@ function Root({
 
     onClose?.();
     set(drawerRef.current, {
-      transform: `translate3d(0, 100%, 0)`,
+      transform: isVertical(direction)
+        ? `translate3d(0, ${direction === 'bottom' ? '100%' : '-100%'}, 0)`
+        : `translate3d(${direction === 'right' ? '100%' : '-100%'}, 0, 0)`,
       transition: `transform ${TRANSITIONS.DURATION}s cubic-bezier(${TRANSITIONS.EASE.join(',')})`,
     });
 
@@ -422,7 +438,7 @@ function Root({
   function resetDrawer() {
     if (!drawerRef.current) return;
     const wrapper = document.querySelector('[vaul-drawer-wrapper]');
-    const currentSwipeAmount = getTranslateY(drawerRef.current);
+    const currentSwipeAmount = getTranslate(drawerRef.current, direction);
 
     set(drawerRef.current, {
       transform: 'translate3d(0, 0, 0)',
@@ -441,8 +457,15 @@ function Root({
         {
           borderRadius: `${BORDER_RADIUS}px`,
           overflow: 'hidden',
-          transform: `scale(${getScale()}) translate3d(0, calc(env(safe-area-inset-top) + 14px), 0)`,
-          transformOrigin: 'top',
+          ...(isVertical(direction)
+            ? {
+                transform: `scale(${getScale()}) translate3d(0, calc(env(safe-area-inset-top) + 14px), 0)`,
+                transformOrigin: 'top',
+              }
+            : {
+                transform: `scale(${getScale()}) translate3d(calc(env(safe-area-inset-top) + 14px), 0, 0)`,
+                transformOrigin: 'left',
+              }),
           transitionProperty: 'transform, border-radius',
           transitionDuration: `${TRANSITIONS.DURATION}s`,
           transitionTimingFunction: `cubic-bezier(${TRANSITIONS.EASE.join(',')})`,
@@ -462,14 +485,14 @@ function Root({
     isAllowedToDrag.current = false;
     setIsDragging(false);
     dragEndTime.current = new Date();
-    const swipeAmount = getTranslateY(drawerRef.current);
+    const swipeAmount = getTranslate(drawerRef.current, direction);
 
     if (!shouldDrag(event.target, false) || !swipeAmount || Number.isNaN(swipeAmount)) return;
 
     if (dragStartTime.current === null) return;
 
     const timeTaken = dragEndTime.current.getTime() - dragStartTime.current.getTime();
-    const distMoved = pointerStartY.current - event.screenY;
+    const distMoved = pointerStart.current - (isVertical(direction) ? event.screenY : event.screenX);
     const velocity = Math.abs(distMoved) / timeTaken;
 
     if (velocity > 0.05) {
@@ -482,8 +505,9 @@ function Root({
     }
 
     if (snapPoints) {
+      const directionMultiplier = direction === 'bottom' || direction === 'right' ? 1 : -1;
       onReleaseSnapPoints({
-        draggedDistance: distMoved,
+        draggedDistance: distMoved * directionMultiplier,
         closeDrawer,
         velocity,
         dismissible,
@@ -493,7 +517,7 @@ function Root({
     }
 
     // Moved upwards, don't do anything
-    if (distMoved > 0) {
+    if (direction === 'bottom' || direction === 'right' ? distMoved > 0 : distMoved < 0) {
       resetDrawer();
       onReleaseProp?.(event, true);
       return;
@@ -555,8 +579,15 @@ function Root({
       set(wrapper, {
         borderRadius: `${BORDER_RADIUS}px`,
         overflow: 'hidden',
-        transform: `scale(${getScale()}) translate3d(0, calc(env(safe-area-inset-top) + 14px), 0)`,
-        transformOrigin: 'top',
+        ...(isVertical(direction)
+          ? {
+              transform: `scale(${getScale()}) translate3d(0, calc(env(safe-area-inset-top) + 14px), 0)`,
+              transformOrigin: 'top',
+            }
+          : {
+              transform: `scale(${getScale()}) translate3d(calc(env(safe-area-inset-top) + 14px), 0, 0)`,
+              transformOrigin: 'left',
+            }),
         transitionProperty: 'transform, border-radius',
         transitionDuration: `${TRANSITIONS.DURATION}s`,
         transitionTimingFunction: `cubic-bezier(${TRANSITIONS.EASE.join(',')})`,
@@ -589,9 +620,12 @@ function Root({
 
     if (!o && drawerRef.current) {
       nestedOpenChangeTimer.current = setTimeout(() => {
+        const translateValue = getTranslate(drawerRef.current as HTMLElement, direction);
         set(drawerRef.current, {
           transition: 'none',
-          transform: `translate3d(0, ${getTranslateY(drawerRef.current as HTMLElement)}px, 0)`,
+          transform: isVertical(direction)
+            ? `translate3d(0, ${translateValue}px, 0)`
+            : `translate3d(${translateValue}px, 0, 0)`,
         });
       }, 500);
     }
@@ -599,24 +633,31 @@ function Root({
 
   function onNestedDrag(event: React.PointerEvent<HTMLDivElement>, percentageDragged: number) {
     if (percentageDragged < 0) return;
-    const initialScale = (window.innerWidth - NESTED_DISPLACEMENT) / window.innerWidth;
+
+    const initialDim = isVertical(direction) ? window.innerHeight : window.innerWidth;
+    const initialScale = (initialDim - NESTED_DISPLACEMENT) / initialDim;
     const newScale = initialScale + percentageDragged * (1 - initialScale);
-    const newY = -NESTED_DISPLACEMENT + percentageDragged * NESTED_DISPLACEMENT;
+    const newTranslate = -NESTED_DISPLACEMENT + percentageDragged * NESTED_DISPLACEMENT;
 
     set(drawerRef.current, {
-      transform: `scale(${newScale}) translate3d(0, ${newY}px, 0)`,
+      transform: isVertical(direction)
+        ? `scale(${newScale}) translate3d(0, ${newTranslate}px, 0)`
+        : `scale(${newScale}) translate3d(${newTranslate}px, 0, 0)`,
       transition: 'none',
     });
   }
 
   function onNestedRelease(event: React.PointerEvent<HTMLDivElement>, o: boolean) {
-    const scale = o ? (window.innerWidth - NESTED_DISPLACEMENT) / window.innerWidth : 1;
-    const y = o ? -NESTED_DISPLACEMENT : 0;
+    const dim = isVertical(direction) ? window.innerHeight : window.innerWidth;
+    const scale = o ? (dim - NESTED_DISPLACEMENT) / dim : 1;
+    const translate = o ? -NESTED_DISPLACEMENT : 0;
 
     if (o) {
       set(drawerRef.current, {
         transition: `transform ${TRANSITIONS.DURATION}s cubic-bezier(${TRANSITIONS.EASE.join(',')})`,
-        transform: `scale(${scale}) translate3d(0, ${y}px, 0)`,
+        transform: isVertical(direction)
+          ? `scale(${scale}) translate3d(0, ${translate}px, 0)`
+          : `scale(${scale}) translate3d(${translate}px, 0, 0)`,
       });
     }
   }
@@ -664,6 +705,7 @@ function Root({
           openProp,
           modal,
           snapPointsOffset,
+          direction,
         }}
       >
         {children}
@@ -716,6 +758,7 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
     openProp,
     onOpenChange,
     setVisible,
+    direction,
   } = useDrawerContext();
   const composedRef = useComposedRefs(ref, drawerRef);
 
@@ -765,6 +808,7 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
       }
       {...rest}
       vaul-drawer=""
+      vaul-drawer-direction={direction}
       vaul-drawer-visible={visible ? 'true' : 'false'}
     />
   );
