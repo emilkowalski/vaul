@@ -60,7 +60,7 @@ function Root({
   onDrag: onDragProp,
   onRelease: onReleaseProp,
   snapPoints,
-  nested,
+  nested = false,
   closeThreshold = CLOSE_THRESHOLD,
   scrollLockTimeout = SCROLL_LOCK_TIMEOUT,
   dismissible = true,
@@ -161,8 +161,10 @@ function Root({
       return false;
     }
 
-    if (direction === 'bottom' || direction === 'right' ? swipeAmount > 0 : swipeAmount < 0) {
-      return true;
+    if (swipeAmount !== null) {
+      if (direction === 'bottom' || direction === 'right' ? swipeAmount > 0 : swipeAmount < 0) {
+        return true;
+      }
     }
 
     // Don't drag if there's highlighted text
@@ -212,6 +214,9 @@ function Root({
   }
 
   function onDrag(event: React.PointerEvent<HTMLDivElement>) {
+    if (!drawerRef.current) {
+      return;
+    }
     // We need to know how much of the drawer has been dragged in percentages so that we can transform background accordingly
     if (isDragging) {
       const directionMultiplier = direction === 'bottom' || direction === 'right' ? 1 : -1;
@@ -550,7 +555,7 @@ function Root({
   }, [isOpen]);
 
   React.useEffect(() => {
-    if (visible) {
+    if (drawerRef.current && visible) {
       // Find all scrollable elements inside our drawer and assign a class to it so that we can disable overflow when dragging to prevent pointermove not being captured
       const children = drawerRef.current.querySelectorAll('*');
       children.forEach((child: Element) => {
@@ -774,7 +779,7 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
           onOpenAutoFocus(e);
         } else {
           e.preventDefault();
-          drawerRef.current.focus();
+          drawerRef.current?.focus();
         }
       }}
       onPointerDown={onPress}
