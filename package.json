@@ -46,7 +46,7 @@
     "@playwright/test": "^1.37.1",
     "@radix-ui/react-dialog": "^1.0.4",
     "@types/react": "^18.2.46",
-    "bunchee": "^4.2.9",
+    "bunchee": "^4.2.10",
     "eslint": "^7.32.0",
     "prettier": "^2.5.1",
     "react": "18.2.0",
