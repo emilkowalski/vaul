@@ -1,4 +1,5 @@
 import React from 'react';
+import { DrawerDirection } from './types';
 
 interface DrawerContextValue {
   drawerRef: React.RefObject<HTMLDivElement>;
@@ -24,18 +25,19 @@ interface DrawerContextValue {
   setVisible: (o: boolean) => void;
   openProp?: boolean;
   onOpenChange?: (o: boolean) => void;
+  direction?: DrawerDirection;
 }
 
 export const DrawerContext = React.createContext<DrawerContextValue>({
   drawerRef: { current: null },
   overlayRef: { current: null },
-  scaleBackground: () => {},
-  onPress: () => {},
-  onRelease: () => {},
-  onDrag: () => {},
-  onNestedDrag: () => {},
-  onNestedOpenChange: () => {},
-  onNestedRelease: () => {},
+  scaleBackground: () => { },
+  onPress: () => { },
+  onRelease: () => { },
+  onDrag: () => { },
+  onNestedDrag: () => { },
+  onNestedOpenChange: () => { },
+  onNestedRelease: () => { },
   openProp: undefined,
   dismissible: false,
   isOpen: false,
@@ -45,11 +47,12 @@ export const DrawerContext = React.createContext<DrawerContextValue>({
   modal: false,
   shouldFade: false,
   activeSnapPoint: null,
-  onOpenChange: () => {},
-  setActiveSnapPoint: () => {},
+  onOpenChange: () => { },
+  setActiveSnapPoint: () => { },
   visible: false,
-  closeDrawer: () => {},
-  setVisible: () => {},
+  closeDrawer: () => { },
+  setVisible: () => { },
+  direction: 'bottom',
 });
 
 export const useDrawerContext = () => React.useContext(DrawerContext);
