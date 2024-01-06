@@ -24,6 +24,7 @@ interface DrawerContextValue {
   setVisible: (o: boolean) => void;
   openProp?: boolean;
   onOpenChange?: (o: boolean) => void;
+  direction?: 'top' | 'bottom';
 }
 
 export const DrawerContext = React.createContext<DrawerContextValue>({
@@ -50,6 +51,7 @@ export const DrawerContext = React.createContext<DrawerContextValue>({
   visible: false,
   closeDrawer: () => {},
   setVisible: () => {},
+  direction: 'bottom',
 });
 
 export const useDrawerContext = () => React.useContext(DrawerContext);

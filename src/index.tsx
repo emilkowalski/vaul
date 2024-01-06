@@ -49,6 +49,7 @@ type DialogProps = {
   modal?: boolean;
   nested?: boolean;
   onClose?: () => void;
+  direction?: 'top' | 'bottom';
 } & (WithFadeFromProps | WithoutFadeFromProps);
 
 function Root({
@@ -69,6 +70,7 @@ function Root({
   fixed,
   modal = true,
   onClose,
+  direction = 'bottom',
 }: DialogProps) {
   const [isOpen = false, setIsOpen] = React.useState<boolean>(false);
   const [hasBeenOpened, setHasBeenOpened] = React.useState<boolean>(false);
@@ -113,6 +115,7 @@ function Root({
     fadeFromIndex,
     overlayRef,
     onSnapPointChange,
+    direction
   });
 
   usePreventScroll({
@@ -147,7 +150,7 @@ function Root({
     pointerStartY.current = event.screenY;
   }
 
-  function shouldDrag(el: EventTarget, isDraggingDown: boolean) {
+  function shouldDrag(el: EventTarget, isDraggingInDirection: boolean) {
     let element = el as HTMLElement;
     const highlightedText = window.getSelection()?.toString();
     const swipeAmount = drawerRef.current ? getTranslateY(drawerRef.current) : null;
@@ -158,7 +161,7 @@ function Root({
       return false;
     }
 
-    if (swipeAmount > 0) {
+    if (direction === 'bottom' ? swipeAmount > 0 : swipeAmount < 0) {
       return true;
     }
 
@@ -177,7 +180,7 @@ function Root({
       return false;
     }
 
-    if (isDraggingDown) {
+    if (isDraggingInDirection) {
       lastTimeDragPrevented.current = date;
 
       // We are dragging down so we should allow scrolling
@@ -211,13 +214,14 @@ function Root({
   function onDrag(event: React.PointerEvent<HTMLDivElement>) {
     // We need to know how much of the drawer has been dragged in percentages so that we can transform background accordingly
     if (isDragging) {
-      const draggedDistance = pointerStartY.current - event.screenY;
-      const isDraggingDown = draggedDistance > 0;
+      const directionMultiplier = direction === 'bottom' ? 1 : -1;
+      const draggedDistance = (pointerStartY.current - event.screenY) * directionMultiplier;
+      const isDraggingInDirection = draggedDistance > 0;
 
       // Disallow dragging down to close when first snap point is the active one and dismissible prop is set to false.
       if (snapPoints && activeSnapPointIndex === 0 && !dismissible) return;
 
-      if (!isAllowedToDrag.current && !shouldDrag(event.target, isDraggingDown)) return;
+      if (!isAllowedToDrag.current && !shouldDrag(event.target, isDraggingInDirection)) return;
       drawerRef.current.classList.add(DRAG_CLASS);
       // If shouldDrag gave true once after pressing down on the drawer, we set isAllowedToDrag to true and it will remain true until we let go, there's no reason to disable dragging mid way, ever, and that's the solution to it
       isAllowedToDrag.current = true;
@@ -234,11 +238,11 @@ function Root({
       }
 
       // Run this only if snapPoints are not defined or if we are at the last snap point (highest one)
-      if (isDraggingDown && !snapPoints) {
+      if (isDraggingInDirection && !snapPoints) {
         const dampenedDraggedDistance = dampenValue(draggedDistance);
 
         set(drawerRef.current, {
-          transform: `translate3d(0, ${Math.min(dampenedDraggedDistance * -1, 0)}px, 0)`,
+          transform: `translate3d(0, ${Math.min(dampenedDraggedDistance * -1, 0) * directionMultiplier}px, 0)`,
         });
         return;
       }
@@ -248,7 +252,7 @@ function Root({
       const wrapper = document.querySelector('[vaul-drawer-wrapper]');
 
       let percentageDragged = absDraggedDistance / drawerHeightRef.current;
-      const snapPointPercentageDragged = getSnapPointsPercentageDragged(absDraggedDistance, isDraggingDown);
+      const snapPointPercentageDragged = getSnapPointsPercentageDragged(absDraggedDistance, isDraggingInDirection);
 
       if (snapPointPercentageDragged !== null) {
         percentageDragged = snapPointPercentageDragged;
@@ -289,7 +293,7 @@ function Root({
 
       if (!snapPoints) {
         set(drawerRef.current, {
-          transform: `translate3d(0, ${absDraggedDistance}px, 0)`,
+          transform: `translate3d(0, ${absDraggedDistance * directionMultiplier}px, 0)`,
         });
       }
     }
@@ -364,7 +368,7 @@ function Root({
 
     onClose?.();
     set(drawerRef.current, {
-      transform: `translate3d(0, 100%, 0)`,
+      transform: `translate3d(0, ${direction === 'bottom' ? '100%' : '-100%'}, 0)`,
       transition: `transform ${TRANSITIONS.DURATION}s cubic-bezier(${TRANSITIONS.EASE.join(',')})`,
     });
 
@@ -482,8 +486,9 @@ function Root({
     }
 
     if (snapPoints) {
+      const directionMultiplier = direction === 'bottom' ? 1 : -1;
       onReleaseSnapPoints({
-        draggedDistance: distMoved,
+        draggedDistance: distMoved * directionMultiplier,
         closeDrawer,
         velocity,
         dismissible,
@@ -493,7 +498,7 @@ function Root({
     }
 
     // Moved upwards, don't do anything
-    if (distMoved > 0) {
+    if (direction === 'bottom' ? distMoved > 0 : distMoved < 0) {
       resetDrawer();
       onReleaseProp?.(event, true);
       return;
@@ -664,6 +669,7 @@ function Root({
           openProp,
           modal,
           snapPointsOffset,
+          direction,
         }}
       >
         {children}
@@ -716,6 +722,7 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
     openProp,
     onOpenChange,
     setVisible,
+    direction,
   } = useDrawerContext();
   const composedRef = useComposedRefs(ref, drawerRef);
 
@@ -765,6 +772,7 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
       }
       {...rest}
       vaul-drawer=""
+      vaul-drawer-direction={direction}
       vaul-drawer-visible={visible ? 'true' : 'false'}
     />
   );

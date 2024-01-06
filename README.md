@@ -60,6 +60,8 @@ Additional props:
 
 `modal`: When `false`it allows to interact with elements outside of the drawer without closing it. Defaults to`true`.
 
+`direction`: Direction of the drawer. Can be `top` or `bottom`. Defaults to `bottom`.
+
 ### Trigger
 
 The button that opens the dialog. [Props](https://www.radix-ui.com/docs/primitives/components/dialog#trigger).
