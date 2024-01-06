@@ -32,6 +32,28 @@
   height: 200%;
 }
 
+[vaul-handle] {
+  display: block;
+  opacity: 0.8;
+  margin-top: 4px;
+  margin-left: auto;
+  margin-right: auto;
+  height: 5px;
+  width: 56px;
+  border-radius: 1rem;
+  touch-action: pan-y;
+  cursor: grab;
+}
+
+[vaul-handle]:hover,
+[vaul-handle]:active {
+  opacity: 1;
+}
+
+[vaul-handle]:active {
+  cursor: grabbing;
+}
+
 [vaul-overlay][vaul-snap-points='true']:not([vaul-snap-points-overlay='true']):not([data-state='closed']) {
   opacity: 0;
 }
