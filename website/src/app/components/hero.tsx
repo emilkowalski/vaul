@@ -57,7 +57,16 @@ export function Hero() {
                   <div className="max-w-md mx-auto">
                     <Drawer.Title className="font-medium mb-4">Drawer for React.</Drawer.Title>
                     <p className="text-gray-600 mb-2">
-                      This component can be used as a Dialog replacement on mobile and tablet devices.
+                      This component can be used as a Dialog replacement on mobile and tablet devices. You can read
+                      about why and how it was built{' '}
+                      <a
+                        target="_blank"
+                        className="underline"
+                        href="https://emilkowal.ski/ui/building-a-drawer-component"
+                      >
+                        here
+                      </a>
+                      .
                     </p>
                     <p className="text-gray-600 mb-2">
                       It comes unstyled, has gesture-driven animations, and is made by{' '}
