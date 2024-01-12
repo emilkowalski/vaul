@@ -49,6 +49,7 @@ type DialogProps = {
   modal?: boolean;
   nested?: boolean;
   onClose?: () => void;
+  preventScrollRestoration?: boolean;
 } & (WithFadeFromProps | WithoutFadeFromProps);
 
 function Root({
@@ -69,6 +70,7 @@ function Root({
   fixed,
   modal = true,
   onClose,
+  preventScrollRestoration = true,
 }: DialogProps) {
   const [isOpen = false, setIsOpen] = React.useState<boolean>(false);
   const [hasBeenOpened, setHasBeenOpened] = React.useState<boolean>(false);
@@ -124,6 +126,7 @@ function Root({
     modal,
     nested,
     hasBeenOpened,
+    preventScrollRestoration,
   });
 
   function getScale() {
