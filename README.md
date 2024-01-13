@@ -60,6 +60,8 @@ Additional props:
 
 `modal`: When `false`it allows to interact with elements outside of the drawer without closing it. Defaults to`true`.
 
+`preventScrollRestoration`: When `true` it prevents scroll restoration when the drawer is closed after a navigation happens inside of it. Defaults to `true`.
+
 ### Trigger
 
 The button that opens the dialog. [Props](https://www.radix-ui.com/docs/primitives/components/dialog#trigger).

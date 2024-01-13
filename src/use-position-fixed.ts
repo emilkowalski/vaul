@@ -7,11 +7,13 @@ export function usePositionFixed({
   modal,
   nested,
   hasBeenOpened,
+  preventScrollRestoration,
 }: {
   isOpen: boolean;
   modal: boolean;
   nested: boolean;
   hasBeenOpened: boolean;
+  preventScrollRestoration: boolean;
 }) {
   const [activeUrl, setActiveUrl] = React.useState(typeof window !== 'undefined' ? window.location.href : '');
   const scrollPos = React.useRef(0);
@@ -64,7 +66,7 @@ export function usePositionFixed({
       document.body.style.right = 'unset';
 
       requestAnimationFrame(() => {
-        if (activeUrl !== window.location.href) {
+        if (preventScrollRestoration && activeUrl !== window.location.href) {
           setActiveUrl(window.location.href);
           return;
         }
