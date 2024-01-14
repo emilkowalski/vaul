@@ -178,6 +178,9 @@ export function useSnapPoints({
     if (activeSnapPointOffset === null) return;
     const newYValue = activeSnapPointOffset - draggedDistance;
 
+    // Don't do anything if we exceed the last(highest) snap point
+    if (newYValue < snapPointsOffset[snapPointsOffset.length - 1]) return;
+
     set(drawerRef.current, {
       transform: `translate3d(0, ${newYValue}px, 0)`,
     });
