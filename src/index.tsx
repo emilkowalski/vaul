@@ -50,6 +50,7 @@ type DialogProps = {
   nested?: boolean;
   onClose?: () => void;
   direction?: 'top' | 'bottom' | 'left' | 'right';
+  preventScrollRestoration?: boolean;
 } & (WithFadeFromProps | WithoutFadeFromProps);
 
 function Root({
@@ -71,6 +72,7 @@ function Root({
   modal = true,
   onClose,
   direction = 'bottom',
+  preventScrollRestoration = true,
 }: DialogProps) {
   const [isOpen = false, setIsOpen] = React.useState<boolean>(false);
   const [hasBeenOpened, setHasBeenOpened] = React.useState<boolean>(false);
@@ -127,6 +129,7 @@ function Root({
     modal,
     nested,
     hasBeenOpened,
+    preventScrollRestoration,
   });
 
   function getScale() {
@@ -557,8 +560,8 @@ function Root({
   React.useEffect(() => {
     if (drawerRef.current && visible) {
       // Find all scrollable elements inside our drawer and assign a class to it so that we can disable overflow when dragging to prevent pointermove not being captured
-      const children = drawerRef.current.querySelectorAll('*');
-      children.forEach((child: Element) => {
+      const children = drawerRef?.current?.querySelectorAll('*');
+      children?.forEach((child: Element) => {
         const htmlChild = child as HTMLElement;
         if (htmlChild.scrollHeight > htmlChild.clientHeight || htmlChild.scrollWidth > htmlChild.clientWidth) {
           htmlChild.classList.add('vaul-scrollable');

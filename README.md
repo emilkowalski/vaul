@@ -1,10 +1,10 @@
 https://github.com/emilkowalski/vaul/assets/36730035/fdf8c5e8-ade8-433b-8bb0-4ce10e722516
 
-Vaul is an unstyled drawer component for React that can be used as a Dialog replacement on tablet and mobile devices. It uses [Radix's Dialog primitive](https://www.radix-ui.com/docs/primitives/components/dialog#trigger) under the hood and is inspired by [this tweet](https://twitter.com/devongovett/status/1674470185783402496).
+Vaul is an unstyled drawer component for React that can be used as a Dialog replacement on tablet and mobile devices. You can read about why and how it was built [here](https://emilkowal.ski/ui/building-a-drawer-component).
 
 ## Usage
 
-To start using the library, install it in your project:
+To start using the library, install it in your project:,
 
 ```bash
 npm install vaul
@@ -61,6 +61,8 @@ Additional props:
 `modal`: When `false`it allows to interact with elements outside of the drawer without closing it. Defaults to`true`.
 
 `direction`: Direction of the drawer. Can be `top` or `bottom`, `left`, `right`. Defaults to `bottom`.
+
+`preventScrollRestoration`: When `true` it prevents scroll restoration when the drawer is closed after a navigation happens inside of it. Defaults to `true`.
 
 ### Trigger
 
