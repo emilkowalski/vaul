@@ -45,8 +45,8 @@
   "devDependencies": {
     "@playwright/test": "^1.37.1",
     "@radix-ui/react-dialog": "^1.0.4",
-	"@types/react": "^18.2.46",
-    "bunchee": "^4.4.0",
+    "@types/react": "^18.2.46",
+    "bunchee": "^4.2.11",
     "eslint": "^7.32.0",
     "prettier": "^2.5.1",
     "react": "18.2.0",
@@ -58,7 +58,7 @@
     "react": "^16.8 || ^17.0 || ^18.0",
     "react-dom": "^16.8 || ^17.0 || ^18.0"
   },
-  "packageManager": "pnpm@8.14.1",
+  "packageManager": "pnpm@6.32.11",
   "dependencies": {
     "@radix-ui/react-dialog": "^1.0.4"
   }
