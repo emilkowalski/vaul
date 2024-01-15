@@ -92,7 +92,6 @@ let restore;
  */
 export function usePreventScroll(options: PreventScrollOptions = {}) {
   let { isDisabled } = options;
-  console.log(isDisabled);
 
   useIsomorphicLayoutEffect(() => {
     if (isDisabled) {
