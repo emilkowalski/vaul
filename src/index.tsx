@@ -675,26 +675,25 @@ function Root({
   );
 }
 
-const Overlay = React.forwardRef<
-  HTMLDivElement,
-  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Overlay> & { children: React.ReactNode }
->(function ({ children, ...rest }, ref) {
-  const { overlayRef, snapPoints, onRelease, shouldFade, isOpen, visible } = useDrawerContext();
-  const composedRef = useComposedRefs(ref, overlayRef);
-  const hasSnapPoints = snapPoints && snapPoints.length > 0;
+const Overlay = React.forwardRef<HTMLDivElement, React.ComponentPropsWithoutRef<typeof DialogPrimitive.Overlay>>(
+  function ({ children, ...rest }, ref) {
+    const { overlayRef, snapPoints, onRelease, shouldFade, isOpen, visible } = useDrawerContext();
+    const composedRef = useComposedRefs(ref, overlayRef);
+    const hasSnapPoints = snapPoints && snapPoints.length > 0;
 
-  return (
-    <DialogPrimitive.Overlay
-      onMouseUp={onRelease}
-      ref={composedRef}
-      vaul-drawer-visible={visible ? 'true' : 'false'}
-      vaul-overlay=""
-      vaul-snap-points={isOpen && hasSnapPoints ? 'true' : 'false'}
-      vaul-snap-points-overlay={isOpen && shouldFade ? 'true' : 'false'}
-      {...rest}
-    />
-  );
-});
+    return (
+      <DialogPrimitive.Overlay
+        onMouseUp={onRelease}
+        ref={composedRef}
+        vaul-drawer-visible={visible ? 'true' : 'false'}
+        vaul-overlay=""
+        vaul-snap-points={isOpen && hasSnapPoints ? 'true' : 'false'}
+        vaul-snap-points-overlay={isOpen && shouldFade ? 'true' : 'false'}
+        {...rest}
+      />
+    );
+  },
+);
 
 Overlay.displayName = 'Drawer.Overlay';
 
