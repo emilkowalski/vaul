@@ -1,4 +1,4 @@
-import { DrawerDirection } from "./types";
+import { DrawerDirection } from './types';
 
 interface Style {
   [key: string]: string;
@@ -58,16 +58,16 @@ export function reset(el: Element | HTMLElement | null, prop?: string) {
 
 export const isVertical = (direction: DrawerDirection) => {
   switch (direction) {
-    case "top":
-    case "bottom":
+    case 'top':
+    case 'bottom':
       return true;
-    case "left":
-    case "right":
+    case 'left':
+    case 'right':
       return false;
     default:
       return direction satisfies never;
   }
-}
+};
 
 export function getTranslate(element: HTMLElement, direction: DrawerDirection): number | null {
   const style = window.getComputedStyle(element);

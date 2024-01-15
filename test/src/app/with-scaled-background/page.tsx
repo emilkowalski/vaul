@@ -1,7 +1,7 @@
 'use client';
 
-import classNames from 'classnames';
 import { useState } from 'react';
+import clsx from 'clsx';
 import { Drawer } from 'vaul';
 import { DrawerDirection } from 'vaul/src/types';
 
@@ -30,7 +30,7 @@ const DrawerContent = ({ drawerDirection }: { drawerDirection: DrawerDirection }
   return (
     <Drawer.Content
       data-testid="content"
-      className={classNames({
+      className={clsx({
         'bg-zinc-100 flex fixed p-6': true,
         'rounded-t-[10px] flex-col h-[50%] bottom-0 left-0 right-0': drawerDirection === 'bottom',
         'rounded-b-[10px] flex-col h-[50%] top-0 left-0 right-0': drawerDirection === 'top',
@@ -39,7 +39,7 @@ const DrawerContent = ({ drawerDirection }: { drawerDirection: DrawerDirection }
       })}
     >
       <div
-        className={classNames({
+        className={clsx({
           'w-full h-full flex rounded-full gap-8': true,
           'flex-col': drawerDirection === 'bottom',
           'flex-col-reverse': drawerDirection === 'top',
@@ -48,7 +48,7 @@ const DrawerContent = ({ drawerDirection }: { drawerDirection: DrawerDirection }
         })}
       >
         <div
-          className={classNames({
+          className={clsx({
             'rounded-full bg-zinc-300': true,
             'mx-auto w-12 h-1.5': drawerDirection === 'top' || drawerDirection === 'bottom',
             'my-auto h-12 w-1.5': drawerDirection === 'left' || drawerDirection === 'right',

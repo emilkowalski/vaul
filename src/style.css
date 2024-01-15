@@ -47,7 +47,7 @@
 }
 
 [vaul-drawer][vaul-drawer-visible='true'][vaul-drawer-direction='right'] {
-  transform: translate3d(var(--snap-point-height, 0),0, 0);
+  transform: translate3d(var(--snap-point-height, 0), 0, 0);
 }
 
 [vaul-overlay] {

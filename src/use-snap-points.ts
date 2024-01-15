@@ -74,7 +74,6 @@ export function useSnapPoints({
         }
 
         return width;
-
       }) ?? [],
     [snapPoints],
   );
@@ -90,7 +89,7 @@ export function useSnapPoints({
       onSnapPointChange(newSnapPointIndex);
       set(drawerRef.current, {
         transition: `transform ${TRANSITIONS.DURATION}s cubic-bezier(${TRANSITIONS.EASE.join(',')})`,
-        transform: isVertical(direction) ? `translate3d(0, ${dimension}px, 0)` : `translate3d(${dimension}px, 0, 0)`
+        transform: isVertical(direction) ? `translate3d(0, ${dimension}px, 0)` : `translate3d(${dimension}px, 0, 0)`,
       });
 
       if (
@@ -136,9 +135,10 @@ export function useSnapPoints({
   }) {
     if (fadeFromIndex === undefined) return;
 
-    const currentPosition = direction === 'bottom' || direction === "right"
-      ? activeSnapPointOffset ?? 0 - draggedDistance
-      : activeSnapPointOffset ?? 0 + draggedDistance;
+    const currentPosition =
+      direction === 'bottom' || direction === 'right'
+        ? activeSnapPointOffset ?? 0 - draggedDistance
+        : activeSnapPointOffset ?? 0 + draggedDistance;
     const isOverlaySnapPoint = activeSnapPointIndex === fadeFromIndex - 1;
     const isFirst = activeSnapPointIndex === 0;
     const hasDraggedUp = draggedDistance > 0;
@@ -192,12 +192,13 @@ export function useSnapPoints({
 
   function onDrag({ draggedDistance }: { draggedDistance: number }) {
     if (activeSnapPointOffset === null) return;
-    const newValue = direction === 'bottom' || direction === "right"
-      ? activeSnapPointOffset - draggedDistance
-      : activeSnapPointOffset + draggedDistance;
+    const newValue =
+      direction === 'bottom' || direction === 'right'
+        ? activeSnapPointOffset - draggedDistance
+        : activeSnapPointOffset + draggedDistance;
 
     set(drawerRef.current, {
-      transform: isVertical(direction) ? `translate3d(0, ${newValue}px, 0)` : `translate3d(${newValue}px, 0, 0)`
+      transform: isVertical(direction) ? `translate3d(0, ${newValue}px, 0)` : `translate3d(${newValue}px, 0, 0)`,
     });
   }
 
