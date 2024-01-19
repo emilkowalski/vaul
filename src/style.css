@@ -59,8 +59,9 @@
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  width: 100%;
-  height: 100%;
+  width: max(100%, 2.75rem); /* 44px */
+  height: max(100%, 2.75rem); /* 44px */
+  touch-action: inherit;
 }
 
 [vaul-overlay][vaul-snap-points='true']:not([vaul-snap-points-overlay='true']):not([data-state='closed']) {
@@ -79,12 +80,15 @@
   }
 }
 
+@media (pointer: fine) {
+  [vaul-handle-hitarea]: {
+    width: 100%;
+    height: 100%;
+  }
+}
+
 @media (hover: hover) and (pointer: fine) {
   [vaul-drawer] {
     user-select: none;
-  }
-  [vaul-handle-hitarea]: {
-    width: max(100%, 2.75rem); /* 44px */
-    height: max(100%, 2.75rem); /* 44px */
   }
 }
