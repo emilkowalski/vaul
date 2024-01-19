@@ -680,15 +680,21 @@ type HandleProps = React.HTMLAttributes<HTMLSpanElement> & {
   preventCycle?: boolean;
 };
 
-const Handle = React.forwardRef<HTMLSpanElement, HandleProps>(({ preventCycle = false, ...rest }, ref) => {
+const Handle = React.forwardRef<HTMLSpanElement, HandleProps>(({ preventCycle = false, children, ...rest }, ref) => {
   const { visible, closeDrawer, isDragging, snapPoints, activeSnapPoint, setActiveSnapPoint, dismissible } =
     useDrawerContext();
 
+  const closeTimeoutIdRef = React.useRef<number | null>(null);
+  const shouldCancelInteractionRef = React.useRef(false);
+
   function handleCycleSnapPoints() {
     // Prevent accidental taps while resizing drawer
-    if (isDragging || preventCycle) return;
-
+    if (isDragging || preventCycle || shouldCancelInteractionRef.current) {
+      handleCancelInteraction();
+      return;
+    }
     const isLastSnapPoint = activeSnapPoint === snapPoints?.[snapPoints?.length - 1] ?? null;
+
     if (!snapPoints || (isLastSnapPoint && dismissible)) {
       closeDrawer();
       return;
@@ -698,8 +704,22 @@ const Handle = React.forwardRef<HTMLSpanElement, HandleProps>(({ preventCycle = 
     setActiveSnapPoint(nextSnapPoint);
   }
 
+  function handleStartInteraction() {
+    closeTimeoutIdRef.current = window.setTimeout(() => {
+      // Cancel click interaction on a long press (0.4s)
+      shouldCancelInteractionRef.current = true;
+    }, 400);
+  }
+
+  function handleCancelInteraction() {
+    window.clearTimeout(closeTimeoutIdRef.current!);
+    shouldCancelInteractionRef.current = false;
+  }
+
   return (
     <span
+      onPointerDown={handleStartInteraction}
+      onPointerCancel={handleCancelInteraction}
       onClick={handleCycleSnapPoints}
       onDoubleClick={closeDrawer}
       ref={ref}
@@ -707,7 +727,10 @@ const Handle = React.forwardRef<HTMLSpanElement, HandleProps>(({ preventCycle = 
       vaul-handle=""
       aria-hidden="true"
       {...rest}
-    />
+    >
+      {/* Expand handle's hit area beyond what's visible to ensure a 44x44 tap target for touch devices (accessibility standard) */}
+      <span vaul-handle-hitarea="" aria-hidden="true" />
+    </span>
   );
 });
 Handle.displayName = 'Drawer.Handle';
