@@ -61,6 +61,8 @@ Additional props:
 
 `modal`: When `false` it allows to interact with elements outside of the drawer without closing it. Defaults to `true`.
 
+`handleOnly`: When `true` only allows the drawer to be dragged by the `<Drawer.Handle />` component. Defaults to `false`.
+
 `preventScrollRestoration`: When `true` it prevents scroll restoration when the drawer is closed after a navigation happens inside of it. Defaults to `true`.
 
 ### Trigger
@@ -89,7 +91,7 @@ The button that closes the dialog. [Props](https://www.radix-ui.com/docs/primiti
 
 ### Handle
 
-A drag hint (also known as grabber). Shows people that they can drag the drawer to resize it; they can also tap it to cycle through the snap points, and double tap quickly to close the drawer. Set `preventCycle={true}` to stop this default behavior.
+A drag hint (also known as grabber). Shows people that they can drag the drawer to resize it; they can also tap it to cycle through the snap points, and double tap quickly to close the drawer. Set `preventCycle={true}` to stop this behavior. If you want to change the handle's hit area you can do so by styling the `[vaul-handle-hitarea]` selector (Defaults to 44x44 on mobile devices).
 
 ### Portal
 
