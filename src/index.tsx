@@ -680,6 +680,8 @@ type HandleProps = React.HTMLAttributes<HTMLSpanElement> & {
   preventCycle?: boolean;
 };
 
+const LONG_HANDLE_PRESS_TIMEOUT = 400;
+
 const Handle = React.forwardRef<HTMLSpanElement, HandleProps>(({ preventCycle = false, children, ...rest }, ref) => {
   const { visible, closeDrawer, isDragging, snapPoints, activeSnapPoint, setActiveSnapPoint, dismissible } =
     useDrawerContext();
@@ -693,9 +695,9 @@ const Handle = React.forwardRef<HTMLSpanElement, HandleProps>(({ preventCycle = 
       handleCancelInteraction();
       return;
     }
-    const isLastSnapPoint = activeSnapPoint === snapPoints?.[snapPoints?.length - 1] ?? null;
 
-    if (!snapPoints || (isLastSnapPoint && dismissible)) {
+    const isLastSnapPoint = activeSnapPoint === snapPoints?.[snapPoints?.length - 1] ?? null;
+    if ((isLastSnapPoint && dismissible) || snapPoints?.length === 0) {
       closeDrawer();
       return;
     }
@@ -706,13 +708,13 @@ const Handle = React.forwardRef<HTMLSpanElement, HandleProps>(({ preventCycle = 
 
   function handleStartInteraction() {
     closeTimeoutIdRef.current = window.setTimeout(() => {
-      // Cancel click interaction on a long press (0.4s)
+      // Cancel click interaction on a long press
       shouldCancelInteractionRef.current = true;
-    }, 400);
+    }, LONG_HANDLE_PRESS_TIMEOUT);
   }
 
   function handleCancelInteraction() {
-    window.clearTimeout(closeTimeoutIdRef.current!);
+    window.clearTimeout(closeTimeoutIdRef.current);
     shouldCancelInteractionRef.current = false;
   }
 
@@ -733,6 +735,7 @@ const Handle = React.forwardRef<HTMLSpanElement, HandleProps>(({ preventCycle = 
     </span>
   );
 });
+
 Handle.displayName = 'Drawer.Handle';
 
 const Overlay = React.forwardRef<HTMLDivElement, React.ComponentPropsWithoutRef<typeof DialogPrimitive.Overlay>>(
