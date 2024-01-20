@@ -197,8 +197,13 @@ export function useSnapPoints({
         ? activeSnapPointOffset - draggedDistance
         : activeSnapPointOffset + draggedDistance;
 
-    // Don't do anything if we exceed the last(highest) snap point
-    if (newYValue < snapPointsOffset[snapPointsOffset.length - 1]) return;
+    // Don't do anything if we exceed the last(biggest) snap point
+    if ((direction === 'bottom' || direction === 'right') && newValue < snapPointsOffset[snapPointsOffset.length - 1]) {
+      return;
+    }
+    if ((direction === 'top' || direction === 'left') && newValue > snapPointsOffset[snapPointsOffset.length - 1]) {
+      return;
+    }
 
     set(drawerRef.current, {
       transform: isVertical(direction) ? `translate3d(0, ${newValue}px, 0)` : `translate3d(${newValue}px, 0, 0)`,
