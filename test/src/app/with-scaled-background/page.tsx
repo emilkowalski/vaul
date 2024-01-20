@@ -1,11 +1,86 @@
 'use client';
 
+import { useState } from 'react';
+import clsx from 'clsx';
 import { Drawer } from 'vaul';
+import { DrawerDirection } from 'vaul/src/types';
+
+const CenteredContent = () => {
+  return (
+    <div className="max-w-md mx-auto">
+      <Drawer.Title className="font-medium mb-4">Unstyled drawer for React.</Drawer.Title>
+      <p className="text-zinc-600 mb-2">
+        This component can be used as a replacement for a Dialog on mobile and tablet devices.
+      </p>
+      <p className="text-zinc-600 mb-8">
+        It uses{' '}
+        <a href="https://www.radix-ui.com/docs/primitives/components/dialog" className="underline" target="_blank">
+          Radix&apos;s Dialog primitive
+        </a>{' '}
+        under the hood and is inspired by{' '}
+        <a href="https://twitter.com/devongovett/status/1674470185783402496" className="underline" target="_blank">
+          this tweet.
+        </a>
+      </p>
+    </div>
+  );
+};
+
+const DrawerContent = ({ drawerDirection }: { drawerDirection: DrawerDirection }) => {
+  return (
+    <Drawer.Content
+      data-testid="content"
+      className={clsx({
+        'bg-zinc-100 flex fixed p-6': true,
+        'rounded-t-[10px] flex-col h-[50%] bottom-0 left-0 right-0': drawerDirection === 'bottom',
+        'rounded-b-[10px] flex-col h-[50%] top-0 left-0 right-0': drawerDirection === 'top',
+        'rounded-r-[10px] flex-row w-[50%] left-0 top-0 bottom-0': drawerDirection === 'left',
+        'rounded-l-[10px] flex-row w-[50%] right-0 top-0 bottom-0': drawerDirection === 'right',
+      })}
+    >
+      <div
+        className={clsx({
+          'w-full h-full flex rounded-full gap-8': true,
+          'flex-col': drawerDirection === 'bottom',
+          'flex-col-reverse': drawerDirection === 'top',
+          'flex-row-reverse': drawerDirection === 'left',
+          'flex-row ': drawerDirection === 'right',
+        })}
+      >
+        <div
+          className={clsx({
+            'rounded-full bg-zinc-300': true,
+            'mx-auto w-12 h-1.5': drawerDirection === 'top' || drawerDirection === 'bottom',
+            'my-auto h-12 w-1.5': drawerDirection === 'left' || drawerDirection === 'right',
+          })}
+        />
+        <div className="grid place-content-center w-full h-full">
+          <CenteredContent />
+        </div>
+      </div>
+    </Drawer.Content>
+  );
+};
 
 export default function Page() {
+  const [direction, setDirection] = useState<DrawerDirection>('bottom');
+
   return (
-    <div className="w-screen h-screen bg-white p-8 flex justify-center items-center" vaul-drawer-wrapper="">
-      <Drawer.Root shouldScaleBackground>
+    <div
+      className="w-screen h-screen bg-white p-8 flex flex-col gap-2 justify-center items-center"
+      vaul-drawer-wrapper=""
+    >
+      <select
+        value={direction}
+        className="border-zinc-300 border-2 px-4 py-1 rounded-lg"
+        onChange={(e) => setDirection(e.target.value as DrawerDirection)}
+      >
+        <option value="top">Top</option>
+        <option value="bottom">Bottom</option>
+        <option value="left">Left</option>
+        <option value="right">Right</option>
+      </select>
+      <Drawer.Root shouldScaleBackground direction={direction}>
         <Drawer.Trigger asChild>
           <button data-testid="trigger" className="text-2xl">
             Open Drawer
@@ -13,88 +88,7 @@ export default function Page() {
         </Drawer.Trigger>
         <Drawer.Portal>
           <Drawer.Overlay data-testid="overlay" className="fixed inset-0 bg-black/40" />
-          <Drawer.Content
-            data-testid="content"
-            className="bg-zinc-100 flex flex-col rounded-t-[10px] h-[96%] mt-24 fixed bottom-0 left-0 right-0"
-          >
-            <div className="p-4 bg-white rounded-t-[10px] flex-1">
-              <div className="mx-auto w-12 h-1.5 flex-shrink-0 rounded-full bg-zinc-300 mb-8" />
-              <div className="max-w-md mx-auto">
-                <Drawer.Title className="font-medium mb-4">Unstyled drawer for React.</Drawer.Title>
-                <p className="text-zinc-600 mb-2">
-                  This component can be used as a replacement for a Dialog on mobile and tablet devices.
-                </p>
-                <p className="text-zinc-600 mb-8">
-                  It uses{' '}
-                  <a
-                    href="https://www.radix-ui.com/docs/primitives/components/dialog"
-                    className="underline"
-                    target="_blank"
-                  >
-                    Radix&apos;s Dialog primitive
-                  </a>{' '}
-                  under the hood and is inspired by{' '}
-                  <a
-                    href="https://twitter.com/devongovett/status/1674470185783402496"
-                    className="underline"
-                    target="_blank"
-                  >
-                    this tweet.
-                  </a>
-                </p>
-              </div>
-            </div>
-            <div className="p-4 bg-zinc-100 border-t border-zinc-200 mt-auto">
-              <div className="flex gap-6 justify-end max-w-md mx-auto">
-                <a
-                  className="text-xs text-zinc-600 flex items-center gap-0.25"
-                  href="https://github.com/emilkowalski/vaul"
-                  target="_blank"
-                >
-                  GitHub
-                  <svg
-                    fill="none"
-                    height="16"
-                    stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    viewBox="0 0 24 24"
-                    width="16"
-                    aria-hidden="true"
-                    className="w-3 h-3 ml-1"
-                  >
-                    <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"></path>
-                    <path d="M15 3h6v6"></path>
-                    <path d="M10 14L21 3"></path>
-                  </svg>
-                </a>
-                <a
-                  className="text-xs text-zinc-600 flex items-center gap-0.25"
-                  href="https://twitter.com/emilkowalski_"
-                  target="_blank"
-                >
-                  Twitter
-                  <svg
-                    fill="none"
-                    height="16"
-                    stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    viewBox="0 0 24 24"
-                    width="16"
-                    aria-hidden="true"
-                    className="w-3 h-3 ml-1"
-                  >
-                    <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"></path>
-                    <path d="M15 3h6v6"></path>
-                    <path d="M10 14L21 3"></path>
-                  </svg>
-                </a>
-              </div>
-            </div>
-          </Drawer.Content>
+          <DrawerContent drawerDirection={direction} />
         </Drawer.Portal>
       </Drawer.Root>
     </div>
