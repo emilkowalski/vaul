@@ -39,6 +39,7 @@ Play around with the examples on codesandbox:
 - [Without scaled background](https://codesandbox.io/p/sandbox/drawer-with-scale-forked-nx2glp?file=%2Fapp%2Fmy-drawer.tsx%3A4%2C1)
 - [With snap points](https://codesandbox.io/p/sandbox/drawer-non-dismissable-forked-jchtff?file=/app/my-drawer.tsx:1,1)
 - [Scrollable with inputs](https://codesandbox.io/p/sandbox/drawer-with-scale-forked-73f8jw?file=%2Fapp%2Fmy-drawer.tsx%3A1%2C1)
+- [Drawer from right instead of bottom](https://codesandbox.io/p/devbox/drawer-direction-right-n338ml?file=%2Fapp%2Fmy-drawer.tsx%3A47%2C2)
 - [Nested drawers](https://codesandbox.io/p/sandbox/drawer-non-dismissable-forked-5z2r3j?file=%2Fapp%2Fmy-drawer.tsx%3A49%2C16-49%2C246)
 - [Non-dismissible](https://codesandbox.io/p/sandbox/drawer-without-scale-forked-kxh9j5?file=%2Fapp%2Fmy-drawer.tsx%3A1%2C1)
 
@@ -47,7 +48,7 @@ Play around with the examples on codesandbox:
 ### Root
 
 Contains all parts of a dialog. Use `shouldScaleBackground` to enable background scaling, it requires an element with `[vaul-drawer-wrapper]` data attribute to scale its background.
-Can be controlled with the `value` and `onOpenChange` props. Can be opened by default via `defaultOpen` prop.
+Can be controlled with the `value` and `onOpenChange` props. Can be opened by default via the `open` prop.
 
 Additional props:
 
@@ -62,6 +63,8 @@ Additional props:
 `modal`: When `false` it allows to interact with elements outside of the drawer without closing it. Defaults to `true`.
 
 `handleOnly`: When `true` only allows the drawer to be dragged by the `<Drawer.Handle />` component. Defaults to `false`.
+
+`direction`: Direction of the drawer. Can be `top` or `bottom`, `left`, `right`. Defaults to `bottom`.
 
 `preventScrollRestoration`: When `true` it prevents scroll restoration when the drawer is closed after a navigation happens inside of it. Defaults to `true`.
 
