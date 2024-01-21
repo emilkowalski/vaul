@@ -405,6 +405,7 @@ function Root({
     }, 300);
 
     setTimeout(() => {
+      reset(document.documentElement, 'scrollBehavior');
       if (snapPoints) {
         setActiveSnapPoint(snapPoints[0]);
       }
@@ -552,6 +553,10 @@ function Root({
   React.useEffect(() => {
     // Trigger enter animation without using CSS animation
     if (isOpen) {
+      set(document.documentElement, {
+        scrollBehavior: 'auto',
+      });
+
       openTime.current = new Date();
       scaleBackground(true);
     }
