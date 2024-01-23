@@ -137,8 +137,8 @@ export function useSnapPoints({
 
     const currentPosition =
       direction === 'bottom' || direction === 'right'
-        ? activeSnapPointOffset ?? 0 - draggedDistance
-        : activeSnapPointOffset ?? 0 + draggedDistance;
+        ? (activeSnapPointOffset ?? 0) - draggedDistance
+        : (activeSnapPointOffset ?? 0) + draggedDistance;
     const isOverlaySnapPoint = activeSnapPointIndex === fadeFromIndex - 1;
     const isFirst = activeSnapPointIndex === 0;
     const hasDraggedUp = draggedDistance > 0;
