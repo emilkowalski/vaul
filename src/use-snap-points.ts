@@ -117,8 +117,8 @@ export function useSnapPoints({
     if (activeSnapPoint || activeSnapPointProp) {
       const newIndex =
         snapPoints?.findIndex((snapPoint) => snapPoint === activeSnapPointProp || snapPoint === activeSnapPoint) ??
-        null;
-      if (snapPointsOffset && newIndex && typeof snapPointsOffset[newIndex] === 'number') {
+        -1;
+      if (snapPointsOffset && newIndex !== -1 && typeof snapPointsOffset[newIndex] === 'number') {
         snapToPoint(snapPointsOffset[newIndex] as number);
       }
     }
@@ -139,8 +139,8 @@ export function useSnapPoints({
 
     const currentPosition =
       direction === 'bottom' || direction === 'right'
-        ? activeSnapPointOffset ?? 0 - draggedDistance
-        : activeSnapPointOffset ?? 0 + draggedDistance;
+        ? (activeSnapPointOffset ?? 0) - draggedDistance
+        : (activeSnapPointOffset ?? 0) + draggedDistance;
     const isOverlaySnapPoint = activeSnapPointIndex === fadeFromIndex - 1;
     const isFirst = activeSnapPointIndex === 0;
     const hasDraggedUp = draggedDistance > 0;
