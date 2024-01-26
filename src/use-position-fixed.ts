@@ -16,7 +16,7 @@ export function usePositionFixed({
   const [activeUrl, setActiveUrl] = React.useState(typeof window !== 'undefined' ? window.location.href : '');
   const scrollPos = React.useRef(0);
 
-  function setPositionFixed() {
+  const setPositionFixed = React.useCallback(() => {
     // If previousBodyPosition is already set, don't set it again.
     if (previousBodyPosition === null && isOpen) {
       previousBodyPosition = {
@@ -48,9 +48,9 @@ export function usePositionFixed({
         300,
       );
     }
-  }
+  }, [isOpen]);
 
-  function restorePositionSetting() {
+  const restorePositionSetting = React.useCallback(() => {
     if (previousBodyPosition !== null) {
       // Convert the position from "px" to Int
       const y = -parseInt(document.body.style.top, 10);
@@ -74,7 +74,7 @@ export function usePositionFixed({
 
       previousBodyPosition = null;
     }
-  }
+  }, [activeUrl]);
 
   React.useEffect(() => {
     function onScroll() {
@@ -104,7 +104,7 @@ export function usePositionFixed({
     } else {
       restorePositionSetting();
     }
-  }, [isOpen, hasBeenOpened, activeUrl]);
+  }, [isOpen, hasBeenOpened, activeUrl, modal, nested, setPositionFixed, restorePositionSetting]);
 
   return { restorePositionSetting };
 }
