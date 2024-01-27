@@ -615,6 +615,13 @@ function Root({
         transitionDuration: `${TRANSITIONS.DURATION}s`,
         transitionTimingFunction: `cubic-bezier(${TRANSITIONS.EASE.join(',')})`,
       });
+      set(
+        document.body,
+        {
+          background: '',
+        },
+        true,
+      );
     }
   }
 
