@@ -33,14 +33,13 @@
     "url": "https://github.com/emilkowalski/vaul/issues"
   },
   "devDependencies": {
-    "@playwright/test": "^1.41.1",
-    "@radix-ui/react-dialog": "^1.0.5",
-    "@types/react": "18.2.21",
-    "eslint": "^8.56.0",
-    "prettier": "^3.2.4",
-    "tsup": "^8.0.1",
-    "turbo": "1.11",
-    "typescript": "5.3.3"
+    "@playwright/test": "^1.37.1",
+    "@radix-ui/react-dialog": "^1.0.4",
+    "eslint": "^7.32.0",
+    "prettier": "^2.5.1",
+    "typescript": "5.2.2",
+    "tsup": "^6.4.0",
+    "turbo": "1.6"
   },
   "peerDependencies": {
     "react": "^16.8 || ^17.0 || ^18.0",
@@ -48,6 +47,6 @@
   },
   "packageManager": "pnpm@6.32.11",
   "dependencies": {
-    "@radix-ui/react-dialog": "^1.0.5"
+    "@radix-ui/react-dialog": "^1.0.4"
   }
 }
