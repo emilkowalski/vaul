@@ -793,7 +793,7 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
       onPointerDown={onPress}
       onPointerDownOutside={(e) => {
         onPointerDownOutside?.(e);
-        if (!modal) {
+        if (!modal || e.defaultPrevented) {
           e.preventDefault();
           return;
         }
