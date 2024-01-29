@@ -405,7 +405,7 @@ function Root({
     }, 300);
 
     setTimeout(() => {
-      reset(document.documentElement, 'scrollBehavior');
+      // reset(document.documentElement, 'scrollBehavior');
       if (snapPoints) {
         setActiveSnapPoint(snapPoints[0]);
       }
@@ -581,6 +581,11 @@ function Root({
     if (!wrapper || !shouldScaleBackground) return;
 
     if (open) {
+      // setting original styles initially
+      set(document.body, {
+        background: '',
+      });
+      // setting body styles, with cache ignored, so that we can get correct original styles in reset
       set(
         document.body,
         {
@@ -615,13 +620,6 @@ function Root({
         transitionDuration: `${TRANSITIONS.DURATION}s`,
         transitionTimingFunction: `cubic-bezier(${TRANSITIONS.EASE.join(',')})`,
       });
-      set(
-        document.body,
-        {
-          background: '',
-        },
-        true,
-      );
     }
   }
 
