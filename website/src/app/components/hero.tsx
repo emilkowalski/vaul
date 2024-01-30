@@ -44,7 +44,7 @@ export function Hero() {
             <Drawer.Trigger asChild>
               <button
                 type="button"
-                className="rounded-full bg-white px-4 py-2.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+                className="rounded-full bg-white px-4 py-2.5 text-sm font-medium text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
               >
                 Open Drawer
               </button>
@@ -150,7 +150,7 @@ export function Hero() {
           </Drawer.Root>
           <a
             href="https://github.com/emilkowalski/vaul"
-            className="font-semibold text-sm px-4 py-2.5 hover:bg-gray-100 rounded-full"
+            className="font-medium text-sm px-4 py-2.5 hover:bg-gray-100 rounded-full"
             target="_blank"
           >
             GitHub <span aria-hidden="true">→</span>
