@@ -405,7 +405,7 @@ function Root({
     }, 300);
 
     setTimeout(() => {
-      reset(document.documentElement, 'scrollBehavior');
+      // reset(document.documentElement, 'scrollBehavior');
       if (snapPoints) {
         setActiveSnapPoint(snapPoints[0]);
       }
@@ -581,6 +581,11 @@ function Root({
     if (!wrapper || !shouldScaleBackground) return;
 
     if (open) {
+      // setting original styles initially
+      set(document.body, {
+        background: document.body.style.backgroundColor || document.body.style.background,
+      });
+      // setting body styles, with cache ignored, so that we can get correct original styles in reset
       set(
         document.body,
         {
