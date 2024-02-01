@@ -191,7 +191,6 @@ export function useSnapPoints({
   }
 
   function onDrag({ draggedDistance }: { draggedDistance: number }) {
-    console.log(activeSnapPointOffset);
     if (activeSnapPointOffset === null) return;
     const newValue =
       direction === 'bottom' || direction === 'right'
