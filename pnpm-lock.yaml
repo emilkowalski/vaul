@@ -788,7 +788,7 @@ packages:
     resolution: {integrity: sha512-D94LjX4Sp0xJFVaoQOd3OO9k7tpBYNOXdVhkltUbGv2Qb9OXdrg/CpsjlZv7ia14Sylv398LswWBVVu5nqKzAQ==}
     peerDependencies:
       '@types/react': '*'
-      react: ^16.8 || ^17.0 || ^18.0 || 18.2.0
+      react: ^16.8 || ^17.0 || ^18.0
     peerDependenciesMeta:
       '@types/react':
         optional: true
