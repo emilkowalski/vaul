@@ -43,7 +43,7 @@ export function useSnapPoints({
     !snapPoints;
 
   const activeSnapPointIndex = React.useMemo(
-    () => snapPoints?.findIndex((snapPoint) => snapPoint === activeSnapPoint) || null,
+    () => snapPoints?.findIndex((snapPoint) => snapPoint === activeSnapPoint),
     [snapPoints, activeSnapPoint],
   );
 
