@@ -159,13 +159,17 @@ function Root({
     const swipeAmount = drawerRef.current ? getTranslate(drawerRef.current, direction) : null;
     const date = new Date();
 
+    if (direction === 'right' || 'left') {
+      return true;
+    }
+
     // Allow scrolling when animating
     if (openTime.current && date.getTime() - openTime.current.getTime() < 500) {
       return false;
     }
 
     if (swipeAmount !== null) {
-      if (direction === 'bottom' || direction === 'right' ? swipeAmount > 0 : swipeAmount < 0) {
+      if (direction === 'bottom' ? swipeAmount > 0 : swipeAmount < 0) {
         return true;
       }
     }
@@ -486,10 +490,7 @@ function Root({
 
   function onRelease(event: React.PointerEvent<HTMLDivElement>) {
     if (!isDragging || !drawerRef.current) return;
-    // if (isAllowedToDrag.current && isInput(event.target as HTMLElement)) {
-    //   // If we were just dragging, prevent focusing on inputs etc. on release
-    //   (event.target as HTMLInputElement).blur();
-    // }
+
     drawerRef.current.classList.remove(DRAG_CLASS);
     isAllowedToDrag.current = false;
     setIsDragging(false);
