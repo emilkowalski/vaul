@@ -260,6 +260,7 @@ function Root({
             ? `translate3d(0, ${translateValue}px, 0)`
             : `translate3d(${translateValue}px, 0, 0)`,
         });
+
         return;
       }
 

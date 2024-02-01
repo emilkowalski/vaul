@@ -43,7 +43,7 @@ export function useSnapPoints({
     !snapPoints;
 
   const activeSnapPointIndex = React.useMemo(
-    () => snapPoints?.findIndex((snapPoint) => snapPoint === activeSnapPoint) || null,
+    () => snapPoints?.findIndex((snapPoint) => snapPoint === activeSnapPoint),
     [snapPoints, activeSnapPoint],
   );
 
@@ -191,6 +191,7 @@ export function useSnapPoints({
   }
 
   function onDrag({ draggedDistance }: { draggedDistance: number }) {
+    console.log(activeSnapPointOffset);
     if (activeSnapPointOffset === null) return;
     const newValue =
       direction === 'bottom' || direction === 'right'
@@ -198,12 +199,13 @@ export function useSnapPoints({
         : activeSnapPointOffset + draggedDistance;
 
     // Don't do anything if we exceed the last(biggest) snap point
-    if ((direction === 'bottom' || direction === 'right') && newValue < snapPointsOffset[snapPointsOffset.length - 1]) {
-      return;
-    }
-    if ((direction === 'top' || direction === 'left') && newValue > snapPointsOffset[snapPointsOffset.length - 1]) {
-      return;
-    }
+    // if ((direction === 'bottom' || direction === 'right') && newValue < snapPointsOffset[snapPointsOffset.length - 1]) {
+    //   return;
+    // }
+    // if ((direction === 'top' || direction === 'left') && newValue > snapPointsOffset[snapPointsOffset.length - 1]) {
+    //   return;
+    // }
+    console.log('hello');
 
     set(drawerRef.current, {
       transform: isVertical(direction) ? `translate3d(0, ${newValue}px, 0)` : `translate3d(${newValue}px, 0, 0)`,
