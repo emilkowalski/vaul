@@ -159,6 +159,10 @@ function Root({
     const swipeAmount = drawerRef.current ? getTranslate(drawerRef.current, direction) : null;
     const date = new Date();
 
+    if (element.hasAttribute('data-vaul-no-drag')) {
+      return false;
+    }
+
     if (direction === 'right' || direction === 'left') {
       return true;
     }
@@ -260,7 +264,6 @@ function Root({
             ? `translate3d(0, ${translateValue}px, 0)`
             : `translate3d(${translateValue}px, 0, 0)`,
         });
-
         return;
       }
 
