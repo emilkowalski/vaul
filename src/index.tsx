@@ -159,7 +159,7 @@ function Root({
     const swipeAmount = drawerRef.current ? getTranslate(drawerRef.current, direction) : null;
     const date = new Date();
 
-    if (direction === 'right' || 'left') {
+    if (direction === 'right' || direction === 'left') {
       return true;
     }
 
