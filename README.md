@@ -41,6 +41,7 @@ Play around with the examples on codesandbox:
 - [Drawer from right instead of bottom](https://codesandbox.io/p/devbox/drawer-direction-right-n338ml?file=%2Fapp%2Fmy-drawer.tsx%3A47%2C2)
 - [Nested drawers](https://codesandbox.io/p/sandbox/drawer-non-dismissable-forked-5z2r3j?file=%2Fapp%2Fmy-drawer.tsx%3A49%2C16-49%2C246)
 - [Non-dismissible](https://codesandbox.io/p/sandbox/drawer-without-scale-forked-kxh9j5?file=%2Fapp%2Fmy-drawer.tsx%3A1%2C1)
+- [Non-draggable element](https://codesandbox.io/p/devbox/drawer-with-scale-forked-hwtfws?file=%2Fapp%2Fmy-drawer.tsx%3A42%2C37)
 
 ## API Reference
 
@@ -64,6 +65,8 @@ Additional props:
 `direction`: Direction of the drawer. Can be `top` or `bottom`, `left`, `right`. Defaults to `bottom`.
 
 `preventScrollRestoration`: When `true` it prevents scroll restoration when the drawer is closed after a navigation happens inside of it. Defaults to `true`.
+
+`[data-vaul-no-drag]`: When interacting with an elemenet with this data attribute, the drawer won't be dragged.
 
 ### Trigger
 
