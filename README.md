@@ -66,7 +66,7 @@ Additional props:
 
 `preventScrollRestoration`: When `true` it prevents scroll restoration when the drawer is closed after a navigation happens inside of it. Defaults to `true`.
 
-`[data-vaul-no-drag]`: When interacting with an elemenet with this data attribute, the drawer won't be dragged.
+`[data-vaul-no-drag]`: When interacting with an element with this data attribute, the drawer won't be dragged.
 
 ### Trigger
 
