@@ -4,10 +4,10 @@ import { clsx } from 'clsx';
 import { useState } from 'react';
 import { Drawer } from 'vaul';
 
-const snapPoints = [0, '148px', '355px'];
+const snapPoints = ['148px', '355px'];
 
 export default function Page() {
-  const [snap, setSnap] = useState<number | string | null>(snapPoints[1]);
+  const [snap, setSnap] = useState<number | string | null>(snapPoints[0]);
 
   const activeSnapPointIndex = snapPoints.indexOf(snap as string);
 

@@ -6,26 +6,27 @@ test.beforeEach(async ({ page }) => {
 });
 
 test.describe('With handle', () => {
-  test('click should cycle the snap point', async ({ page }) => {
+  test('click should cycle to the next snap point', async ({ page }) => {
     await page.waitForTimeout(ANIMATION_DURATION);
 
     await expect(page.getByTestId('content')).toBeVisible();
-    await expect(page.getByTestId('active-snap-index')).toHaveText('1');
+    await expect(page.getByTestId('active-snap-index')).toHaveText('0');
 
     await page.getByTestId('handle').click();
-
-    await expect(page.getByTestId('active-snap-index')).toHaveText('2');
+    await expect(page.getByTestId('active-snap-index')).toHaveText('1');
 
     await page.getByTestId('handle').click();
     await expect(page.getByTestId('content')).not.toBeVisible();
   });
 
-  test('Double click should close the drawer', async ({ page }) => {
+  test('double click should close the drawer', async ({ page }) => {
     await page.waitForTimeout(ANIMATION_DURATION);
 
     await expect(page.getByTestId('content')).toBeVisible();
-    await page.getByTestId('handle').dblclick();
+    await expect(page.getByTestId('active-snap-index')).toHaveText('0');
+    await page.getByTestId('handle').dispatchEvent("dblclick");
 
+    await page.waitForTimeout(ANIMATION_DURATION);
     await expect(page.getByTestId('content')).not.toBeVisible();
   });
 });

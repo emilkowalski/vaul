@@ -735,9 +735,12 @@ type HandleProps = React.ComponentPropsWithoutRef<'div'> & {
   preventCycle?: boolean;
 };
 
-const LONG_HANDLE_PRESS_TIMEOUT = 400;
+const LONG_HANDLE_PRESS_TIMEOUT = 300;
 
-const Handle = React.forwardRef<HTMLDivElement, HandleProps>(({ preventCycle = false, children, ...rest }, ref) => {
+const Handle = React.forwardRef<HTMLDivElement, HandleProps>(function (
+  { preventCycle = false, children, ...rest },
+  ref,
+) {
   const {
     visible,
     closeDrawer,
@@ -760,6 +763,8 @@ const Handle = React.forwardRef<HTMLDivElement, HandleProps>(({ preventCycle = f
       handleCancelInteraction();
       return;
     }
+    // make sure to clear the timeout id if the user releases the handle before the cancel timeout
+    handleCancelInteraction();
 
     const isLastSnapPoint = activeSnapPoint === snapPoints?.[snapPoints?.length - 1] ?? null;
     if ((isLastSnapPoint && dismissible) || snapPoints?.length === 0) {
