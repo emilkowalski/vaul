@@ -10,7 +10,7 @@
   ],
   "scripts": {
     "type-check": "tsc --noEmit",
-    "build": "type-check && tsup src/index.tsx",
+    "build": "pnpm type-check && tsup src/index.tsx",
     "dev": "tsup src/index.tsx --watch",
     "dev:website": "turbo run dev --filter=website...",
     "dev:test": "turbo run dev --filter=test...",
