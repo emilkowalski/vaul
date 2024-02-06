@@ -51,6 +51,7 @@ type DialogProps = {
   onClose?: () => void;
   direction?: 'top' | 'bottom' | 'left' | 'right';
   preventScrollRestoration?: boolean;
+  disablePreventScroll?: boolean;
 } & (WithFadeFromProps | WithoutFadeFromProps);
 
 function Root({
@@ -73,6 +74,7 @@ function Root({
   onClose,
   direction = 'bottom',
   preventScrollRestoration = true,
+  disablePreventScroll = false,
 }: DialogProps) {
   const [isOpen = false, setIsOpen] = React.useState<boolean>(false);
   const [hasBeenOpened, setHasBeenOpened] = React.useState<boolean>(false);
@@ -121,7 +123,7 @@ function Root({
   });
 
   usePreventScroll({
-    isDisabled: !isOpen || isDragging || !modal || justReleased || !hasBeenOpened,
+    isDisabled: !isOpen || isDragging || !modal || justReleased || !hasBeenOpened || disablePreventScroll,
   });
 
   const { restorePositionSetting } = usePositionFixed({
@@ -689,11 +691,7 @@ function Root({
     <DialogPrimitive.Root
       modal={modal}
       onOpenChange={(o: boolean) => {
-        if (openProp !== undefined) {
-          onOpenChange?.(o);
-          return;
-        }
-
+        onOpenChange?.(o);
         if (!o) {
           closeDrawer();
         } else {
@@ -812,10 +810,6 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
         }
         e.preventDefault();
         onOpenChange?.(false);
-        if (!dismissible || openProp !== undefined) {
-          return;
-        }
-
         closeDrawer();
       }}
       onPointerMove={onDrag}
