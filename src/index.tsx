@@ -392,6 +392,8 @@ function Root({
   function closeDrawer() {
     if (!drawerRef.current) return;
 
+    cancelDrag();
+
     onClose?.();
     set(drawerRef.current, {
       transform: isVertical(direction)
@@ -490,6 +492,15 @@ function Root({
         true,
       );
     }
+  }
+
+  function cancelDrag() {
+    if (!isDragging || !drawerRef.current) return;
+
+    drawerRef.current.classList.remove(DRAG_CLASS);
+    isAllowedToDrag.current = false;
+    setIsDragging(false);
+    dragEndTime.current = new Date();
   }
 
   function onRelease(event: React.PointerEvent<HTMLDivElement>) {
