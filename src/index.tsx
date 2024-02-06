@@ -433,8 +433,8 @@ function Root({
     }
   }, [isOpen, shouldScaleBackground]);
 
-  // This can be done much better
-  React.useEffect(() => {
+  // LayoutEffect to prevent extra render where openProp and isOpen are not synced yet
+  React.useLayoutEffect(() => {
     if (openProp) {
       setIsOpen(true);
       setHasBeenOpened(true);
@@ -691,7 +691,11 @@ function Root({
     <DialogPrimitive.Root
       modal={modal}
       onOpenChange={(o: boolean) => {
-        onOpenChange?.(o);
+        if (openProp !== undefined) {
+          onOpenChange?.(o);
+          return;
+        }
+
         if (!o) {
           closeDrawer();
         } else {
@@ -810,6 +814,11 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
         }
         e.preventDefault();
         onOpenChange?.(false);
+
+        if (!dismissible || openProp !== undefined) {
+          return;
+        }
+
         closeDrawer();
       }}
       onPointerMove={onDrag}
