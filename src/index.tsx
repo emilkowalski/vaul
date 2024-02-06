@@ -152,7 +152,7 @@ function Root({
     // Ensure we maintain correct pointer capture even when going outside of the drawer
     (event.target as HTMLElement).setPointerCapture(event.pointerId);
 
-    pointerStart.current = isVertical(direction) ? event.screenY : event.screenX;
+    pointerStart.current = isVertical(direction) ? event.clientY : event.clientX;
   }
 
   function shouldDrag(el: EventTarget, isDraggingInDirection: boolean) {
@@ -234,7 +234,7 @@ function Root({
     if (isDragging) {
       const directionMultiplier = direction === 'bottom' || direction === 'right' ? 1 : -1;
       const draggedDistance =
-        (pointerStart.current - (isVertical(direction) ? event.screenY : event.screenX)) * directionMultiplier;
+        (pointerStart.current - (isVertical(direction) ? event.clientY : event.clientX)) * directionMultiplier;
       const isDraggingInDirection = draggedDistance > 0;
 
       // Disallow dragging down to close when first snap point is the active one and dismissible prop is set to false.
@@ -508,7 +508,7 @@ function Root({
     if (dragStartTime.current === null) return;
 
     const timeTaken = dragEndTime.current.getTime() - dragStartTime.current.getTime();
-    const distMoved = pointerStart.current - (isVertical(direction) ? event.screenY : event.screenX);
+    const distMoved = pointerStart.current - (isVertical(direction) ? event.clientY : event.clientX);
     const velocity = Math.abs(distMoved) / timeTaken;
 
     if (velocity > 0.05) {
@@ -814,7 +814,6 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
         }
         e.preventDefault();
         onOpenChange?.(false);
-
         if (!dismissible || openProp !== undefined) {
           return;
         }
