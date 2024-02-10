@@ -9,6 +9,9 @@
     "lint": "next lint"
   },
   "devDependencies": {
+    "@types/node": "20.5.7",
+    "@types/react": "18.2.55",
+    "@types/react-dom": "18.2.18",
     "autoprefixer": "10.4.15",
     "eslint": "8.48.0",
     "eslint-config-next": "13.5.1",

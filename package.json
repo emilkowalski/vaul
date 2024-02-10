@@ -11,11 +11,11 @@
   "exports": {
     "import": {
       "types": "./dist/index.d.mts",
-      "require": "./dist/index.mjs"
+      "default": "./dist/index.mjs"
     },
     "require": {
       "types": "./dist/index.d.ts",
-      "require": "./dist/index.js"
+      "default": "./dist/index.js"
     }
   },
   "scripts": {
@@ -47,6 +47,7 @@
     "@playwright/test": "^1.37.1",
     "@radix-ui/react-dialog": "^1.0.4",
     "@types/node": "20.5.7",
+    "@types/react": "18.2.55",
     "@types/react-dom": "18.2.18",
     "bunchee": "^4.4.6",
     "eslint": "^7.32.0",
