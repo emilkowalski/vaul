@@ -444,14 +444,6 @@ function Root({
   React.useEffect(() => {
     if (!isOpen && shouldScaleBackground) {
       // Can't use `onAnimationEnd` as the component will be invisible by then
-      set(
-        document.body,
-        {
-          background: initialBodyBackground,
-          transition: `background 0.3s cubic-bezier(${TRANSITIONS.EASE.join(',')})`,
-        },
-        true,
-      );
       const id = setTimeout(() => {
         reset(document.body);
       }, 200);
