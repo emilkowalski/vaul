@@ -235,8 +235,28 @@ function Root({
         (pointerStart.current - (isVertical(direction) ? event.screenY : event.screenX)) * directionMultiplier;
       const isDraggingInDirection = draggedDistance > 0;
 
+      // Pre condition for disallowing dragging in the close direction.
+      const noCloseSnapPointsPreCondition = snapPoints && !dismissible && !isDraggingInDirection;
+
       // Disallow dragging down to close when first snap point is the active one and dismissible prop is set to false.
-      if (snapPoints && activeSnapPointIndex === 0 && !dismissible) return;
+      if (noCloseSnapPointsPreCondition && activeSnapPointIndex === 0) return;
+
+      // We need to capture last time when drag with scroll was triggered and have a timeout between
+      const absDraggedDistance = Math.abs(draggedDistance);
+      const wrapper = document.querySelector('[vaul-drawer-wrapper]');
+
+      // Calculate the percentage dragged, where 1 is the closed position
+      let percentageDragged = absDraggedDistance / drawerHeightRef.current;
+      const snapPointPercentageDragged = getSnapPointsPercentageDragged(absDraggedDistance, isDraggingInDirection);
+
+      if (snapPointPercentageDragged !== null) {
+        percentageDragged = snapPointPercentageDragged;
+      }
+
+      // Disallow close dragging beyond the smallest snap point.
+      if (noCloseSnapPointsPreCondition && percentageDragged >= 1) {
+        return;
+      }
 
       if (!isAllowedToDrag.current && !shouldDrag(event.target, isDraggingInDirection)) return;
       drawerRef.current.classList.add(DRAG_CLASS);
@@ -265,17 +285,6 @@ function Root({
             : `translate3d(${translateValue}px, 0, 0)`,
         });
         return;
-      }
-
-      // We need to capture last time when drag with scroll was triggered and have a timeout between
-      const absDraggedDistance = Math.abs(draggedDistance);
-      const wrapper = document.querySelector('[vaul-drawer-wrapper]');
-
-      let percentageDragged = absDraggedDistance / drawerHeightRef.current;
-      const snapPointPercentageDragged = getSnapPointsPercentageDragged(absDraggedDistance, isDraggingInDirection);
-
-      if (snapPointPercentageDragged !== null) {
-        percentageDragged = snapPointPercentageDragged;
       }
 
       const opacityValue = 1 - percentageDragged;
