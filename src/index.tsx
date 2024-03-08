@@ -138,6 +138,7 @@ function Root({
 
   function onPress(event: React.PointerEvent<HTMLDivElement>) {
     if (!dismissible && !snapPoints) return;
+    if (!isDraggableElement(event.target)) return;
     if (drawerRef.current && !drawerRef.current.contains(event.target as Node)) return;
     drawerHeightRef.current = drawerRef.current?.getBoundingClientRect().height || 0;
     setIsDragging(true);
@@ -153,15 +154,23 @@ function Root({
     pointerStart.current = isVertical(direction) ? event.screenY : event.screenX;
   }
 
+  function isDraggableElement(el: EventTarget) {
+    let element = el as HTMLElement;
+
+    if (element.hasAttribute('data-vaul-no-drag') || element.closest('[data-vaul-no-drag]')) {
+      return false;
+    }
+
+    return true;
+  }
+
   function shouldDrag(el: EventTarget, isDraggingInDirection: boolean) {
     let element = el as HTMLElement;
     const highlightedText = window.getSelection()?.toString();
     const swipeAmount = drawerRef.current ? getTranslate(drawerRef.current, direction) : null;
     const date = new Date();
 
-    if (element.hasAttribute('data-vaul-no-drag') || element.closest('[data-vaul-no-drag]')) {
-      return false;
-    }
+    if (!isDraggableElement(el)) return false;
 
     if (direction === 'right' || direction === 'left') {
       return true;
