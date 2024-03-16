@@ -831,7 +831,6 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
           keyboardIsOpen.current = false;
         }
         e.preventDefault();
-        onOpenChange?.(false);
         if (!dismissible || openProp !== undefined) {
           return;
         }
