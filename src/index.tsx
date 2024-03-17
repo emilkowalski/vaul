@@ -1,9 +1,9 @@
 'use client';
 
-import * as DialogPrimitive from '@radix-ui/react-dialog';
-import React from 'react';
-import { DrawerContext, useDrawerContext } from './context';
 import './style.css';
+import * as React from 'react';
+import * as DialogPrimitive from '@radix-ui/react-dialog';
+import { DrawerContext, useDrawerContext } from './context';
 import { usePreventScroll, isInput, isIOS } from './use-prevent-scroll';
 import { useComposedRefs } from './use-composed-refs';
 import { usePositionFixed } from './use-position-fixed';
