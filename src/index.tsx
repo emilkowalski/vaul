@@ -51,6 +51,7 @@ type DialogProps = {
   onClose?: () => void;
   direction?: 'top' | 'bottom' | 'left' | 'right';
   preventScrollRestoration?: boolean;
+  disablePreventScroll?: boolean;
 } & (WithFadeFromProps | WithoutFadeFromProps);
 
 function Root({
@@ -73,6 +74,7 @@ function Root({
   onClose,
   direction = 'bottom',
   preventScrollRestoration = true,
+  disablePreventScroll = false,
 }: DialogProps) {
   const [isOpen = false, setIsOpen] = React.useState<boolean>(false);
   const [hasBeenOpened, setHasBeenOpened] = React.useState<boolean>(false);
@@ -121,7 +123,7 @@ function Root({
   });
 
   usePreventScroll({
-    isDisabled: !isOpen || isDragging || !modal || justReleased || !hasBeenOpened,
+    isDisabled: !isOpen || isDragging || !modal || justReleased || !hasBeenOpened || disablePreventScroll,
   });
 
   const { restorePositionSetting } = usePositionFixed({
@@ -150,7 +152,7 @@ function Root({
     // Ensure we maintain correct pointer capture even when going outside of the drawer
     (event.target as HTMLElement).setPointerCapture(event.pointerId);
 
-    pointerStart.current = isVertical(direction) ? event.screenY : event.screenX;
+    pointerStart.current = isVertical(direction) ? event.clientY : event.clientX;
   }
 
   function shouldDrag(el: EventTarget, isDraggingInDirection: boolean) {
@@ -232,7 +234,7 @@ function Root({
     if (isDragging) {
       const directionMultiplier = direction === 'bottom' || direction === 'right' ? 1 : -1;
       const draggedDistance =
-        (pointerStart.current - (isVertical(direction) ? event.screenY : event.screenX)) * directionMultiplier;
+        (pointerStart.current - (isVertical(direction) ? event.clientY : event.clientX)) * directionMultiplier;
       const isDraggingInDirection = draggedDistance > 0;
 
       // Pre condition for disallowing dragging in the close direction.
@@ -442,8 +444,8 @@ function Root({
     }
   }, [isOpen, shouldScaleBackground]);
 
-  // This can be done much better
-  React.useEffect(() => {
+  // LayoutEffect to prevent extra render where openProp and isOpen are not synced yet
+  React.useLayoutEffect(() => {
     if (openProp) {
       setIsOpen(true);
       setHasBeenOpened(true);
@@ -526,7 +528,7 @@ function Root({
     if (dragStartTime.current === null) return;
 
     const timeTaken = dragEndTime.current.getTime() - dragStartTime.current.getTime();
-    const distMoved = pointerStart.current - (isVertical(direction) ? event.screenY : event.screenX);
+    const distMoved = pointerStart.current - (isVertical(direction) ? event.clientY : event.clientX);
     const velocity = Math.abs(distMoved) / timeTaken;
 
     if (velocity > 0.05) {
