@@ -34,6 +34,7 @@ interface WithoutFadeFromProps {
 }
 
 type DialogProps = {
+  disableDrag: boolean,
   activeSnapPoint?: number | string | null;
   setActiveSnapPoint?: (snapPoint: number | string | null) => void;
   children?: React.ReactNode;
@@ -58,6 +59,7 @@ function Root({
   onOpenChange,
   children,
   shouldScaleBackground,
+  disableDrag = false,
   onDrag: onDragProp,
   onRelease: onReleaseProp,
   snapPoints,
@@ -225,7 +227,7 @@ function Root({
   }
 
   function onDrag(event: React.PointerEvent<HTMLDivElement>) {
-    if (!drawerRef.current) {
+    if (!drawerRef.current || disableDrag) {
       return;
     }
     // We need to know how much of the drawer has been dragged in percentages so that we can transform background accordingly
@@ -487,13 +489,13 @@ function Root({
           overflow: 'hidden',
           ...(isVertical(direction)
             ? {
-                transform: `scale(${getScale()}) translate3d(0, calc(env(safe-area-inset-top) + 14px), 0)`,
-                transformOrigin: 'top',
-              }
+              transform: `scale(${getScale()}) translate3d(0, calc(env(safe-area-inset-top) + 14px), 0)`,
+              transformOrigin: 'top',
+            }
             : {
-                transform: `scale(${getScale()}) translate3d(calc(env(safe-area-inset-top) + 14px), 0, 0)`,
-                transformOrigin: 'left',
-              }),
+              transform: `scale(${getScale()}) translate3d(calc(env(safe-area-inset-top) + 14px), 0, 0)`,
+              transformOrigin: 'left',
+            }),
           transitionProperty: 'transform, border-radius',
           transitionDuration: `${TRANSITIONS.DURATION}s`,
           transitionTimingFunction: `cubic-bezier(${TRANSITIONS.EASE.join(',')})`,
@@ -624,13 +626,13 @@ function Root({
         overflow: 'hidden',
         ...(isVertical(direction)
           ? {
-              transform: `scale(${getScale()}) translate3d(0, calc(env(safe-area-inset-top) + 14px), 0)`,
-              transformOrigin: 'top',
-            }
+            transform: `scale(${getScale()}) translate3d(0, calc(env(safe-area-inset-top) + 14px), 0)`,
+            transformOrigin: 'top',
+          }
           : {
-              transform: `scale(${getScale()}) translate3d(calc(env(safe-area-inset-top) + 14px), 0, 0)`,
-              transformOrigin: 'left',
-            }),
+            transform: `scale(${getScale()}) translate3d(calc(env(safe-area-inset-top) + 14px), 0, 0)`,
+            transformOrigin: 'left',
+          }),
         transitionProperty: 'transform, border-radius',
         transitionDuration: `${TRANSITIONS.DURATION}s`,
         transitionTimingFunction: `cubic-bezier(${TRANSITIONS.EASE.join(',')})`,
@@ -844,9 +846,9 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
       style={
         snapPointsOffset && snapPointsOffset.length > 0
           ? ({
-              '--snap-point-height': `${snapPointsOffset[0]!}px`,
-              ...style,
-            } as React.CSSProperties)
+            '--snap-point-height': `${snapPointsOffset[0]!}px`,
+            ...style,
+          } as React.CSSProperties)
           : style
       }
       {...rest}
