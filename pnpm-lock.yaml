@@ -9,7 +9,7 @@ importers:
       '@types/node': 20.5.7
       '@types/react': 18.2.55
       '@types/react-dom': 18.2.18
-      bunchee: ^5.1.0
+      bunchee: ^5.1.1
       eslint: ^7.32.0
       prettier: ^2.5.1
       react: ^18.2.0
@@ -23,7 +23,7 @@ importers:
       '@types/node': 20.5.7
       '@types/react': 18.2.55
       '@types/react-dom': 18.2.18
-      bunchee: 5.1.0_typescript@5.2.2
+      bunchee: 5.1.1_typescript@5.2.2
       eslint: 7.32.0
       prettier: 2.8.8
       react: 18.2.0
@@ -1536,8 +1536,8 @@ packages:
     engines: {node: '>=6'}
     dev: true
 
-  /bunchee/5.1.0_typescript@5.2.2:
-    resolution: {integrity: sha512-jmjPROOa8WOW341xmT0XnvqQOt/QNNbt7iIaesDhxeD5wUZBPKwgOPpcxDt/2FcOIKXKlh7EJQQDxgxps1WBzw==}
+  /bunchee/5.1.1_typescript@5.2.2:
+    resolution: {integrity: sha512-g5BHJYw2jdCi47OQaYa4QIL4Eo7JgYkgfISQyDPpOBAcKle/nBdzO6zLXu0kFi4ScjZcwH5WCWDan+U603LhxA==}
     engines: {node: '>= 18.0.0'}
     hasBin: true
     peerDependencies:
