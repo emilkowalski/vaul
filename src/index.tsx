@@ -8,7 +8,7 @@ import { usePreventScroll, isInput, isIOS } from './use-prevent-scroll';
 import { useComposedRefs } from './use-composed-refs';
 import { usePositionFixed } from './use-position-fixed';
 import { useSnapPoints } from './use-snap-points';
-import { set, reset, getTranslate, dampenValue, isVertical } from './helpers';
+import { set, reset, getTranslate, dampenValue, isVertical, updateRgbaAlpha } from './helpers';
 import { TRANSITIONS, VELOCITY_THRESHOLD } from './constants';
 import { DrawerDirection } from './types';
 
@@ -82,6 +82,7 @@ function Root({
   // Not visible = translateY(100%)
   const [visible, setVisible] = React.useState<boolean>(false);
   const [mounted, setMounted] = React.useState<boolean>(false);
+  const [initialBodyBackground, setInitialBodyBackground] = React.useState<string | undefined>();
   const [isDragging, setIsDragging] = React.useState<boolean>(false);
   const [justReleased, setJustReleased] = React.useState<boolean>(false);
   const overlayRef = React.useRef<HTMLDivElement>(null);
@@ -102,6 +103,12 @@ function Root({
     // Change openTime ref when we reach the last snap point to prevent dragging for 500ms incase it's scrollable.
     if (snapPoints && activeSnapPointIndex === snapPointsOffset.length - 1) openTime.current = new Date();
   }, []);
+
+  const overlayBackgroundColor = React.useMemo(() => {
+    if (!overlayRef.current) return null;
+    const overlayStyle = window.getComputedStyle(overlayRef.current);
+    return overlayStyle.backgroundColor;
+  }, [overlayRef.current]);
 
   const {
     activeSnapPoint,
@@ -416,8 +423,20 @@ function Root({
 
     set(overlayRef.current, {
       opacity: '0',
-      transition: `opacity ${TRANSITIONS.DURATION}s cubic-bezier(${TRANSITIONS.EASE.join(',')})`,
+      background: initialBodyBackground,
+      transition: `opacity ${TRANSITIONS.DURATION}s cubic-bezier(${TRANSITIONS.EASE.join(',')}), background ${
+        TRANSITIONS.DURATION
+      }s cubic-bezier(${TRANSITIONS.EASE.join(',')})`,
     });
+
+    set(
+      document.body,
+      {
+        background: initialBodyBackground,
+        transition: `background 0.3s cubic-bezier(${TRANSITIONS.EASE.join(',')})`,
+      },
+      true,
+    );
 
     scaleBackground(false);
 
@@ -455,6 +474,19 @@ function Root({
     }
   }, [openProp]);
 
+  React.useEffect(() => {
+    if (mounted && isOpen && overlayBackgroundColor) {
+      set(
+        document.body,
+        {
+          background: updateRgbaAlpha(overlayBackgroundColor, 1),
+          transition: 'none',
+        },
+        true,
+      );
+    }
+  }, [overlayBackgroundColor, isOpen]);
+
   // This can be done much better
   React.useEffect(() => {
     if (mounted) {
@@ -464,6 +496,12 @@ function Root({
 
   React.useEffect(() => {
     setMounted(true);
+
+    // initially setting and caching original body styles
+    setInitialBodyBackground(document.body.style.backgroundColor || document.body.style.background);
+    set(document.body, {
+      background: document.body.style.backgroundColor || document.body.style.background,
+    });
   }, []);
 
   function resetDrawer() {
@@ -609,19 +647,6 @@ function Root({
     if (!wrapper || !shouldScaleBackground) return;
 
     if (open) {
-      // setting original styles initially
-      set(document.body, {
-        background: document.body.style.backgroundColor || document.body.style.background,
-      });
-      // setting body styles, with cache ignored, so that we can get correct original styles in reset
-      set(
-        document.body,
-        {
-          background: 'black',
-        },
-        true,
-      );
-
       set(wrapper, {
         borderRadius: `${BORDER_RADIUS}px`,
         overflow: 'hidden',

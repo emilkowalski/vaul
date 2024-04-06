@@ -8,7 +8,6 @@ export function Hero() {
       <div
         aria-hidden
         className="absolute top-0 w-[1000px] z-10 h-[400px] left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-[0.15] pointer-events-none"
-        style={{ backgroundImage: 'radial-gradient(#A4A4A3, transparent 50%)' }}
       />
       <svg
         className="absolute pointer-events-none inset-0 h-full w-full stroke-gray-200 opacity-50 [mask-image:radial-gradient(100%_100%_at_top_center,white,transparent)]"

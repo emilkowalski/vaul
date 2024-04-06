@@ -90,3 +90,33 @@ export function getTranslate(element: HTMLElement, direction: DrawerDirection): 
 export function dampenValue(v: number) {
   return 8 * (Math.log(v + 1) - 2);
 }
+
+export function updateRgbaAlpha(rgbaColor: string, newAlpha: number): string {
+  // Ensure newAlpha is between 0 and 1
+  newAlpha = Math.max(0, Math.min(1, newAlpha));
+
+  // Extract the RGB values from the RGBA string
+  const rgbaParts = RegExp(/rgba?\((\d{1,3}),\s*(\d{1,3}),\s*(\d{1,3})(?:,\s*([\d.]+))?\)/).exec(rgbaColor);
+
+  if (!rgbaParts) {
+    throw new Error(`Invalid RGBA color value: ${rgbaColor}`);
+  }
+
+  // Reconstruct the RGBA color with the new alpha value
+  const updatedRgbaColor = `rgba(${rgbaParts[1]}, ${rgbaParts[2]}, ${rgbaParts[3]}, ${newAlpha})`;
+
+  return updatedRgbaColor;
+}
+
+function parseRgba(rgba: string): [number, number, number, number] {
+  const match = rgba.match(/rgba?\((\d{1,3}),\s*(\d{1,3}),\s*(\d{1,3}),?\s*([\d.]+)?\)/);
+  if (!match) {
+    throw new Error('Invalid RGBA color value');
+  }
+  return [
+    parseInt(match[1], 10),
+    parseInt(match[2], 10),
+    parseInt(match[3], 10),
+    match[4] !== undefined ? parseFloat(match[4]) : 1, // Default alpha to 1 if not provided
+  ];
+}
