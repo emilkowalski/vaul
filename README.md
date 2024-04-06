@@ -68,7 +68,7 @@ Additional props:
 
 `disablePreventScroll`: When `true` scroll prevention mechanism will be disabled. Scroll prevention ensures that page will not scroll on mobile when opening drawer. However this mechanism gets confused when drawer has an input with autofocus and therefore opens simulataneosly with touch keyboard. Defaults to `true`. `modal` set to `false` also disables it.
 
-`[data-vaul-no-drag]`: When interacting with an elemenet with this data attribute, the drawer won't be dragged.
+`[data-vaul-no-drag]`: When interacting with an element with this data attribute, the drawer won't be dragged.
 
 ### Trigger
 

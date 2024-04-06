@@ -2,16 +2,26 @@
   "name": "vaul",
   "version": "0.9.0",
   "description": "Drawer component for React.",
-  "main": "dist/index.js",
-  "module": "dist/index.mjs",
-  "types": "dist/index.d.ts",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
   "files": [
     "dist"
   ],
+  "exports": {
+    "import": {
+      "types": "./dist/index.d.mts",
+      "default": "./dist/index.mjs"
+    },
+    "require": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
   "scripts": {
     "type-check": "tsc --noEmit",
-    "build": "pnpm type-check && tsup src/index.tsx",
-    "dev": "tsup src/index.tsx --watch",
+    "build": "pnpm type-check && bunchee",
+    "dev": "bunchee --watch",
     "dev:website": "turbo run dev --filter=website...",
     "dev:test": "turbo run dev --filter=test...",
     "format": "prettier --write .",
@@ -34,16 +44,16 @@
     "url": "https://github.com/emilkowalski/vaul/issues"
   },
   "devDependencies": {
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
     "@playwright/test": "^1.37.1",
     "@radix-ui/react-dialog": "^1.0.4",
     "@types/node": "20.5.7",
-    "@types/react": "18.2.52",
+    "@types/react": "18.2.55",
     "@types/react-dom": "18.2.18",
+    "bunchee": "^4.4.6",
     "eslint": "^7.32.0",
     "prettier": "^2.5.1",
-    "tsup": "^6.4.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
     "turbo": "1.6",
     "typescript": "5.2.2"
   },

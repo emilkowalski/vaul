@@ -113,9 +113,3 @@
   to {
   }
 }
-
-@media (hover: hover) and (pointer: fine) {
-  [vaul-drawer] {
-    user-select: none;
-  }
-}
