@@ -70,6 +70,9 @@ export const isVertical = (direction: DrawerDirection) => {
 };
 
 export function getTranslate(element: HTMLElement, direction: DrawerDirection): number | null {
+  if (!element) {
+    return null;
+  }
   const style = window.getComputedStyle(element);
   const transform =
     // @ts-ignore
