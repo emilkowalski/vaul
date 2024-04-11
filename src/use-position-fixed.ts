@@ -1,3 +1,4 @@
+// @deno-types="npm:@types/react@^18.2.0"
 import React from 'react';
 
 let previousBodyPosition: Record<string, string> | null = null;

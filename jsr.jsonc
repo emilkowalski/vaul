@@ -1,0 +1,23 @@
+{
+    "name": "@bureaudouble/vaul",
+    "version": "0.0.1",
+    "compilerOptions": {
+        "jsx": "react-jsx",
+        "lib": [
+          "es2022",
+          "dom",
+          "dom.iterable",
+          "dom.asynciterable"
+        ]
+    },
+    "exclude": ["**/*", "!README.md", "!LICENSE.md", "!src", "!jsr.jsonc"],
+    "imports": {
+        "react": "npm:react@^18.2.0",
+        "react-style-singleton": "npm:react-style-singleton@^2.2.1",
+        "@radix-ui/react-dialog": "jsr:@radix-ui-fork/react-dialog@^0.0.5"
+    },
+    "exports": {
+        ".": "./src/index.tsx"
+    }
+}
+  

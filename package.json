@@ -63,6 +63,7 @@
   },
   "packageManager": "pnpm@6.32.11",
   "dependencies": {
+    "react-style-singleton": "^2.2.1",
     "@radix-ui/react-dialog": "^1.0.4"
   }
 }

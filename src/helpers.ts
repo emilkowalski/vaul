@@ -1,4 +1,4 @@
-import { DrawerDirection } from './types';
+import { DrawerDirection } from './types.ts';
 
 interface Style {
   [key: string]: string;

@@ -1,5 +1,6 @@
 // This code comes from https://github.com/radix-ui/primitives/blob/main/packages/react/use-controllable-state/src/useControllableState.tsx
 
+// @deno-types="npm:@types/react@^18.2.0"
 import React from 'react';
 
 type UseControllableStateParams<T> = {

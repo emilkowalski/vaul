@@ -1,5 +1,6 @@
 // This code comes from https://github.com/adobe/react-spectrum/blob/main/packages/%40react-aria/overlays/src/usePreventScroll.ts
 
+// @deno-types="npm:@types/react@^18.2.0"
 import { useEffect, useLayoutEffect } from 'react';
 
 export const useIsomorphicLayoutEffect = typeof window !== 'undefined' ? useLayoutEffect : useEffect;

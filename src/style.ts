@@ -1,3 +1,4 @@
+const style: string = /* css */`
 [vaul-drawer] {
   touch-action: none;
   transition: transform 0.5s cubic-bezier(0.32, 0.72, 0, 1);
@@ -113,3 +114,6 @@
   to {
   }
 }
+`;
+
+export default style;
