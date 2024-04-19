@@ -1,7 +1,7 @@
 'use client';
 
 import * as DialogPrimitive from '@radix-ui/react-dialog';
-import React from 'react';
+import React, { useRef, useState } from 'react';
 import { DrawerContext, useDrawerContext } from './context';
 import './style.css';
 import { usePreventScroll, isInput, isIOS } from './use-prevent-scroll';
@@ -808,22 +808,36 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
   } = useDrawerContext();
   const composedRef = useComposedRefs(ref, drawerRef);
   const pointerStartRef = React.useRef<{ x: number; y: number } | null>(null);
+  const wasBeyondThePointRef = React.useRef(false);
+
+  const isDeltaInDirection = (delta: { x: number; y: number }, direction: DrawerDirection, threshold = 0) => {
+    if (wasBeyondThePointRef.current) return true;
+
+    const deltaY = Math.abs(delta.y);
+    const deltaX = Math.abs(delta.x);
+    const isDeltaX = deltaX > deltaY;
+    const dFactor = ['bottom', 'right'].includes(direction) ? 1 : -1;
+
+    if (direction === 'left' || direction === 'right') {
+      const isReverseDirection = delta.x * dFactor < 0;
+      if (!isReverseDirection && deltaX >= 0 && deltaX <= threshold) {
+        return isDeltaX;
+      }
+    } else {
+      const isReverseDirection = delta.y * dFactor < 0;
+      if (!isReverseDirection && deltaY >= 0 && deltaY <= threshold) {
+        return !isDeltaX;
+      }
+    }
+
+    wasBeyondThePointRef.current = true;
+    return true;
+  };
 
   React.useEffect(() => {
     // Trigger enter animation without using CSS animation
     setVisible(true);
   }, []);
-
-  const isDeltaInDirection = (delta: { x: number; y: number }, direction: DrawerDirection, threshold = 0) => {
-    const deltaX = Math.abs(delta.x);
-    const deltaY = Math.abs(delta.y);
-    const isDeltaX = deltaX > deltaY;
-    if (direction === 'left' || direction === 'right') {
-      return isDeltaX && deltaX > threshold;
-    } else {
-      return !isDeltaX && deltaY > threshold;
-    }
-  };
 
   return (
     <DialogPrimitive.Content
@@ -872,17 +886,12 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
       }}
       onPointerMove={(event) => {
         rest.onPointerMove?.(event);
-        if (!pointerStartRef.current) return null;
+        if (!pointerStartRef.current) return;
         const yPosition = event.clientY - pointerStartRef.current.y;
         const xPosition = event.clientX - pointerStartRef.current.x;
 
-        const isHorizontalSwipe = ['left', 'right'].includes(direction);
-        const clamp = ['left', 'top'].includes(direction) ? Math.min : Math.max;
-
-        const clampedX = isHorizontalSwipe ? clamp(0, xPosition) : 0;
-        const clampedY = !isHorizontalSwipe ? clamp(0, yPosition) : 0;
         const swipeStartThreshold = event.pointerType === 'touch' ? 10 : 2;
-        const delta = { x: clampedX, y: clampedY };
+        const delta = { x: xPosition, y: yPosition };
 
         const isAllowedToSwipe = isDeltaInDirection(delta, direction, swipeStartThreshold);
         if (isAllowedToSwipe) onDrag(event);
@@ -893,6 +902,7 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
       onPointerUp={(event) => {
         rest.onPointerUp?.(event);
         pointerStartRef.current = null;
+        wasBeyondThePointRef.current = false;
         onRelease(event);
       }}
     />
