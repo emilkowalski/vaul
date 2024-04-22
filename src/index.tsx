@@ -863,11 +863,8 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
           keyboardIsOpen.current = false;
         }
         e.preventDefault();
+        if (!dismissible) return;
         onOpenChange?.(false);
-        if (!dismissible || openProp !== undefined) {
-          return;
-        }
-
         closeDrawer();
       }}
       onPointerMove={(event) => {
