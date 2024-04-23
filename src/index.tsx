@@ -11,6 +11,7 @@ import { useSnapPoints } from './use-snap-points';
 import { set, reset, getTranslate, dampenValue, isVertical } from './helpers';
 import { TRANSITIONS, VELOCITY_THRESHOLD } from './constants';
 import { DrawerDirection } from './types';
+import { useControllableState } from './use-controllable-state';
 
 const CLOSE_THRESHOLD = 0.25;
 
@@ -38,6 +39,7 @@ type DialogProps = {
   activeSnapPoint?: number | string | null;
   setActiveSnapPoint?: (snapPoint: number | string | null) => void;
   children?: React.ReactNode;
+  defaultOpen?: boolean;
   open?: boolean;
   closeThreshold?: number;
   onOpenChange?: (open: boolean) => void;
@@ -56,6 +58,7 @@ type DialogProps = {
 } & (WithFadeFromProps | WithoutFadeFromProps);
 
 function Root({
+  defaultOpen,
   open: openProp,
   onOpenChange,
   children,
@@ -77,11 +80,15 @@ function Root({
   preventScrollRestoration = true,
   disablePreventScroll = false,
 }: DialogProps) {
-  const [isOpen = false, setIsOpen] = React.useState<boolean>(false);
+  const [isOpen = false, setIsOpen] = useControllableState({
+    defaultProp: defaultOpen,
+    prop: openProp,
+    onChange: onOpenChange,
+  });
   const [hasBeenOpened, setHasBeenOpened] = React.useState<boolean>(false);
   // Not visible = translateY(100%)
   const [visible, setVisible] = React.useState<boolean>(false);
-  const [mounted, setMounted] = React.useState<boolean>(false);
+  // const [mounted, setMounted] = React.useState<boolean>(false);
   const [isDragging, setIsDragging] = React.useState<boolean>(false);
   const [justReleased, setJustReleased] = React.useState<boolean>(false);
   const overlayRef = React.useRef<HTMLDivElement>(null);
@@ -407,24 +414,22 @@ function Root({
     cancelDrag();
 
     onClose?.();
-    set(drawerRef.current, {
-      transform: isVertical(direction)
-        ? `translate3d(0, ${direction === 'bottom' ? '100%' : '-100%'}, 0)`
-        : `translate3d(${direction === 'right' ? '100%' : '-100%'}, 0, 0)`,
-      transition: `transform ${TRANSITIONS.DURATION}s cubic-bezier(${TRANSITIONS.EASE.join(',')})`,
-    });
-
-    set(overlayRef.current, {
-      opacity: '0',
-      transition: `opacity ${TRANSITIONS.DURATION}s cubic-bezier(${TRANSITIONS.EASE.join(',')})`,
-    });
-
+    // set(drawerRef.current, {
+    //   transform: isVertical(direction)
+    //     ? `translate3d(0, ${direction === 'bottom' ? '100%' : '-100%'}, 0)`
+    //     : `translate3d(${direction === 'right' ? '100%' : '-100%'}, 0, 0)`,
+    //   transition: `transform ${TRANSITIONS.DURATION}s cubic-bezier(${TRANSITIONS.EASE.join(',')})`,
+    // });
+    //
+    // set(overlayRef.current, {
+    //   opacity: '0',
+    //   transition: `opacity ${TRANSITIONS.DURATION}s cubic-bezier(${TRANSITIONS.EASE.join(',')})`,
+    // });
+    //
     scaleBackground(false);
 
-    setTimeout(() => {
-      setVisible(false);
-      setIsOpen(false);
-    }, 300);
+    setVisible(false);
+    // setIsOpen(false);
 
     setTimeout(() => {
       // reset(document.documentElement, 'scrollBehavior');
@@ -446,25 +451,25 @@ function Root({
   }, [isOpen, shouldScaleBackground]);
 
   // LayoutEffect to prevent extra render where openProp and isOpen are not synced yet
-  React.useLayoutEffect(() => {
-    if (openProp) {
-      setIsOpen(true);
-      setHasBeenOpened(true);
-    } else {
-      closeDrawer();
-    }
-  }, [openProp]);
+  // React.useLayoutEffect(() => {
+  //   if (openProp) {
+  //     setIsOpen(true);
+  //     setHasBeenOpened(true);
+  //   } else {
+  //     closeDrawer();
+  //   }
+  // }, [openProp]);
 
   // This can be done much better
-  React.useEffect(() => {
-    if (mounted) {
-      onOpenChange?.(isOpen);
-    }
-  }, [isOpen]);
+  // React.useEffect(() => {
+  //   if (mounted) {
+  //     onOpenChange?.(isOpen);
+  //   }
+  // }, [isOpen]);
 
-  React.useEffect(() => {
-    setMounted(true);
-  }, []);
+  // React.useEffect(() => {
+  //   setMounted(true);
+  // }, []);
 
   function resetDrawer() {
     if (!drawerRef.current) return;
@@ -711,18 +716,11 @@ function Root({
   return (
     <DialogPrimitive.Root
       modal={modal}
-      onOpenChange={(o: boolean) => {
-        if (openProp !== undefined) {
-          onOpenChange?.(o);
-          return;
-        }
-
-        if (!o) {
-          closeDrawer();
-        } else {
-          setHasBeenOpened(true);
-          setIsOpen(o);
-        }
+      defaultOpen={defaultOpen}
+      onOpenChange={(open) => {
+        if (open) setHasBeenOpened(true);
+        else closeDrawer();
+        setIsOpen(open);
       }}
       open={isOpen}
     >
@@ -805,9 +803,12 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
     onOpenChange,
     setVisible,
     direction,
+    isOpen,
+    snapPoints,
   } = useDrawerContext();
   const composedRef = useComposedRefs(ref, drawerRef);
   const pointerStartRef = React.useRef<{ x: number; y: number } | null>(null);
+  const hasSnapPoints = snapPoints && snapPoints.length > 0;
 
   React.useEffect(() => {
     // Trigger enter animation without using CSS animation
@@ -830,6 +831,7 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
       vaul-drawer=""
       vaul-drawer-direction={direction}
       vaul-drawer-visible={visible ? 'true' : 'false'}
+      vaul-snap-points={isOpen && hasSnapPoints ? 'true' : 'false'}
       {...rest}
       ref={composedRef}
       style={
@@ -862,13 +864,13 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
         if (keyboardIsOpen.current) {
           keyboardIsOpen.current = false;
         }
-        e.preventDefault();
-        onOpenChange?.(false);
-        if (!dismissible || openProp !== undefined) {
-          return;
-        }
+        // e.preventDefault();
+        // onOpenChange?.(false);
+        // if (!dismissible || openProp !== undefined) {
+        //   return;
+        // }
 
-        closeDrawer();
+        // closeDrawer();
       }}
       onPointerMove={(event) => {
         rest.onPointerMove?.(event);

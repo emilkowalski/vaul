@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { forwardRef, useState } from 'react';
 import clsx from 'clsx';
 import { Drawer } from 'vaul';
 import { DrawerDirection } from 'vaul/src/types';
@@ -26,9 +26,10 @@ const CenteredContent = () => {
   );
 };
 
-const DrawerContent = ({ drawerDirection }: { drawerDirection: DrawerDirection }) => {
+const DrawerContent = forwardRef<HTMLDivElement, { drawerDirection: DrawerDirection }>(({ drawerDirection }, ref) => {
   return (
     <Drawer.Content
+      ref={ref}
       data-testid="content"
       className={clsx({
         'bg-zinc-100 flex fixed p-6': true,
@@ -60,7 +61,7 @@ const DrawerContent = ({ drawerDirection }: { drawerDirection: DrawerDirection }
       </div>
     </Drawer.Content>
   );
-};
+});
 
 export default function Page() {
   const [direction, setDirection] = useState<DrawerDirection>('bottom');
