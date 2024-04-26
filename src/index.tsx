@@ -10,6 +10,7 @@ import { usePositionFixed } from './use-position-fixed';
 import { useSnapPoints } from './use-snap-points';
 import { set, reset, getTranslate, dampenValue, isVertical } from './helpers';
 import { TRANSITIONS, VELOCITY_THRESHOLD } from './constants';
+import { DrawerDirection } from './types';
 
 const CLOSE_THRESHOLD = 0.25;
 
@@ -51,6 +52,7 @@ type DialogProps = {
   onClose?: () => void;
   direction?: 'top' | 'bottom' | 'left' | 'right';
   preventScrollRestoration?: boolean;
+  disablePreventScroll?: boolean;
 } & (WithFadeFromProps | WithoutFadeFromProps);
 
 function Root({
@@ -73,6 +75,7 @@ function Root({
   onClose,
   direction = 'bottom',
   preventScrollRestoration = true,
+  disablePreventScroll = false,
 }: DialogProps) {
   const [isOpen = false, setIsOpen] = React.useState<boolean>(false);
   const [hasBeenOpened, setHasBeenOpened] = React.useState<boolean>(false);
@@ -121,7 +124,7 @@ function Root({
   });
 
   usePreventScroll({
-    isDisabled: !isOpen || isDragging || !modal || justReleased || !hasBeenOpened,
+    isDisabled: !isOpen || isDragging || !modal || justReleased || !hasBeenOpened || disablePreventScroll,
   });
 
   const { restorePositionSetting } = usePositionFixed({
@@ -150,7 +153,7 @@ function Root({
     // Ensure we maintain correct pointer capture even when going outside of the drawer
     (event.target as HTMLElement).setPointerCapture(event.pointerId);
 
-    pointerStart.current = isVertical(direction) ? event.screenY : event.screenX;
+    pointerStart.current = isVertical(direction) ? event.clientY : event.clientX;
   }
 
   function shouldDrag(el: EventTarget, isDraggingInDirection: boolean) {
@@ -232,7 +235,7 @@ function Root({
     if (isDragging) {
       const directionMultiplier = direction === 'bottom' || direction === 'right' ? 1 : -1;
       const draggedDistance =
-        (pointerStart.current - (isVertical(direction) ? event.screenY : event.screenX)) * directionMultiplier;
+        (pointerStart.current - (isVertical(direction) ? event.clientY : event.clientX)) * directionMultiplier;
       const isDraggingInDirection = draggedDistance > 0;
 
       // Pre condition for disallowing dragging in the close direction.
@@ -442,8 +445,8 @@ function Root({
     }
   }, [isOpen, shouldScaleBackground]);
 
-  // This can be done much better
-  React.useEffect(() => {
+  // LayoutEffect to prevent extra render where openProp and isOpen are not synced yet
+  React.useLayoutEffect(() => {
     if (openProp) {
       setIsOpen(true);
       setHasBeenOpened(true);
@@ -526,7 +529,7 @@ function Root({
     if (dragStartTime.current === null) return;
 
     const timeTaken = dragEndTime.current.getTime() - dragStartTime.current.getTime();
-    const distMoved = pointerStart.current - (isVertical(direction) ? event.screenY : event.screenX);
+    const distMoved = pointerStart.current - (isVertical(direction) ? event.clientY : event.clientX);
     const velocity = Math.abs(distMoved) / timeTaken;
 
     if (velocity > 0.05) {
@@ -804,14 +807,39 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
     direction,
   } = useDrawerContext();
   const composedRef = useComposedRefs(ref, drawerRef);
+  const pointerStartRef = React.useRef<{ x: number; y: number } | null>(null);
 
   React.useEffect(() => {
     // Trigger enter animation without using CSS animation
     setVisible(true);
   }, []);
 
+  const isDeltaInDirection = (delta: { x: number; y: number }, direction: DrawerDirection, threshold = 0) => {
+    const deltaX = Math.abs(delta.x);
+    const deltaY = Math.abs(delta.y);
+    const isDeltaX = deltaX > deltaY;
+    if (direction === 'left' || direction === 'right') {
+      return isDeltaX && deltaX > threshold;
+    } else {
+      return !isDeltaX && deltaY > threshold;
+    }
+  };
+
   return (
     <DialogPrimitive.Content
+      vaul-drawer=""
+      vaul-drawer-direction={direction}
+      vaul-drawer-visible={visible ? 'true' : 'false'}
+      {...rest}
+      ref={composedRef}
+      style={
+        snapPointsOffset && snapPointsOffset.length > 0
+          ? ({
+              '--snap-point-height': `${snapPointsOffset[0]!}px`,
+              ...style,
+            } as React.CSSProperties)
+          : style
+      }
       onOpenAutoFocus={(e) => {
         if (onOpenAutoFocus) {
           onOpenAutoFocus(e);
@@ -820,7 +848,11 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
           drawerRef.current?.focus();
         }
       }}
-      onPointerDown={onPress}
+      onPointerDown={(event) => {
+        rest.onPointerDown?.(event);
+        pointerStartRef.current = { x: event.clientX, y: event.clientY };
+        onPress(event);
+      }}
       onPointerDownOutside={(e) => {
         onPointerDownOutside?.(e);
         if (!modal || e.defaultPrevented) {
@@ -837,21 +869,31 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
 
         closeDrawer();
       }}
-      onPointerMove={onDrag}
-      onPointerUp={onRelease}
-      ref={composedRef}
-      style={
-        snapPointsOffset && snapPointsOffset.length > 0
-          ? ({
-              '--snap-point-height': `${snapPointsOffset[0]!}px`,
-              ...style,
-            } as React.CSSProperties)
-          : style
-      }
-      {...rest}
-      vaul-drawer=""
-      vaul-drawer-direction={direction}
-      vaul-drawer-visible={visible ? 'true' : 'false'}
+      onPointerMove={(event) => {
+        rest.onPointerMove?.(event);
+        if (!pointerStartRef.current) return null;
+        const yPosition = event.clientY - pointerStartRef.current.y;
+        const xPosition = event.clientX - pointerStartRef.current.x;
+
+        const isHorizontalSwipe = ['left', 'right'].includes(direction);
+        const clamp = ['left', 'top'].includes(direction) ? Math.min : Math.max;
+
+        const clampedX = isHorizontalSwipe ? clamp(0, xPosition) : 0;
+        const clampedY = !isHorizontalSwipe ? clamp(0, yPosition) : 0;
+        const swipeStartThreshold = event.pointerType === 'touch' ? 10 : 2;
+        const delta = { x: clampedX, y: clampedY };
+
+        const isAllowedToSwipe = isDeltaInDirection(delta, direction, swipeStartThreshold);
+        if (isAllowedToSwipe) onDrag(event);
+        else if (Math.abs(xPosition) > swipeStartThreshold || Math.abs(yPosition) > swipeStartThreshold) {
+          pointerStartRef.current = null;
+        }
+      }}
+      onPointerUp={(event) => {
+        rest.onPointerUp?.(event);
+        pointerStartRef.current = null;
+        onRelease(event);
+      }}
     />
   );
 });
