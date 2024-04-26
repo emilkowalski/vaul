@@ -1,5 +1,6 @@
 // This code comes from https://github.com/radix-ui/primitives/tree/main/packages/react/compose-refs
 
+// @deno-types="npm:@types/react@^18.2.0"
 import * as React from 'react';
 
 type PossibleRef<T> = React.Ref<T> | undefined;

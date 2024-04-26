@@ -1,8 +1,9 @@
+// @deno-types="npm:@types/react@^18.2.0"
 import React from 'react';
-import { set, isVertical } from './helpers';
-import { TRANSITIONS, VELOCITY_THRESHOLD } from './constants';
-import { useControllableState } from './use-controllable-state';
-import { DrawerDirection } from './types';
+import { set, isVertical } from './helpers.ts';
+import { TRANSITIONS, VELOCITY_THRESHOLD } from './constants.ts';
+import { useControllableState } from './use-controllable-state.ts';
+import { DrawerDirection } from './types.ts';
 
 export function useSnapPoints({
   activeSnapPointProp,

@@ -1,5 +1,6 @@
+// @deno-types="npm:@types/react@^18.2.0"
 import React from 'react';
-import { DrawerDirection } from './types';
+import { DrawerDirection } from './types.ts';
 
 interface DrawerContextValue {
   drawerRef: React.RefObject<HTMLDivElement>;

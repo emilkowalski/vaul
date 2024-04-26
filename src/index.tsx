@@ -1,16 +1,18 @@
 'use client';
 
 import * as DialogPrimitive from '@radix-ui/react-dialog';
+// @deno-types="npm:@types/react@^18.2.0"
 import React from 'react';
-import { DrawerContext, useDrawerContext } from './context';
-import './style.css';
-import { usePreventScroll, isInput, isIOS } from './use-prevent-scroll';
-import { useComposedRefs } from './use-composed-refs';
-import { usePositionFixed } from './use-position-fixed';
-import { useSnapPoints } from './use-snap-points';
-import { set, reset, getTranslate, dampenValue, isVertical } from './helpers';
-import { TRANSITIONS, VELOCITY_THRESHOLD } from './constants';
-import { DrawerDirection } from './types';
+import { styleHookSingleton } from 'react-style-singleton';
+import style from "./style.ts";
+import { DrawerContext, useDrawerContext } from './context.ts';
+import { usePreventScroll, isInput, isIOS } from './use-prevent-scroll.ts';
+import { useComposedRefs } from './use-composed-refs.ts';
+import { usePositionFixed } from './use-position-fixed.ts';
+import { useSnapPoints } from './use-snap-points.ts';
+import { set, reset, getTranslate, dampenValue, isVertical } from './helpers.ts';
+import { TRANSITIONS, VELOCITY_THRESHOLD } from './constants.ts';
+import { DrawerDirection } from './types.ts';
 
 const CLOSE_THRESHOLD = 0.25;
 
@@ -55,6 +57,8 @@ type DialogProps = {
   disablePreventScroll?: boolean;
 } & (WithFadeFromProps | WithoutFadeFromProps);
 
+const useStyle: ReturnType<typeof styleHookSingleton> = styleHookSingleton();
+
 function Root({
   open: openProp,
   onOpenChange,
@@ -76,7 +80,8 @@ function Root({
   direction = 'bottom',
   preventScrollRestoration = true,
   disablePreventScroll = false,
-}: DialogProps) {
+}: DialogProps): React.JSX.Element {
+  useStyle(style);
   const [isOpen = false, setIsOpen] = React.useState<boolean>(false);
   const [hasBeenOpened, setHasBeenOpened] = React.useState<boolean>(false);
   // Not visible = translateY(100%)
@@ -760,7 +765,8 @@ function Root({
   );
 }
 
-const Overlay = React.forwardRef<HTMLDivElement, React.ComponentPropsWithoutRef<typeof DialogPrimitive.Overlay>>(
+const Overlay: React.ForwardRefExoticComponent<Omit<typeof DialogPrimitive.Overlay, "ref"> & React.RefAttributes<HTMLDivElement>> = 
+React.forwardRef<HTMLDivElement, React.ComponentPropsWithoutRef<typeof DialogPrimitive.Overlay>>(
   function ({ children, ...rest }, ref) {
     const { overlayRef, snapPoints, onRelease, shouldFade, isOpen, visible } = useDrawerContext();
     const composedRef = useComposedRefs(ref, overlayRef);
@@ -786,7 +792,8 @@ type ContentProps = React.ComponentPropsWithoutRef<typeof DialogPrimitive.Conten
   onAnimationEnd?: (open: boolean) => void;
 };
 
-const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
+const Content: React.ForwardRefExoticComponent<Omit<ContentProps, "ref"> & React.RefAttributes<HTMLDivElement>>
+= React.forwardRef<HTMLDivElement, ContentProps>(function (
   { onOpenAutoFocus, onPointerDownOutside, onAnimationEnd, style, ...rest },
   ref,
 ) {
@@ -901,7 +908,7 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
 
 Content.displayName = 'Drawer.Content';
 
-function NestedRoot({ onDrag, onOpenChange, ...rest }: DialogProps) {
+function NestedRoot({ onDrag, onOpenChange, ...rest }: DialogProps): React.JSX.Element {
   const { onNestedDrag, onNestedOpenChange, onNestedRelease } = useDrawerContext();
 
   if (!onNestedDrag) {
