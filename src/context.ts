@@ -4,7 +4,6 @@ import { DrawerDirection } from './types';
 interface DrawerContextValue {
   drawerRef: React.RefObject<HTMLDivElement>;
   overlayRef: React.RefObject<HTMLDivElement>;
-  scaleBackground: (open: boolean) => void;
   onPress: (event: React.PointerEvent<HTMLDivElement>) => void;
   onRelease: (event: React.PointerEvent<HTMLDivElement>) => void;
   onDrag: (event: React.PointerEvent<HTMLDivElement>) => void;
@@ -26,12 +25,13 @@ interface DrawerContextValue {
   openProp?: boolean;
   onOpenChange?: (o: boolean) => void;
   direction?: DrawerDirection;
+  shouldScaleBackground: boolean;
+  onClose: () => void;
 }
 
 export const DrawerContext = React.createContext<DrawerContextValue>({
   drawerRef: { current: null },
   overlayRef: { current: null },
-  scaleBackground: () => {},
   onPress: () => {},
   onRelease: () => {},
   onDrag: () => {},
@@ -53,6 +53,8 @@ export const DrawerContext = React.createContext<DrawerContextValue>({
   closeDrawer: () => {},
   setVisible: () => {},
   direction: 'bottom',
+  shouldScaleBackground: false,
+  onClose: () => {},
 });
 
 export const useDrawerContext = () => React.useContext(DrawerContext);
