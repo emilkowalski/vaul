@@ -80,12 +80,23 @@
   transform: translate3d(var(--snap-point-height, 0), 0, 0);
 }
 
-[vaul-overlay] {
+[vaul-overlay][vaul-snap-points='false'] {
+  animation-duration: 0.5s;
+  animation-timing-function: cubic-bezier(0.32, 0.72, 0, 1);
+}
+[vaul-overlay][vaul-snap-points='false'][data-state='open'] {
+  animation-name: fadeIn;
+}
+[vaul-overlay][vaul-snap-points='false'][data-state='closed'] {
+  animation-name: fadeOut;
+}
+
+[vaul-overlay][vaul-snap-points='true'] {
   opacity: 0;
   transition: opacity 0.5s cubic-bezier(0.32, 0.72, 0, 1);
 }
 
-[vaul-overlay][vaul-drawer-visible='true'] {
+[vaul-overlay][vaul-snap-points='true'][vaul-drawer-visible='true'] {
   opacity: 1;
 }
 
@@ -141,6 +152,21 @@
   from {
   }
   to {
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  to {
+    opacity: 0;
   }
 }
 
