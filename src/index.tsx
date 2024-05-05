@@ -2,15 +2,14 @@
 
 import * as DialogPrimitive from '@radix-ui/react-dialog';
 import React from 'react';
-import { TRANSITIONS, VELOCITY_THRESHOLD } from './constants';
 import { DrawerContext, useDrawerContext } from './context';
-import { dampenValue, getTranslate, isVertical, reset, set } from './helpers';
 import './style.css';
-import { DrawerDirection } from './types';
+import { usePreventScroll, isInput, isIOS } from './use-prevent-scroll';
 import { useComposedRefs } from './use-composed-refs';
 import { usePositionFixed } from './use-position-fixed';
-import { isIOS, isInput, usePreventScroll } from './use-prevent-scroll';
 import { useSnapPoints } from './use-snap-points';
+import { set, reset, getTranslate, dampenValue, isVertical } from './helpers';
+import { TRANSITIONS, VELOCITY_THRESHOLD } from './constants';
 
 const CLOSE_THRESHOLD = 0.25;
 
@@ -53,7 +52,6 @@ type DialogProps = {
   onClose?: () => void;
   direction?: 'top' | 'bottom' | 'left' | 'right';
   preventScrollRestoration?: boolean;
-  disablePreventScroll?: boolean;
 } & (WithFadeFromProps | WithoutFadeFromProps);
 
 function Root({
@@ -77,7 +75,6 @@ function Root({
   onClose,
   direction = 'bottom',
   preventScrollRestoration = true,
-  disablePreventScroll = false,
 }: DialogProps) {
   const [isOpen = false, setIsOpen] = React.useState<boolean>(false);
   const [hasBeenOpened, setHasBeenOpened] = React.useState<boolean>(false);
@@ -126,7 +123,7 @@ function Root({
   });
 
   usePreventScroll({
-    isDisabled: !isOpen || isDragging || !modal || justReleased || !hasBeenOpened || disablePreventScroll,
+    isDisabled: !isOpen || isDragging || !modal || justReleased || !hasBeenOpened,
   });
 
   const { restorePositionSetting } = usePositionFixed({
@@ -155,7 +152,7 @@ function Root({
     // Ensure we maintain correct pointer capture even when going outside of the drawer
     (event.target as HTMLElement).setPointerCapture(event.pointerId);
 
-    pointerStart.current = isVertical(direction) ? event.clientY : event.clientX;
+    pointerStart.current = isVertical(direction) ? event.screenY : event.screenX;
   }
 
   function shouldDrag(el: EventTarget, isDraggingInDirection: boolean) {
@@ -164,21 +161,13 @@ function Root({
     const swipeAmount = drawerRef.current ? getTranslate(drawerRef.current, direction) : null;
     const date = new Date();
 
-    if (element.hasAttribute('data-vaul-no-drag') || element.closest('[data-vaul-no-drag]')) {
-      return false;
-    }
-
-    if (direction === 'right' || direction === 'left') {
-      return true;
-    }
-
     // Allow scrolling when animating
     if (openTime.current && date.getTime() - openTime.current.getTime() < 500) {
       return false;
     }
 
     if (swipeAmount !== null) {
-      if (direction === 'bottom' ? swipeAmount > 0 : swipeAmount < 0) {
+      if (direction === 'bottom' || direction === 'right' ? swipeAmount > 0 : swipeAmount < 0) {
         return true;
       }
     }
@@ -237,31 +226,11 @@ function Root({
     if (isDragging) {
       const directionMultiplier = direction === 'bottom' || direction === 'right' ? 1 : -1;
       const draggedDistance =
-        (pointerStart.current - (isVertical(direction) ? event.clientY : event.clientX)) * directionMultiplier;
+        (pointerStart.current - (isVertical(direction) ? event.screenY : event.screenX)) * directionMultiplier;
       const isDraggingInDirection = draggedDistance > 0;
 
-      // Pre condition for disallowing dragging in the close direction.
-      const noCloseSnapPointsPreCondition = snapPoints && !dismissible && !isDraggingInDirection;
-
       // Disallow dragging down to close when first snap point is the active one and dismissible prop is set to false.
-      if (noCloseSnapPointsPreCondition && activeSnapPointIndex === 0) return;
-
-      // We need to capture last time when drag with scroll was triggered and have a timeout between
-      const absDraggedDistance = Math.abs(draggedDistance);
-      const wrapper = document.querySelector('[vaul-drawer-wrapper]');
-
-      // Calculate the percentage dragged, where 1 is the closed position
-      let percentageDragged = absDraggedDistance / drawerHeightRef.current;
-      const snapPointPercentageDragged = getSnapPointsPercentageDragged(absDraggedDistance, isDraggingInDirection);
-
-      if (snapPointPercentageDragged !== null) {
-        percentageDragged = snapPointPercentageDragged;
-      }
-
-      // Disallow close dragging beyond the smallest snap point.
-      if (noCloseSnapPointsPreCondition && percentageDragged >= 1) {
-        return;
-      }
+      if (snapPoints && activeSnapPointIndex === 0 && !dismissible) return;
 
       if (!isAllowedToDrag.current && !shouldDrag(event.target, isDraggingInDirection)) return;
       drawerRef.current.classList.add(DRAG_CLASS);
@@ -290,6 +259,17 @@ function Root({
             : `translate3d(${translateValue}px, 0, 0)`,
         });
         return;
+      }
+
+      // We need to capture last time when drag with scroll was triggered and have a timeout between
+      const absDraggedDistance = Math.abs(draggedDistance);
+      const wrapper = document.querySelector('[vaul-drawer-wrapper]');
+
+      let percentageDragged = absDraggedDistance / drawerHeightRef.current;
+      const snapPointPercentageDragged = getSnapPointsPercentageDragged(absDraggedDistance, isDraggingInDirection);
+
+      if (snapPointPercentageDragged !== null) {
+        percentageDragged = snapPointPercentageDragged;
       }
 
       const opacityValue = 1 - percentageDragged;
@@ -406,8 +386,6 @@ function Root({
   function closeDrawer() {
     if (!drawerRef.current) return;
 
-    cancelDrag();
-
     onClose?.();
     set(drawerRef.current, {
       transform: isVertical(direction)
@@ -429,7 +407,7 @@ function Root({
     }, 300);
 
     setTimeout(() => {
-      // reset(document.documentElement, 'scrollBehavior');
+      reset(document.documentElement, 'scrollBehavior');
       if (snapPoints) {
         setActiveSnapPoint(snapPoints[0]);
       }
@@ -447,8 +425,8 @@ function Root({
     }
   }, [isOpen, shouldScaleBackground]);
 
-  // LayoutEffect to prevent extra render where openProp and isOpen are not synced yet
-  React.useLayoutEffect(() => {
+  // This can be done much better
+  React.useEffect(() => {
     if (openProp) {
       setIsOpen(true);
       setHasBeenOpened(true);
@@ -508,18 +486,12 @@ function Root({
     }
   }
 
-  function cancelDrag() {
-    if (!isDragging || !drawerRef.current) return;
-
-    drawerRef.current.classList.remove(DRAG_CLASS);
-    isAllowedToDrag.current = false;
-    setIsDragging(false);
-    dragEndTime.current = new Date();
-  }
-
   function onRelease(event: React.PointerEvent<HTMLDivElement>) {
     if (!isDragging || !drawerRef.current) return;
-
+    if (isAllowedToDrag.current && isInput(event.target as HTMLElement)) {
+      // If we were just dragging, prevent focusing on inputs etc. on release
+      (event.target as HTMLInputElement).blur();
+    }
     drawerRef.current.classList.remove(DRAG_CLASS);
     isAllowedToDrag.current = false;
     setIsDragging(false);
@@ -531,7 +503,7 @@ function Root({
     if (dragStartTime.current === null) return;
 
     const timeTaken = dragEndTime.current.getTime() - dragStartTime.current.getTime();
-    const distMoved = pointerStart.current - (isVertical(direction) ? event.clientY : event.clientX);
+    const distMoved = pointerStart.current - (isVertical(direction) ? event.screenY : event.screenX);
     const velocity = Math.abs(distMoved) / timeTaken;
 
     if (velocity > 0.05) {
@@ -611,11 +583,6 @@ function Root({
     if (!wrapper || !shouldScaleBackground) return;
 
     if (open) {
-      // setting original styles initially
-      set(document.body, {
-        background: document.body.style.backgroundColor || document.body.style.background,
-      });
-      // setting body styles, with cache ignored, so that we can get correct original styles in reset
       set(
         document.body,
         {
@@ -764,7 +731,7 @@ function Root({
   );
 }
 
-type HandleProps = React.ComponentPropsWithoutRef<'span'> & {
+type HandleProps = React.ComponentPropsWithoutRef<'div'> & {
   preventCycle?: boolean;
 };
 
@@ -796,24 +763,16 @@ const Handle = React.forwardRef<HTMLDivElement, HandleProps>(function (
       handleCancelInteraction();
       return;
     }
-
-    // Make sure to clear the timeout id if the user releases the handle before the cancel timeout
+    // make sure to clear the timeout id if the user releases the handle before the cancel timeout
     handleCancelInteraction();
 
-    if ((!snapPoints || snapPoints.length === 0) && dismissible) {
+    const isLastSnapPoint = activeSnapPoint === snapPoints?.[snapPoints?.length - 1] ?? null;
+    if ((isLastSnapPoint && dismissible) || snapPoints?.length === 0) {
       closeDrawer();
       return;
     }
 
-    const isLastSnapPoint = activeSnapPoint === snapPoints[snapPoints.length - 1];
-    if (isLastSnapPoint && dismissible) {
-      closeDrawer();
-      return;
-    }
-
-    const currentSnapIndex = snapPoints.findIndex((point) => point === activeSnapPoint);
-    if (currentSnapIndex === -1) return; // activeSnapPoint not found in snapPoints
-    const nextSnapPoint = snapPoints[currentSnapIndex + 1];
+    const nextSnapPoint = snapPoints[snapPoints.findIndex((point) => point === activeSnapPoint) + 1];
     setActiveSnapPoint(nextSnapPoint);
   }
 
@@ -835,12 +794,10 @@ const Handle = React.forwardRef<HTMLDivElement, HandleProps>(function (
       onDoubleClick={closeDrawer}
       onPointerCancel={handleCancelInteraction}
       onPointerDown={(e) => {
-        if (handleOnly) onPress(e);
+        handleOnly && onPress(e);
         handleStartInteraction();
       }}
-      onPointerMove={(e) => {
-        if (handleOnly) onDrag(e);
-      }}
+      onPointerMove={(e) => handleOnly && onDrag(e)}
       // onPointerUp is already handled by the content component
       ref={ref}
       vaul-drawer-visible={visible ? 'true' : 'false'}
@@ -848,7 +805,7 @@ const Handle = React.forwardRef<HTMLDivElement, HandleProps>(function (
       aria-hidden="true"
       {...rest}
     >
-      {/* Expand handle's hit area beyond what's visible to ensure a 44x44 tap target for touch devices */}
+      {/* Expand handle's hit area beyond what's visible to ensure a 44x44 tap target for touch devices (accessibility standard) */}
       <span vaul-handle-hitarea="" aria-hidden="true">
         {children}
       </span>
@@ -906,39 +863,14 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
     direction,
   } = useDrawerContext();
   const composedRef = useComposedRefs(ref, drawerRef);
-  const pointerStartRef = React.useRef<{ x: number; y: number } | null>(null);
 
   React.useEffect(() => {
     // Trigger enter animation without using CSS animation
     setVisible(true);
   }, []);
 
-  const isDeltaInDirection = (delta: { x: number; y: number }, direction: DrawerDirection, threshold = 0) => {
-    const deltaX = Math.abs(delta.x);
-    const deltaY = Math.abs(delta.y);
-    const isDeltaX = deltaX > deltaY;
-    if (direction === 'left' || direction === 'right') {
-      return isDeltaX && deltaX > threshold;
-    } else {
-      return !isDeltaX && deltaY > threshold;
-    }
-  };
-
   return (
     <DialogPrimitive.Content
-      vaul-drawer=""
-      vaul-drawer-direction={direction}
-      vaul-drawer-visible={visible ? 'true' : 'false'}
-      {...rest}
-      ref={composedRef}
-      style={
-        snapPointsOffset && snapPointsOffset.length > 0
-          ? ({
-              '--snap-point-height': `${snapPointsOffset[0]!}px`,
-              ...style,
-            } as React.CSSProperties)
-          : style
-      }
       onOpenAutoFocus={(e) => {
         if (onOpenAutoFocus) {
           onOpenAutoFocus(e);
@@ -947,15 +879,10 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
           drawerRef.current?.focus();
         }
       }}
-      onPointerDown={(event) => {
-        if (handleOnly) return;
-        rest.onPointerDown?.(event);
-        pointerStartRef.current = { x: event.clientX, y: event.clientY };
-        onPress(event);
-      }}
+      onPointerDown={(e) => !handleOnly && onPress(e)}
       onPointerDownOutside={(e) => {
         onPointerDownOutside?.(e);
-        if (!modal || e.defaultPrevented) {
+        if (!modal) {
           e.preventDefault();
           return;
         }
@@ -970,32 +897,21 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
 
         closeDrawer();
       }}
-      onPointerMove={(event) => {
-        if (handleOnly) return;
-        rest.onPointerMove?.(event);
-        if (!pointerStartRef.current) return null;
-        const yPosition = event.clientY - pointerStartRef.current.y;
-        const xPosition = event.clientX - pointerStartRef.current.x;
-
-        const isHorizontalSwipe = ['left', 'right'].includes(direction);
-        const clamp = ['left', 'top'].includes(direction) ? Math.min : Math.max;
-
-        const clampedX = isHorizontalSwipe ? clamp(0, xPosition) : 0;
-        const clampedY = !isHorizontalSwipe ? clamp(0, yPosition) : 0;
-        const swipeStartThreshold = event.pointerType === 'touch' ? 10 : 2;
-        const delta = { x: clampedX, y: clampedY };
-
-        const isAllowedToSwipe = isDeltaInDirection(delta, direction, swipeStartThreshold);
-        if (isAllowedToSwipe) onDrag(event);
-        else if (Math.abs(xPosition) > swipeStartThreshold || Math.abs(yPosition) > swipeStartThreshold) {
-          pointerStartRef.current = null;
-        }
-      }}
-      onPointerUp={(event) => {
-        rest.onPointerUp?.(event);
-        pointerStartRef.current = null;
-        onRelease(event);
-      }}
+      onPointerMove={(e) => !handleOnly && onDrag(e)}
+      onPointerUp={onRelease}
+      ref={composedRef}
+      style={
+        snapPointsOffset && snapPointsOffset.length > 0
+          ? ({
+              '--snap-point-height': `${snapPointsOffset[0]!}px`,
+              ...style,
+            } as React.CSSProperties)
+          : style
+      }
+      {...rest}
+      vaul-drawer=""
+      vaul-drawer-direction={direction}
+      vaul-drawer-visible={visible ? 'true' : 'false'}
     />
   );
 });
