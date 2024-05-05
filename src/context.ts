@@ -55,4 +55,10 @@ export const DrawerContext = React.createContext<DrawerContextValue>({
   direction: 'bottom',
 });
 
-export const useDrawerContext = () => React.useContext(DrawerContext);
+export const useDrawerContext = () => {
+  const context = React.useContext(DrawerContext);
+  if (!context) {
+    throw new Error('useDrawerContext must be used within a Drawer.Root');
+  }
+  return context;
+};
