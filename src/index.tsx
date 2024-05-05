@@ -796,16 +796,23 @@ const Handle = React.forwardRef<HTMLDivElement, HandleProps>(function (
       handleCancelInteraction();
       return;
     }
-    // make sure to clear the timeout id if the user releases the handle before the cancel timeout
+    // Make sure to clear the timeout id if the user releases the handle before the cancel timeout
     handleCancelInteraction();
 
-    const isLastSnapPoint = activeSnapPoint === snapPoints?.[snapPoints?.length - 1] ?? null;
-    if ((isLastSnapPoint && dismissible) || snapPoints?.length === 0) {
+    if ((!snapPoints || snapPoints.length === 0) && dismissible) {
       closeDrawer();
       return;
     }
 
-    const nextSnapPoint = snapPoints[snapPoints.findIndex((point) => point === activeSnapPoint) + 1];
+    const isLastSnapPoint = activeSnapPoint === snapPoints[snapPoints.length - 1];
+    if (isLastSnapPoint && dismissible) {
+      closeDrawer();
+      return;
+    }
+
+    const currentSnapIndex = snapPoints.findIndex((point) => point === activeSnapPoint);
+    if (currentSnapIndex === -1) return; // activeSnapPoint not found in snapPoints
+    const nextSnapPoint = snapPoints[currentSnapIndex + 1];
     setActiveSnapPoint(nextSnapPoint);
   }
 
@@ -827,10 +834,12 @@ const Handle = React.forwardRef<HTMLDivElement, HandleProps>(function (
       onDoubleClick={closeDrawer}
       onPointerCancel={handleCancelInteraction}
       onPointerDown={(e) => {
-        handleOnly && onPress(e);
+        if (handleOnly) onPress(e);
         handleStartInteraction();
       }}
-      onPointerMove={(e) => handleOnly && onDrag(e)}
+      onPointerMove={(e) => {
+        if (handleOnly) onDrag(e);
+      }}
       // onPointerUp is already handled by the content component
       ref={ref}
       vaul-drawer-visible={visible ? 'true' : 'false'}
@@ -838,7 +847,7 @@ const Handle = React.forwardRef<HTMLDivElement, HandleProps>(function (
       aria-hidden="true"
       {...rest}
     >
-      {/* Expand handle's hit area beyond what's visible to ensure a 44x44 tap target for touch devices (accessibility standard) */}
+      {/* Expand handle's hit area beyond what's visible to ensure a 44x44 tap target for touch devices */}
       <span vaul-handle-hitarea="" aria-hidden="true">
         {children}
       </span>
