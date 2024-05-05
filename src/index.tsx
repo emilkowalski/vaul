@@ -42,6 +42,7 @@ type DialogProps = {
   closeThreshold?: number;
   onOpenChange?: (open: boolean) => void;
   shouldScaleBackground?: boolean;
+  setBackgroundColorOnScale?: boolean;
   scrollLockTimeout?: number;
   fixed?: boolean;
   dismissible?: boolean;
@@ -64,6 +65,7 @@ function Root({
   onRelease: onReleaseProp,
   snapPoints,
   nested = false,
+  setBackgroundColorOnScale = true,
   closeThreshold = CLOSE_THRESHOLD,
   scrollLockTimeout = SCROLL_LOCK_TIMEOUT,
   dismissible = true,
@@ -609,18 +611,20 @@ function Root({
     if (!wrapper || !shouldScaleBackground) return;
 
     if (open) {
-      // setting original styles initially
-      set(document.body, {
-        background: document.body.style.backgroundColor || document.body.style.background,
-      });
-      // setting body styles, with cache ignored, so that we can get correct original styles in reset
-      set(
-        document.body,
-        {
-          background: 'black',
-        },
-        true,
-      );
+      if (setBackgroundColorOnScale) {
+        // setting original styles initially
+        set(document.body, {
+          background: document.body.style.backgroundColor || document.body.style.background,
+        });
+        // setting body styles, with cache ignored, so that we can get correct original styles in reset
+        set(
+          document.body,
+          {
+            background: 'black',
+          },
+          true,
+        );
+      }
 
       set(wrapper, {
         borderRadius: `${BORDER_RADIUS}px`,
