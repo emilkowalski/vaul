@@ -808,13 +808,14 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
   } = useDrawerContext();
   const composedRef = useComposedRefs(ref, drawerRef);
   const pointerStartRef = React.useRef<{ x: number; y: number } | null>(null);
+  const lastKnownPointerEventRef = React.useRef<React.PointerEvent<HTMLDivElement> | null>(null);
 
   React.useEffect(() => {
     // Trigger enter animation without using CSS animation
     setVisible(true);
   }, []);
 
-  const isDeltaInDirection = (delta: { x: number; y: number }, direction: DrawerDirection, threshold = 0) => {
+  function isDeltaInDirection(delta: { x: number; y: number }, direction: DrawerDirection, threshold = 0) {
     const deltaX = Math.abs(delta.x);
     const deltaY = Math.abs(delta.y);
     const isDeltaX = deltaX > deltaY;
@@ -823,7 +824,15 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
     } else {
       return !isDeltaX && deltaY > threshold;
     }
-  };
+  }
+
+  function handleOnPointerUp(event: React.PointerEvent<HTMLDivElement> | undefined) {
+    const eventToUse = event || lastKnownPointerEventRef.current;
+    if (!eventToUse) return;
+    rest.onPointerUp?.(eventToUse);
+    pointerStartRef.current = null;
+    onRelease(eventToUse);
+  }
 
   return (
     <DialogPrimitive.Content
@@ -872,6 +881,8 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
       }}
       onPointerMove={(event) => {
         rest.onPointerMove?.(event);
+        lastKnownPointerEventRef.current = event;
+
         if (!pointerStartRef.current) return null;
         const yPosition = event.clientY - pointerStartRef.current.y;
         const xPosition = event.clientX - pointerStartRef.current.x;
@@ -890,11 +901,9 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
           pointerStartRef.current = null;
         }
       }}
-      onPointerUp={(event) => {
-        rest.onPointerUp?.(event);
-        pointerStartRef.current = null;
-        onRelease(event);
-      }}
+      onPointerUp={handleOnPointerUp}
+      onPointerOut={handleOnPointerUp}
+      onContextMenu={handleOnPointerUp}
     />
   );
 });
