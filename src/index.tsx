@@ -768,7 +768,8 @@ type HandleProps = React.ComponentPropsWithoutRef<'div'> & {
   preventCycle?: boolean;
 };
 
-const LONG_HANDLE_PRESS_TIMEOUT = 300;
+const LONG_HANDLE_PRESS_TIMEOUT = 250;
+const DOUBLE_TAP_TIMEOUT = 120;
 
 const Handle = React.forwardRef<HTMLDivElement, HandleProps>(function (
   { preventCycle = false, children, ...rest },
@@ -789,6 +790,17 @@ const Handle = React.forwardRef<HTMLDivElement, HandleProps>(function (
 
   const closeTimeoutIdRef = React.useRef<number | null>(null);
   const shouldCancelInteractionRef = React.useRef(false);
+
+  function handleStartCycle() {
+    // Stop if this is the second click of a double click
+    if (shouldCancelInteractionRef.current) {
+      handleCancelInteraction();
+      return;
+    }
+    window.setTimeout(() => {
+      handleCycleSnapPoints();
+    }, DOUBLE_TAP_TIMEOUT);
+  }
 
   function handleCycleSnapPoints() {
     // Prevent accidental taps while resizing drawer
@@ -830,8 +842,11 @@ const Handle = React.forwardRef<HTMLDivElement, HandleProps>(function (
 
   return (
     <div
-      onClick={handleCycleSnapPoints}
-      onDoubleClick={closeDrawer}
+      onClick={handleStartCycle}
+      onDoubleClick={() => {
+        shouldCancelInteractionRef.current = true;
+        closeDrawer();
+      }}
       onPointerCancel={handleCancelInteraction}
       onPointerDown={(e) => {
         if (handleOnly) onPress(e);
