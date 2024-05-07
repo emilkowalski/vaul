@@ -71,6 +71,10 @@ Additional props:
 
 `disablePreventScroll`: When `true` scroll prevention mechanism will be disabled. Scroll prevention ensures that page will not scroll on mobile when opening drawer. However this mechanism gets confused when drawer has an input with autofocus and therefore opens simulataneosly with touch keyboard. Defaults to `true`. `modal` set to `false` also disables it.
 
+`noBodyStyles`: When `true` the `body` doesn't get any styles assigned from Vaul.
+
+`setBackgroundColorOnScale`: When `false` we don't change body's background color when the drawer is open. `true` by default.
+
 `[data-vaul-no-drag]`: When interacting with an element with this data attribute, the drawer won't be dragged.
 
 ### Trigger
