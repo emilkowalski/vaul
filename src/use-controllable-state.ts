@@ -1,6 +1,6 @@
 // This code comes from https://github.com/radix-ui/primitives/blob/main/packages/react/use-controllable-state/src/useControllableState.tsx
 
-import React from 'react';
+import * as React from 'react';
 
 type UseControllableStateParams<T> = {
   prop?: T | undefined;

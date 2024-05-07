@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 
 let previousBodyPosition: Record<string, string> | null = null;
 
