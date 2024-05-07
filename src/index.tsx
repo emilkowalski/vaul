@@ -40,6 +40,7 @@ type DialogProps = {
   children?: React.ReactNode;
   open?: boolean;
   closeThreshold?: number;
+  noBodyStyles?: boolean;
   onOpenChange?: (open: boolean) => void;
   shouldScaleBackground?: boolean;
   setBackgroundColorOnScale?: boolean;
@@ -77,6 +78,7 @@ function Root({
   fixed,
   modal = true,
   onClose,
+  noBodyStyles,
   direction = 'bottom',
   preventScrollRestoration = true,
   disablePreventScroll = false,
@@ -137,6 +139,7 @@ function Root({
     nested,
     hasBeenOpened,
     preventScrollRestoration,
+	noBodyStyles
   });
 
   function getScale() {
@@ -614,18 +617,20 @@ function Root({
 
     if (open) {
       if (setBackgroundColorOnScale) {
-        // setting original styles initially
-        set(document.body, {
-          background: document.body.style.backgroundColor || document.body.style.background,
-        });
-        // setting body styles, with cache ignored, so that we can get correct original styles in reset
-        set(
-          document.body,
-          {
-            background: 'black',
-          },
-          true,
-        );
+        if (!noBodyStyles) {
+          // setting original styles initially
+          set(document.body, {
+            background: document.body.style.backgroundColor || document.body.style.background,
+          });
+          // setting body styles, with cache ignored, so that we can get correct original styles in reset
+          set(
+            document.body,
+            {
+              background: 'black',
+            },
+            true,
+          );
+        }
       }
 
       set(wrapper, {

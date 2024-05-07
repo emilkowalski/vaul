@@ -8,19 +8,21 @@ export function usePositionFixed({
   nested,
   hasBeenOpened,
   preventScrollRestoration,
+  noBodyStyles,
 }: {
   isOpen: boolean;
   modal: boolean;
   nested: boolean;
   hasBeenOpened: boolean;
   preventScrollRestoration: boolean;
+  noBodyStyles: boolean;
 }) {
   const [activeUrl, setActiveUrl] = React.useState(() => (typeof window !== 'undefined' ? window.location.href : ''));
   const scrollPos = React.useRef(0);
 
   const setPositionFixed = React.useCallback(() => {
     // If previousBodyPosition is already set, don't set it again.
-    if (previousBodyPosition === null && isOpen) {
+    if (previousBodyPosition === null && isOpen && !noBodyStyles) {
       previousBodyPosition = {
         position: document.body.style.position,
         top: document.body.style.top,
@@ -56,7 +58,7 @@ export function usePositionFixed({
   }, [isOpen]);
 
   const restorePositionSetting = React.useCallback(() => {
-    if (previousBodyPosition !== null) {
+    if (previousBodyPosition !== null && !noBodyStyles) {
       // Convert the position from "px" to Int
       const y = -parseInt(document.body.style.top, 10);
       const x = -parseInt(document.body.style.left, 10);
