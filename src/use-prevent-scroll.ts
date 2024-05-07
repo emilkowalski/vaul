@@ -257,7 +257,7 @@ function preventScrollMobileSafari() {
   );
 
   // Scroll to the top. The negative margin on the body will make this appear the same.
-  //   window.scrollTo(0, 0);
+  window.scrollTo(0, 0);
 
   let removeEvents = chain(
     addEvent(document, 'touchstart', onTouchStart, { passive: false, capture: true }),
