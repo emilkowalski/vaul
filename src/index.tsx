@@ -1030,9 +1030,9 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
         }
       }}
       onPointerMove={(event) => {
+        lastKnownPointerEventRef.current = event;
         if (handleOnly) return;
         rest.onPointerMove?.(event);
-        lastKnownPointerEventRef.current = event;
  
         if (!pointerStartRef.current) return;
         const yPosition = event.clientY - pointerStartRef.current.y;
