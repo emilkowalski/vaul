@@ -114,13 +114,15 @@ export function useSnapPoints({
   );
 
   React.useEffect(() => {
-    if (activeSnapPointProp) {
-      const newIndex = snapPoints?.findIndex((snapPoint) => snapPoint === activeSnapPointProp) ?? -1;
+    if (activeSnapPoint || activeSnapPointProp) {
+      const newIndex =
+        snapPoints?.findIndex((snapPoint) => snapPoint === activeSnapPointProp || snapPoint === activeSnapPoint) ??
+        -1;
       if (snapPointsOffset && newIndex !== -1 && typeof snapPointsOffset[newIndex] === 'number') {
         snapToPoint(snapPointsOffset[newIndex] as number);
       }
     }
-  }, [activeSnapPointProp, snapPoints, snapPointsOffset, snapToPoint]);
+  }, [activeSnapPoint, activeSnapPointProp, snapPoints, snapPointsOffset, snapToPoint]);
 
   function onRelease({
     draggedDistance,

@@ -8,38 +8,43 @@ export function usePositionFixed({
   nested,
   hasBeenOpened,
   preventScrollRestoration,
+  noBodyStyles,
 }: {
   isOpen: boolean;
   modal: boolean;
   nested: boolean;
   hasBeenOpened: boolean;
   preventScrollRestoration: boolean;
+  noBodyStyles: boolean;
 }) {
-  const [activeUrl, setActiveUrl] = React.useState(typeof window !== 'undefined' ? window.location.href : '');
+  const [activeUrl, setActiveUrl] = React.useState(() => (typeof window !== 'undefined' ? window.location.href : ''));
   const scrollPos = React.useRef(0);
 
   const setPositionFixed = React.useCallback(() => {
     // If previousBodyPosition is already set, don't set it again.
-    if (previousBodyPosition === null && isOpen) {
+    if (previousBodyPosition === null && isOpen && !noBodyStyles) {
       previousBodyPosition = {
         position: document.body.style.position,
         top: document.body.style.top,
         left: document.body.style.left,
         height: document.body.style.height,
+        right: 'unset',
       };
 
       // Update the dom inside an animation frame
       const { scrollX, innerHeight } = window;
 
       document.body.style.setProperty('position', 'fixed', 'important');
-      document.body.style.top = `${-scrollPos.current}px`;
-      document.body.style.left = `${-scrollX}px`;
-      document.body.style.right = '0px';
-      document.body.style.height = 'auto';
+      Object.assign(document.body.style, {
+        top: `${-scrollPos.current}px`,
+        left: `${-scrollX}px`,
+        right: '0px',
+        height: 'auto',
+      });
 
-      setTimeout(
+      window.setTimeout(
         () =>
-          requestAnimationFrame(() => {
+          window.requestAnimationFrame(() => {
             // Attempt to check if the bottom bar appeared due to the position change
             const bottomBarHeight = innerHeight - window.innerHeight;
             if (bottomBarHeight && scrollPos.current >= innerHeight) {
@@ -53,19 +58,15 @@ export function usePositionFixed({
   }, [isOpen]);
 
   const restorePositionSetting = React.useCallback(() => {
-    if (previousBodyPosition !== null) {
+    if (previousBodyPosition !== null && !noBodyStyles) {
       // Convert the position from "px" to Int
       const y = -parseInt(document.body.style.top, 10);
       const x = -parseInt(document.body.style.left, 10);
 
       // Restore styles
-      document.body.style.position = previousBodyPosition.position;
-      document.body.style.top = previousBodyPosition.top;
-      document.body.style.left = previousBodyPosition.left;
-      document.body.style.height = previousBodyPosition.height;
-      document.body.style.right = 'unset';
+      Object.assign(document.body.style, previousBodyPosition);
 
-      requestAnimationFrame(() => {
+      window.requestAnimationFrame(() => {
         if (preventScrollRestoration && activeUrl !== window.location.href) {
           setActiveUrl(window.location.href);
           return;
@@ -101,7 +102,7 @@ export function usePositionFixed({
       !isStandalone && setPositionFixed();
 
       if (!modal) {
-        setTimeout(() => {
+        window.setTimeout(() => {
           restorePositionSetting();
         }, 500);
       }
