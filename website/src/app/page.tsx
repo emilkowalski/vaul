@@ -21,8 +21,8 @@ export const metadata: Metadata = {
 
 export default function Home() {
   return (
-    <main className="antialiased">
+    <div className="antialiased">
       <Hero />
-    </main>
+    </div>
   );
 }

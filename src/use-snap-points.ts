@@ -30,7 +30,7 @@ export function useSnapPoints({
   });
 
   const isLastSnapPoint = React.useMemo(
-    () => activeSnapPoint === snapPoints?.[snapPoints.length - 1] ?? null,
+    () => activeSnapPoint === snapPoints?.[snapPoints.length - 1] || null,
     [snapPoints, activeSnapPoint],
   );
 
@@ -43,7 +43,7 @@ export function useSnapPoints({
     !snapPoints;
 
   const activeSnapPointIndex = React.useMemo(
-    () => snapPoints?.findIndex((snapPoint) => snapPoint === activeSnapPoint) ?? null,
+    () => snapPoints?.findIndex((snapPoint) => snapPoint === activeSnapPoint),
     [snapPoints, activeSnapPoint],
   );
 
@@ -114,13 +114,15 @@ export function useSnapPoints({
   );
 
   React.useEffect(() => {
-    if (activeSnapPointProp) {
-      const newIndex = snapPoints?.findIndex((snapPoint) => snapPoint === activeSnapPointProp) ?? -1;
+    if (activeSnapPoint || activeSnapPointProp) {
+      const newIndex =
+        snapPoints?.findIndex((snapPoint) => snapPoint === activeSnapPointProp || snapPoint === activeSnapPoint) ??
+        -1;
       if (snapPointsOffset && newIndex !== -1 && typeof snapPointsOffset[newIndex] === 'number') {
         snapToPoint(snapPointsOffset[newIndex] as number);
       }
     }
-  }, [activeSnapPointProp, snapPoints, snapPointsOffset, snapToPoint]);
+  }, [activeSnapPoint, activeSnapPointProp, snapPoints, snapPointsOffset, snapToPoint]);
 
   function onRelease({
     draggedDistance,

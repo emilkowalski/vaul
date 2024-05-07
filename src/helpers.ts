@@ -20,8 +20,8 @@ export function isInView(el: HTMLElement): boolean {
   );
 }
 
-export function set(el?: Element | HTMLElement | null, styles?: Style, ignoreCache = false) {
-  if (!el || !(el instanceof HTMLElement) || !styles) return;
+export function set(el: Element | HTMLElement | null | undefined, styles: Style, ignoreCache = false) {
+  if (!el || !(el instanceof HTMLElement)) return;
   let originalStyles: Style = {};
 
   Object.entries(styles).forEach(([key, value]: [string, string]) => {
@@ -70,6 +70,9 @@ export const isVertical = (direction: DrawerDirection) => {
 };
 
 export function getTranslate(element: HTMLElement, direction: DrawerDirection): number | null {
+  if (!element) {
+    return null;
+  }
   const style = window.getComputedStyle(element);
   const transform =
     // @ts-ignore

@@ -1,5 +1,6 @@
 [vaul-drawer] {
   touch-action: none;
+  will-change: transform;
   transition: transform 0.5s cubic-bezier(0.32, 0.72, 0, 1);
 }
 
@@ -98,6 +99,38 @@
   width: 200%;
 }
 
+[vaul-handle] {
+  display: block;
+  position: relative;
+  opacity: 0.8;
+  margin-left: auto;
+  margin-right: auto;
+  height: 5px;
+  width: 56px;
+  border-radius: 1rem;
+  touch-action: pan-y;
+  cursor: grab;
+}
+
+[vaul-handle]:hover,
+[vaul-handle]:active {
+  opacity: 1;
+}
+
+[vaul-handle]:active {
+  cursor: grabbing;
+}
+
+[vaul-handle-hitarea] {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: max(100%, 2.75rem); /* 44px */
+  height: max(100%, 2.75rem); /* 44px */
+  touch-action: inherit;
+}
+
 [vaul-overlay][vaul-snap-points='true']:not([vaul-snap-points-overlay='true']):not([data-state='closed']) {
   opacity: 0;
 }
@@ -117,5 +150,12 @@
 @media (hover: hover) and (pointer: fine) {
   [vaul-drawer] {
     user-select: none;
+  }
+}
+
+@media (pointer: fine) {
+  [vaul-handle-hitarea]: {
+    width: 100%;
+    height: 100%;
   }
 }
