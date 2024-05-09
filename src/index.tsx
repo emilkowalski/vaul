@@ -34,7 +34,7 @@ interface WithoutFadeFromProps {
   fadeFromIndex?: never;
 }
 
-type DialogProps = {
+export type DialogProps = {
   activeSnapPoint?: number | string | null;
   setActiveSnapPoint?: (snapPoint: number | string | null) => void;
   children?: React.ReactNode;
