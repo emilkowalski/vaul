@@ -962,13 +962,11 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
     setVisible(true);
   }, []);
       
- function handleOnPointerUp(event: React.PointerEvent<HTMLDivElement> | undefined) {
-    const eventToUse = event || lastKnownPointerEventRef.current;
-    if (!eventToUse) return;
-    rest.onPointerUp?.(eventToUse);
+ function handleOnPointerUp(event: React.PointerEvent<HTMLDivElement>) {
+    rest.onPointerUp?.(event);
     pointerStartRef.current = null;
     wasBeyondThePointRef.current = false;
-    onRelease(eventToUse);
+    onRelease(event);
   }
 
   return (
@@ -1048,8 +1046,8 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
         }
       }}
       onPointerUp={handleOnPointerUp}
-      onPointerOut={handleOnPointerUp}
-      onContextMenu={handleOnPointerUp}
+      onPointerOut={() => handleOnPointerUp(lastKnownPointerEventRef.current)}
+      onContextMenu={() => handleOnPointerUp(lastKnownPointerEventRef.current)}
     />
   );
 });
