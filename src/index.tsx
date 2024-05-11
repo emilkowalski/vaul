@@ -52,7 +52,7 @@ type DialogProps = {
   onRelease?: (event: React.PointerEvent<HTMLDivElement>, open: boolean) => void;
   modal?: boolean;
   nested?: boolean;
-  onClose?: () => void;
+  onClose?: (preventClose?: () => void) => void;
   direction?: 'top' | 'bottom' | 'left' | 'right';
   preventScrollRestoration?: boolean;
   disablePreventScroll?: boolean;
@@ -101,6 +101,7 @@ function Root({
   const keyboardIsOpen = React.useRef(false);
   const previousDiffFromInitial = React.useRef(0);
   const drawerRef = React.useRef<HTMLDivElement>(null);
+  const shouldClose = React.useRef(true);
   const drawerHeightRef = React.useRef(drawerRef.current?.getBoundingClientRect().height || 0);
   const initialDrawerHeight = React.useRef(0);
 
@@ -139,7 +140,7 @@ function Root({
     nested,
     hasBeenOpened,
     preventScrollRestoration,
-	noBodyStyles
+    noBodyStyles,
   });
 
   function getScale() {
@@ -408,30 +409,41 @@ function Root({
     return () => window.visualViewport?.removeEventListener('resize', onVisualViewportChange);
   }, [activeSnapPointIndex, snapPoints, snapPointsOffset]);
 
+  function preventClose() {
+    shouldClose.current = false;
+  }
+
   function closeDrawer() {
     if (!drawerRef.current) return;
 
     cancelDrag();
 
-    onClose?.();
-    set(drawerRef.current, {
-      transform: isVertical(direction)
-        ? `translate3d(0, ${direction === 'bottom' ? '100%' : '-100%'}, 0)`
-        : `translate3d(${direction === 'right' ? '100%' : '-100%'}, 0, 0)`,
-      transition: `transform ${TRANSITIONS.DURATION}s cubic-bezier(${TRANSITIONS.EASE.join(',')})`,
-    });
+    onClose?.(preventClose);
 
-    set(overlayRef.current, {
-      opacity: '0',
-      transition: `opacity ${TRANSITIONS.DURATION}s cubic-bezier(${TRANSITIONS.EASE.join(',')})`,
-    });
+    if (shouldClose.current === true) {
+      set(drawerRef.current, {
+        transform: isVertical(direction)
+          ? `translate3d(0, ${direction === 'bottom' ? '100%' : '-100%'}, 0)`
+          : `translate3d(${direction === 'right' ? '100%' : '-100%'}, 0, 0)`,
+        transition: `transform ${TRANSITIONS.DURATION}s cubic-bezier(${TRANSITIONS.EASE.join(',')})`,
+      });
 
-    scaleBackground(false);
+      set(overlayRef.current, {
+        opacity: '0',
+        transition: `opacity ${TRANSITIONS.DURATION}s cubic-bezier(${TRANSITIONS.EASE.join(',')})`,
+      });
 
-    setTimeout(() => {
-      setVisible(false);
-      setIsOpen(false);
-    }, 300);
+      scaleBackground(false);
+
+      setTimeout(() => {
+        setVisible(false);
+        setIsOpen(false);
+      }, 300);
+    } else {
+      resetDrawer();
+    }
+
+    shouldClose.current = true;
 
     setTimeout(() => {
       // reset(document.documentElement, 'scrollBehavior');
