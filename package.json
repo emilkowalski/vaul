@@ -1,6 +1,6 @@
 {
   "name": "@hanzo/vaul-fork",
-  "version": "0.100.1",
+  "version": "0.100.2",
   "description": "Hanzo fork of Vaul: a drawer component for React.",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",

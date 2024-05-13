@@ -116,8 +116,8 @@ function Root({
   function getScale() {
     return (window.innerWidth - WINDOW_TOP_OFFSET) / window.innerWidth;
   }
-
-  function onPress(event: React.PointerEvent<HTMLDivElement>) {
+    // :aa
+  function onPress(event: React.PointerEvent<HTMLDivElement>, handle: boolean=false) {
     if (!dismissible && !snapPoints) return;
     if (drawerRef.current && !drawerRef.current.contains(event.target as Node)) return;
     drawerHeightRef.current = drawerRef.current?.getBoundingClientRect().height || 0;
@@ -790,14 +790,12 @@ const Handle = React.forwardRef<HTMLDivElement, HandleProps>(function (
       handleCancelInteraction();
       return;
     }
-
-/*
-+    if (handleClick) {
-+      handleCancelInteraction();
-+      handleClick();
-+      return;
-+    }
-+    */
+      // :aa
+    if (handleClick) {
+      handleCancelInteraction();
+      handleClick();
+      return;
+    }
 
     // Make sure to clear the timeout id if the user releases the handle before the cancel timeout
     handleCancelInteraction();
@@ -833,14 +831,14 @@ const Handle = React.forwardRef<HTMLDivElement, HandleProps>(function (
 
   return (
     <div
-      onClick={handleClick ?? handleStartCycle} // :aa
+      onClick={handleStartCycle} 
       onDoubleClick={() => {
         shouldCancelInteractionRef.current = true;
         closeDrawer();
       }}
       onPointerCancel={handleCancelInteraction}
       onPointerDown={(e) => {
-        if (handleOnly) onPress(e);
+        if (handleOnly) onPress(e, true);
         handleStartInteraction();
       }}
       onPointerMove={(e) => {
