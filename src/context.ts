@@ -24,6 +24,7 @@ interface DrawerContextValue {
   setActiveSnapPoint: (o: number | string | null) => void;
   visible: boolean;
   closeDrawer: () => void;
+  handleCloseGesture?: () => boolean;
   setVisible: (o: boolean) => void;
   openProp?: boolean;
   onOpenChange?: (o: boolean) => void;

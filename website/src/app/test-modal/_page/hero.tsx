@@ -1,6 +1,6 @@
 'use client';
 import React, { useState } from 'react'
-import { Drawer } from 'vaul'
+import { Drawer } from '@hanzo/vaul-fork';
 
 export function Hero() {
 

@@ -1,6 +1,6 @@
 'use client';
 
-import { Drawer } from 'vaul';
+import { Drawer } from '@hanzo/vaul-fork';
 
 export function Hero() {
   return (

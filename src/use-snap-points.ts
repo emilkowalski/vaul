@@ -13,6 +13,7 @@ export function useSnapPoints({
   fadeFromIndex,
   onSnapPointChange,
   direction = 'bottom',
+  fastDragSkipsToEnd = true,
 }: {
   activeSnapPointProp?: number | string | null;
   setActiveSnapPointProp?(snapPoint: number | null | string): void;
@@ -22,6 +23,7 @@ export function useSnapPoints({
   overlayRef: React.RefObject<HTMLDivElement>;
   onSnapPointChange(activeSnapPointIndex: number): void;
   direction?: DrawerDirection;
+  fastDragSkipsToEnd?: boolean;
 }) {
   const [activeSnapPoint, setActiveSnapPoint] = useControllableState<string | number | null>({
     prop: activeSnapPointProp,
@@ -151,13 +153,13 @@ export function useSnapPoints({
       });
     }
 
-    if (velocity > 2 && !hasDraggedUp) {
+    if (fastDragSkipsToEnd && velocity > 2 && !hasDraggedUp) {
       if (dismissible) closeDrawer();
       else snapToPoint(snapPointsOffset[0]); // snap to initial point
       return;
     }
 
-    if (velocity > 2 && hasDraggedUp && snapPointsOffset && snapPoints) {
+    if (fastDragSkipsToEnd && velocity > 2 && hasDraggedUp && snapPointsOffset && snapPoints) {
       snapToPoint(snapPointsOffset[snapPoints.length - 1] as number);
       return;
     }
@@ -181,6 +183,7 @@ export function useSnapPoints({
 
       if (isFirst && dragDirection < 0 && dismissible) {
         closeDrawer();
+        return; // :aa added
       }
 
       if (activeSnapPointIndex === null) return;
