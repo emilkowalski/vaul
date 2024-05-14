@@ -3,7 +3,7 @@
 import * as DialogPrimitive from '@radix-ui/react-dialog';
 import React, { useRef, useState } from 'react';
 import { DrawerContext, useDrawerContext } from './context';
-import './style.css';
+//import './style.css';
 import { usePreventScroll, isInput, isIOS } from './use-prevent-scroll';
 import { useComposedRefs } from './use-composed-refs';
 import { usePositionFixed } from './use-position-fixed';
@@ -775,13 +775,14 @@ function Root({
 
 type HandleProps = React.ComponentPropsWithoutRef<'div'> & {
   preventCycle?: boolean;
+  handleClick?: () => void; // :aa
 };
 
 const LONG_HANDLE_PRESS_TIMEOUT = 250;
 const DOUBLE_TAP_TIMEOUT = 120;
 
 const Handle = React.forwardRef<HTMLDivElement, HandleProps>(function (
-  { preventCycle = false, children, ...rest },
+  { preventCycle = false, handleClick, children, ...rest },
   ref,
 ) {
   const {
@@ -812,11 +813,20 @@ const Handle = React.forwardRef<HTMLDivElement, HandleProps>(function (
   }
 
   function handleCycleSnapPoints() {
+
     // Prevent accidental taps while resizing drawer
     if (isDragging || preventCycle || shouldCancelInteractionRef.current) {
       handleCancelInteraction();
       return;
     }
+
+      // :aa
+    if (handleClick) {
+      handleCancelInteraction();
+      handleClick();
+      return;
+    }
+    
     // Make sure to clear the timeout id if the user releases the handle before the cancel timeout
     handleCancelInteraction();
 
@@ -867,7 +877,7 @@ const Handle = React.forwardRef<HTMLDivElement, HandleProps>(function (
       // onPointerUp is already handled by the content component
       ref={ref}
       vaul-drawer-visible={visible ? 'true' : 'false'}
-      vaul-handle=""
+      //vaul-handle=""
       aria-hidden="true"
       {...rest}
     >
