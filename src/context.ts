@@ -7,7 +7,7 @@ interface DrawerContextValue {
   scaleBackground: (open: boolean) => void;
   onPress: (event: React.PointerEvent<HTMLDivElement>) => void;
   onRelease: (event: React.PointerEvent<HTMLDivElement>) => void;
-  onDrag: (event: React.PointerEvent<HTMLDivElement>) => void;
+  onDrag: (event: React.PointerEvent<HTMLDivElement>, handle?: boolean) => void;
   onNestedDrag: (event: React.PointerEvent<HTMLDivElement>, percentageDragged: number) => void;
   onNestedOpenChange: (o: boolean) => void;
   onNestedRelease: (event: React.PointerEvent<HTMLDivElement>, open: boolean) => void;
@@ -24,6 +24,7 @@ interface DrawerContextValue {
   setActiveSnapPoint: (o: number | string | null) => void;
   visible: boolean;
   closeDrawer: () => void;
+  handleCloseGesture?: () => boolean;
   setVisible: (o: boolean) => void;
   openProp?: boolean;
   onOpenChange?: (o: boolean) => void;
