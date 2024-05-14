@@ -1,6 +1,8 @@
 'use client';
 
-import { Drawer } from 'vaul';
+import { Drawer } from '@hanzo/vaul-fork';
+
+const SNAPS = ['200px', '500px']
 
 export function Hero() {
   return (
@@ -40,7 +42,7 @@ export function Hero() {
           <p className="text-gray-600 text-xl">Drawer component for React.</p>
         </div>
         <div className="flex gap-4 justify-center mt-6">
-          <Drawer.Root shouldScaleBackground>
+          <Drawer.Root shouldScaleBackground handleOnly snapPoints={SNAPS}>
             <Drawer.Trigger asChild>
               <button
                 type="button"

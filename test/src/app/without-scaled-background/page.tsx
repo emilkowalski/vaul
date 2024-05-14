@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Drawer } from 'vaul';
+import { Drawer } from '@hanzo/vaul-fork';
 
 export default function Page() {
   const [open, setOpen] = useState(false);
