@@ -116,8 +116,8 @@ function Root({
   function getScale() {
     return (window.innerWidth - WINDOW_TOP_OFFSET) / window.innerWidth;
   }
-    // :aa
-  function onPress(event: React.PointerEvent<HTMLDivElement>, handle: boolean=false) {
+
+  function onPress(event: React.PointerEvent<HTMLDivElement>) {
     if (!dismissible && !snapPoints) return;
     if (drawerRef.current && !drawerRef.current.contains(event.target as Node)) return;
     drawerHeightRef.current = drawerRef.current?.getBoundingClientRect().height || 0;
@@ -135,6 +135,7 @@ function Root({
   }
 
   function shouldDrag(el: EventTarget, isDraggingInDirection: boolean) {
+
     let element = el as HTMLElement;
     const highlightedText = window.getSelection()?.toString();
     const swipeAmount = drawerRef.current ? getTranslate(drawerRef.current, direction) : null;
@@ -205,7 +206,7 @@ function Root({
     return true;
   }
 
-  function onDrag(event: React.PointerEvent<HTMLDivElement>) {
+  function onDrag(event: React.PointerEvent<HTMLDivElement>, handle: boolean=false) {
     if (!drawerRef.current) {
       return;
     }
@@ -239,7 +240,7 @@ function Root({
         return;
       }
 
-      if (!isAllowedToDrag.current && !shouldDrag(event.target, isDraggingInDirection)) return;
+      if (handle || (!isAllowedToDrag.current && !shouldDrag(event.target, isDraggingInDirection))) return;
       drawerRef.current.classList.add(DRAG_CLASS);
       // If shouldDrag gave true once after pressing down on the drawer, we set isAllowedToDrag to true and it will remain true until we let go, there's no reason to disable dragging mid way, ever, and that's the solution to it
       isAllowedToDrag.current = true;
@@ -790,15 +791,16 @@ const Handle = React.forwardRef<HTMLDivElement, HandleProps>(function (
       handleCancelInteraction();
       return;
     }
+
+    // Make sure to clear the timeout id if the user releases the handle before the cancel timeout
+    handleCancelInteraction();
+
       // :aa
     if (handleClick) {
-      handleCancelInteraction();
       handleClick();
       return;
     }
 
-    // Make sure to clear the timeout id if the user releases the handle before the cancel timeout
-    handleCancelInteraction();
 
     if ((!snapPoints || snapPoints.length === 0) && dismissible) {
       closeDrawer();
@@ -838,11 +840,11 @@ const Handle = React.forwardRef<HTMLDivElement, HandleProps>(function (
       }}
       onPointerCancel={handleCancelInteraction}
       onPointerDown={(e) => {
-        if (handleOnly) onPress(e, true);
+        if (handleOnly) onPress(e);
         handleStartInteraction();
       }}
       onPointerMove={(e) => {
-        if (handleOnly) onDrag(e);
+        if (handleOnly) onDrag(e, true);
       }}
       // onPointerUp is already handled by the content component
       ref={ref}
