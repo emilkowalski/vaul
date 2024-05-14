@@ -206,7 +206,7 @@ function Root({
     return true;
   }
 
-  function onDrag(event: React.PointerEvent<HTMLDivElement>, handle: boolean=false) {
+  function onDrag(event: React.PointerEvent<HTMLDivElement>) {
     if (!drawerRef.current) {
       return;
     }
@@ -240,7 +240,7 @@ function Root({
         return;
       }
 
-      if (handle || (!isAllowedToDrag.current && !shouldDrag(event.target, isDraggingInDirection))) return;
+      if (!isAllowedToDrag.current && !shouldDrag(event.target, isDraggingInDirection)) return;
       drawerRef.current.classList.add(DRAG_CLASS);
       // If shouldDrag gave true once after pressing down on the drawer, we set isAllowedToDrag to true and it will remain true until we let go, there's no reason to disable dragging mid way, ever, and that's the solution to it
       isAllowedToDrag.current = true;
@@ -844,7 +844,7 @@ const Handle = React.forwardRef<HTMLDivElement, HandleProps>(function (
         handleStartInteraction();
       }}
       onPointerMove={(e) => {
-        if (handleOnly) onDrag(e, true);
+        if (handleOnly) onDrag(e);
       }}
       // onPointerUp is already handled by the content component
       ref={ref}
@@ -1019,7 +1019,7 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
         }
       }}
       onPointerUp={(event) => {
-        if (handleOnly) return; // :aa added
+        //if (handleOnly) return; // :aa added
         rest.onPointerUp?.(event);
         pointerStartRef.current = null;
         wasBeyondThePointRef.current = false;

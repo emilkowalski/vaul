@@ -7,7 +7,7 @@ interface DrawerContextValue {
   scaleBackground: (open: boolean) => void;
   onPress: (event: React.PointerEvent<HTMLDivElement>) => void;
   onRelease: (event: React.PointerEvent<HTMLDivElement>) => void;
-  onDrag: (event: React.PointerEvent<HTMLDivElement>, handle?: boolean) => void;
+  onDrag: (event: React.PointerEvent<HTMLDivElement>) => void;
   onNestedDrag: (event: React.PointerEvent<HTMLDivElement>, percentageDragged: number) => void;
   onNestedOpenChange: (o: boolean) => void;
   onNestedRelease: (event: React.PointerEvent<HTMLDivElement>, open: boolean) => void;
