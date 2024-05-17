@@ -1,6 +1,6 @@
 {
   "name": "@hanzo/vaul-fork",
-  "version": "0.150.1",
+  "version": "0.150.14",
   "description": "Hanzo: Drawer component for React.",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
@@ -28,7 +28,8 @@
     "test": "playwright test",
     "clean:nm": "find . -name 'node_modules' -type d -prune -exec rm -rf '{}' +",
     "clean:nxt": "find . -name '.next' -type d -prune -exec rm -rf '{}' +",
-    "clean:all": "pnpm clean:nm && pnpm clean:nxt && rm pnpm-lock.yaml"
+    "clean:all": "pnpm clean:nm && pnpm clean:nxt && rm pnpm-lock.yaml",
+    "pub": "npm publish"
   },
   "keywords": [
     "react",

@@ -39,7 +39,9 @@ function Root({
   closeThreshold = CLOSE_THRESHOLD,
   scrollLockTimeout = SCROLL_LOCK_TIMEOUT,
   dismissible = true,
-  handleOnly = false,
+  dragHandleOnly = false,
+  cycleSnapPointsOnHandleClick = true,
+  handleHandleClicked,
   fastDragSkipsToEnd=true, //:aa
   fadeFromIndex = snapPoints && snapPoints.length - 1,
   activeSnapPoint: activeSnapPointProp,
@@ -97,7 +99,9 @@ function Root({
     overlayRef,
     onSnapPointChange,
     direction,
-    fastDragSkipsToEnd // :aa
+    fastDragSkipsToEnd, // :aa
+    handleCloseGesture, // :aa
+
   });
 
   usePreventScroll({
@@ -494,6 +498,28 @@ function Root({
     dragEndTime.current = new Date();
   }
 
+
+  function cycleSnapPoints() {
+
+    if ((!snapPoints || snapPoints.length === 0) && dismissible) {
+      closeDrawer();
+      return;
+    }
+
+    const isLastSnapPoint = activeSnapPoint === snapPoints[snapPoints.length - 1];
+    if (isLastSnapPoint && dismissible) {
+      closeDrawer();
+      return;
+    }
+
+    const currentSnapIndex = snapPoints.findIndex((point) => point === activeSnapPoint);
+    if (currentSnapIndex === -1) return; // activeSnapPoint not found in snapPoints
+    const nextSnapPoint = snapPoints[currentSnapIndex + 1];
+    setActiveSnapPoint(nextSnapPoint);
+  }
+
+
+
   function onRelease(event: React.PointerEvent<HTMLDivElement>) {
     if (!isDragging || !drawerRef.current) return;
 
@@ -522,13 +548,22 @@ function Root({
 
     if (snapPoints) {
       const directionMultiplier = direction === 'bottom' || direction === 'right' ? 1 : -1;
-      onReleaseSnapPoints({
+      const wasDragAction = onReleaseSnapPoints({
         draggedDistance: distMoved * directionMultiplier,
-        closeDrawer,
+        elapsedTime: timeTaken,
         velocity,
+        closeDrawer,
         dismissible,
       });
       onReleaseProp?.(event, true);
+      if (!wasDragAction) {
+        if (handleHandleClicked) {
+          handleHandleClicked()
+        }
+        else if (cycleSnapPointsOnHandleClick) {
+          cycleSnapPoints()
+        }
+      }
       return;
     }
 
@@ -553,8 +588,18 @@ function Root({
       return;
     }
 
+    if ((event.target as HTMLElement).id === 'vaul-drawer-handle' )  {
+      if (handleHandleClicked) {
+        handleHandleClicked()
+      }
+      else if (cycleSnapPointsOnHandleClick) {
+        cycleSnapPoints()
+      }
+    }
+    else {
+      resetDrawer();
+    }
     onReleaseProp?.(event, true);
-    resetDrawer();
   }
 
   React.useEffect(() => {
@@ -724,7 +769,7 @@ function Root({
           onRelease,
           onDrag,
           dismissible,
-          handleOnly,
+          dragHandleOnly,
           handleCloseGesture,
           isOpen,
           isDragging,
@@ -746,110 +791,38 @@ function Root({
   );
 }
 
-type HandleProps = React.ComponentPropsWithoutRef<'div'> & {
-  preventCycle?: boolean;
-  handleClick?: () => void; // :aa
-};
+type HandleProps = React.ComponentPropsWithoutRef<'div'> 
 
-const LONG_HANDLE_PRESS_TIMEOUT = 250;
-const DOUBLE_TAP_TIMEOUT = 120;
+//const LONG_HANDLE_PRESS_TIMEOUT = 250;
+//const DOUBLE_TAP_TIMEOUT = 120;
 
-const Handle = React.forwardRef<HTMLDivElement, HandleProps>(function (
-  { preventCycle = false, handleClick, children, ...rest },
+const Handle = React.forwardRef<HTMLDivElement, HandleProps>((
+  {children, ...rest },
   ref,
-) {
+) => {
+
   const {
     visible,
-    closeDrawer,
-    isDragging,
-    snapPoints,
-    activeSnapPoint,
-    setActiveSnapPoint,
-    dismissible,
-    handleOnly,
+    dragHandleOnly,
     onPress,
     onDrag,
   } = useDrawerContext();
 
-  const closeTimeoutIdRef = React.useRef<number | null>(null);
-  const shouldCancelInteractionRef = React.useRef(false);
-
-  function handleStartCycle() {
-    // Stop if this is the second click of a double click
-    if (shouldCancelInteractionRef.current) {
-      handleCancelInteraction();
-      return;
-    }
-    window.setTimeout(() => {
-      handleCycleSnapPoints();
-    }, DOUBLE_TAP_TIMEOUT);
-  }
-
-  function handleCycleSnapPoints() {
-
-    // Prevent accidental taps while resizing drawer
-    if (isDragging || preventCycle || shouldCancelInteractionRef.current) {
-      handleCancelInteraction();
-      return;
-    }
-
-    // Make sure to clear the timeout id if the user releases the handle before the cancel timeout
-    handleCancelInteraction();
-
-      // :aa
-    if (handleClick) {
-      handleClick();
-      return;
-    }
-
-    if ((!snapPoints || snapPoints.length === 0) && dismissible) {
-      closeDrawer();
-      return;
-    }
-
-    const isLastSnapPoint = activeSnapPoint === snapPoints[snapPoints.length - 1];
-    if (isLastSnapPoint && dismissible) {
-      closeDrawer();
-      return;
-    }
-
-    const currentSnapIndex = snapPoints.findIndex((point) => point === activeSnapPoint);
-    if (currentSnapIndex === -1) return; // activeSnapPoint not found in snapPoints
-    const nextSnapPoint = snapPoints[currentSnapIndex + 1];
-    setActiveSnapPoint(nextSnapPoint);
-  }
-
-  function handleStartInteraction() {
-    closeTimeoutIdRef.current = window.setTimeout(() => {
-      // Cancel click interaction on a long press
-      shouldCancelInteractionRef.current = true;
-    }, LONG_HANDLE_PRESS_TIMEOUT);
-  }
-    // :aa "should be called resetInteraction"
-  function handleCancelInteraction() {
-    window.clearTimeout(closeTimeoutIdRef.current);
-    shouldCancelInteractionRef.current = false;
-  }
-
   return (
     <div
-      onClick={handleStartCycle} 
-      onDoubleClick={() => {
-        shouldCancelInteractionRef.current = true;
-        closeDrawer();
-      }}
-      onPointerCancel={handleCancelInteraction}
+      id='vaul-drawer-handle'
       onPointerDown={(e) => {
-        if (handleOnly) onPress(e);
-        handleStartInteraction();
+        if (dragHandleOnly) onPress(e);
       }}
       onPointerMove={(e) => {
-        if (handleOnly) onDrag(e);
+        if (dragHandleOnly) onDrag(e);
       }}
+
       // onPointerUp is already handled by the content component
+      // :aa yes, but that's sloppy, since it relies on the the even bubbling up
       ref={ref}
       vaul-drawer-visible={visible ? 'true' : 'false'}
-      //vaul-handle=""
+      //vaul-handle="" // don't trigger css
       aria-hidden="true"
       {...rest}
     >
@@ -864,8 +837,16 @@ const Handle = React.forwardRef<HTMLDivElement, HandleProps>(function (
 Handle.displayName = 'Drawer.Handle';
 
 const Overlay = React.forwardRef<HTMLDivElement, React.ComponentPropsWithoutRef<typeof DialogPrimitive.Overlay>>(
-  function ({ children, ...rest }, ref) {
-    const { overlayRef, snapPoints, onRelease, shouldFade, isOpen, visible } = useDrawerContext();
+  ({ children, ...rest }, ref) => {
+    const { 
+      overlayRef, 
+      snapPoints, 
+      onRelease, 
+      shouldFade, 
+      isOpen, 
+      visible 
+    } = useDrawerContext();
+
     const composedRef = useComposedRefs(ref, overlayRef);
     const hasSnapPoints = snapPoints && snapPoints.length > 0;
 
@@ -907,10 +888,11 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
     openProp,
     onOpenChange,
     setVisible,
-    handleOnly,
+    dragHandleOnly,
     handleCloseGesture,
     direction,
   } = useDrawerContext();
+
   const composedRef = useComposedRefs(ref, drawerRef);
   const pointerStartRef = React.useRef<{ x: number; y: number } | null>(null);
   const wasBeyondThePointRef = React.useRef(false);
@@ -968,7 +950,7 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
         }
       }}
       onPointerDown={(event) => {
-        if (handleOnly) return;
+        if (dragHandleOnly) return;
         rest.onPointerDown?.(event);
         pointerStartRef.current = { x: event.clientX, y: event.clientY };
         onPress(event);
@@ -1003,7 +985,7 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
         }
       }}
       onPointerMove={(event) => {
-        if (handleOnly) return;
+        if (dragHandleOnly) return;
         rest.onPointerMove?.(event);
         if (!pointerStartRef.current) return;
         const yPosition = event.clientY - pointerStartRef.current.y;
@@ -1019,7 +1001,6 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
         }
       }}
       onPointerUp={(event) => {
-        //if (handleOnly) return; // :aa added
         rest.onPointerUp?.(event);
         pointerStartRef.current = null;
         wasBeyondThePointRef.current = false;

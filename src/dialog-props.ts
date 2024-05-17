@@ -21,7 +21,9 @@ type DialogProps = {
   scrollLockTimeout?: number;
   fixed?: boolean;
   dismissible?: boolean;
-  handleOnly?: boolean;
+  dragHandleOnly?: boolean;
+  cycleSnapPointsOnHandleClick?: boolean;
+  handleHandleClicked?: () => void
   fastDragSkipsToEnd?: boolean, // :aa
   onDrag?: (event: React.PointerEvent<HTMLDivElement>, percentageDragged: number) => void;
   onRelease?: (event: React.PointerEvent<HTMLDivElement>, open: boolean) => void;

@@ -14,6 +14,7 @@ export function useSnapPoints({
   onSnapPointChange,
   direction = 'bottom',
   fastDragSkipsToEnd = true,
+  handleCloseGesture,
 }: {
   activeSnapPointProp?: number | string | null;
   setActiveSnapPointProp?(snapPoint: number | null | string): void;
@@ -24,6 +25,7 @@ export function useSnapPoints({
   onSnapPointChange(activeSnapPointIndex: number): void;
   direction?: DrawerDirection;
   fastDragSkipsToEnd?: boolean;
+  handleCloseGesture: () => boolean
 }) {
   const [activeSnapPoint, setActiveSnapPoint] = useControllableState<string | number | null>({
     prop: activeSnapPointProp,
@@ -50,8 +52,8 @@ export function useSnapPoints({
   );
 
   const snapPointsOffset = React.useMemo(
-    () =>
-      snapPoints?.map((snapPoint) => {
+    () => {
+      const _snapPointsOffset = snapPoints?.map((snapPoint) => {
         const hasWindow = typeof window !== 'undefined';
         const isPx = typeof snapPoint === 'string';
         let snapPointAsNumber = 0;
@@ -76,7 +78,11 @@ export function useSnapPoints({
         }
 
         return width;
-      }) ?? [],
+      }) ?? []
+
+  //console.log("snapPointsOffset MEMO: ", _snapPointsOffset);
+      return _snapPointsOffset;
+    },
     [snapPoints],
   );
 
@@ -127,17 +133,26 @@ export function useSnapPoints({
   }, [activeSnapPoint, activeSnapPointProp, snapPoints, snapPointsOffset, snapToPoint]);
 
   function onRelease({
-    draggedDistance,
-    closeDrawer,
+    draggedDistance, // :aa direction indicated with > or <  zero
+    elapsedTime,
     velocity,
+    closeDrawer,
     dismissible,
   }: {
     draggedDistance: number;
-    closeDrawer: () => void;
+    elapsedTime: number;
     velocity: number;
+    closeDrawer: () => void;
     dismissible: boolean;
-  }) {
-    if (fadeFromIndex === undefined) return;
+
+  }): boolean /* was dragged */ {
+
+//console.log("USE SNAP REL START (144)")
+    if (fadeFromIndex === undefined)  {
+      return false;
+    }
+
+//console.log("ACTIVE SP OFFSET: ", activeSnapPointOffset)
 
     const currentPosition =
       direction === 'bottom' || direction === 'right'
@@ -148,6 +163,7 @@ export function useSnapPoints({
     const hasDraggedUp = draggedDistance > 0;
 
     if (isOverlaySnapPoint) {
+//console.log("USE SNAP REL (158)")
       set(overlayRef.current, {
         transition: `opacity ${TRANSITIONS.DURATION}s cubic-bezier(${TRANSITIONS.EASE.join(',')})`,
       });
@@ -156,12 +172,12 @@ export function useSnapPoints({
     if (fastDragSkipsToEnd && velocity > 2 && !hasDraggedUp) {
       if (dismissible) closeDrawer();
       else snapToPoint(snapPointsOffset[0]); // snap to initial point
-      return;
+      return true;
     }
 
     if (fastDragSkipsToEnd && velocity > 2 && hasDraggedUp && snapPointsOffset && snapPoints) {
       snapToPoint(snapPointsOffset[snapPoints.length - 1] as number);
-      return;
+      return true;
     }
 
     // Find the closest snap point to the current position
@@ -172,27 +188,45 @@ export function useSnapPoints({
     });
 
     const dim = isVertical(direction) ? window.innerHeight : window.innerWidth;
-    if (velocity > VELOCITY_THRESHOLD && Math.abs(draggedDistance) < dim * 0.4) {
-      const dragDirection = hasDraggedUp ? 1 : -1; // 1 = up, -1 = down
 
+    if (velocity > VELOCITY_THRESHOLD && Math.abs(draggedDistance) < dim * 0.4) {
+
+//console.log("USE SNAP REL DRAGGED (184)")
+      
+      const dragDirection = hasDraggedUp ? 1 : -1; // 1 = up, -1 = down
       // Don't do anything if we swipe upwards while being on the last snap point
       if (dragDirection > 0 && isLastSnapPoint) {
+//console.log("USE SNAP REL DRAGGED TOP (190)")
         snapToPoint(snapPointsOffset[snapPoints.length - 1]);
-        return;
+        //return true;
       }
-
-      if (isFirst && dragDirection < 0 && dismissible) {
+      else if (isFirst && dragDirection < 0 && dismissible) {
+//console.log("USE SNAP REL DRAGGED BOTTOm (196)")
         closeDrawer();
-        return; // :aa added
+        //return true; // :aa added
       }
-
-      if (activeSnapPointIndex === null) return;
-
-      snapToPoint(snapPointsOffset[activeSnapPointIndex + dragDirection]);
-      return;
+      else if (activeSnapPointIndex !== null) {
+//console.log("USE SNAP REL DRAGGED go to NEXT POINT (202)")
+        snapToPoint(snapPointsOffset[activeSnapPointIndex + dragDirection]);
+      }
+      return true;
+    }
+  // https://borstch.com/blog/javascript-touch-events-and-mobile-specific-considerations 
+    if (Math.abs(draggedDistance) < 5 && elapsedTime < 200) {
+//console.log("NOT DRAGGED  (210)")
+      return false;
+    }
+    if (Math.abs(draggedDistance) > 5) {
+//console.log("DRAGGED SLOWLY!  (214)")
+//console.log("SP offsets: ", snapPointsOffset)
+//console.log("currentPOS: ", currentPosition)
+//console.log("GOING TO CLOSEST SP: ", closestSnapPoint)
+      snapToPoint(closestSnapPoint);
+      return true;
     }
 
-    snapToPoint(closestSnapPoint);
+
+    return true; // Pretend we were dragged so we don't allow onClick
   }
 
   function onDrag({ draggedDistance }: { draggedDistance: number }) {

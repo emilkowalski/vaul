@@ -2,10 +2,26 @@
 import React, { useState } from 'react'
 import { Drawer } from '@hanzo/vaul-fork'
 
+const BUY = '800px'
+const MID = '500px'
+const MICRO = '100px'
+const BOTH = [MICRO, MID, BUY]
+
 export function Hero() {
 
   const [open, setOpen] = useState<boolean>(false)
   const [modal, setModal] = useState<boolean>(true)
+  const [activeSnapPoint, setActiveSnapPoint] = useState<string | number | null>(null)
+
+  const _openDrawer = () => {
+    setActiveSnapPoint(BUY)
+    setOpen(true)
+  }
+
+  const _setActiveSnapPoint = (pt: string | number | null) => {
+    console.log("ON CHANGE: ", pt)
+    setActiveSnapPoint(pt)
+  }
 
   return (
     <div className='relative'>
@@ -47,7 +63,7 @@ export function Hero() {
           <button
             type='button'
             className='rounded-full bg-white px-4 py-2.5 text-sm font-medium text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50'
-            onClick={() => {setOpen(true)}}
+            onClick={_openDrawer}
           >
             Open Drawer
           </button>
@@ -65,7 +81,16 @@ export function Hero() {
           >
             GitHub <span aria-hidden='true'>→</span>
           </a>
-          <Drawer.Root open={open} onOpenChange={setOpen} modal={modal} >
+          <Drawer.Root 
+            open={open} 
+            onOpenChange={setOpen} 
+            modal={modal} 
+            snapPoints={BOTH}
+            activeSnapPoint={activeSnapPoint}
+            fastDragSkipsToEnd={false}
+            dragHandleOnly={true}
+            setActiveSnapPoint={_setActiveSnapPoint}
+          >
             <Drawer.Portal>
               <Drawer.Overlay className='fixed inset-0 bg-black/40' />
               <Drawer.Content className={
@@ -73,12 +98,20 @@ export function Hero() {
                 'bg-gray-100 rounded-t-[10px] ' + 
                 'border border-gray-800 ' + 
                 'mt-24 ' + 
-                'h-[60%] max-h-[96%] ' + 
+//                'h-[60%] max-h-[96%] ' +
+                'h-full ' +
                 'fixed bottom-0 left-0 right-0 ' + 
                 'md:max-w-[550px] md:mx-auto lg:max-w-[50vw]'
               }>
+                  <Drawer.Handle 
+                    className={
+                      'absolute left-0 right-0 mx-auto top-2 ' + 
+                      'w-[100px] h-3 rounded-full bg-gray-400 hover:bg-gray-200 ' + 
+                      'cursor-grab active:cursor-grabbing touch-pan-y'
+                    } 
+                    //handleClick={handleClicked}
+                  />
                 <div className='p-4 bg-white rounded-t-[10px] flex-1'>
-                  <div className='mx-auto w-12 h-1.5 flex-shrink-0 rounded-full bg-gray-300 mb-8' />
                   <div className='max-w-md mx-auto flex flex-col items-center'>
                     <Drawer.Title className='font-medium mb-4'>
                       {`Drawer for React: ${modal ? '' : 'NON-'}MODAL`}
