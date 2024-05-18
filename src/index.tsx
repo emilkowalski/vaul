@@ -41,11 +41,14 @@ type DialogProps = {
   defaultOpen?: boolean;
   open?: boolean;
   closeThreshold?: number;
+  noBodyStyles?: boolean;
   onOpenChange?: (open: boolean) => void;
   shouldScaleBackground?: boolean;
+  setBackgroundColorOnScale?: boolean;
   scrollLockTimeout?: number;
   fixed?: boolean;
   dismissible?: boolean;
+  handleOnly?: boolean;
   onDrag?: (event: React.PointerEvent<HTMLDivElement>, percentageDragged: number) => void;
   onRelease?: (event: React.PointerEvent<HTMLDivElement>, open: boolean) => void;
   modal?: boolean;
@@ -66,15 +69,18 @@ function Root({
   onRelease: onReleaseProp,
   snapPoints,
   nested = false,
+  setBackgroundColorOnScale = true,
   closeThreshold = CLOSE_THRESHOLD,
   scrollLockTimeout = SCROLL_LOCK_TIMEOUT,
   dismissible = true,
+  handleOnly = false,
   fadeFromIndex = snapPoints && snapPoints.length - 1,
   activeSnapPoint: activeSnapPointProp,
   setActiveSnapPoint: setActiveSnapPointProp,
   fixed,
   modal = true,
   onClose,
+  noBodyStyles,
   direction = 'bottom',
   preventScrollRestoration = true,
   disablePreventScroll = false,
@@ -139,6 +145,7 @@ function Root({
     nested,
     hasBeenOpened,
     preventScrollRestoration,
+    noBodyStyles,
   });
 
   function getScale() {
@@ -637,7 +644,9 @@ function Root({
           onRelease,
           onDrag,
           dismissible,
+          handleOnly,
           isOpen,
+          isDragging,
           shouldFade,
           closeDrawer,
           onNestedDrag,
@@ -650,6 +659,8 @@ function Root({
           direction,
           shouldScaleBackground,
           onClose: closeDrawer,
+          setBackgroundColorOnScale,
+          noBodyStyles,
         }}
       >
         {children}
@@ -657,6 +668,114 @@ function Root({
     </DialogPrimitive.Root>
   );
 }
+
+type HandleProps = React.ComponentPropsWithoutRef<'div'> & {
+  preventCycle?: boolean;
+};
+
+const LONG_HANDLE_PRESS_TIMEOUT = 250;
+const DOUBLE_TAP_TIMEOUT = 120;
+
+const Handle = React.forwardRef<HTMLDivElement, HandleProps>(function (
+  { preventCycle = false, children, ...rest },
+  ref,
+) {
+  const {
+    visible,
+    closeDrawer,
+    isDragging,
+    snapPoints,
+    activeSnapPoint,
+    setActiveSnapPoint,
+    dismissible,
+    handleOnly,
+    onPress,
+    onDrag,
+  } = useDrawerContext();
+
+  const closeTimeoutIdRef = React.useRef<number | null>(null);
+  const shouldCancelInteractionRef = React.useRef(false);
+
+  function handleStartCycle() {
+    // Stop if this is the second click of a double click
+    if (shouldCancelInteractionRef.current) {
+      handleCancelInteraction();
+      return;
+    }
+    window.setTimeout(() => {
+      handleCycleSnapPoints();
+    }, DOUBLE_TAP_TIMEOUT);
+  }
+
+  function handleCycleSnapPoints() {
+    // Prevent accidental taps while resizing drawer
+    if (isDragging || preventCycle || shouldCancelInteractionRef.current) {
+      handleCancelInteraction();
+      return;
+    }
+    // Make sure to clear the timeout id if the user releases the handle before the cancel timeout
+    handleCancelInteraction();
+
+    if ((!snapPoints || snapPoints.length === 0) && dismissible) {
+      closeDrawer();
+      return;
+    }
+
+    const isLastSnapPoint = activeSnapPoint === snapPoints[snapPoints.length - 1];
+    if (isLastSnapPoint && dismissible) {
+      closeDrawer();
+      return;
+    }
+
+    const currentSnapIndex = snapPoints.findIndex((point) => point === activeSnapPoint);
+    if (currentSnapIndex === -1) return; // activeSnapPoint not found in snapPoints
+    const nextSnapPoint = snapPoints[currentSnapIndex + 1];
+    setActiveSnapPoint(nextSnapPoint);
+  }
+
+  function handleStartInteraction() {
+    closeTimeoutIdRef.current = window.setTimeout(() => {
+      // Cancel click interaction on a long press
+      shouldCancelInteractionRef.current = true;
+    }, LONG_HANDLE_PRESS_TIMEOUT);
+  }
+
+  function handleCancelInteraction() {
+    window.clearTimeout(closeTimeoutIdRef.current);
+    shouldCancelInteractionRef.current = false;
+  }
+
+  return (
+    <div
+      onClick={handleStartCycle}
+      onDoubleClick={() => {
+        shouldCancelInteractionRef.current = true;
+        closeDrawer();
+      }}
+      onPointerCancel={handleCancelInteraction}
+      onPointerDown={(e) => {
+        if (handleOnly) onPress(e);
+        handleStartInteraction();
+      }}
+      onPointerMove={(e) => {
+        if (handleOnly) onDrag(e);
+      }}
+      // onPointerUp is already handled by the content component
+      ref={ref}
+      vaul-drawer-visible={visible ? 'true' : 'false'}
+      vaul-handle=""
+      aria-hidden="true"
+      {...rest}
+    >
+      {/* Expand handle's hit area beyond what's visible to ensure a 44x44 tap target for touch devices */}
+      <span vaul-handle-hitarea="" aria-hidden="true">
+        {children}
+      </span>
+    </div>
+  );
+});
+
+Handle.displayName = 'Drawer.Handle';
 
 const Overlay = React.forwardRef<HTMLDivElement, React.ComponentPropsWithoutRef<typeof DialogPrimitive.Overlay>>(
   function ({ children, ...rest }, ref) {
@@ -698,6 +817,7 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
     visible,
     modal,
     setVisible,
+    handleOnly,
     direction,
     isOpen,
     snapPoints,
@@ -706,28 +826,42 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
   const composedRef = useComposedRefs(ref, drawerRef);
   const pointerStartRef = React.useRef<{ x: number; y: number } | null>(null);
   const hasSnapPoints = snapPoints && snapPoints.length > 0;
+  const wasBeyondThePointRef = React.useRef(false);
+
+  const isDeltaInDirection = (delta: { x: number; y: number }, direction: DrawerDirection, threshold = 0) => {
+    if (wasBeyondThePointRef.current) return true;
+
+    const deltaY = Math.abs(delta.y);
+    const deltaX = Math.abs(delta.x);
+    const isDeltaX = deltaX > deltaY;
+    const dFactor = ['bottom', 'right'].includes(direction) ? 1 : -1;
+
+    if (direction === 'left' || direction === 'right') {
+      const isReverseDirection = delta.x * dFactor < 0;
+      if (!isReverseDirection && deltaX >= 0 && deltaX <= threshold) {
+        return isDeltaX;
+      }
+    } else {
+      const isReverseDirection = delta.y * dFactor < 0;
+      if (!isReverseDirection && deltaY >= 0 && deltaY <= threshold) {
+        return !isDeltaX;
+      }
+    }
+
+    wasBeyondThePointRef.current = true;
+    return true;
+  };
 
   React.useEffect(() => {
     // Trigger enter animation without using CSS animation
     setVisible(true);
   }, []);
 
-  const isDeltaInDirection = (delta: { x: number; y: number }, direction: DrawerDirection, threshold = 0) => {
-    const deltaX = Math.abs(delta.x);
-    const deltaY = Math.abs(delta.y);
-    const isDeltaX = deltaX > deltaY;
-    if (direction === 'left' || direction === 'right') {
-      return isDeltaX && deltaX > threshold;
-    } else {
-      return !isDeltaX && deltaY > threshold;
-    }
-  };
-
-  useScaleBackground();
-
   React.useEffect(() => {
     if (!isOpen) onClose();
   }, [onClose, isOpen]);
+
+  useScaleBackground();
 
   return (
     <DialogPrimitive.Content
@@ -754,6 +888,7 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
         }
       }}
       onPointerDown={(event) => {
+        if (handleOnly) return;
         rest.onPointerDown?.(event);
         pointerStartRef.current = { x: event.clientX, y: event.clientY };
         onPress(event);
@@ -775,19 +910,27 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
 
         // closeDrawer();
       }}
+      onFocusOutside={(e) => {
+        if (!modal) {
+          e.preventDefault();
+          return;
+        }
+      }}
+      onEscapeKeyDown={(e) => {
+        if (!modal) {
+          e.preventDefault();
+          return;
+        }
+      }}
       onPointerMove={(event) => {
+        if (handleOnly) return;
         rest.onPointerMove?.(event);
-        if (!pointerStartRef.current) return null;
+        if (!pointerStartRef.current) return;
         const yPosition = event.clientY - pointerStartRef.current.y;
         const xPosition = event.clientX - pointerStartRef.current.x;
 
-        const isHorizontalSwipe = ['left', 'right'].includes(direction);
-        const clamp = ['left', 'top'].includes(direction) ? Math.min : Math.max;
-
-        const clampedX = isHorizontalSwipe ? clamp(0, xPosition) : 0;
-        const clampedY = !isHorizontalSwipe ? clamp(0, yPosition) : 0;
         const swipeStartThreshold = event.pointerType === 'touch' ? 10 : 2;
-        const delta = { x: clampedX, y: clampedY };
+        const delta = { x: xPosition, y: yPosition };
 
         const isAllowedToSwipe = isDeltaInDirection(delta, direction, swipeStartThreshold);
         if (isAllowedToSwipe) onDrag(event);
@@ -798,6 +941,7 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
       onPointerUp={(event) => {
         rest.onPointerUp?.(event);
         pointerStartRef.current = null;
+        wasBeyondThePointRef.current = false;
         onRelease(event);
       }}
     />
@@ -839,6 +983,7 @@ export const Drawer = {
   Root,
   NestedRoot,
   Content,
+  Handle,
   Overlay,
   Trigger: DialogPrimitive.Trigger,
   Portal: DialogPrimitive.Portal,

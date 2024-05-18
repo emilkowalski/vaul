@@ -3,8 +3,10 @@ import { useDrawerContext } from './context';
 import { assignStyle, chain, isVertical } from './helpers';
 import { BORDER_RADIUS, TRANSITIONS, WINDOW_TOP_OFFSET } from './constants';
 
+const noop = () => () => {};
+
 export function useScaleBackground() {
-  const { direction, isOpen, shouldScaleBackground } = useDrawerContext();
+  const { direction, isOpen, shouldScaleBackground, setBackgroundColorOnScale, noBodyStyles } = useDrawerContext();
   const timeoutIdRef = React.useRef<number | null>(null);
 
   function getScale() {
@@ -17,7 +19,7 @@ export function useScaleBackground() {
       const wrapper = document.querySelector('[vaul-drawer-wrapper]') as HTMLElement;
 
       const bodyAndWrapperCleanup = chain(
-        assignStyle(document.body, { background: 'black' }),
+        setBackgroundColorOnScale && !noBodyStyles ? assignStyle(document.body, { background: 'black' }) : noop,
         assignStyle(wrapper, {
           transformOrigin: isVertical(direction) ? 'top' : 'left',
           transitionProperty: 'transform, border-radius',
