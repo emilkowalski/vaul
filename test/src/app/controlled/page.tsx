@@ -9,8 +9,8 @@ export default function Page() {
 
   return (
     <div className="w-screen h-screen bg-white p-8 flex justify-center items-center" vaul-drawer-wrapper="">
-      <Drawer.Root open={open}>
-        <Drawer.Trigger asChild onClick={() => setOpen(true)}>
+      <Drawer.Root open={open} onOpenChange={setOpen}>
+        <Drawer.Trigger asChild>
           <button data-testid="trigger" className="text-2xl">
             Open Drawer
           </button>
@@ -118,7 +118,7 @@ export default function Page() {
             className="bg-zinc-100 flex flex-col rounded-t-[10px] h-[96%] mt-24 fixed bottom-0 left-0 right-0"
           >
             <Drawer.Close data-testid="drawer-close">Close</Drawer.Close>
-            <button data-testid="controlled-close" onClick={() => setOpen(false)} className="text-2xl">
+            <button data-testid="controlled-close" onClick={() => setFullyControlled(false)} className="text-2xl">
               Close
             </button>
             <div className="p-4 bg-white rounded-t-[10px] flex-1">
