@@ -55,8 +55,8 @@
     "bunchee": "^4.4.6",
     "eslint": "^7.32.0",
     "prettier": "^2.5.1",
-    "turbo": "1.6",
-    "typescript": "5.3.3"
+    "turbo": "~1.13.3",
+    "typescript": "5.4.5"
   },
   "peerDependencies": {
     "react": "^18.3.1",

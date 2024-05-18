@@ -14,7 +14,6 @@ export function useSnapPoints({
   onSnapPointChange,
   direction = 'bottom',
   fastDragSkipsToEnd = true,
-  handleCloseGesture,
 }: {
   activeSnapPointProp?: number | string | null;
   setActiveSnapPointProp?(snapPoint: number | null | string): void;
@@ -25,7 +24,6 @@ export function useSnapPoints({
   onSnapPointChange(activeSnapPointIndex: number): void;
   direction?: DrawerDirection;
   fastDragSkipsToEnd?: boolean;
-  handleCloseGesture: () => boolean
 }) {
   const [activeSnapPoint, setActiveSnapPoint] = useControllableState<string | number | null>({
     prop: activeSnapPointProp,
@@ -198,12 +196,10 @@ export function useSnapPoints({
       if (dragDirection > 0 && isLastSnapPoint) {
 //console.log("USE SNAP REL DRAGGED TOP (190)")
         snapToPoint(snapPointsOffset[snapPoints.length - 1]);
-        //return true;
       }
       else if (isFirst && dragDirection < 0 && dismissible) {
 //console.log("USE SNAP REL DRAGGED BOTTOm (196)")
         closeDrawer();
-        //return true; // :aa added
       }
       else if (activeSnapPointIndex !== null) {
 //console.log("USE SNAP REL DRAGGED go to NEXT POINT (202)")

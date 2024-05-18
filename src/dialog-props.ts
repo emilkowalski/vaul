@@ -24,14 +24,12 @@ type DialogProps = {
   dragHandleOnly?: boolean;
   cycleSnapPointsOnHandleClick?: boolean;
   handleHandleClicked?: () => void
-  fastDragSkipsToEnd?: boolean, // :aa
+  fastDragSkipsToEnd?: boolean, 
   onDrag?: (event: React.PointerEvent<HTMLDivElement>, percentageDragged: number) => void;
   onRelease?: (event: React.PointerEvent<HTMLDivElement>, open: boolean) => void;
   modal?: boolean;
   nested?: boolean;
     /** 
-     * :aa
-     * 
      * If supplied, will be called when any gesture / event would
      * normally close the drawer.  If the default close behavior is also desired, 
      * this function should return false.

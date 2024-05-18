@@ -42,13 +42,13 @@ function Root({
   dragHandleOnly = false,
   cycleSnapPointsOnHandleClick = true,
   handleHandleClicked,
-  fastDragSkipsToEnd=true, //:aa
+  fastDragSkipsToEnd=true, 
   fadeFromIndex = snapPoints && snapPoints.length - 1,
   activeSnapPoint: activeSnapPointProp,
   setActiveSnapPoint: setActiveSnapPointProp,
   fixed,
   modal = true,
-  handleCloseGesture, //:aa
+  handleCloseGesture, 
   onClose,
   noBodyStyles,
   direction = 'bottom',
@@ -99,9 +99,7 @@ function Root({
     overlayRef,
     onSnapPointChange,
     direction,
-    fastDragSkipsToEnd, // :aa
-    handleCloseGesture, // :aa
-
+    fastDragSkipsToEnd, 
   });
 
   usePreventScroll({
