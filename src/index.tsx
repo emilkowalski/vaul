@@ -1,9 +1,9 @@
 'use client';
-import React, { useRef, useState } from 'react';
+import React from 'react';
 
 import * as DialogPrimitive from '@radix-ui/react-dialog';
 import { DrawerContext, useDrawerContext } from './context';
-//import './style.css';
+//import './style.css'; // :aa 
 import { usePreventScroll, isInput, isIOS } from './use-prevent-scroll';
 import { useComposedRefs } from './use-composed-refs';
 import { usePositionFixed } from './use-position-fixed';
@@ -14,17 +14,11 @@ import { DrawerDirection } from './types';
 import type DialogProps from './dialog-props'; // :aa
 
 const CLOSE_THRESHOLD = 0.25;
-
 const SCROLL_LOCK_TIMEOUT = 100;
-
 const BORDER_RADIUS = 8;
-
 const NESTED_DISPLACEMENT = 16;
-
 const WINDOW_TOP_OFFSET = 26;
-
 const DRAG_CLASS = 'vaul-dragging';
-
 
 function Root({
   open: openProp,
@@ -55,6 +49,7 @@ function Root({
   preventScrollRestoration = true,
   disablePreventScroll = false,
 }: DialogProps) {
+  
   const [isOpen = false, setIsOpen] = React.useState<boolean>(false);
   const [hasBeenOpened, setHasBeenOpened] = React.useState<boolean>(false);
   // Not visible = translateY(100%)

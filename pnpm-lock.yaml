@@ -48,7 +48,7 @@ importers:
 
   website:
     dependencies:
-      '@hanzo/vaul-fork':
+      '@hanzo/react-drawer':
         specifier: workspace:*
         version: link:..
       '@vercel/analytics':

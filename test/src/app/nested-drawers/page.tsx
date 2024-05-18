@@ -1,6 +1,6 @@
 'use client';
 
-import { Drawer } from '@hanzo/vaul-fork';
+import { Drawer } from '@hanzo/react-drawer';
 
 export default function Page() {
   return (

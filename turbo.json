@@ -8,5 +8,6 @@
     "dev": {
       "cache": false
     }
-  }
+  },
+  "extends": ["//"] 
 }

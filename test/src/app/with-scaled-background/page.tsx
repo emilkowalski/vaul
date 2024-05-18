@@ -2,8 +2,8 @@
 
 import { useState } from 'react';
 import clsx from 'clsx';
-import { Drawer } from '@hanzo/vaul-fork';
-import { DrawerDirection } from '@hanzo/vaul-fork/src/types';
+import { Drawer } from '@hanzo/react-drawer';
+import { DrawerDirection } from '@hanzo/react-drawer/src/types';
 
 const CenteredContent = () => {
   return (

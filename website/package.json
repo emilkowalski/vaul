@@ -16,7 +16,7 @@
     "typescript": "5.4.5"
   },
   "dependencies": {
-    "@hanzo/vaul-fork": "workspace:*",
+    "@hanzo/react-drawer": "workspace:*",
     "@vercel/analytics": "^1.0.1",
     "clsx": "^2.0.0",
     "next": "14.2.3",

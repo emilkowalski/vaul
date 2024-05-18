@@ -2,7 +2,7 @@
 
 import { clsx } from 'clsx';
 import { useState } from 'react';
-import { Drawer } from '@hanzo/vaul-fork';
+import { Drawer } from '@hanzo/react-drawer';
 
 const snapPoints = ['148px', '355px', 1];
 

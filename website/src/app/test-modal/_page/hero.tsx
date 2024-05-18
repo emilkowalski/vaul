@@ -1,6 +1,6 @@
 'use client';
 import React, { useState } from 'react'
-import { Drawer } from '@hanzo/vaul-fork'
+import { Drawer } from '@hanzo/react-drawer'
 
 const BUY = '800px'
 const MID = '500px'
