@@ -1,7 +1,7 @@
 'use client';
 
 import * as DialogPrimitive from '@radix-ui/react-dialog';
-import React, { useRef, useState } from 'react';
+import React from 'react';
 import { DrawerContext, useDrawerContext } from './context';
 import './style.css';
 import { usePreventScroll, isInput, isIOS } from './use-prevent-scroll';
@@ -56,6 +56,7 @@ type DialogProps = {
   direction?: 'top' | 'bottom' | 'left' | 'right';
   preventScrollRestoration?: boolean;
   disablePreventScroll?: boolean;
+  container?: HTMLElement | null;
 } & (WithFadeFromProps | WithoutFadeFromProps);
 
 function Root({
@@ -82,6 +83,7 @@ function Root({
   direction = 'bottom',
   preventScrollRestoration = true,
   disablePreventScroll = false,
+  container,
 }: DialogProps) {
   const [isOpen = false, setIsOpen] = React.useState<boolean>(false);
   const [hasBeenOpened, setHasBeenOpened] = React.useState<boolean>(false);
@@ -127,6 +129,7 @@ function Root({
     overlayRef,
     onSnapPointChange,
     direction,
+    container,
   });
 
   usePreventScroll({
@@ -139,7 +142,7 @@ function Root({
     nested,
     hasBeenOpened,
     preventScrollRestoration,
-	noBodyStyles
+    noBodyStyles,
   });
 
   function getScale() {
@@ -773,6 +776,14 @@ function Root({
   );
 }
 
+type PortalProps = React.ComponentPropsWithoutRef<typeof DialogPrimitive.Portal>;
+
+const Portal = (props: PortalProps) => {
+  const context = useDrawerContext();
+  const { container = context.container, ...portalProps } = props;
+  return <DialogPrimitive.Portal container={container} {...portalProps} />;
+};
+
 type HandleProps = React.ComponentPropsWithoutRef<'div'> & {
   preventCycle?: boolean;
 };
@@ -908,7 +919,7 @@ type ContentProps = React.ComponentPropsWithoutRef<typeof DialogPrimitive.Conten
 };
 
 const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
-  { onOpenAutoFocus, onPointerDownOutside, onAnimationEnd, style, ...rest },
+  { onPointerDownOutside, onAnimationEnd, style, ...rest },
   ref,
 ) {
   const {
@@ -976,14 +987,6 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
             } as React.CSSProperties)
           : style
       }
-      onOpenAutoFocus={(e) => {
-        if (onOpenAutoFocus) {
-          onOpenAutoFocus(e);
-        } else {
-          e.preventDefault();
-          drawerRef.current?.focus();
-        }
-      }}
       onPointerDown={(event) => {
         if (handleOnly) return;
         rest.onPointerDown?.(event);
@@ -1081,9 +1084,9 @@ export const Drawer = {
   NestedRoot,
   Content,
   Handle,
+  Portal,
   Overlay,
   Trigger: DialogPrimitive.Trigger,
-  Portal: DialogPrimitive.Portal,
   Close: DialogPrimitive.Close,
   Title: DialogPrimitive.Title,
   Description: DialogPrimitive.Description,
