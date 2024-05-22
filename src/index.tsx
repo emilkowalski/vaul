@@ -955,15 +955,14 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
 
     wasBeyondThePointRef.current = true;
     return true;
-  };
+  }
 
   React.useEffect(() => {
     // Trigger enter animation without using CSS animation
     setVisible(true);
   }, []);
-      
- function handleOnPointerUp(event: React.PointerEvent<HTMLDivElement>) {
-    rest.onPointerUp?.(event);
+
+  function handleOnPointerUp(event: React.PointerEvent<HTMLDivElement>) {
     pointerStartRef.current = null;
     wasBeyondThePointRef.current = false;
     onRelease(event);
@@ -1031,7 +1030,7 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
         lastKnownPointerEventRef.current = event;
         if (handleOnly) return;
         rest.onPointerMove?.(event);
- 
+
         if (!pointerStartRef.current) return;
         const yPosition = event.clientY - pointerStartRef.current.y;
         const xPosition = event.clientX - pointerStartRef.current.x;
@@ -1045,9 +1044,18 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
           pointerStartRef.current = null;
         }
       }}
-      onPointerUp={handleOnPointerUp}
-      onPointerOut={() => handleOnPointerUp(lastKnownPointerEventRef.current)}
-      onContextMenu={() => handleOnPointerUp(lastKnownPointerEventRef.current)}
+      onPointerUp={(event) => {
+        rest.onPointerUp?.(event);
+        handleOnPointerUp(event);
+      }}
+      onPointerOut={(event) => {
+        rest.onPointerOut?.(event);
+        handleOnPointerUp(lastKnownPointerEventRef.current);
+      }}
+      onContextMenu={(event) => {
+        rest.onContextMenu?.(event);
+        handleOnPointerUp(lastKnownPointerEventRef.current);
+      }}
     />
   );
 });
