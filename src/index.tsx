@@ -930,9 +930,10 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
   } = useDrawerContext();
   const composedRef = useComposedRefs(ref, drawerRef);
   const pointerStartRef = React.useRef<{ x: number; y: number } | null>(null);
+  const lastKnownPointerEventRef = React.useRef<React.PointerEvent<HTMLDivElement> | null>(null);
   const wasBeyondThePointRef = React.useRef(false);
 
-  const isDeltaInDirection = (delta: { x: number; y: number }, direction: DrawerDirection, threshold = 0) => {
+  function isDeltaInDirection(delta: { x: number; y: number }, direction: DrawerDirection, threshold = 0) {
     if (wasBeyondThePointRef.current) return true;
 
     const deltaY = Math.abs(delta.y);
@@ -954,12 +955,18 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
 
     wasBeyondThePointRef.current = true;
     return true;
-  };
+  }
 
   React.useEffect(() => {
     // Trigger enter animation without using CSS animation
     setVisible(true);
   }, []);
+
+  function handleOnPointerUp(event: React.PointerEvent<HTMLDivElement>) {
+    pointerStartRef.current = null;
+    wasBeyondThePointRef.current = false;
+    onRelease(event);
+  }
 
   return (
     <DialogPrimitive.Content
@@ -1020,8 +1027,10 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
         }
       }}
       onPointerMove={(event) => {
+        lastKnownPointerEventRef.current = event;
         if (handleOnly) return;
         rest.onPointerMove?.(event);
+
         if (!pointerStartRef.current) return;
         const yPosition = event.clientY - pointerStartRef.current.y;
         const xPosition = event.clientX - pointerStartRef.current.x;
@@ -1037,9 +1046,15 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
       }}
       onPointerUp={(event) => {
         rest.onPointerUp?.(event);
-        pointerStartRef.current = null;
-        wasBeyondThePointRef.current = false;
-        onRelease(event);
+        handleOnPointerUp(event);
+      }}
+      onPointerOut={(event) => {
+        rest.onPointerOut?.(event);
+        handleOnPointerUp(lastKnownPointerEventRef.current);
+      }}
+      onContextMenu={(event) => {
+        rest.onContextMenu?.(event);
+        handleOnPointerUp(lastKnownPointerEventRef.current);
       }}
     />
   );

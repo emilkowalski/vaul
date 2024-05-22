@@ -50,6 +50,16 @@ test.describe('Base tests', () => {
     await expect(page.getByTestId('content')).not.toBeVisible();
   });
 
+  test('should close when dragged down and cancelled', async ({ page }) => {
+    await openDrawer(page);
+    await page.hover('[vaul-drawer]');
+    await page.mouse.down();
+    await page.mouse.move(0, 800);
+    await page.dispatchEvent('[vaul-drawer]', 'contextmenu');
+    await page.waitForTimeout(ANIMATION_DURATION);
+    await expect(page.getByTestId('content')).not.toBeVisible();
+  });
+
   test('should not close when dragged up', async ({ page }) => {
     await openDrawer(page);
     await page.hover('[vaul-drawer]');
