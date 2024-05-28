@@ -854,7 +854,7 @@ const Handle = React.forwardRef<HTMLDivElement, HandleProps>(function (
       onClick={handleStartCycle}
       onDoubleClick={() => {
         shouldCancelInteractionRef.current = true;
-        closeDrawer();
+        if (dismissible) closeDrawer();
       }}
       onPointerCancel={handleCancelInteraction}
       onPointerDown={(e) => {
