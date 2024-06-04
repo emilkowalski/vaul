@@ -22,7 +22,7 @@ export function isInView(el: HTMLElement): boolean {
 
 export function set(el: Element | HTMLElement | null | undefined, styles: Style, ignoreCache = false) {
   if (!el || !(el instanceof HTMLElement)) return;
-  let originalStyles: Style = {};
+  let originalStyles: Style = cache.get(el) ?? {};
 
   Object.entries(styles).forEach(([key, value]: [string, string]) => {
     if (key.startsWith('--')) {
@@ -30,7 +30,10 @@ export function set(el: Element | HTMLElement | null | undefined, styles: Style,
       return;
     }
 
-    originalStyles[key] = (el.style as any)[key];
+    if (!(key in originalStyles)) {
+      originalStyles[key] = (el.style as any)[key];
+    }
+
     (el.style as any)[key] = value;
   });
 
@@ -43,9 +46,7 @@ export function reset(el: Element | HTMLElement | null, prop?: string) {
   if (!el || !(el instanceof HTMLElement)) return;
   let originalStyles = cache.get(el);
 
-  if (!originalStyles) {
-    return;
-  }
+  if (!originalStyles) return;
 
   if (prop) {
     (el.style as any)[prop] = originalStyles[prop];
