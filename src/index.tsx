@@ -56,6 +56,7 @@ type DialogProps = {
   direction?: 'top' | 'bottom' | 'left' | 'right';
   preventScrollRestoration?: boolean;
   disablePreventScroll?: boolean;
+  backgroundMarginTop?: number;
 } & (WithFadeFromProps | WithoutFadeFromProps);
 
 function Root({
@@ -82,6 +83,7 @@ function Root({
   direction = 'bottom',
   preventScrollRestoration = true,
   disablePreventScroll = false,
+  backgroundMarginTop = 14,
 }: DialogProps) {
   const [isOpen = false, setIsOpen] = React.useState<boolean>(false);
   const [hasBeenOpened, setHasBeenOpened] = React.useState<boolean>(false);
@@ -139,7 +141,7 @@ function Root({
     nested,
     hasBeenOpened,
     preventScrollRestoration,
-	noBodyStyles
+    noBodyStyles,
   });
 
   function getScale() {
@@ -317,7 +319,7 @@ function Root({
         const scaleValue = Math.min(getScale() + percentageDragged * (1 - getScale()), 1);
         const borderRadiusValue = 8 - percentageDragged * 8;
 
-        const translateValue = Math.max(0, 14 - percentageDragged * 14);
+        const translateValue = Math.max(0, backgroundMarginTop - percentageDragged * backgroundMarginTop);
 
         set(
           wrapper,
@@ -497,11 +499,11 @@ function Root({
           overflow: 'hidden',
           ...(isVertical(direction)
             ? {
-                transform: `scale(${getScale()}) translate3d(0, calc(env(safe-area-inset-top) + 14px), 0)`,
+                transform: `scale(${getScale()}) translate3d(0, calc(env(safe-area-inset-top) + ${backgroundMarginTop}px), 0)`,
                 transformOrigin: 'top',
               }
             : {
-                transform: `scale(${getScale()}) translate3d(calc(env(safe-area-inset-top) + 14px), 0, 0)`,
+                transform: `scale(${getScale()}) translate3d(calc(env(safe-area-inset-top) + ${backgroundMarginTop}px), 0, 0)`,
                 transformOrigin: 'left',
               }),
           transitionProperty: 'transform, border-radius',
@@ -638,11 +640,11 @@ function Root({
         overflow: 'hidden',
         ...(isVertical(direction)
           ? {
-              transform: `scale(${getScale()}) translate3d(0, calc(env(safe-area-inset-top) + 14px), 0)`,
+              transform: `scale(${getScale()}) translate3d(0, calc(env(safe-area-inset-top) + ${backgroundMarginTop}px), 0)`,
               transformOrigin: 'top',
             }
           : {
-              transform: `scale(${getScale()}) translate3d(calc(env(safe-area-inset-top) + 14px), 0, 0)`,
+              transform: `scale(${getScale()}) translate3d(calc(env(safe-area-inset-top) + ${backgroundMarginTop}px), 0, 0)`,
               transformOrigin: 'left',
             }),
         transitionProperty: 'transform, border-radius',
