@@ -4,7 +4,7 @@ import * as DialogPrimitive from '@radix-ui/react-dialog';
 import React, { useRef, useState } from 'react';
 import { DrawerContext, useDrawerContext } from './context';
 import './style.css';
-import { usePreventScroll, isInput, isIOS } from './use-prevent-scroll';
+import { usePreventScroll, isInput, isIOS, useIsomorphicLayoutEffect } from './use-prevent-scroll';
 import { useComposedRefs } from './use-composed-refs';
 import { usePositionFixed } from './use-position-fixed';
 import { useSnapPoints } from './use-snap-points';
@@ -453,7 +453,7 @@ function Root({
   }, [isOpen, shouldScaleBackground]);
 
   // LayoutEffect to prevent extra render where openProp and isOpen are not synced yet
-  React.useLayoutEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     if (openProp) {
       setIsOpen(true);
       setHasBeenOpened(true);
