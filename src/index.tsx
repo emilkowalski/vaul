@@ -398,6 +398,10 @@ function Root({
         if (snapPoints && snapPoints.length > 0 && !keyboardIsOpen.current) {
           drawerRef.current.style.bottom = `0px`;
         } else {
+          const height = drawerRef.current.getBoundingClientRect().height;
+
+          diffFromInitial = height + offsetFromTop - visualViewportHeight;
+
           // Negative bottom value would never make sense
           drawerRef.current.style.bottom = `${Math.max(diffFromInitial, 0)}px`;
         }
