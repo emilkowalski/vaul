@@ -24,17 +24,17 @@ const WINDOW_TOP_OFFSET = 26;
 
 const DRAG_CLASS = 'vaul-dragging';
 
-interface WithFadeFromProps {
+export interface WithFadeFromProps {
   snapPoints: (number | string)[];
   fadeFromIndex: number;
 }
 
-interface WithoutFadeFromProps {
+export interface WithoutFadeFromProps {
   snapPoints?: (number | string)[];
   fadeFromIndex?: never;
 }
 
-type DialogProps = {
+export type DialogProps = {
   activeSnapPoint?: number | string | null;
   setActiveSnapPoint?: (snapPoint: number | string | null) => void;
   children?: React.ReactNode;
