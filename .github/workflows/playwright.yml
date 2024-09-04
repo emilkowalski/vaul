@@ -13,7 +13,7 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 16
-      - run: npm install -g pnpm@5.3
+      - run: npm install -g pnpm@8.8.0
       - run: pnpm install
       - run: pnpm build
       - run: npx playwright install --with-deps
