@@ -61,7 +61,7 @@
     "react": "^16.8 || ^17.0 || ^18.0",
     "react-dom": "^16.8 || ^17.0 || ^18.0"
   },
-  "packageManager": "pnpm@6.32.11",
+  "packageManager": "pnpm@8.8.0",
   "dependencies": {
     "@radix-ui/react-dialog": "^1.0.4"
   }
