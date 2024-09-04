@@ -49,7 +49,7 @@
     "@types/node": "20.5.7",
     "@types/react": "18.2.55",
     "@types/react-dom": "18.2.18",
-    "bunchee": "^4.4.6",
+    "bunchee": "^5.1.5",
     "eslint": "^7.32.0",
     "prettier": "^2.5.1",
     "react": "^18.2.0",
