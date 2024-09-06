@@ -4,19 +4,19 @@
   transition: transform 0.5s cubic-bezier(0.32, 0.72, 0, 1);
 }
 
-[vaul-drawer][vaul-drawer-direction='bottom'] {
+[vaul-drawer][data-vaul-drawer-direction='bottom'] {
   transform: translate3d(0, 100%, 0);
 }
 
-[vaul-drawer][vaul-drawer-direction='top'] {
+[vaul-drawer][data-vaul-drawer-direction='top'] {
   transform: translate3d(0, -100%, 0);
 }
 
-[vaul-drawer][vaul-drawer-direction='left'] {
+[vaul-drawer][data-vaul-drawer-direction='left'] {
   transform: translate3d(-100%, 0, 0);
 }
 
-[vaul-drawer][vaul-drawer-direction='right'] {
+[vaul-drawer][data-vaul-drawer-direction='right'] {
   transform: translate3d(100%, 0, 0);
 }
 
@@ -35,19 +35,19 @@
   overflow-x: hidden !important;
 }
 
-[vaul-drawer][vaul-drawer-visible='true'][vaul-drawer-direction='top'] {
+[vaul-drawer][vaul-drawer-visible='true'][data-vaul-drawer-direction='top'] {
   transform: translate3d(0, var(--snap-point-height, 0), 0);
 }
 
-[vaul-drawer][vaul-drawer-visible='true'][vaul-drawer-direction='bottom'] {
+[vaul-drawer][vaul-drawer-visible='true'][data-vaul-drawer-direction='bottom'] {
   transform: translate3d(0, var(--snap-point-height, 0), 0);
 }
 
-[vaul-drawer][vaul-drawer-visible='true'][vaul-drawer-direction='left'] {
+[vaul-drawer][vaul-drawer-visible='true'][data-vaul-drawer-direction='left'] {
   transform: translate3d(var(--snap-point-height, 0), 0, 0);
 }
 
-[vaul-drawer][vaul-drawer-visible='true'][vaul-drawer-direction='right'] {
+[vaul-drawer][vaul-drawer-visible='true'][data-vaul-drawer-direction='right'] {
   transform: translate3d(var(--snap-point-height, 0), 0, 0);
 }
 
@@ -67,7 +67,7 @@
   background-color: inherit;
 }
 
-[vaul-drawer][vaul-drawer-direction='top']::after {
+[vaul-drawer][data-vaul-drawer-direction='top']::after {
   top: initial;
   bottom: 100%;
   left: 0;
@@ -75,7 +75,7 @@
   height: 200%;
 }
 
-[vaul-drawer][vaul-drawer-direction='bottom']::after {
+[vaul-drawer][data-vaul-drawer-direction='bottom']::after {
   top: 100%;
   bottom: initial;
   left: 0;
@@ -83,7 +83,7 @@
   height: 200%;
 }
 
-[vaul-drawer][vaul-drawer-direction='left']::after {
+[vaul-drawer][data-vaul-drawer-direction='left']::after {
   left: initial;
   right: 100%;
   top: 0;
@@ -91,7 +91,7 @@
   width: 200%;
 }
 
-[vaul-drawer][vaul-drawer-direction='right']::after {
+[vaul-drawer][data-vaul-drawer-direction='right']::after {
   left: 100%;
   right: initial;
   top: 0;

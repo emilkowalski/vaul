@@ -963,9 +963,9 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
 
   return (
     <DialogPrimitive.Content
+      data-vaul-drawer-direction={direction}
+      data-vaul-drawer-visible={visible ? 'true' : 'false'}
       vaul-drawer=""
-      vaul-drawer-direction={direction}
-      vaul-drawer-visible={visible ? 'true' : 'false'}
       {...rest}
       ref={composedRef}
       style={
