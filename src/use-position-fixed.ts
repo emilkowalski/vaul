@@ -1,4 +1,5 @@
 import React from 'react';
+import { isSafari } from './use-prevent-scroll';
 
 let previousBodyPosition: Record<string, string> | null = null;
 
@@ -94,7 +95,7 @@ export function usePositionFixed({
   }, []);
 
   React.useEffect(() => {
-    if (nested || !hasBeenOpened) return;
+    if (nested || !hasBeenOpened || isSafari()) return;
     // This is needed to force Safari toolbar to show **before** the drawer starts animating to prevent a gnarly shift from happening
     if (isOpen) {
       // avoid for standalone mode (PWA)
