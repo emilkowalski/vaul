@@ -95,7 +95,7 @@ export function usePositionFixed({
   }, []);
 
   React.useEffect(() => {
-    if (nested || !hasBeenOpened || isSafari()) return;
+    if (nested || !hasBeenOpened || !isSafari()) return;
     // This is needed to force Safari toolbar to show **before** the drawer starts animating to prevent a gnarly shift from happening
     if (isOpen) {
       // avoid for standalone mode (PWA)
