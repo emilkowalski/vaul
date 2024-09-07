@@ -8,7 +8,7 @@ export default function Page() {
   const [fullyControlled, setFullyControlled] = useState(false);
 
   return (
-    <div className="w-screen h-screen bg-white p-8 flex justify-center items-center" vaul-drawer-wrapper="">
+    <div className="w-screen h-screen bg-white p-8 flex justify-center items-center" data-vaul-drawer-wrapper="">
       <Drawer.Root open={open}>
         <Drawer.Trigger asChild onClick={() => setOpen(true)}>
           <button data-testid="trigger" className="text-2xl">

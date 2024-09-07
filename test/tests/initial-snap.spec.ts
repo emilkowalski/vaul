@@ -13,7 +13,7 @@ const snapPointYPositions = {
 } as const;
 
 const snapTo = async (page: Page, snapPointIndex: keyof typeof snapPointYPositions) => {
-  await page.hover('[vaul-drawer]');
+  await page.hover('[data-vaul-drawer]');
   await page.mouse.down();
   await page.mouse.move(0, snapPointYPositions[snapPointIndex]);
   await page.mouse.up();

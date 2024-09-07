@@ -6,7 +6,7 @@ import { Drawer } from 'vaul';
 export default function Page() {
   const [open, setOpen] = useState(false);
   return (
-    <div className="w-screen h-screen bg-white p-8 flex justify-center items-center" vaul-drawer-wrapper="">
+    <div className="w-screen h-screen bg-white p-8 flex justify-center items-center" data-vaul-drawer-wrapper="">
       <Drawer.Root open={open} onOpenChange={setOpen}>
         <Drawer.Trigger asChild>
           <button data-testid="trigger" className="text-2xl">
