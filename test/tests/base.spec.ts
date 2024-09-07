@@ -42,7 +42,7 @@ test.describe('Base tests', () => {
 
   test('should close when dragged down', async ({ page }) => {
     await openDrawer(page);
-    await page.hover('[vaul-drawer]');
+    await page.hover('[data-vaul-drawer]');
     await page.mouse.down();
     await page.mouse.move(0, 800);
     await page.mouse.up();
@@ -52,7 +52,7 @@ test.describe('Base tests', () => {
 
   test('should not close when dragged up', async ({ page }) => {
     await openDrawer(page);
-    await page.hover('[vaul-drawer]');
+    await page.hover('[data-vaul-drawer]');
     await page.mouse.down();
     await page.mouse.move(0, -800);
     await page.mouse.up();

@@ -68,7 +68,7 @@ export default function Page() {
   return (
     <div
       className="w-screen h-screen bg-white p-8 flex flex-col gap-2 justify-center items-center"
-      vaul-drawer-wrapper=""
+      data-vaul-drawer-wrapper=""
     >
       <select
         value={direction}

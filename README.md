@@ -48,7 +48,7 @@ Play around with the examples on codesandbox:
 
 ### Root
 
-Contains all parts of a dialog. Use `shouldScaleBackground` to enable background scaling, it requires an element with `[vaul-drawer-wrapper]` data attribute to scale its background.
+Contains all parts of a dialog. Use `shouldScaleBackground` to enable background scaling, it requires an element with `[data-vaul-drawer-wrapper]` data attribute to scale its background.
 Can be controlled with the `value` and `onOpenChange` props. Can be opened by default via the `open` prop.
 
 Additional props:
@@ -103,7 +103,7 @@ The button that closes the dialog. [Props](https://www.radix-ui.com/docs/primiti
 
 ### Handle
 
-A drag hint (also known as grabber). Shows people that they can drag the drawer to resize it; they can also tap it to cycle through the snap points, and double tap quickly to close the drawer. Set `preventCycle={true}` to stop this behavior. If you want to change the handle's hit area you can do so by styling the `[vaul-handle-hitarea]` selector (Defaults to 44x44 on mobile devices).
+A drag hint (also known as grabber). Shows people that they can drag the drawer to resize it; they can also tap it to cycle through the snap points, and double tap quickly to close the drawer. Set `preventCycle={true}` to stop this behavior. If you want to change the handle's hit area you can do so by styling the `[data-vaul-handle-hitarea]` selector (Defaults to 44x44 on mobile devices).
 
 ### Portal
 

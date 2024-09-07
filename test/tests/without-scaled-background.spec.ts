@@ -6,10 +6,10 @@ test.beforeEach(async ({ page }) => {
 
 test.describe('Without scaled background', () => {
   test('should not scale background', async ({ page }) => {
-    await expect(page.locator('[vaul-drawer-wrapper]')).not.toHaveCSS('transform', '');
+    await expect(page.locator('[data-vaul-drawer-wrapper]')).not.toHaveCSS('transform', '');
 
     await page.getByTestId('trigger').click();
 
-    await expect(page.locator('[vaul-drawer-wrapper]')).not.toHaveCSS('transform', '');
+    await expect(page.locator('[data-vaul-drawer-wrapper]')).not.toHaveCSS('transform', '');
   });
 });
