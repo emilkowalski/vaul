@@ -1,12 +1,11 @@
 'use client';
 
 import * as DialogPrimitive from '@radix-ui/react-dialog';
-import React, { useRef, useState } from 'react';
+import React from 'react';
 import { DrawerContext, useDrawerContext } from './context';
 import './style.css';
 import { usePreventScroll, isInput, isIOS, useIsomorphicLayoutEffect } from './use-prevent-scroll';
 import { useComposedRefs } from './use-composed-refs';
-import { usePositionFixed } from './use-position-fixed';
 import { useSnapPoints } from './use-snap-points';
 import { set, reset, getTranslate, dampenValue, isVertical } from './helpers';
 import { TRANSITIONS, VELOCITY_THRESHOLD } from './constants';
@@ -131,15 +130,6 @@ export function Root({
 
   usePreventScroll({
     isDisabled: !isOpen || isDragging || !modal || justReleased || !hasBeenOpened || disablePreventScroll,
-  });
-
-  const { restorePositionSetting } = usePositionFixed({
-    isOpen,
-    modal,
-    nested,
-    hasBeenOpened,
-    preventScrollRestoration,
-    noBodyStyles,
   });
 
   function getScale() {
@@ -347,7 +337,6 @@ export function Root({
   React.useEffect(() => {
     return () => {
       scaleBackground(false);
-      restorePositionSetting();
     };
   }, []);
 
