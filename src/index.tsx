@@ -24,17 +24,17 @@ const WINDOW_TOP_OFFSET = 26;
 
 const DRAG_CLASS = 'vaul-dragging';
 
-interface WithFadeFromProps {
+export interface WithFadeFromProps {
   snapPoints: (number | string)[];
   fadeFromIndex: number;
 }
 
-interface WithoutFadeFromProps {
+export interface WithoutFadeFromProps {
   snapPoints?: (number | string)[];
   fadeFromIndex?: never;
 }
 
-type DialogProps = {
+export type DialogProps = {
   activeSnapPoint?: number | string | null;
   setActiveSnapPoint?: (snapPoint: number | string | null) => void;
   children?: React.ReactNode;
@@ -58,7 +58,7 @@ type DialogProps = {
   disablePreventScroll?: boolean;
 } & (WithFadeFromProps | WithoutFadeFromProps);
 
-function Root({
+export function Root({
   open: openProp,
   onOpenChange,
   children,
@@ -773,14 +773,14 @@ function Root({
   );
 }
 
-type HandleProps = React.ComponentPropsWithoutRef<'div'> & {
+export type HandleProps = React.ComponentPropsWithoutRef<'div'> & {
   preventCycle?: boolean;
 };
 
 const LONG_HANDLE_PRESS_TIMEOUT = 250;
 const DOUBLE_TAP_TIMEOUT = 120;
 
-const Handle = React.forwardRef<HTMLDivElement, HandleProps>(function (
+export const Handle = React.forwardRef<HTMLDivElement, HandleProps>(function (
   { preventCycle = false, children, ...rest },
   ref,
 ) {
@@ -881,7 +881,7 @@ const Handle = React.forwardRef<HTMLDivElement, HandleProps>(function (
 
 Handle.displayName = 'Drawer.Handle';
 
-const Overlay = React.forwardRef<HTMLDivElement, React.ComponentPropsWithoutRef<typeof DialogPrimitive.Overlay>>(
+export const Overlay = React.forwardRef<HTMLDivElement, React.ComponentPropsWithoutRef<typeof DialogPrimitive.Overlay>>(
   function ({ children, ...rest }, ref) {
     const { overlayRef, snapPoints, onRelease, shouldFade, isOpen, visible } = useDrawerContext();
     const composedRef = useComposedRefs(ref, overlayRef);
@@ -903,11 +903,11 @@ const Overlay = React.forwardRef<HTMLDivElement, React.ComponentPropsWithoutRef<
 
 Overlay.displayName = 'Drawer.Overlay';
 
-type ContentProps = React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content> & {
+export type ContentProps = React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content> & {
   onAnimationEnd?: (open: boolean) => void;
 };
 
-const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
+export const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
   { onOpenAutoFocus, onPointerDownOutside, onAnimationEnd, style, ...rest },
   ref,
 ) {
@@ -1047,7 +1047,7 @@ const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
 
 Content.displayName = 'Drawer.Content';
 
-function NestedRoot({ onDrag, onOpenChange, ...rest }: DialogProps) {
+export function NestedRoot({ onDrag, onOpenChange, ...rest }: DialogProps) {
   const { onNestedDrag, onNestedOpenChange, onNestedRelease } = useDrawerContext();
 
   if (!onNestedDrag) {
