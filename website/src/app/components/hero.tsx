@@ -1,6 +1,7 @@
 'use client';
 
 import { Drawer } from 'vaul';
+import React from 'react';
 
 export function Hero() {
   return (
@@ -40,7 +41,7 @@ export function Hero() {
           <p className="text-gray-600 text-xl">Drawer component for React.</p>
         </div>
         <div className="flex gap-4 justify-center mt-6">
-          <Drawer.Root shouldScaleBackground>
+          <Drawer.Root onOpenChange={(o) => console.log(o)}>
             <Drawer.Trigger asChild>
               <button
                 type="button"

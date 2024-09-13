@@ -2,6 +2,7 @@
   touch-action: none;
   will-change: transform;
   transition: transform 0.5s cubic-bezier(0.32, 0.72, 0, 1);
+  z-index: 9999;
 }
 
 [data-vaul-drawer][data-vaul-drawer-direction='bottom'] {
@@ -52,6 +53,7 @@
 }
 
 [data-vaul-overlay] {
+  z-index: 9999;
   opacity: 0;
   transition: opacity 0.5s cubic-bezier(0.32, 0.72, 0, 1);
 }
@@ -131,7 +133,9 @@
   touch-action: inherit;
 }
 
-[data-vaul-overlay][data-vaul-snap-points='true']:not([data-vaul-snap-points-overlay='true']):not([data-state='closed']) {
+[data-vaul-overlay][data-vaul-snap-points='true']:not([data-vaul-snap-points-overlay='true']):not(
+    [data-state='closed']
+  ) {
   opacity: 0;
 }
 

@@ -19,6 +19,7 @@ import {
   DRAG_CLASS,
 } from './constants';
 import { DrawerDirection } from './types';
+import { useControllableState } from './use-controllable-state';
 
 export interface WithFadeFromProps {
   snapPoints: (number | string)[];
@@ -50,8 +51,8 @@ export type DialogProps = {
   nested?: boolean;
   onClose?: () => void;
   direction?: 'top' | 'bottom' | 'left' | 'right';
-  preventScrollRestoration?: boolean;
   disablePreventScroll?: boolean;
+  defaultOpen?: boolean;
 } & (WithFadeFromProps | WithoutFadeFromProps);
 
 export function Root({
@@ -76,14 +77,17 @@ export function Root({
   onClose,
   noBodyStyles,
   direction = 'bottom',
-  preventScrollRestoration = true,
+  defaultOpen = false,
   disablePreventScroll = false,
 }: DialogProps) {
-  const [isOpen = false, setIsOpen] = React.useState<boolean>(false);
+  const [isOpen = false, setIsOpen] = useControllableState({
+    defaultProp: defaultOpen,
+    prop: openProp,
+    onChange: onOpenChange,
+  });
   const [hasBeenOpened, setHasBeenOpened] = React.useState<boolean>(false);
   // Not visible = translateY(100%)
   const [visible, setVisible] = React.useState<boolean>(false);
-  const [mounted, setMounted] = React.useState<boolean>(false);
   const [isDragging, setIsDragging] = React.useState<boolean>(false);
   const [justReleased, setJustReleased] = React.useState<boolean>(false);
   const overlayRef = React.useRef<HTMLDivElement>(null);
@@ -400,6 +404,7 @@ export function Root({
     cancelDrag();
 
     onClose?.();
+
     set(drawerRef.current, {
       transform: isVertical(direction)
         ? `translate3d(0, ${direction === 'bottom' ? '100%' : '-100%'}, 0)`
@@ -437,27 +442,6 @@ export function Root({
       return () => clearTimeout(id);
     }
   }, [isOpen, shouldScaleBackground]);
-
-  // LayoutEffect to prevent extra render where openProp and isOpen are not synced yet
-  useIsomorphicLayoutEffect(() => {
-    if (openProp) {
-      setIsOpen(true);
-      setHasBeenOpened(true);
-    } else {
-      closeDrawer();
-    }
-  }, [openProp]);
-
-  // This can be done much better
-  React.useEffect(() => {
-    if (mounted) {
-      onOpenChange?.(isOpen);
-    }
-  }, [isOpen]);
-
-  React.useEffect(() => {
-    setMounted(true);
-  }, []);
 
   function resetDrawer() {
     if (!drawerRef.current) return;
@@ -707,19 +691,14 @@ export function Root({
 
   return (
     <DialogPrimitive.Root
+      defaultOpen={defaultOpen}
       modal={modal}
-      onOpenChange={(o: boolean) => {
-        if (openProp !== undefined) {
-          onOpenChange?.(o);
-          return;
-        }
-
-        if (!o) {
-          closeDrawer();
-        } else {
+      onOpenChange={(open) => {
+        console.log(open);
+        if (open) {
           setHasBeenOpened(true);
-          setIsOpen(o);
         }
+        setIsOpen(open);
       }}
       open={isOpen}
     >
@@ -978,15 +957,18 @@ export const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
       }}
       onPointerDownOutside={(e) => {
         onPointerDownOutside?.(e);
+		
         if (!modal || e.defaultPrevented) {
           e.preventDefault();
           return;
         }
+
         if (keyboardIsOpen.current) {
           keyboardIsOpen.current = false;
         }
+
         e.preventDefault();
-        onOpenChange?.(false);
+
         if (!dismissible || openProp !== undefined) {
           return;
         }
