@@ -1,7 +1,7 @@
 'use client';
 
 import * as DialogPrimitive from '@radix-ui/react-dialog';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { DrawerContext, useDrawerContext } from './context';
 import './style.css';
 import { usePreventScroll, isInput, isIOS } from './use-prevent-scroll';
@@ -61,7 +61,6 @@ export function Root({
   onDrag: onDragProp,
   onRelease: onReleaseProp,
   snapPoints,
-  nested = false,
   shouldScaleBackground = false,
   setBackgroundColorOnScale = true,
   closeThreshold = CLOSE_THRESHOLD,
@@ -738,11 +737,24 @@ export const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
   { onOpenAutoFocus, onPointerDownOutside, onAnimationEnd, style, ...rest },
   ref,
 ) {
-  const { drawerRef, onPress, onRelease, onDrag, keyboardIsOpen, snapPointsOffset, modal, isOpen, direction } =
-    useDrawerContext();
+  const {
+    drawerRef,
+    onPress,
+    onRelease,
+    onDrag,
+    keyboardIsOpen,
+    snapPointsOffset,
+    modal,
+    isOpen,
+    direction,
+    snapPoints,
+  } = useDrawerContext();
+  // Needed to use transition instead of animations
+  const [delayedSnapPoints, setDelayedSnapPoints] = React.useState(false);
   const composedRef = useComposedRefs(ref, drawerRef);
   const pointerStartRef = React.useRef<{ x: number; y: number } | null>(null);
   const wasBeyondThePointRef = React.useRef(false);
+  const hasSnapPoints = snapPoints && snapPoints.length > 0;
 
   const isDeltaInDirection = (delta: { x: number; y: number }, direction: DrawerDirection, threshold = 0) => {
     if (wasBeyondThePointRef.current) return true;
@@ -768,11 +780,20 @@ export const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
     return true;
   };
 
+  useEffect(() => {
+    if (hasSnapPoints) {
+      window.requestAnimationFrame(() => {
+        setDelayedSnapPoints(true);
+      });
+    }
+  }, []);
+
   return (
     <DialogPrimitive.Content
       data-vaul-drawer-direction={direction}
       data-vaul-drawer=""
-      data-vaul-snap-points={isOpen && 'false'}
+      data-vaul-delayed-snap-points={delayedSnapPoints ? 'true' : 'false'}
+      data-vaul-snap-points={isOpen && hasSnapPoints ? 'true' : 'false'}
       {...rest}
       ref={composedRef}
       style={
