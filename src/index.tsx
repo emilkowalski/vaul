@@ -59,11 +59,11 @@ export function Root({
   open: openProp,
   onOpenChange,
   children,
-  shouldScaleBackground,
   onDrag: onDragProp,
   onRelease: onReleaseProp,
   snapPoints,
   nested = false,
+  shouldScaleBackground = false,
   setBackgroundColorOnScale = true,
   closeThreshold = CLOSE_THRESHOLD,
   scrollLockTimeout = SCROLL_LOCK_TIMEOUT,
@@ -86,8 +86,6 @@ export function Root({
     onChange: onOpenChange,
   });
   const [hasBeenOpened, setHasBeenOpened] = React.useState<boolean>(false);
-  // Not visible = translateY(100%)
-  const [visible, setVisible] = React.useState<boolean>(false);
   const [isDragging, setIsDragging] = React.useState<boolean>(false);
   const [justReleased, setJustReleased] = React.useState<boolean>(false);
   const overlayRef = React.useRef<HTMLDivElement>(null);
@@ -399,33 +397,13 @@ export function Root({
   }, [activeSnapPointIndex, snapPoints, snapPointsOffset]);
 
   function closeDrawer() {
-    if (!drawerRef.current) return;
-
     cancelDrag();
-
     onClose?.();
 
-    set(drawerRef.current, {
-      transform: isVertical(direction)
-        ? `translate3d(0, ${direction === 'bottom' ? '100%' : '-100%'}, 0)`
-        : `translate3d(${direction === 'right' ? '100%' : '-100%'}, 0, 0)`,
-      transition: `transform ${TRANSITIONS.DURATION}s cubic-bezier(${TRANSITIONS.EASE.join(',')})`,
-    });
-
-    set(overlayRef.current, {
-      opacity: '0',
-      transition: `opacity ${TRANSITIONS.DURATION}s cubic-bezier(${TRANSITIONS.EASE.join(',')})`,
-    });
-
     scaleBackground(false);
+    setIsOpen(false);
 
     setTimeout(() => {
-      setVisible(false);
-      setIsOpen(false);
-    }, 300);
-
-    setTimeout(() => {
-      // reset(document.documentElement, 'scrollBehavior');
       if (snapPoints) {
         setActiveSnapPoint(snapPoints[0]);
       }
@@ -568,7 +546,7 @@ export function Root({
   }, [isOpen]);
 
   React.useEffect(() => {
-    if (drawerRef.current && visible) {
+    if (drawerRef.current) {
       // Find all scrollable elements inside our drawer and assign a class to it so that we can disable overflow when dragging to prevent pointermove not being captured
       const children = drawerRef?.current?.querySelectorAll('*');
       children?.forEach((child: Element) => {
@@ -578,7 +556,7 @@ export function Root({
         }
       });
     }
-  }, [visible]);
+  }, [isOpen]);
 
   function scaleBackground(open: boolean) {
     const wrapper = document.querySelector('[data-vaul-drawer-wrapper]');
@@ -658,7 +636,7 @@ export function Root({
     }
   }
 
-  function onNestedDrag(event: React.PointerEvent<HTMLDivElement>, percentageDragged: number) {
+  function onNestedDrag(_event: React.PointerEvent<HTMLDivElement>, percentageDragged: number) {
     if (percentageDragged < 0) return;
 
     const initialDim = isVertical(direction) ? window.innerHeight : window.innerWidth;
@@ -674,7 +652,7 @@ export function Root({
     });
   }
 
-  function onNestedRelease(event: React.PointerEvent<HTMLDivElement>, o: boolean) {
+  function onNestedRelease(_event: React.PointerEvent<HTMLDivElement>, o: boolean) {
     const dim = isVertical(direction) ? window.innerHeight : window.innerWidth;
     const scale = o ? (dim - NESTED_DISPLACEMENT) / dim : 1;
     const translate = o ? -NESTED_DISPLACEMENT : 0;
@@ -694,7 +672,6 @@ export function Root({
       defaultOpen={defaultOpen}
       modal={modal}
       onOpenChange={(open) => {
-        console.log(open);
         if (open) {
           setHasBeenOpened(true);
         }
@@ -704,7 +681,6 @@ export function Root({
     >
       <DrawerContext.Provider
         value={{
-          visible,
           activeSnapPoint,
           snapPoints,
           setActiveSnapPoint,
@@ -713,7 +689,6 @@ export function Root({
           scaleBackground,
           onOpenChange,
           onPress,
-          setVisible,
           onRelease,
           onDrag,
           dismissible,
@@ -750,7 +725,6 @@ export const Handle = React.forwardRef<HTMLDivElement, HandleProps>(function (
   ref,
 ) {
   const {
-    visible,
     closeDrawer,
     isDragging,
     snapPoints,
@@ -831,7 +805,6 @@ export const Handle = React.forwardRef<HTMLDivElement, HandleProps>(function (
       }}
       // onPointerUp is already handled by the content component
       ref={ref}
-      data-vaul-drawer-visible={visible ? 'true' : 'false'}
       data-vaul-handle=""
       aria-hidden="true"
       {...rest}
@@ -848,7 +821,7 @@ Handle.displayName = 'Drawer.Handle';
 
 export const Overlay = React.forwardRef<HTMLDivElement, React.ComponentPropsWithoutRef<typeof DialogPrimitive.Overlay>>(
   function ({ children, ...rest }, ref) {
-    const { overlayRef, snapPoints, onRelease, shouldFade, isOpen, visible } = useDrawerContext();
+    const { overlayRef, snapPoints, onRelease, shouldFade, isOpen } = useDrawerContext();
     const composedRef = useComposedRefs(ref, overlayRef);
     const hasSnapPoints = snapPoints && snapPoints.length > 0;
 
@@ -856,7 +829,6 @@ export const Overlay = React.forwardRef<HTMLDivElement, React.ComponentPropsWith
       <DialogPrimitive.Overlay
         onMouseUp={onRelease}
         ref={composedRef}
-        data-vaul-drawer-visible={visible ? 'true' : 'false'}
         data-vaul-overlay=""
         data-vaul-snap-points={isOpen && hasSnapPoints ? 'true' : 'false'}
         data-vaul-snap-points-overlay={isOpen && shouldFade ? 'true' : 'false'}
@@ -884,12 +856,10 @@ export const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
     dismissible,
     keyboardIsOpen,
     snapPointsOffset,
-    visible,
     closeDrawer,
     modal,
     openProp,
-    onOpenChange,
-    setVisible,
+    isOpen,
     handleOnly,
     direction,
   } = useDrawerContext();
@@ -921,16 +891,11 @@ export const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
     return true;
   };
 
-  React.useEffect(() => {
-    // Trigger enter animation without using CSS animation
-    setVisible(true);
-  }, []);
-
   return (
     <DialogPrimitive.Content
       data-vaul-drawer-direction={direction}
       data-vaul-drawer=""
-      data-vaul-drawer-visible={visible ? 'true' : 'false'}
+    //   data-vaul-snap-points={isOpen && 'false'}
       {...rest}
       ref={composedRef}
       style={
@@ -957,7 +922,7 @@ export const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
       }}
       onPointerDownOutside={(e) => {
         onPointerDownOutside?.(e);
-		
+
         if (!modal || e.defaultPrevented) {
           e.preventDefault();
           return;

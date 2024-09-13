@@ -22,9 +22,7 @@ interface DrawerContextValue {
   shouldFade: boolean;
   activeSnapPoint?: number | string | null;
   setActiveSnapPoint: (o: number | string | null) => void;
-  visible: boolean;
   closeDrawer: () => void;
-  setVisible: (o: boolean) => void;
   openProp?: boolean;
   onOpenChange?: (o: boolean) => void;
   direction?: DrawerDirection;
@@ -53,9 +51,7 @@ export const DrawerContext = React.createContext<DrawerContextValue>({
   activeSnapPoint: null,
   onOpenChange: () => {},
   setActiveSnapPoint: () => {},
-  visible: false,
   closeDrawer: () => {},
-  setVisible: () => {},
   direction: 'bottom',
 });
 
