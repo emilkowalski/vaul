@@ -73,6 +73,8 @@ Additional props:
 
 `setBackgroundColorOnScale`: When `false` we don't change body's background color when the drawer is open. `true` by default.
 
+`defaultOpen`: Opened by default, still reacts to `open` state changes.
+
 `[data-vaul-no-drag]`: When interacting with an element with this data attribute, the drawer won't be dragged.
 
 ### Controlled Drawer
