@@ -12,7 +12,6 @@ interface DrawerContextValue {
   onNestedOpenChange: (o: boolean) => void;
   onNestedRelease: (event: React.PointerEvent<HTMLDivElement>, open: boolean) => void;
   dismissible: boolean;
-  handleOnly: boolean;
   isOpen: boolean;
   isDragging: boolean;
   keyboardIsOpen: React.MutableRefObject<boolean>;
@@ -22,9 +21,7 @@ interface DrawerContextValue {
   shouldFade: boolean;
   activeSnapPoint?: number | string | null;
   setActiveSnapPoint: (o: number | string | null) => void;
-  visible: boolean;
   closeDrawer: () => void;
-  setVisible: (o: boolean) => void;
   openProp?: boolean;
   onOpenChange?: (o: boolean) => void;
   direction?: DrawerDirection;
@@ -42,7 +39,6 @@ export const DrawerContext = React.createContext<DrawerContextValue>({
   onNestedRelease: () => {},
   openProp: undefined,
   dismissible: false,
-  handleOnly: false,
   isOpen: false,
   isDragging: false,
   keyboardIsOpen: { current: false },
@@ -53,9 +49,7 @@ export const DrawerContext = React.createContext<DrawerContextValue>({
   activeSnapPoint: null,
   onOpenChange: () => {},
   setActiveSnapPoint: () => {},
-  visible: false,
   closeDrawer: () => {},
-  setVisible: () => {},
   direction: 'bottom',
 });
 

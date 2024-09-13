@@ -21,7 +21,6 @@ function MyComponent() {
       <Drawer.Trigger>Open</Drawer.Trigger>
       <Drawer.Portal>
         <Drawer.Content>
-          <Drawer.Handle />
           <p>Content</p>
         </Drawer.Content>
         <Drawer.Overlay />
@@ -63,11 +62,7 @@ Additional props:
 
 `modal`: When `false` it allows to interact with elements outside of the drawer without closing it. Defaults to `true`.
 
-`handleOnly`: When `true` only allows the drawer to be dragged by the `<Drawer.Handle />` component. Defaults to `false`.
-
 `direction`: Direction of the drawer. Can be `top` or `bottom`, `left`, `right`. Defaults to `bottom`.
-
-`preventScrollRestoration`: When `true` it prevents scroll restoration when the drawer is closed after a navigation happens inside of it. Defaults to `true`.
 
 `disablePreventScroll`: When `true` scroll prevention mechanism will be disabled. Scroll prevention ensures that page will not scroll on mobile when opening drawer. However this mechanism gets confused when drawer has an input with autofocus and therefore opens simulataneosly with touch keyboard. Defaults to `true`. `modal` set to `false` also disables it.
 
@@ -75,7 +70,23 @@ Additional props:
 
 `setBackgroundColorOnScale`: When `false` we don't change body's background color when the drawer is open. `true` by default.
 
+`defaultOpen`: Opened by default, still reacts to `open` state changes.
+
 `[data-vaul-no-drag]`: When interacting with an element with this data attribute, the drawer won't be dragged.
+
+### Controlled Drawer
+
+Drawer can be controlled programmatically by providing the `open` prop. If you want to react to open state changes from within the Drawer use the `onOpenChange` prop, this will allow you to provide your own open state while still closing the drawer when the escape key is pressed for example.
+
+```
+const [open, setOpen] = React.useState(false);
+
+// ...
+
+<Drawer.Root open={open} onOpenChange={setOpen}>
+  // ...
+</Drawer.Root>
+```
 
 ### Trigger
 
@@ -100,10 +111,6 @@ An optional accessible description to be announced when the dialog is opened. [P
 ### Close
 
 The button that closes the dialog. [Props](https://www.radix-ui.com/docs/primitives/components/dialog#close).
-
-### Handle
-
-A drag hint (also known as grabber). Shows people that they can drag the drawer to resize it; they can also tap it to cycle through the snap points, and double tap quickly to close the drawer. Set `preventCycle={true}` to stop this behavior. If you want to change the handle's hit area you can do so by styling the `[data-vaul-handle-hitarea]` selector (Defaults to 44x44 on mobile devices).
 
 ### Portal
 

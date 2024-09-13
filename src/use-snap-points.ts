@@ -109,6 +109,7 @@ export function useSnapPoints({
     (dimension: number) => {
       const newSnapPointIndex = snapPointsOffset?.findIndex((snapPointDim) => snapPointDim === dimension) ?? null;
       onSnapPointChange(newSnapPointIndex);
+
       set(drawerRef.current, {
         transition: `transform ${TRANSITIONS.DURATION}s cubic-bezier(${TRANSITIONS.EASE.join(',')})`,
         transform: isVertical(direction) ? `translate3d(0, ${dimension}px, 0)` : `translate3d(${dimension}px, 0, 0)`,
@@ -138,8 +139,7 @@ export function useSnapPoints({
   React.useEffect(() => {
     if (activeSnapPoint || activeSnapPointProp) {
       const newIndex =
-        snapPoints?.findIndex((snapPoint) => snapPoint === activeSnapPointProp || snapPoint === activeSnapPoint) ??
-        -1;
+        snapPoints?.findIndex((snapPoint) => snapPoint === activeSnapPointProp || snapPoint === activeSnapPoint) ?? -1;
       if (snapPointsOffset && newIndex !== -1 && typeof snapPointsOffset[newIndex] === 'number') {
         snapToPoint(snapPointsOffset[newIndex] as number);
       }
