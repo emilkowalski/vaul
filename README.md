@@ -67,8 +67,6 @@ Additional props:
 
 `direction`: Direction of the drawer. Can be `top` or `bottom`, `left`, `right`. Defaults to `bottom`.
 
-`preventScrollRestoration`: When `true` it prevents scroll restoration when the drawer is closed after a navigation happens inside of it. Defaults to `true`.
-
 `disablePreventScroll`: When `true` scroll prevention mechanism will be disabled. Scroll prevention ensures that page will not scroll on mobile when opening drawer. However this mechanism gets confused when drawer has an input with autofocus and therefore opens simulataneosly with touch keyboard. Defaults to `true`. `modal` set to `false` also disables it.
 
 `noBodyStyles`: When `true` the `body` doesn't get any styles assigned from Vaul.
@@ -76,6 +74,20 @@ Additional props:
 `setBackgroundColorOnScale`: When `false` we don't change body's background color when the drawer is open. `true` by default.
 
 `[data-vaul-no-drag]`: When interacting with an element with this data attribute, the drawer won't be dragged.
+
+### Controlled Drawer
+
+Drawer can be controlled programmatically by providing the `open` prop. If you want to react to open state changes from within the Drawer use the `onOpenChange` prop, this will allow you to provide your own open state while still closing the drawer when the escape key is pressed for example.
+
+```
+const [open, setOpen] = React.useState(false);
+
+// ...
+
+<Drawer.Root open={open} onOpenChange={setOpen}>
+  // ...
+</Drawer.Root>
+```
 
 ### Trigger
 
