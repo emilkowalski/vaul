@@ -401,17 +401,6 @@ export function Root({
     }, TRANSITIONS.DURATION * 1000); // seconds to ms
   }
 
-  React.useEffect(() => {
-    if (!isOpen && shouldScaleBackground) {
-      // Can't use `onAnimationEnd` as the component will be invisible by then
-      const id = setTimeout(() => {
-        reset(document.body);
-      }, 200);
-
-      return () => clearTimeout(id);
-    }
-  }, [isOpen, shouldScaleBackground]);
-
   function resetDrawer() {
     if (!drawerRef.current) return;
     const wrapper = document.querySelector('[data-vaul-drawer-wrapper]');
@@ -699,7 +688,7 @@ export const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
   const wasBeyondThePointRef = React.useRef(false);
   const hasSnapPoints = snapPoints && snapPoints.length > 0;
   useScaleBackground();
-  
+
   const isDeltaInDirection = (delta: { x: number; y: number }, direction: DrawerDirection, threshold = 0) => {
     if (wasBeyondThePointRef.current) return true;
 

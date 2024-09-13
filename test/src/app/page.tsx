@@ -13,6 +13,7 @@ export default function Page() {
       <Link href="/non-dismissible">Non-dismissible</Link>
       <Link href="/initial-snap">Initial snap</Link>
       <Link href="/controlled">Controlled</Link>
+      <Link href="/default-open">Controlled</Link>
     </div>
   );
 }
