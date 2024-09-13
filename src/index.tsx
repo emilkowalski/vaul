@@ -51,8 +51,8 @@ export type DialogProps = {
   nested?: boolean;
   onClose?: () => void;
   direction?: 'top' | 'bottom' | 'left' | 'right';
-  disablePreventScroll?: boolean;
   defaultOpen?: boolean;
+  repositionInputs?: boolean;
 } & (WithFadeFromProps | WithoutFadeFromProps);
 
 export function Root({
@@ -76,7 +76,7 @@ export function Root({
   noBodyStyles,
   direction = 'bottom',
   defaultOpen = false,
-  disablePreventScroll = false,
+  repositionInputs = true,
 }: DialogProps) {
   const [isOpen = false, setIsOpen] = useControllableState({
     defaultProp: defaultOpen,
@@ -126,7 +126,7 @@ export function Root({
   });
 
   usePreventScroll({
-    isDisabled: !isOpen || isDragging || !modal || justReleased || !hasBeenOpened || disablePreventScroll,
+    isDisabled: !isOpen || isDragging || !modal || justReleased || !hasBeenOpened || !repositionInputs,
   });
 
   function getScale() {
