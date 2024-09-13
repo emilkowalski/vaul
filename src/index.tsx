@@ -8,20 +8,17 @@ import { usePreventScroll, isInput, isIOS, useIsomorphicLayoutEffect } from './u
 import { useComposedRefs } from './use-composed-refs';
 import { useSnapPoints } from './use-snap-points';
 import { set, reset, getTranslate, dampenValue, isVertical } from './helpers';
-import { TRANSITIONS, VELOCITY_THRESHOLD } from './constants';
+import {
+  TRANSITIONS,
+  VELOCITY_THRESHOLD,
+  CLOSE_THRESHOLD,
+  SCROLL_LOCK_TIMEOUT,
+  BORDER_RADIUS,
+  NESTED_DISPLACEMENT,
+  WINDOW_TOP_OFFSET,
+  DRAG_CLASS,
+} from './constants';
 import { DrawerDirection } from './types';
-
-const CLOSE_THRESHOLD = 0.25;
-
-const SCROLL_LOCK_TIMEOUT = 100;
-
-const BORDER_RADIUS = 8;
-
-const NESTED_DISPLACEMENT = 16;
-
-const WINDOW_TOP_OFFSET = 26;
-
-const DRAG_CLASS = 'vaul-dragging';
 
 export interface WithFadeFromProps {
   snapPoints: (number | string)[];
