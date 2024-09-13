@@ -21,7 +21,6 @@ function MyComponent() {
       <Drawer.Trigger>Open</Drawer.Trigger>
       <Drawer.Portal>
         <Drawer.Content>
-          <Drawer.Handle />
           <p>Content</p>
         </Drawer.Content>
         <Drawer.Overlay />
@@ -62,8 +61,6 @@ Additional props:
 `fadeFromIndex`: Index of a `snapPoint` from which the overlay fade should be applied. Defaults to the last snap point.
 
 `modal`: When `false` it allows to interact with elements outside of the drawer without closing it. Defaults to `true`.
-
-`handleOnly`: When `true` only allows the drawer to be dragged by the `<Drawer.Handle />` component. Defaults to `false`.
 
 `direction`: Direction of the drawer. Can be `top` or `bottom`, `left`, `right`. Defaults to `bottom`.
 
