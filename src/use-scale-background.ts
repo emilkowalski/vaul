@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useDrawerContext } from './context';
-import { assignStyle, chain, isVertical } from './helpers';
+import { assignStyle, chain, isVertical, reset } from './helpers';
 import { BORDER_RADIUS, TRANSITIONS, WINDOW_TOP_OFFSET } from './constants';
 
 const noop = () => () => {};
@@ -8,6 +8,7 @@ const noop = () => () => {};
 export function useScaleBackground() {
   const { direction, isOpen, shouldScaleBackground, setBackgroundColorOnScale, noBodyStyles } = useDrawerContext();
   const timeoutIdRef = React.useRef<number | null>(null);
+  const initialBackgroundColor = useMemo(() => document.body.style.backgroundColor, []);
 
   function getScale() {
     return (window.innerWidth - WINDOW_TOP_OFFSET) / window.innerWidth;
@@ -44,8 +45,14 @@ export function useScaleBackground() {
         wrapperStylesCleanup();
         timeoutIdRef.current = window.setTimeout(() => {
           bodyAndWrapperCleanup();
+
+          if (initialBackgroundColor) {
+            document.body.style.background = initialBackgroundColor;
+          } else {
+            document.body.style.removeProperty('background');
+          }
         }, TRANSITIONS.DURATION * 1000);
       };
     }
-  }, [isOpen, shouldScaleBackground]);
+  }, [isOpen, shouldScaleBackground, initialBackgroundColor]);
 }

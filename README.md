@@ -64,7 +64,7 @@ Additional props:
 
 `direction`: Direction of the drawer. Can be `top` or `bottom`, `left`, `right`. Defaults to `bottom`.
 
-`disablePreventScroll`: When `true` scroll prevention mechanism will be disabled. Scroll prevention ensures that page will not scroll on mobile when opening drawer. However this mechanism gets confused when drawer has an input with autofocus and therefore opens simulataneosly with touch keyboard. Defaults to `true`. `modal` set to `false` also disables it.
+`repositionInputs`: When `true` Vaul will reposition inputs rather than scroll then into view if the keyboard is in the way. Setting it to `false` will fall back to the default browser behavior.
 
 `noBodyStyles`: When `true` the `body` doesn't get any styles assigned from Vaul.
 

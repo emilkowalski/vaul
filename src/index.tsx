@@ -51,8 +51,8 @@ export type DialogProps = {
   nested?: boolean;
   onClose?: () => void;
   direction?: 'top' | 'bottom' | 'left' | 'right';
-  disablePreventScroll?: boolean;
   defaultOpen?: boolean;
+  repositionInputs?: boolean;
 } & (WithFadeFromProps | WithoutFadeFromProps);
 
 export function Root({
@@ -76,7 +76,7 @@ export function Root({
   noBodyStyles,
   direction = 'bottom',
   defaultOpen = false,
-  disablePreventScroll = false,
+  repositionInputs = true,
 }: DialogProps) {
   const [isOpen = false, setIsOpen] = useControllableState({
     defaultProp: defaultOpen,
@@ -126,7 +126,7 @@ export function Root({
   });
 
   usePreventScroll({
-    isDisabled: !isOpen || isDragging || !modal || justReleased || !hasBeenOpened || disablePreventScroll,
+    isDisabled: !isOpen || isDragging || !modal || justReleased || !hasBeenOpened || !repositionInputs,
   });
 
   function getScale() {
@@ -400,17 +400,6 @@ export function Root({
       }
     }, TRANSITIONS.DURATION * 1000); // seconds to ms
   }
-
-  React.useEffect(() => {
-    if (!isOpen && shouldScaleBackground) {
-      // Can't use `onAnimationEnd` as the component will be invisible by then
-      const id = setTimeout(() => {
-        reset(document.body);
-      }, 200);
-
-      return () => clearTimeout(id);
-    }
-  }, [isOpen, shouldScaleBackground]);
 
   function resetDrawer() {
     if (!drawerRef.current) return;
@@ -699,7 +688,7 @@ export const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
   const wasBeyondThePointRef = React.useRef(false);
   const hasSnapPoints = snapPoints && snapPoints.length > 0;
   useScaleBackground();
-  
+
   const isDeltaInDirection = (delta: { x: number; y: number }, direction: DrawerDirection, threshold = 0) => {
     if (wasBeyondThePointRef.current) return true;
 
