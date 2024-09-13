@@ -115,10 +115,6 @@ An optional accessible description to be announced when the dialog is opened. [P
 
 The button that closes the dialog. [Props](https://www.radix-ui.com/docs/primitives/components/dialog#close).
 
-### Handle
-
-A drag hint (also known as grabber). Shows people that they can drag the drawer to resize it; they can also tap it to cycle through the snap points, and double tap quickly to close the drawer. Set `preventCycle={true}` to stop this behavior. If you want to change the handle's hit area you can do so by styling the `[data-vaul-handle-hitarea]` selector (Defaults to 44x44 on mobile devices).
-
 ### Portal
 
 Portals your drawer into the body.
