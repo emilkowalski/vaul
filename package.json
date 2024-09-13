@@ -63,6 +63,6 @@
   },
   "packageManager": "pnpm@8.8.0",
   "dependencies": {
-    "@radix-ui/react-dialog": "^1.0.4"
+    "@radix-ui/react-dialog": "^1.1.1"
   }
 }

@@ -895,7 +895,7 @@ export const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
     <DialogPrimitive.Content
       data-vaul-drawer-direction={direction}
       data-vaul-drawer=""
-    //   data-vaul-snap-points={isOpen && 'false'}
+      data-vaul-snap-points={isOpen && 'false'}
       {...rest}
       ref={composedRef}
       style={
