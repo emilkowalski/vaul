@@ -20,6 +20,7 @@ import {
 } from './constants';
 import { DrawerDirection } from './types';
 import { useControllableState } from './use-controllable-state';
+import { useScaleBackground } from './use-scale-background';
 
 export interface WithFadeFromProps {
   snapPoints: (number | string)[];
@@ -331,12 +332,6 @@ export function Root({
   }
 
   React.useEffect(() => {
-    return () => {
-      scaleBackground(false);
-    };
-  }, []);
-
-  React.useEffect(() => {
     function onVisualViewportChange() {
       if (!drawerRef.current) return;
 
@@ -397,7 +392,6 @@ export function Root({
     cancelDrag();
     onClose?.();
 
-    scaleBackground(false);
     setIsOpen(false);
 
     setTimeout(() => {
@@ -538,7 +532,6 @@ export function Root({
       });
 
       openTime.current = new Date();
-      scaleBackground(true);
     }
   }, [isOpen]);
 
@@ -554,58 +547,6 @@ export function Root({
       });
     }
   }, [isOpen]);
-
-  function scaleBackground(open: boolean) {
-    const wrapper = document.querySelector('[data-vaul-drawer-wrapper]');
-
-    if (!wrapper || !shouldScaleBackground) return;
-
-    if (open) {
-      if (setBackgroundColorOnScale) {
-        if (!noBodyStyles) {
-          // setting original styles initially
-          set(document.body, {
-            background: document.body.style.backgroundColor || document.body.style.background,
-          });
-          // setting body styles, with cache ignored, so that we can get correct original styles in reset
-          set(
-            document.body,
-            {
-              background: 'black',
-            },
-            true,
-          );
-        }
-      }
-
-      set(wrapper, {
-        borderRadius: `${BORDER_RADIUS}px`,
-        overflow: 'hidden',
-        ...(isVertical(direction)
-          ? {
-              transform: `scale(${getScale()}) translate3d(0, calc(env(safe-area-inset-top) + 14px), 0)`,
-              transformOrigin: 'top',
-            }
-          : {
-              transform: `scale(${getScale()}) translate3d(calc(env(safe-area-inset-top) + 14px), 0, 0)`,
-              transformOrigin: 'left',
-            }),
-        transitionProperty: 'transform, border-radius',
-        transitionDuration: `${TRANSITIONS.DURATION}s`,
-        transitionTimingFunction: `cubic-bezier(${TRANSITIONS.EASE.join(',')})`,
-      });
-    } else {
-      // Exit
-      reset(wrapper, 'overflow');
-      reset(wrapper, 'transform');
-      reset(wrapper, 'borderRadius');
-      set(wrapper, {
-        transitionProperty: 'transform, border-radius',
-        transitionDuration: `${TRANSITIONS.DURATION}s`,
-        transitionTimingFunction: `cubic-bezier(${TRANSITIONS.EASE.join(',')})`,
-      });
-    }
-  }
 
   function onNestedOpenChange(o: boolean) {
     const scale = o ? (window.innerWidth - NESTED_DISPLACEMENT) / window.innerWidth : 1;
@@ -683,7 +624,6 @@ export function Root({
           setActiveSnapPoint,
           drawerRef,
           overlayRef,
-          scaleBackground,
           onOpenChange,
           onPress,
           onRelease,
@@ -700,6 +640,9 @@ export function Root({
           modal,
           snapPointsOffset,
           direction,
+          shouldScaleBackground,
+          setBackgroundColorOnScale,
+          noBodyStyles,
         }}
       >
         {children}
@@ -755,7 +698,8 @@ export const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
   const pointerStartRef = React.useRef<{ x: number; y: number } | null>(null);
   const wasBeyondThePointRef = React.useRef(false);
   const hasSnapPoints = snapPoints && snapPoints.length > 0;
-
+  useScaleBackground();
+  
   const isDeltaInDirection = (delta: { x: number; y: number }, direction: DrawerDirection, threshold = 0) => {
     if (wasBeyondThePointRef.current) return true;
 
