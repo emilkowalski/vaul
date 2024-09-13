@@ -4,7 +4,7 @@ import * as DialogPrimitive from '@radix-ui/react-dialog';
 import React from 'react';
 import { DrawerContext, useDrawerContext } from './context';
 import './style.css';
-import { usePreventScroll, isInput, isIOS, useIsomorphicLayoutEffect } from './use-prevent-scroll';
+import { usePreventScroll, isInput, isIOS } from './use-prevent-scroll';
 import { useComposedRefs } from './use-composed-refs';
 import { useSnapPoints } from './use-snap-points';
 import { set, reset, getTranslate, dampenValue, isVertical } from './helpers';
@@ -701,7 +701,6 @@ export function Root({
           onNestedOpenChange,
           onNestedRelease,
           keyboardIsOpen,
-          openProp,
           modal,
           snapPointsOffset,
           direction,
@@ -853,12 +852,9 @@ export const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
     onPress,
     onRelease,
     onDrag,
-    dismissible,
     keyboardIsOpen,
     snapPointsOffset,
-    closeDrawer,
     modal,
-    openProp,
     isOpen,
     handleOnly,
     direction,
@@ -931,14 +927,6 @@ export const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
         if (keyboardIsOpen.current) {
           keyboardIsOpen.current = false;
         }
-
-        e.preventDefault();
-
-        if (!dismissible || openProp !== undefined) {
-          return;
-        }
-
-        closeDrawer();
       }}
       onFocusOutside={(e) => {
         if (!modal) {
