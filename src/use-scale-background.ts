@@ -17,7 +17,9 @@ export function useScaleBackground() {
   React.useEffect(() => {
     if (isOpen && shouldScaleBackground) {
       if (timeoutIdRef.current) clearTimeout(timeoutIdRef.current);
-      const wrapper = document.querySelector('[data-vaul-drawer-wrapper]') as HTMLElement;
+      const wrapper =
+        (document.querySelector('[data-vaul-drawer-wrapper]') as HTMLElement) ||
+        (document.querySelector('[vaul-drawer-wrapper]') as HTMLElement);
 
       const bodyAndWrapperCleanup = chain(
         setBackgroundColorOnScale && !noBodyStyles ? assignStyle(document.body, { background: 'black' }) : noop,
