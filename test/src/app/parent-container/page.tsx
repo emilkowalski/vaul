@@ -22,7 +22,7 @@ function Default() {
       <h1 className="text-3xl font-semibold">Default</h1>
       <div
         ref={setParent}
-        className="bg-zinc-200 w-[440px] h-[400px] rounded-lg relative flex justify-center items-center"
+        className="bg-zinc-200 w-[440px] h-[400px] rounded-lg relative flex justify-center items-center overflow-hidden"
       >
         <Drawer.Root container={parent}>
           <Drawer.Trigger>Open Drawer</Drawer.Trigger>
@@ -48,9 +48,9 @@ function WithNested() {
         ref={setParent}
         className="bg-zinc-200 w-[440px] h-[400px] rounded-lg relative flex justify-center items-center overflow-hidden"
       >
-        <Drawer.Root container={parent}>
+        <Drawer.Root>
           <Drawer.Trigger>Open Drawer</Drawer.Trigger>
-          <Drawer.Portal>
+          <Drawer.Portal container={parent}>
             <Drawer.Overlay className="absolute inset-0 bg-black/40" />
             <Drawer.Content className="absolute bg-zinc-100 inset-x-0 rounded-t-[10px] bottom-0 h-[56%] p-6">
               <Drawer.Title>Unstyled drawer for React.</Drawer.Title>
@@ -92,7 +92,7 @@ function WithSnapPoints() {
           <Drawer.Trigger asChild>
             <button>Open Drawer</button>
           </Drawer.Trigger>
-          <Drawer.Portal container={parent}>
+          <Drawer.Portal>
             <Drawer.Overlay className="absolute inset-0 bg-black/40" />
             <Drawer.Content className="absolute flex flex-col bg-white border border-gray-200 border-b-none rounded-t-[10px] bottom-0 left-0 right-0 h-full max-h-[97%] mx-[-1px]">
               <div
@@ -254,7 +254,7 @@ function WithInitialSnapPoints() {
           <Drawer.Trigger asChild>
             <button>Open Drawer</button>
           </Drawer.Trigger>
-          <Drawer.Portal container={parent}>
+          <Drawer.Portal>
             <Drawer.Overlay className="absolute inset-0 bg-black/40" />
             <Drawer.Content className="absolute flex flex-col bg-white border border-gray-200 border-b-none rounded-t-[10px] bottom-0 left-0 right-0 h-full max-h-[97%] mx-[-1px]">
               <div

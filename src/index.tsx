@@ -7,7 +7,7 @@ import './style.css';
 import { usePreventScroll, isInput, isIOS } from './use-prevent-scroll';
 import { useComposedRefs } from './use-composed-refs';
 import { useSnapPoints } from './use-snap-points';
-import { set, reset, getTranslate, dampenValue, isVertical } from './helpers';
+import { set, getTranslate, dampenValue, isVertical } from './helpers';
 import {
   TRANSITIONS,
   VELOCITY_THRESHOLD,
@@ -139,6 +139,7 @@ export function Root({
   function onPress(event: React.PointerEvent<HTMLDivElement>) {
     if (!dismissible && !snapPoints) return;
     if (drawerRef.current && !drawerRef.current.contains(event.target as Node)) return;
+
     drawerHeightRef.current = drawerRef.current?.getBoundingClientRect().height || 0;
     setIsDragging(true);
     dragStartTime.current = new Date();
@@ -184,11 +185,7 @@ export function Root({
     }
 
     // Disallow dragging if drawer was scrolled within `scrollLockTimeout`
-    if (
-      lastTimeDragPrevented.current &&
-      date.getTime() - lastTimeDragPrevented.current.getTime() < scrollLockTimeout &&
-      swipeAmount === 0
-    ) {
+    if (date.getTime() - lastTimeDragPrevented.current?.getTime() < scrollLockTimeout && swipeAmount === 0) {
       lastTimeDragPrevented.current = date;
       return false;
     }
@@ -228,6 +225,7 @@ export function Root({
     if (!drawerRef.current) {
       return;
     }
+
     // We need to know how much of the drawer has been dragged in percentages so that we can transform background accordingly
     if (isDragging) {
       const directionMultiplier = direction === 'bottom' || direction === 'right' ? 1 : -1;
@@ -257,6 +255,7 @@ export function Root({
       if (noCloseSnapPointsPreCondition && percentageDragged >= 1) {
         return;
       }
+      console.log(isAllowedToDrag.current, shouldDrag(event.target, isDraggingInDirection));
 
       if (!isAllowedToDrag.current && !shouldDrag(event.target, isDraggingInDirection)) return;
       drawerRef.current.classList.add(DRAG_CLASS);
@@ -670,7 +669,7 @@ export type ContentProps = React.ComponentPropsWithoutRef<typeof DialogPrimitive
 };
 
 export const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
-  { onOpenAutoFocus, onPointerDownOutside, onAnimationEnd, style, ...rest },
+  { onPointerDownOutside, onAnimationEnd, style, ...rest },
   ref,
 ) {
   const {
@@ -743,14 +742,6 @@ export const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
             } as React.CSSProperties)
           : style
       }
-      onOpenAutoFocus={(e) => {
-        if (onOpenAutoFocus) {
-          onOpenAutoFocus(e);
-        } else {
-          e.preventDefault();
-          drawerRef.current?.focus();
-        }
-      }}
       onPointerDown={(event) => {
         rest.onPointerDown?.(event);
         pointerStartRef.current = { x: event.clientX, y: event.clientY };
