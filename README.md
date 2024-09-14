@@ -90,7 +90,7 @@ const [open, setOpen] = React.useState(false);
 
 ### Custom Container
 
-Customise the element that your drawer portals into. By default, drawer will be appended to `document.body`.
+Customize the element that your drawer portals into. By default, drawer will be appended to `document.body`.
 
 ```tsx
 import React from 'react';

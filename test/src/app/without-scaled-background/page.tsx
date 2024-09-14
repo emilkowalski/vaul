@@ -20,7 +20,7 @@ export default function Page() {
           <Drawer.Overlay data-testid="overlay" className="fixed inset-0 bg-black/40" />
           <Drawer.Content
             data-testid="content"
-            className="bg-zinc-100 flex flex-col rounded-t-[10px] h-[96%] mt-24 absolute bottom-0 left-0 right-0"
+            className="bg-zinc-100 flex flex-col rounded-t-[10px] h-[96%] mt-24 fixed bottom-0 left-0 right-0"
           >
             <Drawer.Close data-testid="drawer-close">Close</Drawer.Close>
             <button data-testid="controlled-close" onClick={() => setOpen(false)} className="text-2xl">

@@ -255,7 +255,6 @@ export function Root({
       if (noCloseSnapPointsPreCondition && percentageDragged >= 1) {
         return;
       }
-      console.log(isAllowedToDrag.current, shouldDrag(event.target, isDraggingInDirection));
 
       if (!isAllowedToDrag.current && !shouldDrag(event.target, isDraggingInDirection)) return;
       drawerRef.current.classList.add(DRAG_CLASS);
