@@ -602,6 +602,8 @@ export function Root({
       onOpenChange={(open) => {
         if (open) {
           setHasBeenOpened(true);
+        } else {
+          closeDrawer();
         }
         setIsOpen(open);
       }}

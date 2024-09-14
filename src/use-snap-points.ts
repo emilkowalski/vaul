@@ -137,7 +137,7 @@ export function useSnapPoints({
         });
       }
 
-      setActiveSnapPoint(newSnapPointIndex !== null ? snapPoints?.[newSnapPointIndex] : null);
+      setActiveSnapPoint(snapPoints?.[Math.max(newSnapPointIndex, 0)]);
     },
     [drawerRef.current, snapPoints, snapPointsOffset, fadeFromIndex, overlayRef, setActiveSnapPoint],
   );
