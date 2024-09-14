@@ -102,8 +102,6 @@ export function usePreventScroll(options: PreventScrollOptions = {}) {
     if (preventScrollCount === 1) {
       if (isIOS()) {
         restore = preventScrollMobileSafari();
-      } else {
-        restore = preventScrollStandard();
       }
     }
 
@@ -114,15 +112,6 @@ export function usePreventScroll(options: PreventScrollOptions = {}) {
       }
     };
   }, [isDisabled]);
-}
-
-// For most browsers, all we need to do is set `overflow: hidden` on the root element, and
-// add some padding to prevent the page from shifting when the scrollbar is hidden.
-function preventScrollStandard() {
-  return chain(
-    setStyle(document.documentElement, 'paddingRight', `${window.innerWidth - document.documentElement.clientWidth}px`),
-    // setStyle(document.documentElement, 'overflow', 'hidden'),
-  );
 }
 
 // Mobile Safari is a whole different beast. Even with overflow: hidden,
