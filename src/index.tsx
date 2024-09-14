@@ -1,13 +1,13 @@
 'use client';
 
 import * as DialogPrimitive from '@radix-ui/react-dialog';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { DrawerContext, useDrawerContext } from './context';
 import './style.css';
 import { usePreventScroll, isInput, isIOS } from './use-prevent-scroll';
 import { useComposedRefs } from './use-composed-refs';
 import { useSnapPoints } from './use-snap-points';
-import { set, reset, getTranslate, dampenValue, isVertical } from './helpers';
+import { set, getTranslate, dampenValue, isVertical } from './helpers';
 import {
   TRANSITIONS,
   VELOCITY_THRESHOLD,
@@ -53,6 +53,7 @@ export type DialogProps = {
   direction?: 'top' | 'bottom' | 'left' | 'right';
   defaultOpen?: boolean;
   repositionInputs?: boolean;
+  container?: HTMLElement | null;
 } & (WithFadeFromProps | WithoutFadeFromProps);
 
 export function Root({
@@ -77,6 +78,7 @@ export function Root({
   direction = 'bottom',
   defaultOpen = false,
   repositionInputs = true,
+  container,
 }: DialogProps) {
   const [isOpen = false, setIsOpen] = useControllableState({
     defaultProp: defaultOpen,
@@ -123,6 +125,7 @@ export function Root({
     overlayRef,
     onSnapPointChange,
     direction,
+    container,
   });
 
   usePreventScroll({
@@ -136,6 +139,7 @@ export function Root({
   function onPress(event: React.PointerEvent<HTMLDivElement>) {
     if (!dismissible && !snapPoints) return;
     if (drawerRef.current && !drawerRef.current.contains(event.target as Node)) return;
+
     drawerHeightRef.current = drawerRef.current?.getBoundingClientRect().height || 0;
     setIsDragging(true);
     dragStartTime.current = new Date();
@@ -181,11 +185,7 @@ export function Root({
     }
 
     // Disallow dragging if drawer was scrolled within `scrollLockTimeout`
-    if (
-      lastTimeDragPrevented.current &&
-      date.getTime() - lastTimeDragPrevented.current.getTime() < scrollLockTimeout &&
-      swipeAmount === 0
-    ) {
+    if (date.getTime() - lastTimeDragPrevented.current?.getTime() < scrollLockTimeout && swipeAmount === 0) {
       lastTimeDragPrevented.current = date;
       return false;
     }
@@ -225,6 +225,7 @@ export function Root({
     if (!drawerRef.current) {
       return;
     }
+
     // We need to know how much of the drawer has been dragged in percentages so that we can transform background accordingly
     if (isDragging) {
       const directionMultiplier = direction === 'bottom' || direction === 'right' ? 1 : -1;
@@ -632,6 +633,7 @@ export function Root({
           shouldScaleBackground,
           setBackgroundColorOnScale,
           noBodyStyles,
+          container,
         }}
       >
         {children}
@@ -666,7 +668,7 @@ export type ContentProps = React.ComponentPropsWithoutRef<typeof DialogPrimitive
 };
 
 export const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
-  { onOpenAutoFocus, onPointerDownOutside, onAnimationEnd, style, ...rest },
+  { onPointerDownOutside, onAnimationEnd, style, ...rest },
   ref,
 ) {
   const {
@@ -680,6 +682,7 @@ export const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
     isOpen,
     direction,
     snapPoints,
+    container,
   } = useDrawerContext();
   // Needed to use transition instead of animations
   const [delayedSnapPoints, setDelayedSnapPoints] = React.useState(false);
@@ -713,7 +716,7 @@ export const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
     return true;
   };
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (hasSnapPoints) {
       window.requestAnimationFrame(() => {
         setDelayedSnapPoints(true);
@@ -727,6 +730,7 @@ export const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
       data-vaul-drawer=""
       data-vaul-delayed-snap-points={delayedSnapPoints ? 'true' : 'false'}
       data-vaul-snap-points={isOpen && hasSnapPoints ? 'true' : 'false'}
+      data-vaul-custom-container={container ? 'true' : 'false'}
       {...rest}
       ref={composedRef}
       style={
@@ -737,14 +741,6 @@ export const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
             } as React.CSSProperties)
           : style
       }
-      onOpenAutoFocus={(e) => {
-        if (onOpenAutoFocus) {
-          onOpenAutoFocus(e);
-        } else {
-          e.preventDefault();
-          drawerRef.current?.focus();
-        }
-      }}
       onPointerDown={(event) => {
         rest.onPointerDown?.(event);
         pointerStartRef.current = { x: event.clientX, y: event.clientY };
@@ -830,13 +826,22 @@ export function NestedRoot({ onDrag, onOpenChange, ...rest }: DialogProps) {
   );
 }
 
+type PortalProps = React.ComponentPropsWithoutRef<typeof DialogPrimitive.Portal>;
+
+export function Portal(props: PortalProps) {
+  const context = useDrawerContext();
+  const { container = context.container, ...portalProps } = props;
+
+  return <DialogPrimitive.Portal container={container} {...portalProps} />;
+}
+
 export const Drawer = {
   Root,
   NestedRoot,
   Content,
   Overlay,
   Trigger: DialogPrimitive.Trigger,
-  Portal: DialogPrimitive.Portal,
+  Portal,
   Close: DialogPrimitive.Close,
   Title: DialogPrimitive.Title,
   Description: DialogPrimitive.Description,

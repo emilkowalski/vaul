@@ -27,6 +27,7 @@ interface DrawerContextValue {
   shouldScaleBackground: boolean;
   setBackgroundColorOnScale: boolean;
   noBodyStyles: boolean;
+  container?: HTMLElement | null;
 }
 
 export const DrawerContext = React.createContext<DrawerContextValue>({
@@ -55,6 +56,7 @@ export const DrawerContext = React.createContext<DrawerContextValue>({
   shouldScaleBackground: false,
   setBackgroundColorOnScale: true,
   noBodyStyles: false,
+  container: null,
 });
 
 export const useDrawerContext = () => {

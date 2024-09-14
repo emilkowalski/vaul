@@ -88,6 +88,33 @@ const [open, setOpen] = React.useState(false);
 </Drawer.Root>
 ```
 
+### Custom Container
+
+Customize the element that your drawer portals into. By default, drawer will be appended to `document.body`.
+
+```tsx
+import React from 'react';
+import { Drawer } from 'vaul';
+
+export default () => {
+  const [container, setContainer] = React.useState(null);
+
+  return (
+    <div>
+      <Drawer.Root container={container}>
+        <Drawer.Trigger />
+        <Drawer.Portal>
+          <Drawer.Overlay />
+          <Drawer.Content>...</Drawer.Content>
+        </Drawer.Portal>
+      </Drawer.Root>
+      // Drawer will be rendered inside this div.
+      <div ref={setContainer} />
+    </div>
+  );
+};
+```
+
 ### Trigger
 
 The button that opens the dialog. [Props](https://www.radix-ui.com/docs/primitives/components/dialog#trigger).
