@@ -1,7 +1,7 @@
 'use client';
 
 import * as DialogPrimitive from '@radix-ui/react-dialog';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { DrawerContext, useDrawerContext } from './context';
 import './style.css';
 import { usePreventScroll, isInput, isIOS } from './use-prevent-scroll';
@@ -53,6 +53,7 @@ export type DialogProps = {
   direction?: 'top' | 'bottom' | 'left' | 'right';
   defaultOpen?: boolean;
   repositionInputs?: boolean;
+  container?: HTMLElement | null;
 } & (WithFadeFromProps | WithoutFadeFromProps);
 
 export function Root({
@@ -77,6 +78,7 @@ export function Root({
   direction = 'bottom',
   defaultOpen = false,
   repositionInputs = true,
+  container,
 }: DialogProps) {
   const [isOpen = false, setIsOpen] = useControllableState({
     defaultProp: defaultOpen,
@@ -123,6 +125,7 @@ export function Root({
     overlayRef,
     onSnapPointChange,
     direction,
+    container,
   });
 
   usePreventScroll({
@@ -632,6 +635,7 @@ export function Root({
           shouldScaleBackground,
           setBackgroundColorOnScale,
           noBodyStyles,
+          container,
         }}
       >
         {children}
@@ -680,6 +684,7 @@ export const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
     isOpen,
     direction,
     snapPoints,
+    container,
   } = useDrawerContext();
   // Needed to use transition instead of animations
   const [delayedSnapPoints, setDelayedSnapPoints] = React.useState(false);
@@ -713,7 +718,7 @@ export const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
     return true;
   };
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (hasSnapPoints) {
       window.requestAnimationFrame(() => {
         setDelayedSnapPoints(true);
@@ -727,6 +732,7 @@ export const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
       data-vaul-drawer=""
       data-vaul-delayed-snap-points={delayedSnapPoints ? 'true' : 'false'}
       data-vaul-snap-points={isOpen && hasSnapPoints ? 'true' : 'false'}
+      data-vaul-custom-container={container ? 'true' : 'false'}
       {...rest}
       ref={composedRef}
       style={
@@ -830,13 +836,22 @@ export function NestedRoot({ onDrag, onOpenChange, ...rest }: DialogProps) {
   );
 }
 
+type PortalProps = React.ComponentPropsWithoutRef<typeof DialogPrimitive.Portal>;
+
+export function Portal(props: PortalProps) {
+  const context = useDrawerContext();
+  const { container = context.container, ...portalProps } = props;
+
+  return <DialogPrimitive.Portal container={container} {...portalProps} />;
+}
+
 export const Drawer = {
   Root,
   NestedRoot,
   Content,
   Overlay,
   Trigger: DialogPrimitive.Trigger,
-  Portal: DialogPrimitive.Portal,
+  Portal,
   Close: DialogPrimitive.Close,
   Title: DialogPrimitive.Title,
   Description: DialogPrimitive.Description,

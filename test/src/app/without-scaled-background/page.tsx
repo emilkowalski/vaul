@@ -5,9 +5,12 @@ import { Drawer } from 'vaul';
 
 export default function Page() {
   const [open, setOpen] = useState(false);
+  const [parent, setParent] = useState<HTMLDivElement | null>(null);
+
   return (
     <div className="w-screen h-screen bg-white p-8 flex justify-center items-center" data-vaul-drawer-wrapper="">
-      <Drawer.Root open={open} onOpenChange={setOpen}>
+      <div className="w-[50vw] h-[50vh] relative" ref={setParent} />
+      <Drawer.Root open={open} onOpenChange={setOpen} container={parent}>
         <Drawer.Trigger asChild>
           <button data-testid="trigger" className="text-2xl">
             Open Drawer
@@ -17,7 +20,7 @@ export default function Page() {
           <Drawer.Overlay data-testid="overlay" className="fixed inset-0 bg-black/40" />
           <Drawer.Content
             data-testid="content"
-            className="bg-zinc-100 flex flex-col rounded-t-[10px] h-[96%] mt-24 fixed bottom-0 left-0 right-0"
+            className="bg-zinc-100 flex flex-col rounded-t-[10px] h-[96%] mt-24 absolute bottom-0 left-0 right-0"
           >
             <Drawer.Close data-testid="drawer-close">Close</Drawer.Close>
             <button data-testid="controlled-close" onClick={() => setOpen(false)} className="text-2xl">

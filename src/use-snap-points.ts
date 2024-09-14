@@ -13,6 +13,7 @@ export function useSnapPoints({
   fadeFromIndex,
   onSnapPointChange,
   direction = 'bottom',
+  container,
 }: {
   activeSnapPointProp?: number | string | null;
   setActiveSnapPointProp?(snapPoint: number | null | string): void;
@@ -22,6 +23,7 @@ export function useSnapPoints({
   overlayRef: React.RefObject<HTMLDivElement>;
   onSnapPointChange(activeSnapPointIndex: number): void;
   direction?: DrawerDirection;
+  container?: HTMLElement | null | undefined;
 }) {
   const [activeSnapPoint, setActiveSnapPoint] = useControllableState<string | number | null>({
     prop: activeSnapPointProp,
@@ -68,8 +70,12 @@ export function useSnapPoints({
     [snapPoints, activeSnapPoint],
   );
 
-  const snapPointsOffset = React.useMemo(
-    () =>
+  const snapPointsOffset = React.useMemo(() => {
+    const containerSize = container
+      ? { width: container.getBoundingClientRect().width, height: container.getBoundingClientRect().height }
+      : { width: window.innerWidth, height: window.innerHeight };
+
+    return (
       snapPoints?.map((snapPoint) => {
         const isPx = typeof snapPoint === 'string';
         let snapPointAsNumber = 0;
@@ -79,26 +85,24 @@ export function useSnapPoints({
         }
 
         if (isVertical(direction)) {
-          const height = isPx ? snapPointAsNumber : windowDimensions ? snapPoint * windowDimensions.innerHeight : 0;
+          const height = isPx ? snapPointAsNumber : windowDimensions ? snapPoint * containerSize.height : 0;
 
           if (windowDimensions) {
-            return direction === 'bottom'
-              ? windowDimensions.innerHeight - height
-              : -windowDimensions.innerHeight + height;
+            return direction === 'bottom' ? containerSize.height - height : -containerSize.height + height;
           }
 
           return height;
         }
-        const width = isPx ? snapPointAsNumber : windowDimensions ? snapPoint * windowDimensions.innerWidth : 0;
+        const width = isPx ? snapPointAsNumber : windowDimensions ? snapPoint * containerSize.width : 0;
 
         if (windowDimensions) {
-          return direction === 'right' ? windowDimensions.innerWidth - width : -windowDimensions.innerWidth + width;
+          return direction === 'right' ? containerSize.width - width : -containerSize.width + width;
         }
 
         return width;
-      }) ?? [],
-    [snapPoints, windowDimensions],
-  );
+      }) ?? []
+    );
+  }, [snapPoints, windowDimensions, container]);
 
   const activeSnapPointOffset = React.useMemo(
     () => (activeSnapPointIndex !== null ? snapPointsOffset?.[activeSnapPointIndex] : null),
