@@ -72,6 +72,8 @@ Additional props:
 
 `defaultOpen`: Opened by default, still reacts to `open` state changes.
 
+`snapToSequentialPoint`: Disabled velocity based swiping for snap points. This means that a snap point won't be skipped even if the velocity is high enough. Useful if each snap point in a drawer is equally important.
+
 `[data-vaul-no-drag]`: When interacting with an element with this data attribute, the drawer won't be dragged.
 
 ### Controlled Drawer
