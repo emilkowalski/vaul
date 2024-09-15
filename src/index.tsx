@@ -53,6 +53,7 @@ export type DialogProps = {
   direction?: 'top' | 'bottom' | 'left' | 'right';
   defaultOpen?: boolean;
   repositionInputs?: boolean;
+  snapToSequentialPoint?: boolean;
   container?: HTMLElement | null;
 } & (WithFadeFromProps | WithoutFadeFromProps);
 
@@ -77,6 +78,7 @@ export function Root({
   noBodyStyles,
   direction = 'bottom',
   defaultOpen = false,
+  snapToSequentialPoint = false,
   repositionInputs = true,
   container,
 }: DialogProps) {
@@ -126,6 +128,7 @@ export function Root({
     onSnapPointChange,
     direction,
     container,
+    snapToSequentialPoint,
   });
 
   usePreventScroll({
