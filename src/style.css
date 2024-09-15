@@ -88,7 +88,7 @@
 [data-vaul-overlay][data-vaul-snap-points='false'][data-state='open'] {
   animation-name: fadeIn;
 }
-[data-vaul-overlay][data-vaul-snap-points='false'][data-state='closed'] {
+[data-vaul-overlay][data-state='closed'] {
   animation-name: fadeOut;
 }
 

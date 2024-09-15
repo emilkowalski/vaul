@@ -59,6 +59,11 @@ export function useSnapPoints({
     [snapPoints, activeSnapPoint],
   );
 
+  const activeSnapPointIndex = React.useMemo(
+    () => snapPoints?.findIndex((snapPoint) => snapPoint === activeSnapPoint),
+    [snapPoints, activeSnapPoint],
+  );
+
   const shouldFade =
     (snapPoints &&
       snapPoints.length > 0 &&
@@ -66,11 +71,6 @@ export function useSnapPoints({
       !Number.isNaN(fadeFromIndex) &&
       snapPoints[fadeFromIndex] === activeSnapPoint) ||
     !snapPoints;
-
-  const activeSnapPointIndex = React.useMemo(
-    () => snapPoints?.findIndex((snapPoint) => snapPoint === activeSnapPoint),
-    [snapPoints, activeSnapPoint],
-  );
 
   const snapPointsOffset = React.useMemo(() => {
     const containerSize = container
@@ -126,7 +126,8 @@ export function useSnapPoints({
       if (
         snapPointsOffset &&
         newSnapPointIndex !== snapPointsOffset.length - 1 &&
-        newSnapPointIndex !== fadeFromIndex
+        newSnapPointIndex !== fadeFromIndex &&
+        newSnapPointIndex < fadeFromIndex
       ) {
         set(overlayRef.current, {
           transition: `opacity ${TRANSITIONS.DURATION}s cubic-bezier(${TRANSITIONS.EASE.join(',')})`,
