@@ -55,6 +55,7 @@ export type DialogProps = {
   repositionInputs?: boolean;
   snapToSequentialPoint?: boolean;
   container?: HTMLElement | null;
+  onAnimationEnd?: (open: boolean) => void;
 } & (WithFadeFromProps | WithoutFadeFromProps);
 
 export function Root({
@@ -80,6 +81,7 @@ export function Root({
   defaultOpen = false,
   snapToSequentialPoint = false,
   repositionInputs = true,
+  onAnimationEnd,
   container,
 }: DialogProps) {
   const [isOpen = false, setIsOpen] = useControllableState({
@@ -609,6 +611,10 @@ export function Root({
         } else {
           closeDrawer();
         }
+
+        setTimeout(() => {
+          onAnimationEnd(open);
+        }, TRANSITIONS.DURATION * 1000);
         setIsOpen(open);
       }}
       open={isOpen}
@@ -669,12 +675,10 @@ export const Overlay = React.forwardRef<HTMLDivElement, React.ComponentPropsWith
 
 Overlay.displayName = 'Drawer.Overlay';
 
-export type ContentProps = React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content> & {
-  onAnimationEnd?: (open: boolean) => void;
-};
+export type ContentProps = React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content>;
 
 export const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
-  { onPointerDownOutside, onAnimationEnd, style, ...rest },
+  { onPointerDownOutside, style, ...rest },
   ref,
 ) {
   const {

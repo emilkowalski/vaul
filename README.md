@@ -76,6 +76,8 @@ Additional props:
 
 `snapToSequentialPoint`: Disabled velocity based swiping for snap points. This means that a snap point won't be skipped even if the velocity is high enough. Useful if each snap point in a drawer is equally important.
 
+`onAnimationEnd`: Gets triggered after the open or close animation ends, it receives an `open` argument with the `open` state of the drawer by the time the function was triggered. Useful to revert any state changes for example.
+
 `[data-vaul-no-drag]`: When interacting with an element with this data attribute, the drawer won't be dragged.
 
 ### Controlled Drawer
