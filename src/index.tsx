@@ -7,7 +7,7 @@ import './style.css';
 import { usePreventScroll, isInput, isIOS } from './use-prevent-scroll';
 import { useComposedRefs } from './use-composed-refs';
 import { useSnapPoints } from './use-snap-points';
-import { set, getTranslate, dampenValue, isVertical } from './helpers';
+import { set, getTranslate, dampenValue, isVertical, reset } from './helpers';
 import {
   TRANSITIONS,
   VELOCITY_THRESHOLD,
@@ -539,6 +539,10 @@ export function Root({
 
       openTime.current = new Date();
     }
+
+    return () => {
+      reset(document.documentElement, 'scrollBehavior');
+    };
   }, [isOpen]);
 
   React.useEffect(() => {
