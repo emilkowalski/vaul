@@ -52,6 +52,7 @@ export type DialogProps = {
   onClose?: () => void;
   direction?: 'top' | 'bottom' | 'left' | 'right';
   defaultOpen?: boolean;
+  disablePreventScroll?: boolean;
   repositionInputs?: boolean;
   snapToSequentialPoint?: boolean;
   container?: HTMLElement | null;
@@ -79,6 +80,7 @@ export function Root({
   noBodyStyles,
   direction = 'bottom',
   defaultOpen = false,
+  disablePreventScroll = true,
   snapToSequentialPoint = false,
   repositionInputs = true,
   onAnimationEnd,
@@ -140,7 +142,8 @@ export function Root({
   });
 
   usePreventScroll({
-    isDisabled: !isOpen || isDragging || !modal || justReleased || !hasBeenOpened || !repositionInputs,
+    isDisabled:
+      !isOpen || isDragging || !modal || justReleased || !hasBeenOpened || !repositionInputs || !disablePreventScroll,
   });
 
   function getScale() {
