@@ -72,6 +72,8 @@ Additional props:
 
 `defaultOpen`: Opened by default, still reacts to `open` state changes.
 
+`dismissible`: When `false` dragging, clicking outside, pressing esc, etc. will not close the drawer. Use this in comination with the `open` prop, otherwise you won't be able to open/close the drawer.
+
 `snapToSequentialPoint`: Disabled velocity based swiping for snap points. This means that a snap point won't be skipped even if the velocity is high enough. Useful if each snap point in a drawer is equally important.
 
 `[data-vaul-no-drag]`: When interacting with an element with this data attribute, the drawer won't be dragged.
