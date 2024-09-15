@@ -50,21 +50,6 @@
   transform: translate3d(100%, 0, 0);
 }
 
-.data-vaul-dragging .data-vaul-scrollable [vault-drawer-direction='top'] {
-  overflow-y: hidden !important;
-}
-.data-vaul-dragging .data-vaul-scrollable [vault-drawer-direction='bottom'] {
-  overflow-y: hidden !important;
-}
-
-.data-vaul-dragging .data-vaul-scrollable [vault-drawer-direction='left'] {
-  overflow-x: hidden !important;
-}
-
-.data-vaul-dragging .data-vaul-scrollable [vault-drawer-direction='right'] {
-  overflow-x: hidden !important;
-}
-
 [data-vaul-drawer][data-vaul-delayed-snap-points='true'][data-vaul-drawer-direction='top'] {
   transform: translate3d(0, var(--snap-point-height, 0), 0);
 }

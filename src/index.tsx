@@ -545,19 +545,6 @@ export function Root({
     };
   }, [isOpen]);
 
-  React.useEffect(() => {
-    if (drawerRef.current) {
-      // Find all scrollable elements inside our drawer and assign a class to it so that we can disable overflow when dragging to prevent pointermove not being captured
-      const children = drawerRef?.current?.querySelectorAll('*');
-      children?.forEach((child: Element) => {
-        const htmlChild = child as HTMLElement;
-        if (htmlChild.scrollHeight > htmlChild.clientHeight || htmlChild.scrollWidth > htmlChild.clientWidth) {
-          htmlChild.classList.add('vaul-scrollable');
-        }
-      });
-    }
-  }, [isOpen]);
-
   function onNestedOpenChange(o: boolean) {
     const scale = o ? (window.innerWidth - NESTED_DISPLACEMENT) / window.innerWidth : 1;
     const y = o ? -NESTED_DISPLACEMENT : 0;
