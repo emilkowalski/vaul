@@ -52,9 +52,11 @@ export type DialogProps = {
   onClose?: () => void;
   direction?: 'top' | 'bottom' | 'left' | 'right';
   defaultOpen?: boolean;
+  disablePreventScroll?: boolean;
   repositionInputs?: boolean;
   snapToSequentialPoint?: boolean;
   container?: HTMLElement | null;
+  onAnimationEnd?: (open: boolean) => void;
 } & (WithFadeFromProps | WithoutFadeFromProps);
 
 export function Root({
@@ -78,14 +80,22 @@ export function Root({
   noBodyStyles,
   direction = 'bottom',
   defaultOpen = false,
+  disablePreventScroll = true,
   snapToSequentialPoint = false,
   repositionInputs = true,
+  onAnimationEnd,
   container,
 }: DialogProps) {
   const [isOpen = false, setIsOpen] = useControllableState({
     defaultProp: defaultOpen,
     prop: openProp,
-    onChange: onOpenChange,
+    onChange: (o: boolean) => {
+      onOpenChange?.(o);
+
+      setTimeout(() => {
+        onAnimationEnd?.(o);
+      }, TRANSITIONS.DURATION * 1000);
+    },
   });
   const [hasBeenOpened, setHasBeenOpened] = React.useState<boolean>(false);
   const [isDragging, setIsDragging] = React.useState<boolean>(false);
@@ -132,7 +142,8 @@ export function Root({
   });
 
   usePreventScroll({
-    isDisabled: !isOpen || isDragging || !modal || justReleased || !hasBeenOpened || !repositionInputs,
+    isDisabled:
+      !isOpen || isDragging || !modal || justReleased || !hasBeenOpened || !repositionInputs || !disablePreventScroll,
   });
 
   function getScale() {
@@ -392,11 +403,13 @@ export function Root({
     return () => window.visualViewport?.removeEventListener('resize', onVisualViewportChange);
   }, [activeSnapPointIndex, snapPoints, snapPointsOffset]);
 
-  function closeDrawer() {
+  function closeDrawer(fromWithin?: boolean) {
     cancelDrag();
     onClose?.();
 
-    setIsOpen(false);
+    if (!fromWithin) {
+      setIsOpen(false);
+    }
 
     setTimeout(() => {
       if (snapPoints) {
@@ -607,8 +620,9 @@ export function Root({
         if (open) {
           setHasBeenOpened(true);
         } else {
-          closeDrawer();
+          closeDrawer(true);
         }
+
         setIsOpen(open);
       }}
       open={isOpen}
@@ -669,12 +683,10 @@ export const Overlay = React.forwardRef<HTMLDivElement, React.ComponentPropsWith
 
 Overlay.displayName = 'Drawer.Overlay';
 
-export type ContentProps = React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content> & {
-  onAnimationEnd?: (open: boolean) => void;
-};
+export type ContentProps = React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content>;
 
 export const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
-  { onPointerDownOutside, onAnimationEnd, style, ...rest },
+  { onPointerDownOutside, style, ...rest },
   ref,
 ) {
   const {
@@ -824,7 +836,6 @@ export function NestedRoot({ onDrag, onOpenChange, ...rest }: DialogProps) {
         if (o) {
           onNestedOpenChange(o);
         }
-        onOpenChange?.(o);
       }}
       onRelease={onNestedRelease}
       {...rest}
