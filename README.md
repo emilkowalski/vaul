@@ -146,3 +146,9 @@ The button that closes the dialog. [Props](https://www.radix-ui.com/docs/primiti
 ### Portal
 
 Portals your drawer into the body.
+
+### CSS File
+
+CSS in this library is inserted by JavaScript into `<head>` element by default. If you're having issue with it such as [CSP restriction](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/style-src), you can use `vaul/style.css` CSS as a workaround to apply the styles.
+
+> Note: You don't need to import it unless the default inline styles is blocked by CSP.
