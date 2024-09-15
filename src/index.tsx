@@ -603,6 +603,7 @@ export function Root({
       defaultOpen={defaultOpen}
       modal={modal}
       onOpenChange={(open) => {
+        if (!dismissible) return;
         if (open) {
           setHasBeenOpened(true);
         } else {
