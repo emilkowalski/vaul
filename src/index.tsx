@@ -400,7 +400,7 @@ export function Root({
     return () => window.visualViewport?.removeEventListener('resize', onVisualViewportChange);
   }, [activeSnapPointIndex, snapPoints, snapPointsOffset]);
 
-  function closeDrawer(fromWithin: boolean) {
+  function closeDrawer(fromWithin?: boolean) {
     cancelDrag();
     onClose?.();
 
