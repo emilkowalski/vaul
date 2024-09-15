@@ -20,7 +20,8 @@
   },
   "scripts": {
     "type-check": "tsc --noEmit",
-    "build": "pnpm type-check && bunchee",
+    "build": "pnpm type-check && bunchee && pnpm copy-assets",
+    "copy-assets": "cp -r ./src/style.css ./dist/index.css",
     "dev": "bunchee --watch",
     "dev:website": "turbo run dev --filter=website...",
     "dev:test": "turbo run dev --filter=test...",
