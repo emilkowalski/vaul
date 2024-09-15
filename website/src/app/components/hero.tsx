@@ -4,6 +4,7 @@ import { Drawer } from 'vaul';
 import React from 'react';
 
 export function Hero() {
+  const [open, setOpen] = React.useState(false);
   return (
     <div className="relative">
       <div
@@ -41,7 +42,14 @@ export function Hero() {
           <p className="text-gray-600 text-xl">Drawer component for React.</p>
         </div>
         <div className="flex gap-4 justify-center mt-6">
-          <Drawer.Root shouldScaleBackground>
+          <Drawer.Root
+            shouldScaleBackground
+            open={open}
+            onOpenChange={(o) => {
+              console.log(o);
+              setOpen(o);
+            }}
+          >
             <Drawer.Trigger asChild>
               <button
                 type="button"

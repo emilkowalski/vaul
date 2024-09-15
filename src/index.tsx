@@ -87,7 +87,13 @@ export function Root({
   const [isOpen = false, setIsOpen] = useControllableState({
     defaultProp: defaultOpen,
     prop: openProp,
-    onChange: onOpenChange,
+    onChange: (o: boolean) => {
+      onOpenChange?.(o);
+
+      setTimeout(() => {
+        onAnimationEnd?.(o);
+      }, TRANSITIONS.DURATION * 1000);
+    },
   });
   const [hasBeenOpened, setHasBeenOpened] = React.useState<boolean>(false);
   const [isDragging, setIsDragging] = React.useState<boolean>(false);
@@ -394,11 +400,13 @@ export function Root({
     return () => window.visualViewport?.removeEventListener('resize', onVisualViewportChange);
   }, [activeSnapPointIndex, snapPoints, snapPointsOffset]);
 
-  function closeDrawer() {
+  function closeDrawer(fromWithin: boolean) {
     cancelDrag();
     onClose?.();
 
-    setIsOpen(false);
+    if (!fromWithin) {
+      setIsOpen(false);
+    }
 
     setTimeout(() => {
       if (snapPoints) {
@@ -609,12 +617,9 @@ export function Root({
         if (open) {
           setHasBeenOpened(true);
         } else {
-          closeDrawer();
+          closeDrawer(true);
         }
 
-        setTimeout(() => {
-          onAnimationEnd(open);
-        }, TRANSITIONS.DURATION * 1000);
         setIsOpen(open);
       }}
       open={isOpen}
@@ -828,7 +833,6 @@ export function NestedRoot({ onDrag, onOpenChange, ...rest }: DialogProps) {
         if (o) {
           onNestedOpenChange(o);
         }
-        onOpenChange?.(o);
       }}
       onRelease={onNestedRelease}
       {...rest}
