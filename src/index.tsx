@@ -44,6 +44,7 @@ export type DialogProps = {
   setBackgroundColorOnScale?: boolean;
   scrollLockTimeout?: number;
   fixed?: boolean;
+  handleOnly?: boolean;
   dismissible?: boolean;
   onDrag?: (event: React.PointerEvent<HTMLDivElement>, percentageDragged: number) => void;
   onRelease?: (event: React.PointerEvent<HTMLDivElement>, open: boolean) => void;
@@ -71,6 +72,7 @@ export function Root({
   closeThreshold = CLOSE_THRESHOLD,
   scrollLockTimeout = SCROLL_LOCK_TIMEOUT,
   dismissible = true,
+  handleOnly = false,
   fadeFromIndex = snapPoints && snapPoints.length - 1,
   activeSnapPoint: activeSnapPointProp,
   setActiveSnapPoint: setActiveSnapPointProp,
@@ -635,6 +637,7 @@ export function Root({
           onRelease,
           onDrag,
           dismissible,
+          handleOnly,
           isOpen,
           isDragging,
           shouldFade,
@@ -698,6 +701,7 @@ export const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
     direction,
     snapPoints,
     container,
+    handleOnly,
   } = useDrawerContext();
   // Needed to use transition instead of animations
   const [delayedSnapPoints, setDelayedSnapPoints] = React.useState(false);
@@ -757,6 +761,7 @@ export const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
           : style
       }
       onPointerDown={(event) => {
+        if (handleOnly) return;
         rest.onPointerDown?.(event);
         pointerStartRef.current = { x: event.clientX, y: event.clientY };
         onPress(event);
@@ -780,6 +785,7 @@ export const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
         }
       }}
       onPointerMove={(event) => {
+        if (handleOnly) return;
         rest.onPointerMove?.(event);
         if (!pointerStartRef.current) return;
         const yPosition = event.clientY - pointerStartRef.current.y;
@@ -805,6 +811,114 @@ export const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
 });
 
 Content.displayName = 'Drawer.Content';
+
+export type HandleProps = React.ComponentPropsWithoutRef<'div'> & {
+  preventCycle?: boolean;
+};
+
+const LONG_HANDLE_PRESS_TIMEOUT = 250;
+const DOUBLE_TAP_TIMEOUT = 120;
+
+export const Handle = React.forwardRef<HTMLDivElement, HandleProps>(function (
+  { preventCycle = false, children, ...rest },
+  ref,
+) {
+  const {
+    closeDrawer,
+    isDragging,
+    snapPoints,
+    activeSnapPoint,
+    setActiveSnapPoint,
+    dismissible,
+    handleOnly,
+    isOpen,
+    onPress,
+    onDrag,
+  } = useDrawerContext();
+
+  const closeTimeoutIdRef = React.useRef<number | null>(null);
+  const shouldCancelInteractionRef = React.useRef(false);
+
+  function handleStartCycle() {
+    // Stop if this is the second click of a double click
+    if (shouldCancelInteractionRef.current) {
+      handleCancelInteraction();
+      return;
+    }
+    window.setTimeout(() => {
+      handleCycleSnapPoints();
+    }, DOUBLE_TAP_TIMEOUT);
+  }
+
+  function handleCycleSnapPoints() {
+    // Prevent accidental taps while resizing drawer
+    if (isDragging || preventCycle || shouldCancelInteractionRef.current) {
+      handleCancelInteraction();
+      return;
+    }
+    // Make sure to clear the timeout id if the user releases the handle before the cancel timeout
+    handleCancelInteraction();
+
+    if ((!snapPoints || snapPoints.length === 0) && dismissible) {
+      closeDrawer();
+      return;
+    }
+
+    const isLastSnapPoint = activeSnapPoint === snapPoints[snapPoints.length - 1];
+    if (isLastSnapPoint && dismissible) {
+      closeDrawer();
+      return;
+    }
+
+    const currentSnapIndex = snapPoints.findIndex((point) => point === activeSnapPoint);
+    if (currentSnapIndex === -1) return; // activeSnapPoint not found in snapPoints
+    const nextSnapPoint = snapPoints[currentSnapIndex + 1];
+    setActiveSnapPoint(nextSnapPoint);
+  }
+
+  function handleStartInteraction() {
+    closeTimeoutIdRef.current = window.setTimeout(() => {
+      // Cancel click interaction on a long press
+      shouldCancelInteractionRef.current = true;
+    }, LONG_HANDLE_PRESS_TIMEOUT);
+  }
+
+  function handleCancelInteraction() {
+    window.clearTimeout(closeTimeoutIdRef.current);
+    shouldCancelInteractionRef.current = false;
+  }
+
+  return (
+    <div
+      onClick={handleStartCycle}
+      onDoubleClick={() => {
+        shouldCancelInteractionRef.current = true;
+        closeDrawer();
+      }}
+      onPointerCancel={handleCancelInteraction}
+      onPointerDown={(e) => {
+        if (handleOnly) onPress(e);
+        handleStartInteraction();
+      }}
+      onPointerMove={(e) => {
+        if (handleOnly) onDrag(e);
+      }}
+      // onPointerUp is already handled by the content component
+      ref={ref}
+      data-vaul-drawer-visible={isOpen ? 'true' : 'false'}
+      data-vaul-handle=""
+      aria-hidden="true"
+      {...rest}
+    >
+      {/* Expand handle's hit area beyond what's visible to ensure a 44x44 tap target for touch devices */}
+      <span data-vaul-handle-hitarea="" aria-hidden="true">
+        {children}
+      </span>
+    </div>
+  );
+});
+
+Handle.displayName = 'Drawer.Handle';
 
 export function NestedRoot({ onDrag, onOpenChange, ...rest }: DialogProps) {
   const { onNestedDrag, onNestedOpenChange, onNestedRelease } = useDrawerContext();
@@ -850,6 +964,7 @@ export const Drawer = {
   Overlay,
   Trigger: DialogPrimitive.Trigger,
   Portal,
+  Handle,
   Close: DialogPrimitive.Close,
   Title: DialogPrimitive.Title,
   Description: DialogPrimitive.Description,

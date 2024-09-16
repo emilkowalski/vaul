@@ -68,6 +68,8 @@ Additional props:
 
 `noBodyStyles`: When `true` the `body` doesn't get any styles assigned from Vaul.
 
+`handleOnly`: When `true` only allows the drawer to be dragged by the `<Drawer.Handle />` component. Defaults to `false`.
+
 `setBackgroundColorOnScale`: When `false` we don't change body's background color when the drawer is open. `true` by default.
 
 `defaultOpen`: Opened by default, still reacts to `open` state changes.
@@ -119,6 +121,29 @@ export default () => {
     </div>
   );
 };
+```
+
+### Handle
+
+A drag hint (also known as grabber). Shows people that they can drag the drawer; they can also tap it to cycle through the snap points, and double tap quickly to close the drawer.
+
+```jsx
+import { Drawer } from 'vaul';
+
+function MyComponent() {
+  return (
+    <Drawer.Root>
+      <Drawer.Trigger>Open</Drawer.Trigger>
+      <Drawer.Portal>
+        <Drawer.Content>
+          <Drawer.Handle />
+          <p>Content</p>
+        </Drawer.Content>
+        <Drawer.Overlay />
+      </Drawer.Portal>
+    </Drawer.Root>
+  );
+}
 ```
 
 ### Trigger
