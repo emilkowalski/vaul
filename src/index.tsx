@@ -95,6 +95,12 @@ export function Root({
       setTimeout(() => {
         onAnimationEnd?.(o);
       }, TRANSITIONS.DURATION * 1000);
+
+      if (o && !modal) {
+        window.requestAnimationFrame(() => {
+          document.body.style.pointerEvents = 'auto';
+        });
+      }
     },
   });
   const [hasBeenOpened, setHasBeenOpened] = React.useState<boolean>(false);
@@ -545,19 +551,6 @@ export function Root({
     };
   }, [isOpen]);
 
-  React.useEffect(() => {
-    if (drawerRef.current) {
-      // Find all scrollable elements inside our drawer and assign a class to it so that we can disable overflow when dragging to prevent pointermove not being captured
-      const children = drawerRef?.current?.querySelectorAll('*');
-      children?.forEach((child: Element) => {
-        const htmlChild = child as HTMLElement;
-        if (htmlChild.scrollHeight > htmlChild.clientHeight || htmlChild.scrollWidth > htmlChild.clientWidth) {
-          htmlChild.classList.add('vaul-scrollable');
-        }
-      });
-    }
-  }, [isOpen]);
-
   function onNestedOpenChange(o: boolean) {
     const scale = o ? (window.innerWidth - NESTED_DISPLACEMENT) / window.innerWidth : 1;
     const y = o ? -NESTED_DISPLACEMENT : 0;
@@ -618,7 +611,6 @@ export function Root({
   return (
     <DialogPrimitive.Root
       defaultOpen={defaultOpen}
-      modal={modal}
       onOpenChange={(open) => {
         if (!dismissible) return;
         if (open) {
@@ -668,7 +660,7 @@ export function Root({
 
 export const Overlay = React.forwardRef<HTMLDivElement, React.ComponentPropsWithoutRef<typeof DialogPrimitive.Overlay>>(
   function ({ ...rest }, ref) {
-    const { overlayRef, snapPoints, onRelease, shouldFade, isOpen } = useDrawerContext();
+    const { overlayRef, snapPoints, onRelease, shouldFade, isOpen, modal } = useDrawerContext();
     const composedRef = useComposedRefs(ref, overlayRef);
     const hasSnapPoints = snapPoints && snapPoints.length > 0;
 
@@ -679,6 +671,7 @@ export const Overlay = React.forwardRef<HTMLDivElement, React.ComponentPropsWith
         data-vaul-overlay=""
         data-vaul-snap-points={isOpen && hasSnapPoints ? 'true' : 'false'}
         data-vaul-snap-points-overlay={isOpen && shouldFade ? 'true' : 'false'}
+        style={{ visibility: modal ? 'visible' : 'hidden' }}
         {...rest}
       />
     );
