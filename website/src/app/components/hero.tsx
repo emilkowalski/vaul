@@ -41,7 +41,7 @@ export function Hero() {
           <p className="text-gray-600 text-xl">Drawer component for React.</p>
         </div>
         <div className="flex gap-4 justify-center mt-6">
-          <Drawer.Root shouldScaleBackground>
+          <Drawer.Root>
             <Drawer.Trigger asChild>
               <button
                 type="button"

@@ -741,75 +741,73 @@ export const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
   }, []);
 
   return (
-    <>
-      <DialogPrimitive.Content
-        data-vaul-drawer-direction={direction}
-        data-vaul-drawer=""
-        data-vaul-delayed-snap-points={delayedSnapPoints ? 'true' : 'false'}
-        data-vaul-snap-points={isOpen && hasSnapPoints ? 'true' : 'false'}
-        data-vaul-custom-container={container ? 'true' : 'false'}
-        {...rest}
-        ref={composedRef}
-        style={
-          snapPointsOffset && snapPointsOffset.length > 0
-            ? ({
-                '--snap-point-height': `${snapPointsOffset[0]!}px`,
-                ...style,
-              } as React.CSSProperties)
-            : style
+    <DialogPrimitive.Content
+      data-vaul-drawer-direction={direction}
+      data-vaul-drawer=""
+      data-vaul-delayed-snap-points={delayedSnapPoints ? 'true' : 'false'}
+      data-vaul-snap-points={isOpen && hasSnapPoints ? 'true' : 'false'}
+      data-vaul-custom-container={container ? 'true' : 'false'}
+      {...rest}
+      ref={composedRef}
+      style={
+        snapPointsOffset && snapPointsOffset.length > 0
+          ? ({
+              '--snap-point-height': `${snapPointsOffset[0]!}px`,
+              ...style,
+            } as React.CSSProperties)
+          : style
+      }
+      onPointerDown={(event) => {
+        rest.onPointerDown?.(event);
+        pointerStartRef.current = { x: event.clientX, y: event.clientY };
+        onPress(event);
+      }}
+      onPointerDownOutside={(e) => {
+        onPointerDownOutside?.(e);
+
+        if (!modal || e.defaultPrevented) {
+          e.preventDefault();
+          return;
         }
-        onPointerDown={(event) => {
-          rest.onPointerDown?.(event);
-          pointerStartRef.current = { x: event.clientX, y: event.clientY };
-          onPress(event);
-        }}
-        onPointerDownOutside={(e) => {
-          onPointerDownOutside?.(e);
 
-          if (!modal || e.defaultPrevented) {
-            e.preventDefault();
-            return;
-          }
+        if (keyboardIsOpen.current) {
+          keyboardIsOpen.current = false;
+        }
+      }}
+      onFocusOutside={(e) => {
+        if (!modal) {
+          e.preventDefault();
+          return;
+        }
+      }}
+      onEscapeKeyDown={(e) => {
+        if (!modal) {
+          e.preventDefault();
+          return;
+        }
+      }}
+      onPointerMove={(event) => {
+        rest.onPointerMove?.(event);
+        if (!pointerStartRef.current) return;
+        const yPosition = event.clientY - pointerStartRef.current.y;
+        const xPosition = event.clientX - pointerStartRef.current.x;
 
-          if (keyboardIsOpen.current) {
-            keyboardIsOpen.current = false;
-          }
-        }}
-        onFocusOutside={(e) => {
-          if (!modal) {
-            e.preventDefault();
-            return;
-          }
-        }}
-        onEscapeKeyDown={(e) => {
-          if (!modal) {
-            e.preventDefault();
-            return;
-          }
-        }}
-        onPointerMove={(event) => {
-          rest.onPointerMove?.(event);
-          if (!pointerStartRef.current) return;
-          const yPosition = event.clientY - pointerStartRef.current.y;
-          const xPosition = event.clientX - pointerStartRef.current.x;
+        const swipeStartThreshold = event.pointerType === 'touch' ? 10 : 2;
+        const delta = { x: xPosition, y: yPosition };
 
-          const swipeStartThreshold = event.pointerType === 'touch' ? 10 : 2;
-          const delta = { x: xPosition, y: yPosition };
-
-          const isAllowedToSwipe = isDeltaInDirection(delta, direction, swipeStartThreshold);
-          if (isAllowedToSwipe) onDrag(event);
-          else if (Math.abs(xPosition) > swipeStartThreshold || Math.abs(yPosition) > swipeStartThreshold) {
-            pointerStartRef.current = null;
-          }
-        }}
-        onPointerUp={(event) => {
-          rest.onPointerUp?.(event);
+        const isAllowedToSwipe = isDeltaInDirection(delta, direction, swipeStartThreshold);
+        if (isAllowedToSwipe) onDrag(event);
+        else if (Math.abs(xPosition) > swipeStartThreshold || Math.abs(yPosition) > swipeStartThreshold) {
           pointerStartRef.current = null;
-          wasBeyondThePointRef.current = false;
-          onRelease(event);
-        }}
-      />
-    </>
+        }
+      }}
+      onPointerUp={(event) => {
+        rest.onPointerUp?.(event);
+        pointerStartRef.current = null;
+        wasBeyondThePointRef.current = false;
+        onRelease(event);
+      }}
+    />
   );
 });
 
