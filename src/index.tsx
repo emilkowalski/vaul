@@ -671,7 +671,7 @@ export const Overlay = React.forwardRef<HTMLDivElement, React.ComponentPropsWith
         data-vaul-overlay=""
         data-vaul-snap-points={isOpen && hasSnapPoints ? 'true' : 'false'}
         data-vaul-snap-points-overlay={isOpen && shouldFade ? 'true' : 'false'}
-        style={{ display: modal ? 'block' : 'none' }}
+        style={{ visibility: modal ? 'visible' : 'hidden' }}
         {...rest}
       />
     );
@@ -742,8 +742,6 @@ export const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
 
   return (
     <>
-      {/* This is needed to keep the dragging event from being blurred when modal is set to false */}
-      {/* {!modal && isDragging ? <div aria-hidden className="absolute inset-0 opacity-0" /> : null} */}
       <DialogPrimitive.Content
         data-vaul-drawer-direction={direction}
         data-vaul-drawer=""
