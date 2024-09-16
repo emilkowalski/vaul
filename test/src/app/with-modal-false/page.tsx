@@ -14,7 +14,7 @@ export default function Page() {
   return (
     <div className="w-screen h-screen bg-white p-8 flex justify-center items-center">
       <div data-testid="active-snap-index">{activeSnapPointIndex}</div>
-      <Drawer.Root modal=>
+      <Drawer.Root modal={false} snapPoints={snapPoints} setActiveSnapPoint={setSnap}>
         <Drawer.Trigger asChild>
           <button data-testid="trigger">Open Drawer</button>
         </Drawer.Trigger>
@@ -24,7 +24,12 @@ export default function Page() {
             data-testid="content"
             className="fixed flex flex-col bg-white border border-gray-200 border-b-none rounded-t-[10px] bottom-0 left-0 right-0 h-full max-h-[97%] mx-[-1px]"
           >
-            <div className={clsx('flex flex-col max-w-md mx-auto w-full p-4 pt-5 overflow-y-auto')}>
+            <div
+              className={clsx('flex flex-col max-w-md mx-auto w-full p-4 pt-5', {
+                'overflow-y-auto': snap === 1,
+                'overflow-hidden': snap !== 1,
+              })}
+            >
               <div className="flex items-center">
                 <svg
                   className="text-yellow-400 h-5 w-5 flex-shrink-0"

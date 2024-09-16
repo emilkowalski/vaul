@@ -95,6 +95,12 @@ export function Root({
       setTimeout(() => {
         onAnimationEnd?.(o);
       }, TRANSITIONS.DURATION * 1000);
+
+      if (o && !modal) {
+        window.requestAnimationFrame(() => {
+          document.body.style.pointerEvents = 'auto';
+        });
+      }
     },
   });
   const [hasBeenOpened, setHasBeenOpened] = React.useState<boolean>(false);
@@ -605,7 +611,6 @@ export function Root({
   return (
     <DialogPrimitive.Root
       defaultOpen={defaultOpen}
-      modal={modal}
       onOpenChange={(open) => {
         if (!dismissible) return;
         if (open) {
@@ -655,7 +660,7 @@ export function Root({
 
 export const Overlay = React.forwardRef<HTMLDivElement, React.ComponentPropsWithoutRef<typeof DialogPrimitive.Overlay>>(
   function ({ ...rest }, ref) {
-    const { overlayRef, snapPoints, onRelease, shouldFade, isOpen } = useDrawerContext();
+    const { overlayRef, snapPoints, onRelease, shouldFade, isOpen, modal } = useDrawerContext();
     const composedRef = useComposedRefs(ref, overlayRef);
     const hasSnapPoints = snapPoints && snapPoints.length > 0;
 
@@ -666,6 +671,7 @@ export const Overlay = React.forwardRef<HTMLDivElement, React.ComponentPropsWith
         data-vaul-overlay=""
         data-vaul-snap-points={isOpen && hasSnapPoints ? 'true' : 'false'}
         data-vaul-snap-points-overlay={isOpen && shouldFade ? 'true' : 'false'}
+        style={{ display: modal ? 'block' : 'none' }}
         {...rest}
       />
     );
@@ -737,7 +743,7 @@ export const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
   return (
     <>
       {/* This is needed to keep the dragging event from being blurred when modal is set to false */}
-      {!modal && isDragging ? <div aria-hidden className="absolute inset-0 opacity-0 pointer-events-none" /> : null}
+      {/* {!modal && isDragging ? <div aria-hidden className="absolute inset-0 opacity-0" /> : null} */}
       <DialogPrimitive.Content
         data-vaul-drawer-direction={direction}
         data-vaul-drawer=""
