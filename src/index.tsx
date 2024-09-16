@@ -779,12 +779,6 @@ export const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
           return;
         }
       }}
-      onEscapeKeyDown={(e) => {
-        if (!modal) {
-          e.preventDefault();
-          return;
-        }
-      }}
       onPointerMove={(event) => {
         rest.onPointerMove?.(event);
         if (!pointerStartRef.current) return;
