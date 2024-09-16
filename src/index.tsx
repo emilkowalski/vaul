@@ -691,6 +691,7 @@ export const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
     isOpen,
     direction,
     snapPoints,
+    isDragging,
     container,
   } = useDrawerContext();
   // Needed to use transition instead of animations
@@ -734,73 +735,77 @@ export const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
   }, []);
 
   return (
-    <DialogPrimitive.Content
-      data-vaul-drawer-direction={direction}
-      data-vaul-drawer=""
-      data-vaul-delayed-snap-points={delayedSnapPoints ? 'true' : 'false'}
-      data-vaul-snap-points={isOpen && hasSnapPoints ? 'true' : 'false'}
-      data-vaul-custom-container={container ? 'true' : 'false'}
-      {...rest}
-      ref={composedRef}
-      style={
-        snapPointsOffset && snapPointsOffset.length > 0
-          ? ({
-              '--snap-point-height': `${snapPointsOffset[0]!}px`,
-              ...style,
-            } as React.CSSProperties)
-          : style
-      }
-      onPointerDown={(event) => {
-        rest.onPointerDown?.(event);
-        pointerStartRef.current = { x: event.clientX, y: event.clientY };
-        onPress(event);
-      }}
-      onPointerDownOutside={(e) => {
-        onPointerDownOutside?.(e);
-
-        if (!modal || e.defaultPrevented) {
-          e.preventDefault();
-          return;
+    <>
+      {/* This is needed to keep the dragging event from being blurred when modal is set to false */}
+      {!modal && isDragging ? <div aria-hidden className="absolute inset-0 opacity-0 pointer-events-none" /> : null}
+      <DialogPrimitive.Content
+        data-vaul-drawer-direction={direction}
+        data-vaul-drawer=""
+        data-vaul-delayed-snap-points={delayedSnapPoints ? 'true' : 'false'}
+        data-vaul-snap-points={isOpen && hasSnapPoints ? 'true' : 'false'}
+        data-vaul-custom-container={container ? 'true' : 'false'}
+        {...rest}
+        ref={composedRef}
+        style={
+          snapPointsOffset && snapPointsOffset.length > 0
+            ? ({
+                '--snap-point-height': `${snapPointsOffset[0]!}px`,
+                ...style,
+              } as React.CSSProperties)
+            : style
         }
+        onPointerDown={(event) => {
+          rest.onPointerDown?.(event);
+          pointerStartRef.current = { x: event.clientX, y: event.clientY };
+          onPress(event);
+        }}
+        onPointerDownOutside={(e) => {
+          onPointerDownOutside?.(e);
 
-        if (keyboardIsOpen.current) {
-          keyboardIsOpen.current = false;
-        }
-      }}
-      onFocusOutside={(e) => {
-        if (!modal) {
-          e.preventDefault();
-          return;
-        }
-      }}
-      onEscapeKeyDown={(e) => {
-        if (!modal) {
-          e.preventDefault();
-          return;
-        }
-      }}
-      onPointerMove={(event) => {
-        rest.onPointerMove?.(event);
-        if (!pointerStartRef.current) return;
-        const yPosition = event.clientY - pointerStartRef.current.y;
-        const xPosition = event.clientX - pointerStartRef.current.x;
+          if (!modal || e.defaultPrevented) {
+            e.preventDefault();
+            return;
+          }
 
-        const swipeStartThreshold = event.pointerType === 'touch' ? 10 : 2;
-        const delta = { x: xPosition, y: yPosition };
+          if (keyboardIsOpen.current) {
+            keyboardIsOpen.current = false;
+          }
+        }}
+        onFocusOutside={(e) => {
+          if (!modal) {
+            e.preventDefault();
+            return;
+          }
+        }}
+        onEscapeKeyDown={(e) => {
+          if (!modal) {
+            e.preventDefault();
+            return;
+          }
+        }}
+        onPointerMove={(event) => {
+          rest.onPointerMove?.(event);
+          if (!pointerStartRef.current) return;
+          const yPosition = event.clientY - pointerStartRef.current.y;
+          const xPosition = event.clientX - pointerStartRef.current.x;
 
-        const isAllowedToSwipe = isDeltaInDirection(delta, direction, swipeStartThreshold);
-        if (isAllowedToSwipe) onDrag(event);
-        else if (Math.abs(xPosition) > swipeStartThreshold || Math.abs(yPosition) > swipeStartThreshold) {
+          const swipeStartThreshold = event.pointerType === 'touch' ? 10 : 2;
+          const delta = { x: xPosition, y: yPosition };
+
+          const isAllowedToSwipe = isDeltaInDirection(delta, direction, swipeStartThreshold);
+          if (isAllowedToSwipe) onDrag(event);
+          else if (Math.abs(xPosition) > swipeStartThreshold || Math.abs(yPosition) > swipeStartThreshold) {
+            pointerStartRef.current = null;
+          }
+        }}
+        onPointerUp={(event) => {
+          rest.onPointerUp?.(event);
           pointerStartRef.current = null;
-        }
-      }}
-      onPointerUp={(event) => {
-        rest.onPointerUp?.(event);
-        pointerStartRef.current = null;
-        wasBeyondThePointRef.current = false;
-        onRelease(event);
-      }}
-    />
+          wasBeyondThePointRef.current = false;
+          onRelease(event);
+        }}
+      />
+    </>
   );
 });
 

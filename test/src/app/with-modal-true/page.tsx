@@ -14,7 +14,7 @@ export default function Page() {
   return (
     <div className="w-screen h-screen bg-white p-8 flex justify-center items-center">
       <div data-testid="active-snap-index">{activeSnapPointIndex}</div>
-      <Drawer.Root>
+      <Drawer.Root modal=>
         <Drawer.Trigger asChild>
           <button data-testid="trigger">Open Drawer</button>
         </Drawer.Trigger>
