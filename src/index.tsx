@@ -697,7 +697,6 @@ export const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
     isOpen,
     direction,
     snapPoints,
-    isDragging,
     container,
   } = useDrawerContext();
   // Needed to use transition instead of animations
