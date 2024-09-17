@@ -527,8 +527,10 @@ export function Root({
     }
 
     const visibleDrawerHeight = Math.min(drawerRef.current.getBoundingClientRect().height ?? 0, window.innerHeight);
+    const visibleDrawerWidth = Math.min(drawerRef.current.getBoundingClientRect().width ?? 0, window.innerWidth);
 
-    if (swipeAmount >= visibleDrawerHeight * closeThreshold) {
+    const isHorizontalSwipe = direction === 'left' || direction === 'right';
+    if (Math.abs(swipeAmount) >= (isHorizontalSwipe ? visibleDrawerWidth : visibleDrawerHeight) * closeThreshold) {
       closeDrawer();
       onReleaseProp?.(event, false);
       return;
