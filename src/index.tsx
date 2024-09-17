@@ -865,6 +865,7 @@ export const Handle = React.forwardRef<HTMLDivElement, HandleProps>(function (
     }
 
     const isLastSnapPoint = activeSnapPoint === snapPoints[snapPoints.length - 1];
+	
     if (isLastSnapPoint && dismissible) {
       closeDrawer();
       return;
@@ -891,10 +892,6 @@ export const Handle = React.forwardRef<HTMLDivElement, HandleProps>(function (
   return (
     <div
       onClick={handleStartCycle}
-      onDoubleClick={() => {
-        shouldCancelInteractionRef.current = true;
-        closeDrawer();
-      }}
       onPointerCancel={handleCancelInteraction}
       onPointerDown={(e) => {
         if (handleOnly) onPress(e);
