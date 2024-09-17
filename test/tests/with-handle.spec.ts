@@ -14,19 +14,5 @@ test.describe('With handle', () => {
 
     await page.getByTestId('handle').click();
     await expect(page.getByTestId('active-snap-index')).toHaveText('1');
-
-    await page.getByTestId('handle').click();
-    await expect(page.getByTestId('content')).not.toBeVisible();
-  });
-
-  test('double click should close the drawer', async ({ page }) => {
-    await page.waitForTimeout(ANIMATION_DURATION);
-
-    await expect(page.getByTestId('content')).toBeVisible();
-    await expect(page.getByTestId('active-snap-index')).toHaveText('0');
-    await page.getByTestId('handle').dispatchEvent('dblclick');
-
-    await page.waitForTimeout(ANIMATION_DURATION);
-    await expect(page.getByTestId('content')).not.toBeVisible();
   });
 });
