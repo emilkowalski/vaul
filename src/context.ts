@@ -27,6 +27,7 @@ interface DrawerContextValue {
   shouldScaleBackground: boolean;
   setBackgroundColorOnScale: boolean;
   noBodyStyles: boolean;
+  handleOnly?: boolean;
   container?: HTMLElement | null;
 }
 
@@ -46,6 +47,7 @@ export const DrawerContext = React.createContext<DrawerContextValue>({
   keyboardIsOpen: { current: false },
   snapPointsOffset: null,
   snapPoints: null,
+  handleOnly: false,
   modal: false,
   shouldFade: false,
   activeSnapPoint: null,
