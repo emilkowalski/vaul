@@ -11,7 +11,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body className="antialiased text-gray-900 bg-gray-50">
-        <main data-vaul-drawer-wrapper="">{children}</main>
+        <main vaul-drawer-wrapper="">{children}</main>
         <Analytics />
       </body>
     </html>

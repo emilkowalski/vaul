@@ -15,18 +15,22 @@
     "typescript": "5.2.2"
   },
   "dependencies": {
-    "@mdx-js/loader": "^3.0.1",
-    "@mdx-js/react": "^3.0.1",
-    "@next/mdx": "^14.2.12",
-    "@types/mdx": "^2.0.13",
     "@vercel/analytics": "^1.0.1",
     "clsx": "^2.0.0",
     "next": "13.5.1",
+    "next-mdx-remote": "^5.0.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-merge-refs": "^2.0.2",
     "rehype-pretty-code": "^0.14.0",
+    "rehype-stringify": "^10.0.0",
+    "remark-parse": "^11.0.0",
+    "remark-rehype": "^11.1.0",
     "tailwindcss": "3.3.3",
+    "unified": "^11.0.5",
+    "unist": "^0.0.1",
+    "unist-builder": "^4.0.0",
+    "unist-util-visit": "^5.0.0",
     "vaul": "workspace:*"
   }
 }
