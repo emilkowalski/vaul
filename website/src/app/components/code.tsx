@@ -24,6 +24,10 @@ async function highlightCode(code: string) {
     .use(rehypePrettyCode, {
       defaultLang: 'tsx',
       keepBackground: false,
+      theme: {
+        light: 'github-light',
+        dark: 'github-dark',
+      },
     })
     .use(rehypeStringify)
     .process(code);

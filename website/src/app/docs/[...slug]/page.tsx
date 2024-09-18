@@ -43,7 +43,11 @@ interface Params {
 }
 
 const options = {
-  // See Options section below.
+  keepBackground: false,
+  theme: {
+    light: 'github-light',
+    dark: 'github-dark',
+  },
 };
 
 export default async function Page({ params }: Params) {
@@ -75,7 +79,7 @@ export default async function Page({ params }: Params) {
       <h1 className="text-[32px] font-semibold mb-6 text-primary" style={{ letterSpacing: '-0.03em' }}>
         {pageTitle}
       </h1>
-      <p className="text-secondary text-[15px]">{pageDescription}</p>
+      <p className="text-secondary text-[15px] mb-6">{pageDescription}</p>
       <div>{content}</div>
     </>
   );
