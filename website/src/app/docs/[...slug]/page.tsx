@@ -72,8 +72,10 @@ export default async function Page({ params }: Params) {
   // Render the page
   return (
     <>
-      <h1>{pageTitle}</h1>
-      <p>{pageDescription}</p>
+      <h1 className="text-[32px] font-semibold mb-6 text-primary" style={{ letterSpacing: '-0.03em' }}>
+        {pageTitle}
+      </h1>
+      <p className="text-secondary text-[15px]">{pageDescription}</p>
       <div>{content}</div>
     </>
   );

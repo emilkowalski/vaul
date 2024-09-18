@@ -1,8 +1,8 @@
 import { Code } from './code';
 
-export function Preview(props) {
+export function Preview({ source }: { source: string }) {
   const code = `\`\`\`
-${props.source}
+${source}
   \`\`\``;
 
   return (
