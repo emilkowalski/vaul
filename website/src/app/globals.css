@@ -38,3 +38,18 @@ a {
   text-decoration-thickness: 1px;
   text-underline-offset: 2px;
 }
+
+.dotted {
+  background-image: linear-gradient(#d4d4d8 33%, rgba(255, 255, 255, 0) 0%);
+  background-size: 1px 4px;
+}
+
+.dotted-right {
+  background-position: right;
+  background-repeat: repeat-y;
+}
+
+.dotted-bottom {
+  background-position: bottom;
+  background-repeat: repeat-x;
+}
