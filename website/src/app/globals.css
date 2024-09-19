@@ -81,6 +81,13 @@ a {
   background-position: bottom;
 }
 
+.dotted-top {
+  background-image: repeating-linear-gradient(90deg, #d4d4d8 0px, #d4d4d8 1px, transparent 1px, transparent 4px);
+  background-size: 100% 1px;
+  background-repeat: no-repeat;
+  background-position: top;
+}
+
 pre > code {
   font-size: 13px;
 }
