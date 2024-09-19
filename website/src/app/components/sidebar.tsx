@@ -10,16 +10,40 @@ export function Sidebar() {
   const pathname = usePathname();
 
   return (
-    <nav className="px-4 pt-5 pb-4 dotted dotted-right bg-subtle sticky top-0 h-screen hidden md:flex flex-col">
-      <div className="flex gap-1 items-baseline dotted-bottom pb-6">
-        <Link href="/" className="flex items-center gap-2">
-          <span className="font-medium inline-block text-primary">Vaul</span>
-        </Link>
-        <span className="text-xs text-secondary mt-0.5">
-          by <Link href="/">Emil Kowalski</Link>
-        </span>
+    <nav className="pt-5 pb-4 dotted dotted-right bg-subtle sticky top-0 h-screen hidden md:flex flex-col">
+      <div className="flex flex-col dotted-bottom pb-5 px-4">
+        <div className="flex gap-1 items-baseline pb-3.5">
+          <Link href="/" className="flex items-center gap-2">
+            <span className="font-medium inline-block text-primary">Vaul</span>
+          </Link>
+          <span className="text-xs text-secondary mt-0.5">
+            by <Link href="/">Emil Kowalski</Link>
+          </span>
+        </div>
+        <button className="shadow-sm bg-main rounded-md text-tertiary flex items-center p-1 text-[13px]">
+          <svg
+            className="mr-2 ml-1"
+            width="14"
+            height="14"
+            viewBox="0 0 14 14"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M11.8125 11.8125L9.40712 9.40712M9.40712 9.40712C10.1725 8.64179 10.6458 7.5845 10.6458 6.41667C10.6458 4.08097 8.75239 2.1875 6.41667 2.1875C4.08097 2.1875 2.1875 4.08097 2.1875 6.41667C2.1875 8.75239 4.08097 10.6458 6.41667 10.6458C7.5845 10.6458 8.64179 10.1725 9.40712 9.40712Z"
+              stroke="currentColor"
+              strokeWidth="0.875"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+          Search
+          <kbd className="ml-auto h-[18px] px-1 border border-transparent-border rounded flex items-center text-secondary bg-subtle text-[12px] font-medium pl-1.5">
+            <span className="mr-0.5 text-[14px]">⌘</span>K
+          </kbd>
+        </button>
       </div>
-      <div className="mt-5">
+      <div className="grow overflow-y-auto pt-5 px-4">
         {NAV_ITEMS.map((section, index) => (
           <div key={section.name}>
             <span className="text-xs text-tertiary font-medium inline-block mb-2">{section.name}</span>
@@ -42,7 +66,7 @@ export function Sidebar() {
           </div>
         ))}
       </div>
-      <div className="mt-auto">
+      <div className="mt-auto px-4">
         <div className="p-3 rounded-lg shadow-sm bg-main mb-5">
           <h3 className="text-[13px] mb-1 font-medium text-primary">Animations on the Web</h3>
           <p className="text-secondary text-[13px]">Learn how to build components like this one.</p>

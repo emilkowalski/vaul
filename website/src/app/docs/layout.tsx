@@ -4,6 +4,7 @@ import clsx from 'clsx';
 import localFont from 'next/font/local';
 import { Sidebar } from '../components/sidebar';
 import { ThemeProvider } from 'next-themes';
+import { OnThisPage } from '../components/on-this-page';
 
 // If loading a variable font, you don't need to specify the font weight
 const inter = Inter({ subsets: ['latin'] });
@@ -14,25 +15,14 @@ const commitMono = localFont({
 });
 
 export default function Layout({ children }: { children: React.ReactNode }) {
+  console.log(children);
+
   return (
     <div className={clsx('bg-main md:grid grid-cols-[220px,1fr] min-h-[300vh]', inter.className, commitMono.variable)}>
       <Sidebar />
       <div className="flex pt-16 px-8">
         <div className="max-w-[672px] w-full mx-auto px-4">{children}</div>
-        <aside className="w-[220px] hidden md:block">
-          <span className="text-[13px] text-gray-700 flex items-center gap-2">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none">
-              <path
-                d="M2.75 12H21.25M2.75 5.75H21.25M2.75 18.25H11.5"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-            On this page
-          </span>
-        </aside>
+        <OnThisPage />
       </div>
     </div>
   );

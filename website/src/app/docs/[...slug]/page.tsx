@@ -80,7 +80,9 @@ export default async function Page({ params }: Params) {
         {pageTitle}
       </h1>
       <p className="text-secondary text-[15px] mb-6">{pageDescription}</p>
-      <div>{content}</div>
+      <div data-main-content className="flex flex-col">
+        {content}
+      </div>
     </>
   );
 }
