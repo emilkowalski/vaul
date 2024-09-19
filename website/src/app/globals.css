@@ -40,6 +40,24 @@
   --disabled: hsl(240 5 77%);
 }
 
+.dark {
+  --main: #1f1f1f;
+  --subtle: #242424;
+  --el-bg: #2b2b2b;
+  --el-hover-bg: #363636;
+  --el-active-bg: #3d3d3d;
+  --transparent-border: #3a3a3a;
+  --transparent-border-hover: #4b4b4b;
+  --transparent-border-active: #545454;
+  --solid-border: #444444;
+  --solid-border-hover: #525252;
+  --solid-border-active: #5c5c5c;
+  --primary: #f3f3f5;
+  --secondary: #c1c1c6;
+  --tertiary: #74747b;
+  --disabled: #5a5a5e;
+}
+
 body,
 main {
   min-height: 100vh;

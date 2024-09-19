@@ -24,6 +24,7 @@
     "framer-motion": "^11.5.4",
     "next": "13.5.1",
     "next-mdx-remote": "^5.0.0",
+    "next-themes": "^0.3.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-merge-refs": "^2.0.2",

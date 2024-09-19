@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google';
 import clsx from 'clsx';
 import localFont from 'next/font/local';
 import { Sidebar } from '../components/sidebar';
+import { ThemeProvider } from 'next-themes';
 
 // If loading a variable font, you don't need to specify the font weight
 const inter = Inter({ subsets: ['latin'] });
@@ -17,7 +18,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     <div className={clsx('bg-main md:grid grid-cols-[220px,1fr] min-h-[300vh]', inter.className, commitMono.variable)}>
       <Sidebar />
       <div className="flex pt-16 px-8">
-        <main className="max-w-[672px] w-full mx-auto px-4">{children}</main>
+        <div className="max-w-[672px] w-full mx-auto px-4">{children}</div>
         <aside className="w-[220px] hidden md:block">
           <span className="text-[13px] text-gray-700 flex items-center gap-2">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none">

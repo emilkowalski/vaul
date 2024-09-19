@@ -1,6 +1,7 @@
 import './globals.css';
 import { Analytics } from '@vercel/analytics/react';
 import type { Metadata } from 'next';
+import { ThemeProvider } from './components/theme-provider';
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -9,9 +10,11 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className="antialiased text-gray-900 bg-gray-50">
-        <main vaul-drawer-wrapper="">{children}</main>
+        <ThemeProvider>
+          <main vaul-drawer-wrapper="">{children}</main>
+        </ThemeProvider>
         <Analytics />
       </body>
     </html>

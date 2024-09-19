@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import React from 'react';
 import { usePathname } from 'next/navigation';
+import { useTheme } from 'next-themes';
 
 export function Sidebar() {
   const pathname = usePathname();
@@ -11,7 +12,7 @@ export function Sidebar() {
     <nav className="px-4 pt-5 pb-4 dotted dotted-right bg-subtle sticky top-0 h-screen hidden md:flex flex-col">
       <div className="flex gap-1 items-baseline dotted-bottom pb-6">
         <Link href="/" className="flex items-center gap-2">
-          <span className="font-semibold inline-block">Vaul</span>
+          <span className="font-medium inline-block">Vaul</span>
         </Link>
         <span className="text-xs text-gray-600 mt-0.5">
           by <Link href="/">Emil Kowalski</Link>
@@ -19,7 +20,7 @@ export function Sidebar() {
       </div>
       <div className="mt-5">
         {NAV_ITEMS.map((section, index) => (
-          <div>
+          <div key={section.name}>
             <span className="text-xs text-tertiary font-medium inline-block mb-2">{section.name}</span>
             <ul className="space-y-1">
               {section.items.map((item) => (
@@ -40,19 +41,29 @@ export function Sidebar() {
           </div>
         ))}
       </div>
-      <div className="mt-auto flex justify-between items-center pt-5 dotted-top">
-        <ThemeSwitcher />
+      <div className="mt-auto">
+        <div className="p-3 rounded-lg shadow-sm bg-main mb-5">
+          <h3 className="text-[13px] mb-1 font-medium text-primary">Animations on the Web</h3>
+          <p className="text-secondary text-[13px]">Learn how to build components like this one.</p>
+        </div>
+        <div className="flex justify-between items-center pt-5 dotted-top">
+          <ThemeSwitcher />
 
-        <a href="/" className="text-tertiary hover:text-primary">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path
-              fillRule="evenodd"
-              clipRule="evenodd"
-              d="M14.668 3.83333C14.668 2.82081 13.8471 2 12.8346 2H3.16793C2.15541 2 1.33459 2.82081 1.33459 3.83333V10.8333C1.33459 11.8459 2.15541 12.6667 3.16793 12.6667H4.16793V14C4.16793 14.1768 4.26128 14.3404 4.41345 14.4304C4.56562 14.5204 4.75399 14.5233 4.90889 14.4381L8.12969 12.6667H12.8346C13.8471 12.6667 14.668 11.8459 14.668 10.8333V3.83333ZM4.33314 7.33333C4.33314 7.70153 4.63161 8 4.9998 8C5.36799 8 5.66647 7.70153 5.66647 7.33333C5.66647 6.96513 5.36799 6.66667 4.9998 6.66667C4.63161 6.66667 4.33314 6.96513 4.33314 7.33333ZM7.33316 7.33333C7.33316 7.70153 7.63163 8 7.99983 8C8.36796 8 8.66649 7.70153 8.66649 7.33333C8.66649 6.96513 8.36796 6.66667 7.99983 6.66667C7.63163 6.66667 7.33316 6.96513 7.33316 7.33333ZM10.9998 8C10.6316 8 10.3332 7.70153 10.3332 7.33333C10.3332 6.96513 10.6316 6.66667 10.9998 6.66667C11.368 6.66667 11.6665 6.96513 11.6665 7.33333C11.6665 7.70153 11.368 8 10.9998 8Z"
-              fill="currentColor"
-            />
-          </svg>
-        </a>
+          <a
+            href="https://github.com/emilkowalski/vaul/issues/new"
+            className="text-tertiary hover:text-primary"
+            target="_blank"
+          >
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path
+                fillRule="evenodd"
+                clipRule="evenodd"
+                d="M14.668 3.83333C14.668 2.82081 13.8471 2 12.8346 2H3.16793C2.15541 2 1.33459 2.82081 1.33459 3.83333V10.8333C1.33459 11.8459 2.15541 12.6667 3.16793 12.6667H4.16793V14C4.16793 14.1768 4.26128 14.3404 4.41345 14.4304C4.56562 14.5204 4.75399 14.5233 4.90889 14.4381L8.12969 12.6667H12.8346C13.8471 12.6667 14.668 11.8459 14.668 10.8333V3.83333ZM4.33314 7.33333C4.33314 7.70153 4.63161 8 4.9998 8C5.36799 8 5.66647 7.70153 5.66647 7.33333C5.66647 6.96513 5.36799 6.66667 4.9998 6.66667C4.63161 6.66667 4.33314 6.96513 4.33314 7.33333ZM7.33316 7.33333C7.33316 7.70153 7.63163 8 7.99983 8C8.36796 8 8.66649 7.70153 8.66649 7.33333C8.66649 6.96513 8.36796 6.66667 7.99983 6.66667C7.63163 6.66667 7.33316 6.96513 7.33316 7.33333ZM10.9998 8C10.6316 8 10.3332 7.70153 10.3332 7.33333C10.3332 6.96513 10.6316 6.66667 10.9998 6.66667C11.368 6.66667 11.6665 6.96513 11.6665 7.33333C11.6665 7.70153 11.368 8 10.9998 8Z"
+                fill="currentColor"
+              />
+            </svg>
+          </a>
+        </div>
       </div>
     </nav>
   );
@@ -132,13 +143,14 @@ const THEMES = [
 ];
 
 function ThemeSwitcher() {
-  const [nextTheme, setNextTheme] = React.useState('system');
+  const { theme: nextTheme, setTheme } = useTheme();
 
   return (
     <fieldset className="flex p-0.5 rounded-lg border-solid-border border bg-main w-fit gap-1 items-center">
       <legend className="sr-only">Select a display theme:</legend>
       {THEMES.map((theme) => (
         <span
+          suppressHydrationWarning
           data-active={theme.value === nextTheme}
           key={theme.value}
           className="w-[20px] h-[18px] grid place-items-center text-tertiary hover:text-primary cursor-pointer data-[active=true]:text-primary data-[active=true]:bg-el-hover-bg rounded-[6px]"
@@ -149,7 +161,7 @@ function ThemeSwitcher() {
             type="radio"
             name="theme"
             value={theme.value}
-            onClick={() => setNextTheme(theme.value)}
+            onClick={() => setTheme(theme.value)}
             className="form-radio h-4 w-4 text-primary hidden"
           />
           <label htmlFor={theme.value} className="cursor-pointer">
@@ -186,10 +198,6 @@ const NAV_ITEMS = [
       {
         name: 'Default',
         href: '/docs/default',
-      },
-      {
-        name: 'Scaled Background',
-        href: '/docs/scaled-background',
       },
       {
         name: 'Snap Points',

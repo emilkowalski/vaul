@@ -121,6 +121,9 @@ importers:
       next-mdx-remote:
         specifier: ^5.0.0
         version: 5.0.0(@types/react@18.2.55)(react@18.2.0)
+      next-themes:
+        specifier: ^0.3.0
+        version: 0.3.0(react-dom@18.2.0)(react@18.2.0)
       react:
         specifier: 18.2.0
         version: 18.2.0
@@ -4209,6 +4212,16 @@ packages:
     transitivePeerDependencies:
       - '@types/react'
       - supports-color
+    dev: false
+
+  /next-themes@0.3.0(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-/QHIrsYpd6Kfk7xakK4svpDI5mmXP0gfvCoJdGpZQ2TOrQZmsW0QxjaiLn8wbIKjtm4BTSqLoix4lxYYOnLJ/w==}
+    peerDependencies:
+      react: ^16.8 || ^17 || ^18
+      react-dom: ^16.8 || ^17 || ^18
+    dependencies:
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
     dev: false
 
   /next@13.5.1(react-dom@18.2.0)(react@18.2.0):

@@ -1,15 +1,15 @@
 export function Logo({ size = 32 }: { size?: number }) {
   return (
     <svg width={size} height={size} viewBox="0 0 300 300" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <g clip-path="url(#clip0_22_64)">
+      <g clipPath="url(#clip0_22_64)">
         <path
           d="M52.8887 0C23.6791 0 0 23.8341 0 53.2349V207.6H300V53.2349C300 23.8341 276.321 0 247.111 0H52.8887Z"
           fill="url(#paint0_radial_22_64)"
         />
         <path
           opacity="0.1"
-          fill-rule="evenodd"
-          clip-rule="evenodd"
+          fillRule="evenodd"
+          clipRule="evenodd"
           d="M62 0H60V56L0 56V58L60 58V114H0V116H60V165H62V116L120 116V165H122V116H180V165H182V116L240 116V165H242V116H301V114H242V58L301 58V56L242 56V0H240V56H182V0H180V56L122 56V0H120V56H62V0ZM240 114V58H182V114L240 114ZM180 114V58L122 58V114H180ZM120 114V58H62V114L120 114Z"
           fill="black"
         />
@@ -17,8 +17,8 @@ export function Logo({ size = 32 }: { size?: number }) {
           <path
             d="M247.111 111.6H52.8887C23.6791 111.6 0 135.392 0 164.742H300C300 135.392 276.321 111.6 247.111 111.6Z"
             fill="url(#paint1_radial_22_64)"
-            fill-opacity="0.01"
-            shape-rendering="crispEdges"
+            fillOpacity="0.01"
+            shapeRendering="crispEdges"
           />
         </g>
         <g filter="url(#filter1_i_22_64)">
@@ -39,9 +39,9 @@ export function Logo({ size = 32 }: { size?: number }) {
           width="328"
           height="81.1426"
           filterUnits="userSpaceOnUse"
-          color-interpolation-filters="sRGB"
+          colorInterpolationFilters="sRGB"
         >
-          <feFlood flood-opacity="0" result="BackgroundImageFix" />
+          <feFlood floodOpacity="0" result="BackgroundImageFix" />
           <feColorMatrix
             in="SourceAlpha"
             type="matrix"
@@ -73,9 +73,9 @@ export function Logo({ size = 32 }: { size?: number }) {
           width="300"
           height="192.4"
           filterUnits="userSpaceOnUse"
-          color-interpolation-filters="sRGB"
+          colorInterpolation="sRGB"
         >
-          <feFlood flood-opacity="0" result="BackgroundImageFix" />
+          <feFlood floodOpacity="0" result="BackgroundImageFix" />
           <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
           <feColorMatrix
             in="SourceAlpha"
@@ -96,9 +96,9 @@ export function Logo({ size = 32 }: { size?: number }) {
           width="88"
           height="22"
           filterUnits="userSpaceOnUse"
-          color-interpolation-filters="sRGB"
+          colorInterpolationFilters="sRGB"
         >
-          <feFlood flood-opacity="0" result="BackgroundImageFix" />
+          <feFlood floodOpacity="0" result="BackgroundImageFix" />
           <feColorMatrix
             in="SourceAlpha"
             type="matrix"
@@ -131,8 +131,8 @@ export function Logo({ size = 32 }: { size?: number }) {
           gradientUnits="userSpaceOnUse"
           gradientTransform="translate(150 111.5) rotate(-90) scale(116 257)"
         >
-          <stop stop-color="#8D8D8D" />
-          <stop offset="1" stop-color="#2F2F2F" />
+          <stop stopColor="#8D8D8D" />
+          <stop offset="1" stopColor="#2F2F2F" />
         </radialGradient>
         <radialGradient
           id="paint1_radial_22_64"
@@ -142,8 +142,8 @@ export function Logo({ size = 32 }: { size?: number }) {
           gradientUnits="userSpaceOnUse"
           gradientTransform="translate(150 112) rotate(90) scale(188 345)"
         >
-          <stop stop-color="white" />
-          <stop offset="1" stop-color="#D2D2D2" />
+          <stop stopColor="white" />
+          <stop offset="1" stopColor="#D2D2D2" />
         </radialGradient>
         <radialGradient
           id="paint2_radial_22_64"
@@ -153,8 +153,8 @@ export function Logo({ size = 32 }: { size?: number }) {
           gradientUnits="userSpaceOnUse"
           gradientTransform="translate(150 112) rotate(90) scale(188 345)"
         >
-          <stop stop-color="white" />
-          <stop offset="1" stop-color="#D2D2D2" />
+          <stop stopColor="white" />
+          <stop offset="1" stopColor="#D2D2D2" />
         </radialGradient>
         <clipPath id="clip0_22_64">
           <rect width="300" height="300" fill="white" />
