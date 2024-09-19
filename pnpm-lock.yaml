@@ -100,6 +100,9 @@ importers:
       '@types/mdx':
         specifier: ^2.0.13
         version: 2.0.13
+      '@types/unist':
+        specifier: ^3.0.3
+        version: 3.0.3
       '@vercel/analytics':
         specifier: ^1.0.1
         version: 1.1.3
