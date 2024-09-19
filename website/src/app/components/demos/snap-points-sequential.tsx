@@ -10,7 +10,7 @@ export default function VaulDrawer() {
   const [snap, setSnap] = useState<number | string | null>(snapPoints[0]);
 
   return (
-    <Drawer.Root snapPoints={snapPoints} activeSnapPoint={snap} setActiveSnapPoint={setSnap}>
+    <Drawer.Root snapPoints={snapPoints} activeSnapPoint={snap} setActiveSnapPoint={setSnap} snapToSequentialPoint>
       <Drawer.Trigger className="relative flex h-10 flex-shrink-0 items-center justify-center gap-2 overflow-hidden rounded-full bg-white px-4 text-sm font-medium shadow-sm transition-all hover:bg-[#FAFAFA] dark:bg-[#161615] dark:hover:bg-[#1A1A19]">
         Open Drawer
       </Drawer.Trigger>

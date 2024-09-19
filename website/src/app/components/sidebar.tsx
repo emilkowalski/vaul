@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 export function Sidebar() {
   return (
-    <nav className="px-4 py-5 dotted dotted-right bg-subtle sticky top-0 h-screen">
+    <nav className="px-4 py-5 dotted dotted-right bg-subtle sticky top-0 h-screen hidden md:block">
       <div className="flex gap-1 items-baseline dotted-bottom pb-6">
         <Link href="/" className="flex items-center gap-2">
           <span className="font-semibold inline-block">Vaul</span>

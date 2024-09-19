@@ -867,7 +867,7 @@ export const Handle = React.forwardRef<HTMLDivElement, HandleProps>(function (
     }
 
     const isLastSnapPoint = activeSnapPoint === snapPoints[snapPoints.length - 1];
-	
+
     if (isLastSnapPoint && dismissible) {
       closeDrawer();
       return;

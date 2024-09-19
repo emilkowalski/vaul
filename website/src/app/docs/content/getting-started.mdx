@@ -8,12 +8,20 @@ description: "Snap Points are a way to define a set of points that the drawer ca
 </Preview>
 
 
-## Configuration
+## Examples
 
-To enable snap points you need to pass a `snapPoints` prop which is array of points that the drawer can snap to. Each point can be a pixel value or a fraction. For example `240px` will show 240 pixels of the drawer, while `50%` will show half of the drawer.
+### Interact with background
 
-```jsx
-<Drawer.Root snapPoints={["120px", "240px", 1]}>
-	// ...
-</Drawer.Root>
-```
+Combine `modal={false}` with snap points to be able to interact with the background while the drawer is open.
+
+<Preview inline file="snap-points-no-modal">
+  <SnapPointsNoModal />
+</Preview>
+
+### Snap to sequential points
+
+Disable velocity-based snapping by using `snapToSequentialPoint` prop. This means that a snap point won't be skipped even if the velocity is high enough. Useful if each snap point in a drawer is equally important.
+
+<Preview inline file="snap-points-sequential">
+  <SnapPointsSequential />
+</Preview>

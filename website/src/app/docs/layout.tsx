@@ -14,11 +14,11 @@ const commitMono = localFont({
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <div className={clsx('bg-main grid grid-cols-[220px,1fr] min-h-[300vh]', inter.className, commitMono.variable)}>
+    <div className={clsx('bg-main md:grid grid-cols-[220px,1fr] min-h-[300vh]', inter.className, commitMono.variable)}>
       <Sidebar />
       <div className="flex pt-16 px-8">
         <main className="max-w-[672px] w-full mx-auto px-4">{children}</main>
-        <aside className="w-[220px]">
+        <aside className="w-[220px] hidden md:block">
           <span className="text-[13px] text-gray-700 flex items-center gap-2">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none">
               <path
