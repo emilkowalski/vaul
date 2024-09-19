@@ -4,6 +4,7 @@ import Link from 'next/link';
 import React from 'react';
 import { usePathname } from 'next/navigation';
 import { useTheme } from 'next-themes';
+import clsx from 'clsx';
 
 export function Sidebar() {
   const pathname = usePathname();
@@ -12,9 +13,9 @@ export function Sidebar() {
     <nav className="px-4 pt-5 pb-4 dotted dotted-right bg-subtle sticky top-0 h-screen hidden md:flex flex-col">
       <div className="flex gap-1 items-baseline dotted-bottom pb-6">
         <Link href="/" className="flex items-center gap-2">
-          <span className="font-medium inline-block">Vaul</span>
+          <span className="font-medium inline-block text-primary">Vaul</span>
         </Link>
-        <span className="text-xs text-gray-600 mt-0.5">
+        <span className="text-xs text-secondary mt-0.5">
           by <Link href="/">Emil Kowalski</Link>
         </span>
       </div>
@@ -144,16 +145,20 @@ const THEMES = [
 
 function ThemeSwitcher() {
   const { theme: nextTheme, setTheme } = useTheme();
+  const [mounted, setMounted] = React.useState(false);
+
+  React.useEffect(() => setMounted(true), []);
 
   return (
     <fieldset className="flex p-0.5 rounded-lg border-solid-border border bg-main w-fit gap-1 items-center">
       <legend className="sr-only">Select a display theme:</legend>
       {THEMES.map((theme) => (
         <span
-          suppressHydrationWarning
-          data-active={theme.value === nextTheme}
           key={theme.value}
-          className="w-[20px] h-[18px] grid place-items-center text-tertiary hover:text-primary cursor-pointer data-[active=true]:text-primary data-[active=true]:bg-el-hover-bg rounded-[6px]"
+          className={clsx(
+            'w-[20px] h-[18px] grid place-items-center text-tertiary hover:text-primary cursor-pointer rounded-[6px]',
+            theme.value === nextTheme && mounted ? 'text-primary bg-el-hover-bg' : 'text-tertiary',
+          )}
         >
           <input
             aria-label={theme.value}

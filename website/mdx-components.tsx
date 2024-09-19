@@ -27,7 +27,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
         {...props}
       />
     ),
-    p: (props: React.HTMLProps<HTMLParagraphElement>) => <p className="text-[15px] text-[#505058]" {...props} />,
+    p: (props: React.HTMLProps<HTMLParagraphElement>) => <p className="text-[15px] text-secondary" {...props} />,
     pre: (props: React.HTMLProps<HTMLPreElement>) => <pre className="shadow-sm p-4 rounded-lg my-6" {...props} />,
     Preview,
     SnapPoints,
