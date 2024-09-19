@@ -112,6 +112,11 @@ a {
   background-repeat: repeat-y;
 }
 
+.dotted-left {
+  background-position: left;
+  background-repeat: repeat-y;
+}
+
 .dotted-bottom {
   background-image: repeating-linear-gradient(
     90deg,

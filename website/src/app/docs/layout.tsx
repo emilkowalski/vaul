@@ -15,15 +15,10 @@ const commitMono = localFont({
 });
 
 export default function Layout({ children }: { children: React.ReactNode }) {
-  console.log(children);
-
   return (
     <div className={clsx('bg-main md:grid grid-cols-[220px,1fr] min-h-[300vh]', inter.className, commitMono.variable)}>
       <Sidebar />
-      <div className="flex pt-16 px-8">
-        <div className="max-w-[672px] w-full mx-auto px-4">{children}</div>
-        <OnThisPage />
-      </div>
+      {children}
     </div>
   );
 }
