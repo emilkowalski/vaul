@@ -1,6 +1,10 @@
 import SnapPoints from '@/app/components/demos/snap-points';
 import SnapPointsNoModal from '@/app/components/demos/snap-points-no-modal';
 import SnapPointsSequential from '@/app/components/demos/snap-points-sequential';
+import NestedDrawers from '@/app/components/demos/nested-drawers';
+import DefaultDrawer from '@/app/components/demos/default-drawer';
+import WithScaledBackground from '@/app/components/demos/with-scaled-background';
+import SideDrawer from '@/app/components/demos/side-drawer';
 import { Preview } from '@/app/components/preview/preview';
 import type { MDXComponents } from 'mdx/types';
 
@@ -29,6 +33,10 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     SnapPoints,
     SnapPointsNoModal,
     SnapPointsSequential,
+    NestedDrawers,
+    DefaultDrawer,
+    WithScaledBackground,
+    SideDrawer,
     ...components,
   };
 }

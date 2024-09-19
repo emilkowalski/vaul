@@ -263,7 +263,8 @@ export function Root({
 
       // We need to capture last time when drag with scroll was triggered and have a timeout between
       const absDraggedDistance = Math.abs(draggedDistance);
-      const wrapper = document.querySelector('[data-vaul-drawer-wrapper]');
+      const wrapper =
+        document.querySelector('[data-vaul-drawer-wrapper]') || document.querySelector('[vaul-drawer-wrapper]');
 
       // Calculate the percentage dragged, where 1 is the closed position
       let percentageDragged = absDraggedDistance / drawerHeightRef.current;

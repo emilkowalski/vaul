@@ -19,7 +19,7 @@ ${source}
             {TABS.map((tab) => (
               <Tabs.Trigger
                 value={tab}
-                className="capitalize text-xs text-tertiary font-medium data-[state=active]:text-secondary hover:text-secondary relative [&>div]:data-[state=active]:block"
+                className="capitalize text-xs text-secondary font-medium data-[state=active]:text-primary hover:text-primary relative [&>div]:data-[state=active]:block"
                 key={tab}
               >
                 <div aria-hidden className="absolute bottom-[-11px] translate-y-1/2 w-full h-px bg-secondary hidden" />
@@ -29,7 +29,7 @@ ${source}
           </Tabs.List>
           <CopyButton source={source} />
         </div>
-        <div className={clsx('rounded-lg h-[300px]', inline ? '' : 'shadow-sm mt-4')}>
+        <div className={clsx('rounded-lg h-[300px]', inline ? '' : 'shadow-sm mt-4 bg-el-bg')}>
           <Tabs.Content value="preview" className="p-4 h-full">
             <div className="grid place-items-center h-full">{children}</div>
           </Tabs.Content>

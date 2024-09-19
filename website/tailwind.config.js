@@ -30,6 +30,7 @@ module.exports = {
         primary: 'var(--primary)',
         secondary: 'var(--secondary)',
         tertiary: 'var(--tertiary)',
+        disabled: 'var(--disabled)',
       },
     },
     fontFamily: {
