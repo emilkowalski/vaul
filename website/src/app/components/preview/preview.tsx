@@ -13,7 +13,7 @@ ${source}
   return (
     <div>
       <Tabs.Root defaultValue="preview">
-        <div className="px-4 py-3 border-b border-solid-border flex justify-between">
+        <div className="px-4 py-2 border-b border-solid-border flex justify-between">
           <Tabs.List className="space-x-3">
             {TABS.map((tab) => (
               <Tabs.Trigger
@@ -21,7 +21,7 @@ ${source}
                 className="capitalize text-xs text-tertiary font-medium data-[state=active]:text-secondary hover:text-secondary relative [&>div]:data-[state=active]:block"
                 key={tab}
               >
-                <div aria-hidden className="absolute bottom-[-15px] translate-y-1/2 w-full h-px bg-secondary hidden" />
+                <div aria-hidden className="absolute bottom-[-11px] translate-y-1/2 w-full h-px bg-secondary hidden" />
                 {tab}
               </Tabs.Trigger>
             ))}

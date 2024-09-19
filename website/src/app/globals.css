@@ -23,6 +23,20 @@
     0px 8px 16px -4px rgba(0, 0, 0, 0.04), 0px 24px 32px -8px rgba(0, 0, 0, 0.06);
   --ds-focus-color: #0070f3;
   --ds-focus-ring: 0 0 0 2px var(--color-gray-100), 0 0 0 4px var(--ds-focus-color);
+  --main: hsl(0 0 100%);
+  --subtle: hsl(0 0 98%);
+  --el-bg: hsl(0 0 98%);
+  --el-hover-bg: hsl(0 0 94%);
+  --el-active-bg: hsl(0 0 90%);
+  --transparent-border: hsl(0 0 92%);
+  --transparent-border-hover: hsl(0 0 86%);
+  --transparent-border-active: hsl(0 0 82%);
+  --solid-border: hsl(0 0 92%);
+  --solid-border-hover: hsl(0 0 86%);
+  --solid-border-active: hsl(0 0 82%);
+  --primary: hsl(240 6 10%);
+  --secondary: hsl(240 5 34%);
+  --tertiary: hsl(240 5 65%);
 }
 
 body,
@@ -83,4 +97,13 @@ code[data-theme*=' '] span {
     color: var(--shiki-dark);
     background-color: var(--shiki-dark-bg);
   }
+}
+
+p > code {
+  border-radius: 0.375rem;
+  border-width: 1px;
+  border-color: var(--solid-border);
+  background-color: var(--subtle);
+  padding: 2px 3.6px;
+  font-size: 0.8571429em;
 }

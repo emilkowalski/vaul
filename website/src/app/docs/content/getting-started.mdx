@@ -6,3 +6,14 @@ description: "Snap Points are a way to define a set of points that the drawer ca
 <Preview file="snap-points">
   <SnapPoints />
 </Preview>
+
+
+## Configuration
+
+To enable snap points you need to pass a `snapPoints` prop which is array of points that the drawer can snap to. Each point can be a pixel value or a fraction. For example `240px` will show 240 pixels of the drawer, while `50%` will show half of the drawer.
+
+```jsx
+<Drawer.Root snapPoints={["120px", "240px", 1]}>
+	// ...
+</Drawer.Root>
+```
