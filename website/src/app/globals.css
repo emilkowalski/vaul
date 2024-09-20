@@ -143,6 +143,19 @@ a {
   background-position: top;
 }
 
+.dotted-top {
+  background-image: repeating-linear-gradient(
+    90deg,
+    var(--transparent-border) 0px,
+    var(--transparent-border) 1px,
+    transparent 1px,
+    transparent 4px
+  );
+  background-size: 100% 1px;
+  background-repeat: no-repeat;
+  background-position: top;
+}
+
 pre > code {
   font-size: 13px;
 }
@@ -153,7 +166,7 @@ code[data-theme*=' '] span {
   background-color: var(--shiki-light-bg);
 }
 
-@media (prefers-color-scheme: dark) {
+.dark {
   code[data-theme*=' '],
   code[data-theme*=' '] span {
     color: var(--shiki-dark);
@@ -168,4 +181,8 @@ p > code {
   background-color: var(--subtle);
   padding: 2px 3.6px;
   font-size: 0.8571429em;
+}
+
+[data-line] {
+  padding-right: 16px;
 }

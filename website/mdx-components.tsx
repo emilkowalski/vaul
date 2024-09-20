@@ -53,7 +53,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     h3: (props: React.HTMLProps<HTMLHeadingElement>) => (
       <a
         href={`#${kebabCase(String(props.children))}`}
-        className="text-[16px] mt-8 font-semibold mb-3 text-primary inline-block w-fit group relative"
+        className="text-[16px] mt-4 font-semibold mb-3 text-primary inline-block w-fit group relative"
         style={{ letterSpacing: '-0.03em' }}
       >
         <svg

@@ -37,26 +37,28 @@ export function OnThisPage({ headings }: { headings: { id: string; value: string
             </svg>
             On this page
           </span>
-          <ul className="mt-4 dotted-left dotted space-y-1 relative" ref={ref}>
+          <div className="relative">
             <div
               aria-hidden
-              className="w-[3px] h-5 top-[5px] bg-primary absolute left-0 rounded-full translate-y-[-3px] -translate-x-[1px]"
+              className="w-[3px] h-5 bg-primary absolute left-0 rounded-full -translate-x-[1px]"
               style={{ top: style.top, transition: '0.25s ease top' }}
             />
-            {headings.map((heading) => (
-              <li key={heading.id}>
-                <a
-                  href={`#${heading.id}`}
-                  className={clsx('text-[13px] hover:text-primary transition-colors ml-5', {
-                    'text-primary': activeHeading === heading.id,
-                    'text-secondary': activeHeading !== heading.id,
-                  })}
-                >
-                  {heading.value}
-                </a>
-              </li>
-            ))}
-          </ul>
+            <ul className="mt-4 dotted-left dotted space-y-2" ref={ref}>
+              {headings.map((heading) => (
+                <li key={heading.id} className="h-fit">
+                  <a
+                    href={`#${heading.id}`}
+                    className={clsx('text-[13px] hover:text-primary transition-colors ml-5 h-5 flex items-center', {
+                      'text-primary': activeHeading === heading.id,
+                      'text-secondary': activeHeading !== heading.id,
+                    })}
+                  >
+                    {heading.value}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
         </>
       ) : null}
     </aside>

@@ -3,7 +3,7 @@ title: "Default"
 description: "The most basic setup for a drawer."
 ---
 
-<Preview inline file="default-drawer">
+<Preview file="default-drawer">
   <DefaultDrawer />
 </Preview>
 
@@ -23,4 +23,12 @@ Set the `direction` prop to `"right"` or `"left"` to change the position of the 
 
 <Preview inline file="side-drawer">
   <SideDrawer />
+</Preview>
+
+### Controlled
+
+You can use the `open` prop to programmatically open or close the drawer. You can also pass the `onOpenChange` prop which will be called when the open state of the dialog changes, it's useful if you want to react to esc/outside clicks when controlled.
+
+<Preview inline file="with-scaled-background">
+  <WithScaledBackground />
 </Preview>

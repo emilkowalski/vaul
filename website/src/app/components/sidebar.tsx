@@ -43,7 +43,7 @@ export function Sidebar() {
           </kbd>
         </button>
       </div>
-      <div className="grow overflow-y-auto pt-5 px-4">
+      <div className="grow overflow-y-auto pt-5 px-5">
         {NAV_ITEMS.map((section, index) => (
           <div key={section.name}>
             <span className="text-xs text-tertiary font-medium inline-block mb-2">{section.name}</span>
@@ -53,7 +53,7 @@ export function Sidebar() {
                   <Link
                     data-active={pathname === item.href}
                     href={item.href}
-                    className="h-7 flex items-center font-medium text-[13px] text-secondary px-2 -ml-2 hover:bg-el-hover-bg rounded-md data-[active=true]:bg-el-hover-bg data-[active=true]:text-primary"
+                    className="h-7 flex items-center font-medium text-[13px] text-secondary px-2 -ml-2 hover:bg-el-hover-bg rounded-md data-[active=true]:bg-el-hover-bg data-[active=true]:text-primary w-[calc(100%+15px)]"
                   >
                     {item.name}
                   </Link>
@@ -67,10 +67,14 @@ export function Sidebar() {
         ))}
       </div>
       <div className="mt-auto px-4">
-        <div className="p-3 rounded-lg shadow-sm bg-main mb-5">
+        <a
+          href="https://animations.dev/"
+          target="_blank"
+          className="p-3 rounded-lg shadow-sm bg-main mb-5 hover:bg-el-bg flex flex-col transition-colors"
+        >
           <h3 className="text-[13px] mb-1 font-medium text-primary">Animations on the Web</h3>
           <p className="text-secondary text-[13px]">Learn how to build components like this one.</p>
-        </div>
+        </a>
         <div className="flex justify-between items-center pt-5 dotted-top">
           <ThemeSwitcher />
 

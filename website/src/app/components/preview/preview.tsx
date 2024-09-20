@@ -12,7 +12,7 @@ ${source}
   \`\`\``;
 
   return (
-    <div className={clsx(inline ? 'shadow-sm rounded-lg overflow-hidden my-6 mb-12' : '')}>
+    <div className={clsx(inline ? 'shadow-sm rounded-lg overflow-hidden my-6 mb-12' : 'mb-12')}>
       <Tabs.Root defaultValue="preview">
         <div className={clsx('px-4 py-2 border-b border-solid-border flex justify-between', inline ? 'bg-subtle' : '')}>
           <Tabs.List className="space-x-3">
