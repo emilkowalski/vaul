@@ -237,6 +237,10 @@ const NAV_ITEMS = [
         href: '/docs/nested-drawers',
       },
       {
+        name: 'Inputs',
+        href: '/docs/inputs',
+      },
+      {
         name: 'Non-dismissible',
         href: '/docs/non-dismissible',
       },

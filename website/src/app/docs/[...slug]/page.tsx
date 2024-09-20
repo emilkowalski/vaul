@@ -85,15 +85,13 @@ export default async function Page({ params }: Params) {
   const pageDescription = frontmatter.description as string;
 
   return (
-    <div className="flex pt-16 px-8">
+    <div className="flex py-16 px-8">
       <div className="max-w-[672px] w-full mx-auto px-4">
         <h1 className="text-[32px] font-semibold mb-6 text-primary" style={{ letterSpacing: '-0.03em' }}>
           {pageTitle}
         </h1>
         <p className="text-secondary text-[15px] mb-6">{pageDescription}</p>
-        <div data-main-content className="flex flex-col">
-          {content}
-        </div>
+        <div data-main-content>{content}</div>
       </div>
       <OnThisPage headings={headings} />{' '}
     </div>

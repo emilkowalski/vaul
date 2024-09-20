@@ -16,7 +16,7 @@ const commitMono = localFont({
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <div className={clsx('bg-main md:grid grid-cols-[220px,1fr] min-h-[300vh]', inter.className, commitMono.variable)}>
+    <div className={clsx('bg-main md:grid grid-cols-[220px,1fr]', inter.className, commitMono.variable)}>
       <Sidebar />
       {children}
     </div>

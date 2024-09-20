@@ -21,7 +21,7 @@
     "@vercel/analytics": "^1.0.1",
     "clsx": "^2.0.0",
     "copy-to-clipboard": "^3.3.3",
-    "framer-motion": "^11.5.4",
+    "lodash.debounce": "^4.0.8",
     "next": "13.5.1",
     "next-mdx-remote": "^5.0.0",
     "next-themes": "^0.3.0",
