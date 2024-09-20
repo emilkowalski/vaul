@@ -134,7 +134,7 @@ export const useActiveScrollElement = (
       }
 
       // If we're at the bottom of the page, set the last item as active
-      if (window.scrollY >= maxScroll) {
+      if (Math.round(window.scrollY) >= Math.round(maxScroll)) {
         updateActive(ids[ids.length - 1]);
       }
     }

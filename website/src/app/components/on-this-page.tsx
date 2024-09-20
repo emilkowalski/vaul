@@ -40,7 +40,7 @@ export function OnThisPage({ headings }: { headings: { id: string; value: string
           <ul className="mt-4 dotted-left dotted space-y-1 relative" ref={ref}>
             <div
               aria-hidden
-              className="w-[3px] h-5 bg-primary absolute left-0 rounded-full translate-y-[-3px] -translate-x-[1px]"
+              className="w-[3px] h-5 top-[5px] bg-primary absolute left-0 rounded-full translate-y-[-3px] -translate-x-[1px]"
               style={{ top: style.top, transition: '0.25s ease top' }}
             />
             {headings.map((heading) => (
