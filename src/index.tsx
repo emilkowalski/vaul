@@ -785,6 +785,7 @@ export const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
         pointerStartRef.current = { x: event.pageX, y: event.pageY };
         onPress(event);
       }}
+      onOpenAutoFocus={(e) => e.preventDefault()}
       onPointerDownOutside={(e) => {
         onPointerDownOutside?.(e);
 
