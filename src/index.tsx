@@ -57,6 +57,7 @@ export type DialogProps = {
   preventScrollRestoration?: boolean;
   disablePreventScroll?: boolean;
   repositionInputs?: boolean;
+  container?: HTMLElement | null;
 } & (WithFadeFromProps | WithoutFadeFromProps);
 
 export function Root({
@@ -84,6 +85,7 @@ export function Root({
   preventScrollRestoration = true,
   disablePreventScroll = false,
   repositionInputs = true,
+  container,
 }: DialogProps) {
   const [isOpen = false, setIsOpen] = React.useState<boolean>(false);
   const [hasBeenOpened, setHasBeenOpened] = React.useState<boolean>(false);
@@ -129,6 +131,7 @@ export function Root({
     overlayRef,
     onSnapPointChange,
     direction,
+    container,
   });
 
   usePreventScroll({
@@ -197,11 +200,7 @@ export function Root({
     }
 
     // Disallow dragging if drawer was scrolled within `scrollLockTimeout`
-    if (
-      lastTimeDragPrevented.current &&
-      date.getTime() - lastTimeDragPrevented.current.getTime() < scrollLockTimeout &&
-      swipeAmount === 0
-    ) {
+    if (date.getTime() - lastTimeDragPrevented.current?.getTime() < scrollLockTimeout && swipeAmount === 0) {
       lastTimeDragPrevented.current = date;
       return false;
     }
@@ -353,7 +352,6 @@ export function Root({
       restorePositionSetting();
     };
   }, []);
-  console.log('kurwo');
 
   React.useEffect(() => {
     function onVisualViewportChange() {
@@ -769,6 +767,7 @@ export function Root({
           modal,
           snapPointsOffset,
           direction,
+          container,
         }}
       >
         {children}
@@ -931,6 +930,7 @@ export const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
     setVisible,
     handleOnly,
     direction,
+    container,
   } = useDrawerContext();
   const composedRef = useComposedRefs(ref, drawerRef);
   const pointerStartRef = React.useRef<{ x: number; y: number } | null>(null);
@@ -970,6 +970,7 @@ export const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
       data-vaul-drawer-direction={direction}
       data-vaul-drawer=""
       data-vaul-drawer-visible={visible ? 'true' : 'false'}
+      data-vaul-custom-container={container ? 'true' : 'false'}
       {...rest}
       ref={composedRef}
       style={
@@ -980,14 +981,6 @@ export const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
             } as React.CSSProperties)
           : style
       }
-      onOpenAutoFocus={(e) => {
-        if (onOpenAutoFocus) {
-          onOpenAutoFocus(e);
-        } else {
-          e.preventDefault();
-          drawerRef.current?.focus();
-        }
-      }}
       onPointerDown={(event) => {
         if (handleOnly) return;
         rest.onPointerDown?.(event);
@@ -1080,6 +1073,16 @@ export function NestedRoot({ onDrag, onOpenChange, ...rest }: DialogProps) {
   );
 }
 
+type PortalProps = React.ComponentPropsWithoutRef<typeof DialogPrimitive.Portal>;
+
+export function Portal(props: PortalProps) {
+  const context = useDrawerContext();
+  const { container = context.container, ...portalProps } = props;
+  return <DialogPrimitive.Portal container={container} {...portalProps} />;
+}
+
+Portal.displayName = 'Drawer.Portal';
+
 export const Drawer = {
   Root,
   NestedRoot,
@@ -1087,7 +1090,7 @@ export const Drawer = {
   Handle,
   Overlay,
   Trigger: DialogPrimitive.Trigger,
-  Portal: DialogPrimitive.Portal,
+  Portal,
   Close: DialogPrimitive.Close,
   Title: DialogPrimitive.Title,
   Description: DialogPrimitive.Description,

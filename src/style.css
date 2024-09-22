@@ -60,7 +60,7 @@
   opacity: 1;
 }
 
-[data-vaul-drawer]::after {
+[data-vaul-drawer]:not([data-vaul-custom-container='true'])::after {
   content: '';
   position: absolute;
   background: inherit;
@@ -131,7 +131,9 @@
   touch-action: inherit;
 }
 
-[data-vaul-overlay][data-vaul-snap-points='true']:not([data-vaul-snap-points-overlay='true']):not([data-state='closed']) {
+[data-vaul-overlay][data-vaul-snap-points='true']:not([data-vaul-snap-points-overlay='true']):not(
+    [data-state='closed']
+  ) {
   opacity: 0;
 }
 
