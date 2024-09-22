@@ -74,6 +74,7 @@
   animation-name: fadeIn;
 }
 [data-vaul-overlay][data-state='closed'] {
+  pointer-events: none !important;
   animation-name: fadeOut;
 }
 

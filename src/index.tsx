@@ -22,6 +22,7 @@ import { DrawerDirection } from './types';
 import { useControllableState } from './use-controllable-state';
 import { useScaleBackground } from './use-scale-background';
 import { usePositionFixed } from './use-position-fixed';
+import { Presence } from './Presence';
 
 export interface WithFadeFromProps {
   snapPoints: (number | string)[];
@@ -110,6 +111,10 @@ export function Root({
         window.requestAnimationFrame(() => {
           document.body.style.pointerEvents = 'auto';
         });
+      }
+
+      if (!o) {
+        document.body.style.pointerEvents = 'auto';
       }
     },
   });
@@ -685,17 +690,19 @@ export const Overlay = React.forwardRef<HTMLDivElement, React.ComponentPropsWith
     const { overlayRef, snapPoints, onRelease, shouldFade, isOpen, modal } = useDrawerContext();
     const composedRef = useComposedRefs(ref, overlayRef);
     const hasSnapPoints = snapPoints && snapPoints.length > 0;
-
     return (
-      <DialogPrimitive.Overlay
-        onMouseUp={onRelease}
-        ref={composedRef}
-        data-vaul-overlay=""
-        data-vaul-snap-points={isOpen && hasSnapPoints ? 'true' : 'false'}
-        data-vaul-snap-points-overlay={isOpen && shouldFade ? 'true' : 'false'}
-        style={{ visibility: modal ? 'visible' : 'hidden' }}
-        {...rest}
-      />
+      <Presence present={isOpen}>
+        <div
+          onMouseUp={onRelease}
+          ref={composedRef}
+          data-vaul-overlay=""
+          data-vaul-snap-points={isOpen && hasSnapPoints ? 'true' : 'false'}
+          data-vaul-snap-points-overlay={isOpen && shouldFade ? 'true' : 'false'}
+          data-state={isOpen ? 'open' : 'closed'}
+          style={{ visibility: modal ? 'visible' : 'hidden' }}
+          {...rest}
+        />
+      </Presence>
     );
   },
 );
