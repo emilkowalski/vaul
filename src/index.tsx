@@ -21,6 +21,7 @@ import {
 import { DrawerDirection } from './types';
 import { useControllableState } from './use-controllable-state';
 import { useScaleBackground } from './use-scale-background';
+import { usePositionFixed } from './use-position-fixed';
 
 export interface WithFadeFromProps {
   snapPoints: (number | string)[];
@@ -58,6 +59,7 @@ export type DialogProps = {
   snapToSequentialPoint?: boolean;
   container?: HTMLElement | null;
   onAnimationEnd?: (open: boolean) => void;
+  preventScrollRestoration?: boolean;
 } & (WithFadeFromProps | WithoutFadeFromProps);
 
 export function Root({
@@ -79,11 +81,13 @@ export function Root({
   fixed,
   modal = true,
   onClose,
+  nested,
   noBodyStyles,
   direction = 'bottom',
   defaultOpen = false,
   disablePreventScroll = true,
   snapToSequentialPoint = false,
+  preventScrollRestoration = false,
   repositionInputs = true,
   onAnimationEnd,
   container,
@@ -94,6 +98,10 @@ export function Root({
     onChange: (o: boolean) => {
       onOpenChange?.(o);
 
+      if (!o) {
+        restorePositionSetting();
+      }
+	  
       setTimeout(() => {
         onAnimationEnd?.(o);
       }, TRANSITIONS.DURATION * 1000);
@@ -152,6 +160,15 @@ export function Root({
   usePreventScroll({
     isDisabled:
       !isOpen || isDragging || !modal || justReleased || !hasBeenOpened || !repositionInputs || !disablePreventScroll,
+  });
+
+  const { restorePositionSetting } = usePositionFixed({
+    isOpen,
+    modal,
+    nested,
+    hasBeenOpened,
+    preventScrollRestoration,
+    noBodyStyles,
   });
 
   function getScale() {
@@ -867,7 +884,7 @@ export const Handle = React.forwardRef<HTMLDivElement, HandleProps>(function (
     }
 
     const isLastSnapPoint = activeSnapPoint === snapPoints[snapPoints.length - 1];
-	
+
     if (isLastSnapPoint && dismissible) {
       closeDrawer();
       return;

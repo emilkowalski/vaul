@@ -5,12 +5,11 @@ import { Drawer } from 'vaul';
 
 export default function Page() {
   const [open, setOpen] = useState(false);
-  const [parent, setParent] = useState<HTMLDivElement | null>(null);
 
   return (
     <div className="w-screen h-screen bg-white p-8 flex justify-center items-center" data-vaul-drawer-wrapper="">
-      <div className="w-[50vw] h-[50vh] relative" ref={setParent} />
-      <Drawer.Root open={open} onOpenChange={setOpen} container={parent}>
+      <div className="w-[50vw] h-[50vh] relative" />
+      <Drawer.Root open={open} onOpenChange={setOpen} shouldScaleBackground>
         <Drawer.Trigger asChild>
           <button data-testid="trigger" className="text-2xl">
             Open Drawer
