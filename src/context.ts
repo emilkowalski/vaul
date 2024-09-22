@@ -4,6 +4,7 @@ import { DrawerDirection } from './types';
 interface DrawerContextValue {
   drawerRef: React.RefObject<HTMLDivElement>;
   overlayRef: React.RefObject<HTMLDivElement>;
+  scaleBackground: (open: boolean) => void;
   onPress: (event: React.PointerEvent<HTMLDivElement>) => void;
   onRelease: (event: React.PointerEvent<HTMLDivElement>) => void;
   onDrag: (event: React.PointerEvent<HTMLDivElement>) => void;
@@ -11,6 +12,7 @@ interface DrawerContextValue {
   onNestedOpenChange: (o: boolean) => void;
   onNestedRelease: (event: React.PointerEvent<HTMLDivElement>, open: boolean) => void;
   dismissible: boolean;
+  handleOnly: boolean;
   isOpen: boolean;
   isDragging: boolean;
   keyboardIsOpen: React.MutableRefObject<boolean>;
@@ -20,20 +22,18 @@ interface DrawerContextValue {
   shouldFade: boolean;
   activeSnapPoint?: number | string | null;
   setActiveSnapPoint: (o: number | string | null) => void;
+  visible: boolean;
   closeDrawer: () => void;
+  setVisible: (o: boolean) => void;
   openProp?: boolean;
   onOpenChange?: (o: boolean) => void;
   direction?: DrawerDirection;
-  shouldScaleBackground: boolean;
-  setBackgroundColorOnScale: boolean;
-  noBodyStyles: boolean;
-  handleOnly?: boolean;
-  container?: HTMLElement | null;
 }
 
 export const DrawerContext = React.createContext<DrawerContextValue>({
   drawerRef: { current: null },
   overlayRef: { current: null },
+  scaleBackground: () => {},
   onPress: () => {},
   onRelease: () => {},
   onDrag: () => {},
@@ -42,23 +42,21 @@ export const DrawerContext = React.createContext<DrawerContextValue>({
   onNestedRelease: () => {},
   openProp: undefined,
   dismissible: false,
+  handleOnly: false,
   isOpen: false,
   isDragging: false,
   keyboardIsOpen: { current: false },
   snapPointsOffset: null,
   snapPoints: null,
-  handleOnly: false,
   modal: false,
   shouldFade: false,
   activeSnapPoint: null,
   onOpenChange: () => {},
   setActiveSnapPoint: () => {},
+  visible: false,
   closeDrawer: () => {},
+  setVisible: () => {},
   direction: 'bottom',
-  shouldScaleBackground: false,
-  setBackgroundColorOnScale: true,
-  noBodyStyles: false,
-  container: null,
 });
 
 export const useDrawerContext = () => {

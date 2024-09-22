@@ -2,91 +2,65 @@
   touch-action: none;
   will-change: transform;
   transition: transform 0.5s cubic-bezier(0.32, 0.72, 0, 1);
-  animation-duration: 0.5s;
-  animation-timing-function: cubic-bezier(0.32, 0.72, 0, 1);
 }
 
-[data-vaul-drawer][data-vaul-snap-points='false'][data-vaul-drawer-direction='bottom'][data-state='open'] {
-  animation-name: slideFromBottom;
-}
-[data-vaul-drawer][data-vaul-snap-points='false'][data-vaul-drawer-direction='bottom'][data-state='closed'] {
-  animation-name: slideToBottom;
-}
-
-[data-vaul-drawer][data-vaul-snap-points='false'][data-vaul-drawer-direction='top'][data-state='open'] {
-  animation-name: slideFromTop;
-}
-[data-vaul-drawer][data-vaul-snap-points='false'][data-vaul-drawer-direction='top'][data-state='closed'] {
-  animation-name: slideToTop;
-}
-
-[data-vaul-drawer][data-vaul-snap-points='false'][data-vaul-drawer-direction='left'][data-state='open'] {
-  animation-name: slideFromLeft;
-}
-[data-vaul-drawer][data-vaul-snap-points='false'][data-vaul-drawer-direction='left'][data-state='closed'] {
-  animation-name: slideToLeft;
-}
-
-[data-vaul-drawer][data-vaul-snap-points='false'][data-vaul-drawer-direction='right'][data-state='open'] {
-  animation-name: slideFromRight;
-}
-[data-vaul-drawer][data-vaul-snap-points='false'][data-vaul-drawer-direction='right'][data-state='closed'] {
-  animation-name: slideToRight;
-}
-
-[data-vaul-drawer][data-vaul-snap-points='true'][data-vaul-drawer-direction='bottom'] {
+[data-vaul-drawer][data-vaul-drawer-direction='bottom'] {
   transform: translate3d(0, 100%, 0);
 }
 
-[data-vaul-drawer][data-vaul-snap-points='true'][data-vaul-drawer-direction='top'] {
+[data-vaul-drawer][data-vaul-drawer-direction='top'] {
   transform: translate3d(0, -100%, 0);
 }
 
-[data-vaul-drawer][data-vaul-snap-points='true'][data-vaul-drawer-direction='left'] {
+[data-vaul-drawer][data-vaul-drawer-direction='left'] {
   transform: translate3d(-100%, 0, 0);
 }
 
-[data-vaul-drawer][data-vaul-snap-points='true'][data-vaul-drawer-direction='right'] {
+[data-vaul-drawer][data-vaul-drawer-direction='right'] {
   transform: translate3d(100%, 0, 0);
 }
 
-[data-vaul-drawer][data-vaul-delayed-snap-points='true'][data-vaul-drawer-direction='top'] {
+.vaul-dragging .vaul-scrollable [data-vaul-drawer-direction='top'] {
+  overflow-y: hidden !important;
+}
+.vaul-dragging .vaul-scrollable [data-vaul-drawer-direction='bottom'] {
+  overflow-y: hidden !important;
+}
+
+.vaul-dragging .vaul-scrollable [data-vaul-drawer-direction='left'] {
+  overflow-x: hidden !important;
+}
+
+.vaul-dragging .vaul-scrollable [data-vaul-drawer-direction='right'] {
+  overflow-x: hidden !important;
+}
+
+[data-vaul-drawer][data-vaul-drawer-visible='true'][data-vaul-drawer-direction='top'] {
   transform: translate3d(0, var(--snap-point-height, 0), 0);
 }
 
-[data-vaul-drawer][data-vaul-delayed-snap-points='true'][data-vaul-drawer-direction='bottom'] {
+[data-vaul-drawer][data-vaul-drawer-visible='true'][data-vaul-drawer-direction='bottom'] {
   transform: translate3d(0, var(--snap-point-height, 0), 0);
 }
 
-[data-vaul-drawer][data-vaul-delayed-snap-points='true'][data-vaul-drawer-direction='left'] {
+[data-vaul-drawer][data-vaul-drawer-visible='true'][data-vaul-drawer-direction='left'] {
   transform: translate3d(var(--snap-point-height, 0), 0, 0);
 }
 
-[data-vaul-drawer][data-vaul-delayed-snap-points='true'][data-vaul-drawer-direction='right'] {
+[data-vaul-drawer][data-vaul-drawer-visible='true'][data-vaul-drawer-direction='right'] {
   transform: translate3d(var(--snap-point-height, 0), 0, 0);
 }
 
-[data-vaul-overlay][data-vaul-snap-points='false'] {
-  animation-duration: 0.5s;
-  animation-timing-function: cubic-bezier(0.32, 0.72, 0, 1);
-}
-[data-vaul-overlay][data-vaul-snap-points='false'][data-state='open'] {
-  animation-name: fadeIn;
-}
-[data-vaul-overlay][data-state='closed'] {
-  animation-name: fadeOut;
-}
-
-[data-vaul-overlay][data-vaul-snap-points='true'] {
+[data-vaul-overlay] {
   opacity: 0;
   transition: opacity 0.5s cubic-bezier(0.32, 0.72, 0, 1);
 }
 
-[data-vaul-overlay][data-vaul-snap-points='true'] {
+[data-vaul-overlay][data-vaul-drawer-visible='true'] {
   opacity: 1;
 }
 
-[data-vaul-drawer]:not([data-vaul-custom-container='true'])::after {
+[data-vaul-drawer]::after {
   content: '';
   position: absolute;
   background: inherit;
@@ -125,32 +99,26 @@
   width: 200%;
 }
 
-[data-vaul-overlay][data-vaul-snap-points='true']:not([data-vaul-snap-points-overlay='true']):not(
-    [data-state='closed']
-  ) {
-  opacity: 0;
-}
-
-[data-vaul-overlay][data-vaul-snap-points-overlay='true'] {
-  opacity: 1;
-}
-
 [data-vaul-handle] {
   display: block;
   position: relative;
-  opacity: 0.7;
-  background: #e2e2e4;
+  opacity: 0.8;
   margin-left: auto;
   margin-right: auto;
   height: 5px;
-  width: 32px;
+  width: 56px;
   border-radius: 1rem;
   touch-action: pan-y;
+  cursor: grab;
 }
 
 [data-vaul-handle]:hover,
 [data-vaul-handle]:active {
   opacity: 1;
+}
+
+[data-vaul-handle]:active {
+  cursor: grabbing;
 }
 
 [data-vaul-handle-hitarea] {
@@ -163,17 +131,12 @@
   touch-action: inherit;
 }
 
-@media (hover: hover) and (pointer: fine) {
-  [data-vaul-drawer] {
-    user-select: none;
-  }
+[data-vaul-overlay][data-vaul-snap-points='true']:not([data-vaul-snap-points-overlay='true']):not([data-state='closed']) {
+  opacity: 0;
 }
 
-@media (pointer: fine) {
-  [data-vaul-handle-hitarea]: {
-    width: 100%;
-    height: 100%;
-  }
+[data-vaul-overlay][data-vaul-snap-points-overlay='true']:not([data-vaul-drawer-visible='false']) {
+  opacity: 1;
 }
 
 /* This will allow us to not animate via animation, but still benefit from delaying unmount via Radix. */
@@ -184,77 +147,15 @@
   }
 }
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
+@media (hover: hover) and (pointer: fine) {
+  [data-vaul-drawer] {
+    user-select: none;
   }
 }
 
-@keyframes fadeOut {
-  to {
-    opacity: 0;
-  }
-}
-
-@keyframes slideFromBottom {
-  from {
-    transform: translate3d(0, 100%, 0);
-  }
-  to {
-    transform: translate3d(0, 0, 0);
-  }
-}
-
-@keyframes slideToBottom {
-  to {
-    transform: translate3d(0, 100%, 0);
-  }
-}
-
-@keyframes slideFromTop {
-  from {
-    transform: translate3d(0, -100%, 0);
-  }
-  to {
-    transform: translate3d(0, 0, 0);
-  }
-}
-
-@keyframes slideToTop {
-  to {
-    transform: translate3d(0, -100%, 0);
-  }
-}
-
-@keyframes slideFromLeft {
-  from {
-    transform: translate3d(-100%, 0, 0);
-  }
-  to {
-    transform: translate3d(0, 0, 0);
-  }
-}
-
-@keyframes slideToLeft {
-  to {
-    transform: translate3d(-100%, 0, 0);
-  }
-}
-
-@keyframes slideFromRight {
-  from {
-    transform: translate3d(100%, 0, 0);
-  }
-  to {
-    transform: translate3d(0, 0, 0);
-  }
-}
-
-@keyframes slideToRight {
-  to {
-    transform: translate3d(100%, 0, 0);
+@media (pointer: fine) {
+  [data-vaul-handle-hitarea]: {
+    width: 100%;
+    height: 100%;
   }
 }
