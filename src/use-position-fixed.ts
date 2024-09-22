@@ -1,4 +1,5 @@
 import React from 'react';
+import { isSafari } from './use-prevent-scroll';
 
 let previousBodyPosition: Record<string, string> | null = null;
 
@@ -30,6 +31,9 @@ export function usePositionFixed({
   const scrollPos = React.useRef(0);
 
   const setPositionFixed = React.useCallback(() => {
+    // All browsers on iOS will return true here.
+    if (!isSafari()) return;
+
     // If previousBodyPosition is already set, don't set it again.
     if (previousBodyPosition === null && isOpen && !noBodyStyles) {
       previousBodyPosition = {
@@ -67,6 +71,9 @@ export function usePositionFixed({
   }, [isOpen]);
 
   const restorePositionSetting = React.useCallback(() => {
+    // All browsers on iOS will return true here.
+    if (!isSafari()) return;
+	
     if (previousBodyPosition !== null && !noBodyStyles) {
       // Convert the position from "px" to Int
       const y = -parseInt(document.body.style.top, 10);
