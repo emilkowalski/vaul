@@ -8,21 +8,18 @@ import { usePreventScroll, isInput, isIOS, useIsomorphicLayoutEffect } from './u
 import { useComposedRefs } from './use-composed-refs';
 import { useSnapPoints } from './use-snap-points';
 import { set, reset, getTranslate, dampenValue, isVertical } from './helpers';
-import { TRANSITIONS, VELOCITY_THRESHOLD } from './constants';
+import {
+  BORDER_RADIUS,
+  CLOSE_THRESHOLD,
+  DRAG_CLASS,
+  NESTED_DISPLACEMENT,
+  SCROLL_LOCK_TIMEOUT,
+  TRANSITIONS,
+  VELOCITY_THRESHOLD,
+  WINDOW_TOP_OFFSET,
+} from './constants';
 import { DrawerDirection } from './types';
 import { usePositionFixed } from './use-position-fixed';
-
-const CLOSE_THRESHOLD = 0.25;
-
-const SCROLL_LOCK_TIMEOUT = 100;
-
-const BORDER_RADIUS = 8;
-
-const NESTED_DISPLACEMENT = 16;
-
-const WINDOW_TOP_OFFSET = 26;
-
-const DRAG_CLASS = 'vaul-dragging';
 
 export interface WithFadeFromProps {
   snapPoints: (number | string)[];
@@ -58,6 +55,7 @@ export type DialogProps = {
   disablePreventScroll?: boolean;
   repositionInputs?: boolean;
   container?: HTMLElement | null;
+  snapToSequentialPoint?: boolean;
 } & (WithFadeFromProps | WithoutFadeFromProps);
 
 export function Root({
@@ -85,6 +83,7 @@ export function Root({
   preventScrollRestoration = true,
   disablePreventScroll = false,
   repositionInputs = true,
+  snapToSequentialPoint = false,
   container,
 }: DialogProps) {
   const [isOpen = false, setIsOpen] = React.useState<boolean>(false);
@@ -132,6 +131,7 @@ export function Root({
     onSnapPointChange,
     direction,
     container,
+    snapToSequentialPoint,
   });
 
   usePreventScroll({

@@ -8,13 +8,20 @@ const snapPoints = [0, '148px', '355px', 1];
 
 export default function Page() {
   const [snap, setSnap] = useState<number | string | null>(snapPoints[1]);
+  const [open, setOpen] = useState(true);
 
   const activeSnapPointIndex = snapPoints.indexOf(snap as string);
 
   return (
     <div className="w-screen h-screen bg-white p-8 flex justify-center items-center">
       <div data-testid="active-snap-index">{activeSnapPointIndex}</div>
-      <Drawer.Root open snapPoints={snapPoints} activeSnapPoint={snap} setActiveSnapPoint={setSnap}>
+      <Drawer.Root
+        snapPoints={snapPoints}
+        activeSnapPoint={snap}
+        setActiveSnapPoint={setSnap}
+        open={open}
+        onOpenChange={setOpen}
+      >
         <Drawer.Trigger asChild>
           <button data-testid="trigger">Open Drawer</button>
         </Drawer.Trigger>
