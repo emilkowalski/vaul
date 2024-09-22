@@ -56,6 +56,7 @@ export type DialogProps = {
   direction?: 'top' | 'bottom' | 'left' | 'right';
   preventScrollRestoration?: boolean;
   disablePreventScroll?: boolean;
+  repositionInputs?: boolean;
 } & (WithFadeFromProps | WithoutFadeFromProps);
 
 export function Root({
@@ -82,6 +83,7 @@ export function Root({
   direction = 'bottom',
   preventScrollRestoration = true,
   disablePreventScroll = false,
+  repositionInputs = true,
 }: DialogProps) {
   const [isOpen = false, setIsOpen] = React.useState<boolean>(false);
   const [hasBeenOpened, setHasBeenOpened] = React.useState<boolean>(false);
@@ -130,7 +132,8 @@ export function Root({
   });
 
   usePreventScroll({
-    isDisabled: !isOpen || isDragging || !modal || justReleased || !hasBeenOpened || disablePreventScroll,
+    isDisabled:
+      !isOpen || isDragging || !modal || justReleased || !hasBeenOpened || disablePreventScroll || !repositionInputs,
   });
 
   const { restorePositionSetting } = usePositionFixed({
