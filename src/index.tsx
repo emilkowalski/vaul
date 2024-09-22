@@ -21,6 +21,7 @@ import {
 import { DrawerDirection } from './types';
 import { useControllableState } from './use-controllable-state';
 import { useScaleBackground } from './use-scale-background';
+import { usePositionFixed } from './use-position-fixed';
 
 export interface WithFadeFromProps {
   snapPoints: (number | string)[];
@@ -58,6 +59,7 @@ export type DialogProps = {
   snapToSequentialPoint?: boolean;
   container?: HTMLElement | null;
   onAnimationEnd?: (open: boolean) => void;
+  preventScrollRestoration?: boolean;
 } & (WithFadeFromProps | WithoutFadeFromProps);
 
 export function Root({
@@ -79,11 +81,13 @@ export function Root({
   fixed,
   modal = true,
   onClose,
+  nested,
   noBodyStyles,
   direction = 'bottom',
   defaultOpen = false,
   disablePreventScroll = true,
   snapToSequentialPoint = false,
+  preventScrollRestoration = false,
   repositionInputs = true,
   onAnimationEnd,
   container,
@@ -93,6 +97,10 @@ export function Root({
     prop: openProp,
     onChange: (o: boolean) => {
       onOpenChange?.(o);
+
+      if (!o) {
+        restorePositionSetting();
+      }
 
       setTimeout(() => {
         onAnimationEnd?.(o);
@@ -154,6 +162,15 @@ export function Root({
       !isOpen || isDragging || !modal || justReleased || !hasBeenOpened || !repositionInputs || !disablePreventScroll,
   });
 
+  const { restorePositionSetting } = usePositionFixed({
+    isOpen,
+    modal,
+    nested,
+    hasBeenOpened,
+    preventScrollRestoration,
+    noBodyStyles,
+  });
+
   function getScale() {
     return (window.innerWidth - WINDOW_TOP_OFFSET) / window.innerWidth;
   }
@@ -173,7 +190,7 @@ export function Root({
     // Ensure we maintain correct pointer capture even when going outside of the drawer
     (event.target as HTMLElement).setPointerCapture(event.pointerId);
 
-    pointerStart.current = isVertical(direction) ? event.clientY : event.clientX;
+    pointerStart.current = isVertical(direction) ? event.pageY : event.pageX;
   }
 
   function shouldDrag(el: EventTarget, isDraggingInDirection: boolean) {
@@ -212,12 +229,12 @@ export function Root({
       return false;
     }
 
-    if (isDraggingInDirection) {
-      lastTimeDragPrevented.current = date;
+    // if (isDraggingInDirection) {
+    //   lastTimeDragPrevented.current = date;
 
-      // We are dragging down so we should allow scrolling
-      return false;
-    }
+    //   // We are dragging down so we should allow scrolling
+    //   return false;
+    // }
 
     // Keep climbing up the DOM tree as long as there's a parent
     while (element) {
@@ -252,7 +269,7 @@ export function Root({
     if (isDragging) {
       const directionMultiplier = direction === 'bottom' || direction === 'right' ? 1 : -1;
       const draggedDistance =
-        (pointerStart.current - (isVertical(direction) ? event.clientY : event.clientX)) * directionMultiplier;
+        (pointerStart.current - (isVertical(direction) ? event.pageY : event.pageX)) * directionMultiplier;
       const isDraggingInDirection = draggedDistance > 0;
 
       // Pre condition for disallowing dragging in the close direction.
@@ -489,7 +506,7 @@ export function Root({
     if (dragStartTime.current === null) return;
 
     const timeTaken = dragEndTime.current.getTime() - dragStartTime.current.getTime();
-    const distMoved = pointerStart.current - (isVertical(direction) ? event.clientY : event.clientX);
+    const distMoved = pointerStart.current - (isVertical(direction) ? event.pageY : event.pageX);
     const velocity = Math.abs(distMoved) / timeTaken;
 
     if (velocity > 0.05) {
@@ -765,7 +782,7 @@ export const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
       onPointerDown={(event) => {
         if (handleOnly) return;
         rest.onPointerDown?.(event);
-        pointerStartRef.current = { x: event.clientX, y: event.clientY };
+        pointerStartRef.current = { x: event.pageX, y: event.pageY };
         onPress(event);
       }}
       onPointerDownOutside={(e) => {
@@ -790,8 +807,8 @@ export const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
         if (handleOnly) return;
         rest.onPointerMove?.(event);
         if (!pointerStartRef.current) return;
-        const yPosition = event.clientY - pointerStartRef.current.y;
-        const xPosition = event.clientX - pointerStartRef.current.x;
+        const yPosition = event.pageY - pointerStartRef.current.y;
+        const xPosition = event.pageX - pointerStartRef.current.x;
 
         const swipeStartThreshold = event.pointerType === 'touch' ? 10 : 2;
         const delta = { x: xPosition, y: yPosition };
@@ -867,7 +884,7 @@ export const Handle = React.forwardRef<HTMLDivElement, HandleProps>(function (
     }
 
     const isLastSnapPoint = activeSnapPoint === snapPoints[snapPoints.length - 1];
-	
+
     if (isLastSnapPoint && dismissible) {
       closeDrawer();
       return;

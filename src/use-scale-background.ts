@@ -23,7 +23,7 @@ export function useScaleBackground() {
 
       if (!wrapper) return;
 
-      const bodyAndWrapperCleanup = chain(
+      chain(
         setBackgroundColorOnScale && !noBodyStyles ? assignStyle(document.body, { background: 'black' }) : noop,
         assignStyle(wrapper, {
           transformOrigin: isVertical(direction) ? 'top' : 'left',
@@ -48,8 +48,6 @@ export function useScaleBackground() {
       return () => {
         wrapperStylesCleanup();
         timeoutIdRef.current = window.setTimeout(() => {
-          bodyAndWrapperCleanup();
-
           if (initialBackgroundColor) {
             document.body.style.background = initialBackgroundColor;
           } else {
