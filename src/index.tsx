@@ -271,7 +271,6 @@ export function Root({
       const draggedDistance =
         (pointerStart.current - (isVertical(direction) ? event.pageY : event.pageX)) * directionMultiplier;
       const isDraggingInDirection = draggedDistance > 0;
-      console.log({ draggedDistance, pointerStart: pointerStart.current, clientY: event.clientY });
 
       // Pre condition for disallowing dragging in the close direction.
       const noCloseSnapPointsPreCondition = snapPoints && !dismissible && !isDraggingInDirection;

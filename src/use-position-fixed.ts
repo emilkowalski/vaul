@@ -78,7 +78,6 @@ export function usePositionFixed({
       // Convert the position from "px" to Int
       const y = -parseInt(document.body.style.top, 10);
       const x = -parseInt(document.body.style.left, 10);
-      console.log(previousBodyPosition);
 
       // Restore styles
       Object.assign(document.body.style, previousBodyPosition);
