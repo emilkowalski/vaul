@@ -101,7 +101,7 @@ export function Root({
       if (!o) {
         restorePositionSetting();
       }
-	  
+
       setTimeout(() => {
         onAnimationEnd?.(o);
       }, TRANSITIONS.DURATION * 1000);

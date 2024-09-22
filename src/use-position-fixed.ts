@@ -30,22 +30,20 @@ export function usePositionFixed({
   const [activeUrl, setActiveUrl] = React.useState(() => (typeof window !== 'undefined' ? window.location.href : ''));
   const scrollPos = React.useRef(0);
 
-  const previousBodyPosition = React.useMemo(() => {
-    return {
-      position: document.body.style.position,
-      top: document.body.style.top,
-      left: document.body.style.left,
-      height: document.body.style.height,
-      right: 'unset',
-    };
-  }, [isOpen]);
-
   const setPositionFixed = React.useCallback(() => {
     // All browsers on iOS will return true here.
     if (!isSafari()) return;
 
     // If previousBodyPosition is already set, don't set it again.
     if (previousBodyPosition === null && isOpen && !noBodyStyles) {
+      previousBodyPosition = {
+        position: document.body.style.position,
+        top: document.body.style.top,
+        left: document.body.style.left,
+        height: document.body.style.height,
+        right: 'unset',
+      };
+
       // Update the dom inside an animation frame
       const { scrollX, innerHeight } = window;
 
