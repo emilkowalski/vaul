@@ -190,7 +190,7 @@ export function Root({
     // Ensure we maintain correct pointer capture even when going outside of the drawer
     (event.target as HTMLElement).setPointerCapture(event.pointerId);
 
-    pointerStart.current = isVertical(direction) ? event.clientY : event.clientX;
+    pointerStart.current = isVertical(direction) ? event.pageY : event.pageX;
   }
 
   function shouldDrag(el: EventTarget, isDraggingInDirection: boolean) {
@@ -229,12 +229,12 @@ export function Root({
       return false;
     }
 
-    if (isDraggingInDirection) {
-      lastTimeDragPrevented.current = date;
+    // if (isDraggingInDirection) {
+    //   lastTimeDragPrevented.current = date;
 
-      // We are dragging down so we should allow scrolling
-      return false;
-    }
+    //   // We are dragging down so we should allow scrolling
+    //   return false;
+    // }
 
     // Keep climbing up the DOM tree as long as there's a parent
     while (element) {
@@ -269,8 +269,9 @@ export function Root({
     if (isDragging) {
       const directionMultiplier = direction === 'bottom' || direction === 'right' ? 1 : -1;
       const draggedDistance =
-        (pointerStart.current - (isVertical(direction) ? event.clientY : event.clientX)) * directionMultiplier;
+        (pointerStart.current - (isVertical(direction) ? event.pageY : event.pageX)) * directionMultiplier;
       const isDraggingInDirection = draggedDistance > 0;
+      console.log({ draggedDistance, pointerStart: pointerStart.current, clientY: event.clientY });
 
       // Pre condition for disallowing dragging in the close direction.
       const noCloseSnapPointsPreCondition = snapPoints && !dismissible && !isDraggingInDirection;
