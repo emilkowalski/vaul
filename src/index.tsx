@@ -506,7 +506,7 @@ export function Root({
     if (dragStartTime.current === null) return;
 
     const timeTaken = dragEndTime.current.getTime() - dragStartTime.current.getTime();
-    const distMoved = pointerStart.current - (isVertical(direction) ? event.clientY : event.clientX);
+    const distMoved = pointerStart.current - (isVertical(direction) ? event.pageY : event.pageX);
     const velocity = Math.abs(distMoved) / timeTaken;
 
     if (velocity > 0.05) {
@@ -782,7 +782,7 @@ export const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
       onPointerDown={(event) => {
         if (handleOnly) return;
         rest.onPointerDown?.(event);
-        pointerStartRef.current = { x: event.clientX, y: event.clientY };
+        pointerStartRef.current = { x: event.pageX, y: event.pageY };
         onPress(event);
       }}
       onPointerDownOutside={(e) => {
@@ -807,8 +807,8 @@ export const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
         if (handleOnly) return;
         rest.onPointerMove?.(event);
         if (!pointerStartRef.current) return;
-        const yPosition = event.clientY - pointerStartRef.current.y;
-        const xPosition = event.clientX - pointerStartRef.current.x;
+        const yPosition = event.pageY - pointerStartRef.current.y;
+        const xPosition = event.pageX - pointerStartRef.current.x;
 
         const swipeStartThreshold = event.pointerType === 'touch' ? 10 : 2;
         const delta = { x: xPosition, y: yPosition };
