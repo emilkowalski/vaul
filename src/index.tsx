@@ -10,6 +10,7 @@ import { useSnapPoints } from './use-snap-points';
 import { set, reset, getTranslate, dampenValue, isVertical } from './helpers';
 import { TRANSITIONS, VELOCITY_THRESHOLD } from './constants';
 import { DrawerDirection } from './types';
+import { usePositionFixed } from './use-position-fixed';
 
 const CLOSE_THRESHOLD = 0.25;
 
@@ -130,6 +131,15 @@ export function Root({
 
   usePreventScroll({
     isDisabled: !isOpen || isDragging || !modal || justReleased || !hasBeenOpened || disablePreventScroll,
+  });
+
+  const { restorePositionSetting } = usePositionFixed({
+    isOpen,
+    modal,
+    nested,
+    hasBeenOpened,
+    preventScrollRestoration,
+    noBodyStyles,
   });
 
   function getScale() {
@@ -337,8 +347,10 @@ export function Root({
   React.useEffect(() => {
     return () => {
       scaleBackground(false);
+      restorePositionSetting();
     };
   }, []);
+  console.log('kurwo');
 
   React.useEffect(() => {
     function onVisualViewportChange() {
