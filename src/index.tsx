@@ -111,6 +111,10 @@ export function Root({
           document.body.style.pointerEvents = 'auto';
         });
       }
+
+	  if(!o) {
+		document.body.style.pointerEvents = 'auto';
+	  }
     },
   });
   const [hasBeenOpened, setHasBeenOpened] = React.useState<boolean>(false);
@@ -229,12 +233,12 @@ export function Root({
       return false;
     }
 
-    // if (isDraggingInDirection) {
-    //   lastTimeDragPrevented.current = date;
+    if (isDraggingInDirection) {
+      lastTimeDragPrevented.current = date;
 
-    //   // We are dragging down so we should allow scrolling
-    //   return false;
-    // }
+      // We are dragging down so we should allow scrolling
+      return false;
+    }
 
     // Keep climbing up the DOM tree as long as there's a parent
     while (element) {
