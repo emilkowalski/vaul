@@ -112,9 +112,10 @@ export function Root({
         });
       }
 
-	  if(!o) {
-		document.body.style.pointerEvents = 'auto';
-	  }
+      if (!o) {
+        // This will be removed when the exit animation ends (`500ms`)
+        document.body.style.pointerEvents = 'auto';
+      }
     },
   });
   const [hasBeenOpened, setHasBeenOpened] = React.useState<boolean>(false);
