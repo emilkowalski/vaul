@@ -694,6 +694,9 @@ export const Overlay = React.forwardRef<HTMLDivElement, React.ComponentPropsWith
     const composedRef = useComposedRefs(ref, overlayRef);
     const hasSnapPoints = snapPoints && snapPoints.length > 0;
 
+    // Overlay is the component that is locking scroll, removing it will unlock the scroll without having to dig into Radix's Dialog library
+    if (!modal) return null;
+
     return (
       <DialogPrimitive.Overlay
         onMouseUp={onRelease}
@@ -701,7 +704,6 @@ export const Overlay = React.forwardRef<HTMLDivElement, React.ComponentPropsWith
         data-vaul-overlay=""
         data-vaul-snap-points={isOpen && hasSnapPoints ? 'true' : 'false'}
         data-vaul-snap-points-overlay={isOpen && shouldFade ? 'true' : 'false'}
-        style={{ visibility: modal ? 'visible' : 'hidden' }}
         {...rest}
       />
     );
