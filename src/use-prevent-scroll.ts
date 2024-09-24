@@ -2,6 +2,8 @@
 
 import { useEffect, useLayoutEffect } from 'react';
 
+const KEYBOARD_BUFFER = 24;
+
 export const useIsomorphicLayoutEffect = typeof window !== 'undefined' ? useLayoutEffect : useEffect;
 
 interface PreventScrollOptions {
@@ -310,7 +312,8 @@ function scrollIntoView(target: Element) {
       let scrollableTop = scrollable.getBoundingClientRect().top;
       let targetTop = target.getBoundingClientRect().top;
       let targetBottom = target.getBoundingClientRect().bottom;
-      const keyboardHeight = scrollable.getBoundingClientRect().bottom;
+      // Buffer is needed for some edge cases
+      const keyboardHeight = scrollable.getBoundingClientRect().bottom + KEYBOARD_BUFFER;
 
       if (targetBottom > keyboardHeight) {
         scrollable.scrollTop += targetTop - scrollableTop;

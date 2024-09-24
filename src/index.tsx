@@ -378,7 +378,7 @@ export function Root({
 
   React.useEffect(() => {
     function onVisualViewportChange() {
-      if (!drawerRef.current) return;
+      if (!drawerRef.current || !repositionInputs) return;
 
       const focusedElement = document.activeElement as HTMLElement;
       if (isInput(focusedElement) || keyboardIsOpen.current) {
@@ -391,7 +391,7 @@ export function Root({
         }
         const offsetFromTop = drawerRef.current.getBoundingClientRect().top;
 
-        // visualViewport height may change due to some subtle changes to the keyboard. Checking if the height changed by 60 or more will make sure that they keyboard really changed its open state.
+        // visualViewport height may change due to somq e subtle changes to the keyboard. Checking if the height changed by 60 or more will make sure that they keyboard really changed its open state.
         if (Math.abs(previousDiffFromInitial.current - diffFromInitial) > 60) {
           keyboardIsOpen.current = !keyboardIsOpen.current;
         }
@@ -408,7 +408,7 @@ export function Root({
           let newDrawerHeight = height;
 
           if (height > visualViewportHeight) {
-            newDrawerHeight = visualViewportHeight - WINDOW_TOP_OFFSET;
+            newDrawerHeight = visualViewportHeight - offsetFromTop;
           }
           // When fixed, don't move the drawer upwards if there's space, but rather only change it's height so it's fully scrollable when the keyboard is open
           if (fixed) {
