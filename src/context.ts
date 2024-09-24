@@ -29,6 +29,7 @@ interface DrawerContextValue {
   noBodyStyles: boolean;
   handleOnly?: boolean;
   container?: HTMLElement | null;
+  autoFocus?: boolean;
 }
 
 export const DrawerContext = React.createContext<DrawerContextValue>({
@@ -59,6 +60,7 @@ export const DrawerContext = React.createContext<DrawerContextValue>({
   setBackgroundColorOnScale: true,
   noBodyStyles: false,
   container: null,
+  autoFocus: false,
 });
 
 export const useDrawerContext = () => {

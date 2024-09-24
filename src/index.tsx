@@ -60,6 +60,7 @@ export type DialogProps = {
   container?: HTMLElement | null;
   onAnimationEnd?: (open: boolean) => void;
   preventScrollRestoration?: boolean;
+  autoFocus?: boolean;
 } & (WithFadeFromProps | WithoutFadeFromProps);
 
 export function Root({
@@ -91,6 +92,7 @@ export function Root({
   repositionInputs = true,
   onAnimationEnd,
   container,
+  autoFocus = false,
 }: DialogProps) {
   const [isOpen = false, setIsOpen] = useControllableState({
     defaultProp: defaultOpen,
@@ -638,7 +640,7 @@ export function Root({
     <DialogPrimitive.Root
       defaultOpen={defaultOpen}
       onOpenChange={(open) => {
-        if (!dismissible) return;
+        if (!dismissible && !open) return;
         if (open) {
           setHasBeenOpened(true);
         } else {
@@ -677,6 +679,7 @@ export function Root({
           setBackgroundColorOnScale,
           noBodyStyles,
           container,
+          autoFocus,
         }}
       >
         {children}
@@ -710,7 +713,7 @@ Overlay.displayName = 'Drawer.Overlay';
 export type ContentProps = React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content>;
 
 export const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
-  { onPointerDownOutside, style, ...rest },
+  { onPointerDownOutside, style, onOpenAutoFocus, ...rest },
   ref,
 ) {
   const {
@@ -726,6 +729,7 @@ export const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
     snapPoints,
     container,
     handleOnly,
+    autoFocus,
   } = useDrawerContext();
   // Needed to use transition instead of animations
   const [delayedSnapPoints, setDelayedSnapPoints] = React.useState(false);
@@ -797,7 +801,13 @@ export const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
         pointerStartRef.current = { x: event.pageX, y: event.pageY };
         onPress(event);
       }}
-      onOpenAutoFocus={(e) => e.preventDefault()}
+      onOpenAutoFocus={(e) => {
+        onOpenAutoFocus?.(e);
+
+        if (!autoFocus) {
+          e.preventDefault();
+        }
+      }}
       onPointerDownOutside={(e) => {
         onPointerDownOutside?.(e);
 
