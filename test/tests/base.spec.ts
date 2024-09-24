@@ -66,3 +66,13 @@ test.describe('Base tests', () => {
     await expect(page.getByTestId('content')).toBeVisible();
   });
 });
+
+test('should close when dragged down and cancelled', async ({ page }) => {
+  await openDrawer(page);
+  await page.hover('[data-vaul-drawer]');
+  await page.mouse.down();
+  await page.mouse.move(0, 800);
+  await page.dispatchEvent('[data-vaul-drawer]', 'contextmenu');
+  await page.waitForTimeout(ANIMATION_DURATION);
+  await expect(page.getByTestId('content')).not.toBeVisible();
+});

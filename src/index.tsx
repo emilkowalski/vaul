@@ -731,6 +731,7 @@ export const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
   const [delayedSnapPoints, setDelayedSnapPoints] = React.useState(false);
   const composedRef = useComposedRefs(ref, drawerRef);
   const pointerStartRef = React.useRef<{ x: number; y: number } | null>(null);
+  const lastKnownPointerEventRef = React.useRef<React.PointerEvent<HTMLDivElement> | null>(null);
   const wasBeyondThePointRef = React.useRef(false);
   const hasSnapPoints = snapPoints && snapPoints.length > 0;
   useScaleBackground();
@@ -766,6 +767,12 @@ export const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
       });
     }
   }, []);
+
+  function handleOnPointerUp(event: React.PointerEvent<HTMLDivElement>) {
+    pointerStartRef.current = null;
+    wasBeyondThePointRef.current = false;
+    onRelease(event);
+  }
 
   return (
     <DialogPrimitive.Content
@@ -810,6 +817,7 @@ export const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
         }
       }}
       onPointerMove={(event) => {
+        lastKnownPointerEventRef.current = event;
         if (handleOnly) return;
         rest.onPointerMove?.(event);
         if (!pointerStartRef.current) return;
@@ -830,6 +838,14 @@ export const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
         pointerStartRef.current = null;
         wasBeyondThePointRef.current = false;
         onRelease(event);
+      }}
+      onPointerOut={(event) => {
+        rest.onPointerOut?.(event);
+        handleOnPointerUp(lastKnownPointerEventRef.current);
+      }}
+      onContextMenu={(event) => {
+        rest.onContextMenu?.(event);
+        handleOnPointerUp(lastKnownPointerEventRef.current);
       }}
     />
   );
