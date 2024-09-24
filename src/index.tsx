@@ -383,14 +383,17 @@ export function Root({
       const focusedElement = document.activeElement as HTMLElement;
       if (isInput(focusedElement) || keyboardIsOpen.current) {
         const visualViewportHeight = window.visualViewport?.height || 0;
-        // This is the height of the keyboard
-        let diffFromInitial = window.innerHeight - visualViewportHeight;
+
         const drawerHeight = drawerRef.current.getBoundingClientRect().height || 0;
+        const offsetFromTop = drawerRef.current.getBoundingClientRect().top;
+
+        // This is the height of the keyboard
+        let diffFromInitial = drawerHeight + offsetFromTop - visualViewportHeight;
+        
         if (!initialDrawerHeight.current) {
           initialDrawerHeight.current = drawerHeight;
         }
-        const offsetFromTop = drawerRef.current.getBoundingClientRect().top;
-
+        
         // visualViewport height may change due to some subtle changes to the keyboard. Checking if the height changed by 60 or more will make sure that they keyboard really changed its open state.
         if (Math.abs(previousDiffFromInitial.current - diffFromInitial) > 60) {
           keyboardIsOpen.current = !keyboardIsOpen.current;
