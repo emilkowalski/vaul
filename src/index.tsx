@@ -579,6 +579,7 @@ export function Root({
 
   function onNestedOpenChange(o: boolean) {
     const scale = o ? (window.innerWidth - NESTED_DISPLACEMENT) / window.innerWidth : 1;
+
     const y = o ? -NESTED_DISPLACEMENT : 0;
 
     if (nestedOpenChangeTimer.current) {
@@ -606,8 +607,7 @@ export function Root({
   function onNestedDrag(_event: React.PointerEvent<HTMLDivElement>, percentageDragged: number) {
     if (percentageDragged < 0) return;
 
-    const initialDim = isVertical(direction) ? window.innerHeight : window.innerWidth;
-    const initialScale = (initialDim - NESTED_DISPLACEMENT) / initialDim;
+    const initialScale = (window.innerWidth - NESTED_DISPLACEMENT) / window.innerWidth;
     const newScale = initialScale + percentageDragged * (1 - initialScale);
     const newTranslate = -NESTED_DISPLACEMENT + percentageDragged * NESTED_DISPLACEMENT;
 
