@@ -385,9 +385,13 @@ export function Root({
       const focusedElement = document.activeElement as HTMLElement;
       if (isInput(focusedElement) || keyboardIsOpen.current) {
         const visualViewportHeight = window.visualViewport?.height || 0;
+        const totalHeight = window.innerHeight;
         // This is the height of the keyboard
-        let diffFromInitial = window.innerHeight - visualViewportHeight;
+        let diffFromInitial = totalHeight - visualViewportHeight;
         const drawerHeight = drawerRef.current.getBoundingClientRect().height || 0;
+        // Adjust drawer height only if it's tall enough
+        const isTallEnough = drawerHeight > totalHeight * 0.8;
+
         if (!initialDrawerHeight.current) {
           initialDrawerHeight.current = drawerHeight;
         }
@@ -410,7 +414,7 @@ export function Root({
           let newDrawerHeight = height;
 
           if (height > visualViewportHeight) {
-            newDrawerHeight = visualViewportHeight - offsetFromTop;
+            newDrawerHeight = visualViewportHeight - (isTallEnough ? offsetFromTop : WINDOW_TOP_OFFSET);
           }
           // When fixed, don't move the drawer upwards if there's space, but rather only change it's height so it's fully scrollable when the keyboard is open
           if (fixed) {
