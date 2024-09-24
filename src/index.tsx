@@ -135,6 +135,7 @@ export function Root({
   const previousDiffFromInitial = React.useRef(0);
   const drawerRef = React.useRef<HTMLDivElement>(null);
   const drawerHeightRef = React.useRef(drawerRef.current?.getBoundingClientRect().height || 0);
+  const drawerWidthRef = React.useRef(drawerRef.current?.getBoundingClientRect().width || 0);
   const initialDrawerHeight = React.useRef(0);
 
   const onSnapPointChange = React.useCallback((activeSnapPointIndex: number) => {
@@ -187,6 +188,7 @@ export function Root({
     if (drawerRef.current && !drawerRef.current.contains(event.target as Node)) return;
 
     drawerHeightRef.current = drawerRef.current?.getBoundingClientRect().height || 0;
+    drawerWidthRef.current = drawerRef.current?.getBoundingClientRect().width || 0;
     setIsDragging(true);
     dragStartTime.current = new Date();
 
@@ -288,9 +290,11 @@ export function Root({
       // We need to capture last time when drag with scroll was triggered and have a timeout between
       const absDraggedDistance = Math.abs(draggedDistance);
       const wrapper = document.querySelector('[data-vaul-drawer-wrapper]');
+      const drawerDimension =
+        direction === 'bottom' || direction === 'top' ? drawerHeightRef.current : drawerWidthRef.current;
 
       // Calculate the percentage dragged, where 1 is the closed position
-      let percentageDragged = absDraggedDistance / drawerHeightRef.current;
+      let percentageDragged = absDraggedDistance / drawerDimension;
       const snapPointPercentageDragged = getSnapPointsPercentageDragged(absDraggedDistance, isDraggingInDirection);
 
       if (snapPointPercentageDragged !== null) {
