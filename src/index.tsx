@@ -707,9 +707,12 @@ export const Overlay = React.forwardRef<HTMLDivElement, React.ComponentPropsWith
     // Overlay is the component that is locking scroll, removing it will unlock the scroll without having to dig into Radix's Dialog library
     if (!modal) {
       // Need to do this manually unfortunately
-      window.requestAnimationFrame(() => {
-        document.body.style.pointerEvents = 'auto';
-      });
+      if (typeof window !== 'undefined') {
+        window.requestAnimationFrame(() => {
+          document.body.style.pointerEvents = 'auto';
+        });
+      }
+	  
       return null;
     }
 
