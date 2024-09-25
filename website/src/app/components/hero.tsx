@@ -158,6 +158,14 @@ export function Hero() {
           </a>
         </div>
       </div>
+      <div className="flex justify-center">
+        <a
+          href="/getting-started"
+          className="text-gray-600 text-center mt-4 underline hover:text-gray-900 transition-colors text-sm"
+        >
+          Documentation
+        </a>
+      </div>
     </div>
   );
 }
