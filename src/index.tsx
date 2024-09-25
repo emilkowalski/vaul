@@ -100,7 +100,7 @@ export function Root({
     onChange: (o: boolean) => {
       onOpenChange?.(o);
 
-      if (!o) {
+      if (!o && !nested) {
         restorePositionSetting();
       }
 

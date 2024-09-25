@@ -5,7 +5,7 @@ import { Drawer } from 'vaul';
 export default function Page() {
   return (
     <div className="w-screen h-screen bg-white p-8 flex justify-center items-center" data-vaul-drawer-wrapper="">
-      <Drawer.Root shouldScaleBackground>
+      <Drawer.Root>
         <Drawer.Trigger asChild>
           <button data-testid="trigger">Open Drawer</button>
         </Drawer.Trigger>
