@@ -2,6 +2,16 @@
 const nextConfig = {
   async rewrites() {
     return {
+      beforeFiles: [
+        {
+          source: `/_next/path*/:path*/:path*`,
+          destination: `https://vaul-docs.vercel.app/_next/path*/:path*/:path*`,
+        },
+        {
+          source: `/_next/data/:release/my-app/:path*`,
+          destination: `https://vaul-docs.vercel.app/_next/path*/:path*/:path*`,
+        },
+      ],
       fallback: [
         {
           source: '/:path*',
@@ -10,7 +20,6 @@ const nextConfig = {
       ],
     };
   },
-  assetPrefix: 'https://vaul-docs.vercel.app/',
 };
 
 module.exports = nextConfig;
