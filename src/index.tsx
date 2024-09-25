@@ -109,9 +109,11 @@ export function Root({
       }, TRANSITIONS.DURATION * 1000);
 
       if (o && !modal) {
-        requestAnimationFrame(() => {
-          document.body.style.pointerEvents = 'auto';
-        });
+        if (typeof window !== 'undefined') {
+          window.requestAnimationFrame(() => {
+            document.body.style.pointerEvents = 'auto';
+          });
+        }
       }
 
       if (!o) {
