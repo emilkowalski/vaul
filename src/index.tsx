@@ -109,7 +109,7 @@ export function Root({
       }, TRANSITIONS.DURATION * 1000);
 
       if (o && !modal) {
-        window.requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
           document.body.style.pointerEvents = 'auto';
         });
       }
