@@ -5,6 +5,7 @@ const nextConfig = {
       {
         source: '/:path*',
         destination: 'https://vaul-docs.vercel.app/:path*',
+        assetPrefix: 'https://vaul-docs.vercel.app',
       },
     ];
   },
