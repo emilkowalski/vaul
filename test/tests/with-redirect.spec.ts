@@ -6,7 +6,7 @@ test.beforeEach(async ({ page }) => {
   await page.goto('/with-redirect');
 });
 
-test.describe('Without redirect', () => {
+test.describe('With redirect', () => {
   test('should restore body position settings', async ({ page }) => {
     await openDrawer(page);
     await page.getByTestId('link').click();
@@ -19,7 +19,7 @@ test.describe('Without redirect', () => {
     await expect(content).toBeVisible();
 
     content.scrollIntoViewIfNeeded();
-    
+
     await expect(page.getByTestId('content')).toBeInViewport();
   });
 });
