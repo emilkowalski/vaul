@@ -110,6 +110,20 @@ export function usePositionFixed({
   }, []);
 
   React.useEffect(() => {
+    if (!modal) return;
+
+    return () => {
+      if (typeof document === 'undefined') return;
+
+      // Another drawer is opened, safe to ignore the execution
+      const hasDrawerOpened = !!document.querySelector('[data-vaul-drawer]');
+      if (hasDrawerOpened) return;
+
+      restorePositionSetting();
+    };
+  }, [modal, restorePositionSetting]);
+
+  React.useEffect(() => {
     if (nested || !hasBeenOpened) return;
     // This is needed to force Safari toolbar to show **before** the drawer starts animating to prevent a gnarly shift from happening
     if (isOpen) {
