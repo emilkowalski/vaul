@@ -1,6 +1,5 @@
 import { test, expect } from '@playwright/test';
 import { openDrawer } from './helpers';
-import { ANIMATION_DURATION } from './constants';
 
 test.beforeEach(async ({ page }) => {
   await page.goto('/with-redirect');
