@@ -649,11 +649,9 @@ export function Root({
   React.useEffect(() => {
     if (!modal) {
       // Need to do this manually unfortunately
-      if (typeof window !== 'undefined') {
-        window.requestAnimationFrame(() => {
-          document.body.style.pointerEvents = 'auto';
-        });
-      }
+      window.requestAnimationFrame(() => {
+        document.body.style.pointerEvents = 'auto';
+      });
     }
   }, [modal]);
 
