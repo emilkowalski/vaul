@@ -16,6 +16,7 @@ export default function Page() {
       <Link href="/controlled">Controlled</Link>
       <Link href="/default-open">Default open</Link>
       <Link href="/with-redirect">With redirect</Link>
+	  test
     </div>
   );
 }
