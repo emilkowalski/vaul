@@ -27,7 +27,7 @@ html {
 
 main {
   min-height: 100vh;
-  background: white;
+  background: #edece9;
 }
 
 html {
@@ -37,4 +37,9 @@ html {
 a {
   text-decoration-thickness: 1px;
   text-underline-offset: 2px;
+}
+
+.radial-mask {
+  mask-image: radial-gradient(circle, transparent 30%, black 70%);
+  -webkit-mask-image: radial-gradient(circle, transparent 30%, black 70%);
 }

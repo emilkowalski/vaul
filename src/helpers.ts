@@ -1,4 +1,5 @@
 import { AnyFunction, DrawerDirection } from './types';
+import { DESKTOP_BREAKPOINT } from './constants';
 
 interface Style {
   [key: string]: string;
@@ -84,7 +85,10 @@ export function getTranslate(element: HTMLElement, direction: DrawerDirection): 
   }
   // https://developer.mozilla.org/en-US/docs/Web/CSS/transform-function/matrix
   mat = transform.match(/^matrix\((.+)\)$/);
-  return mat ? parseFloat(mat[1].split(', ')[isVertical(direction) ? 5 : 4]) : null;
+  const isDesktop = window.innerWidth >= DESKTOP_BREAKPOINT;
+  const innerVerticalTranslate = mat ? parseFloat(mat[1].split(', ')[isVertical(direction) ? 5 : 4]) : 0;
+  const desktopAdjusted = isDesktop ? window.innerHeight / 4 + innerVerticalTranslate : innerVerticalTranslate;
+  return mat ? desktopAdjusted : null;
 }
 
 export function dampenValue(v: number) {

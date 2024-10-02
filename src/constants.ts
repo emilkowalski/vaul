@@ -16,3 +16,5 @@ export const NESTED_DISPLACEMENT = 16;
 export const WINDOW_TOP_OFFSET = 26;
 
 export const DRAG_CLASS = 'vaul-dragging';
+
+export const DESKTOP_BREAKPOINT = 1024;

@@ -4,7 +4,8 @@ import * as DialogPrimitive from '@radix-ui/react-dialog';
 import React from 'react';
 import { DrawerContext, useDrawerContext } from './context';
 import './style.css';
-import { usePreventScroll, isInput, isIOS } from './use-prevent-scroll';
+import { usePreventScroll, isInput } from './use-prevent-scroll';
+import { isIOS, useIsDesktop } from './use-device';
 import { useComposedRefs } from './use-composed-refs';
 import { useSnapPoints } from './use-snap-points';
 import { set, getTranslate, dampenValue, isVertical, reset } from './helpers';
@@ -121,6 +122,7 @@ export function Root({
   const drawerRef = React.useRef<HTMLDivElement>(null);
   const drawerHeightRef = React.useRef(drawerRef.current?.getBoundingClientRect().height || 0);
   const initialDrawerHeight = React.useRef(0);
+  const isDesktop = useIsDesktop();
 
   const onSnapPointChange = React.useCallback((activeSnapPointIndex: number) => {
     // Change openTime ref when we reach the last snap point to prevent dragging for 500ms incase it's scrollable.
@@ -301,7 +303,9 @@ export function Root({
         const translateValue = Math.min(dampenedDraggedDistance * -1, 0) * directionMultiplier;
         set(drawerRef.current, {
           transform: isVertical(direction)
-            ? `translate3d(0, ${translateValue}px, 0)`
+            ? `translate3d(${isDesktop ? '-50%' : '0'}, ${
+                isDesktop ? `calc(-75% + ${translateValue}px)` : `${translateValue}px`
+              }, 0)`
             : `translate3d(${translateValue}px, 0, 0)`,
         });
         return;
@@ -327,7 +331,7 @@ export function Root({
         const scaleValue = Math.min(getScale() + percentageDragged * (1 - getScale()), 1);
         const borderRadiusValue = 8 - percentageDragged * 8;
 
-        const translateValue = Math.max(0, 14 - percentageDragged * 14);
+        const translateValue = isDesktop ? 0 : Math.max(0, 14 - percentageDragged * 14);
 
         set(
           wrapper,
@@ -336,6 +340,7 @@ export function Root({
             transform: isVertical(direction)
               ? `scale(${scaleValue}) translate3d(0, ${translateValue}px, 0)`
               : `scale(${scaleValue}) translate3d(${translateValue}px, 0, 0)`,
+            transformOrigin: isVertical(direction) ? (isDesktop ? 'center' : 'top') : 'left',
             transition: 'none',
           },
           true,
@@ -347,8 +352,12 @@ export function Root({
 
         set(drawerRef.current, {
           transform: isVertical(direction)
-            ? `translate3d(0, ${translateValue}px, 0)`
-            : `translate3d(${translateValue}px, 0, 0)`,
+            ? `translate3d(${isDesktop ? '-50%' : '0'}, ${
+                isDesktop ? `calc(-75% + ${translateValue}px)` : `${translateValue}px`
+              }, 0)`
+            : `translate3d(${isDesktop ? `calc(-50% - ${translateValue}px)` : `${translateValue}px`}, ${
+                isDesktop ? '-75%' : '0'
+              }, 0)`,
         });
       }
     }
@@ -432,7 +441,7 @@ export function Root({
     const currentSwipeAmount = getTranslate(drawerRef.current, direction);
 
     set(drawerRef.current, {
-      transform: 'translate3d(0, 0, 0)',
+      transform: `translate3d(${isDesktop ? '-50%' : '0'}, ${isDesktop ? `-75%` : '0'}, 0)`,
       transition: `transform ${TRANSITIONS.DURATION}s cubic-bezier(${TRANSITIONS.EASE.join(',')})`,
     });
 
@@ -450,11 +459,15 @@ export function Root({
           overflow: 'hidden',
           ...(isVertical(direction)
             ? {
-                transform: `scale(${getScale()}) translate3d(0, calc(env(safe-area-inset-top) + 14px), 0)`,
-                transformOrigin: 'top',
+                transform: `scale(${getScale()}) translate3d(0, ${
+                  isDesktop ? '0' : 'calc(env(safe-area-inset-top) + 14px)'
+                }, 0)`,
+                transformOrigin: isDesktop ? 'center' : 'top',
               }
             : {
-                transform: `scale(${getScale()}) translate3d(calc(env(safe-area-inset-top) + 14px), 0, 0)`,
+                transform: `scale(${getScale()}) translate3d(${
+                  isDesktop ? '0' : 'calc(env(safe-area-inset-top) + 14px)'
+                }, 0, 0)`,
                 transformOrigin: 'left',
               }),
           transitionProperty: 'transform, border-radius',
@@ -867,7 +880,7 @@ export const Handle = React.forwardRef<HTMLDivElement, HandleProps>(function (
     }
 
     const isLastSnapPoint = activeSnapPoint === snapPoints[snapPoints.length - 1];
-	
+
     if (isLastSnapPoint && dismissible) {
       closeDrawer();
       return;
