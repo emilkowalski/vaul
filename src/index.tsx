@@ -819,6 +819,7 @@ export const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
     onDrag,
     keyboardIsOpen,
     snapPointsOffset,
+    activeSnapPointIndex,
     modal,
     isOpen,
     direction,
@@ -886,7 +887,7 @@ export const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
       style={
         snapPointsOffset && snapPointsOffset.length > 0
           ? ({
-              '--snap-point-height': `${snapPointsOffset[0]!}px`,
+              '--snap-point-height': `${snapPointsOffset[activeSnapPointIndex]}px`,
               ...style,
             } as React.CSSProperties)
           : style
