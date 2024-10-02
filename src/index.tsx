@@ -25,8 +25,8 @@ import { usePositionFixed } from './use-position-fixed';
 
 export interface WithFadeFromProps {
   /**
-   * Array of numbers from 0 to 100 that corresponds to % of the screen a given snap point should take up. 
-   * Should go from least visible. Example `[0.2, 0.5, 0.8]`. 
+   * Array of numbers from 0 to 100 that corresponds to % of the screen a given snap point should take up.
+   * Should go from least visible. Example `[0.2, 0.5, 0.8]`.
    * You can also use px values, which doesn't take screen height into account.
    */
   snapPoints: (number | string)[];
@@ -38,8 +38,8 @@ export interface WithFadeFromProps {
 
 export interface WithoutFadeFromProps {
   /**
-   * Array of numbers from 0 to 100 that corresponds to % of the screen a given snap point should take up. 
-   * Should go from least visible. Example `[0.2, 0.5, 0.8]`. 
+   * Array of numbers from 0 to 100 that corresponds to % of the screen a given snap point should take up.
+   * Should go from least visible. Example `[0.2, 0.5, 0.8]`.
    * You can also use px values, which doesn't take screen height into account.
    */
   snapPoints?: (number | string)[];
@@ -52,7 +52,7 @@ export type DialogProps = {
   children?: React.ReactNode;
   open?: boolean;
   /**
-   * Number between 0 and 1 that determines when the drawer should be closed. 
+   * Number between 0 and 1 that determines when the drawer should be closed.
    * Example: threshold of 0.5 would close the drawer if the user swiped for 50% of the height of the drawer or more.
    * @default 0.25
    */
@@ -64,12 +64,12 @@ export type DialogProps = {
   onOpenChange?: (open: boolean) => void;
   shouldScaleBackground?: boolean;
   /**
-   * When `false` we don't change body's background color when the drawer is open. 
+   * When `false` we don't change body's background color when the drawer is open.
    * @default true
    */
   setBackgroundColorOnScale?: boolean;
   /**
-   * Duration for which the drawer is not draggable after scrolling content inside of the drawer. 
+   * Duration for which the drawer is not draggable after scrolling content inside of the drawer.
    * @default 500ms
    */
   scrollLockTimeout?: number;
@@ -78,12 +78,12 @@ export type DialogProps = {
    */
   fixed?: boolean;
   /**
-   * When `true` only allows the drawer to be dragged by the `<Drawer.Handle />` component. 
+   * When `true` only allows the drawer to be dragged by the `<Drawer.Handle />` component.
    * @default false
    */
   handleOnly?: boolean;
   /**
-   * When `false` dragging, clicking outside, pressing esc, etc. will not close the drawer. 
+   * When `false` dragging, clicking outside, pressing esc, etc. will not close the drawer.
    * Use this in comination with the `open` prop, otherwise you won't be able to open/close the drawer.
    * @default true
    */
@@ -91,14 +91,14 @@ export type DialogProps = {
   onDrag?: (event: React.PointerEvent<HTMLDivElement>, percentageDragged: number) => void;
   onRelease?: (event: React.PointerEvent<HTMLDivElement>, open: boolean) => void;
   /**
-   * When `false` it allows to interact with elements outside of the drawer without closing it. 
+   * When `false` it allows to interact with elements outside of the drawer without closing it.
    * @default true
    */
   modal?: boolean;
   nested?: boolean;
   onClose?: () => void;
   /**
-   * Direction of the drawer. Can be `top` or `bottom`, `left`, `right`. 
+   * Direction of the drawer. Can be `top` or `bottom`, `left`, `right`.
    * @default 'bottom'
    */
   direction?: 'top' | 'bottom' | 'left' | 'right';
@@ -113,21 +113,21 @@ export type DialogProps = {
    */
   disablePreventScroll?: boolean;
   /**
-   * When `true` Vaul will reposition inputs rather than scroll then into view if the keyboard is in the way. 
+   * When `true` Vaul will reposition inputs rather than scroll then into view if the keyboard is in the way.
    * Setting it to `false` will fall back to the default browser behavior.
    * @default true when {@link snapPoints} is defined
    */
   repositionInputs?: boolean;
   /**
-   * Disabled velocity based swiping for snap points. 
-   * This means that a snap point won't be skipped even if the velocity is high enough. 
+   * Disabled velocity based swiping for snap points.
+   * This means that a snap point won't be skipped even if the velocity is high enough.
    * Useful if each snap point in a drawer is equally important.
    * @default false
    */
   snapToSequentialPoint?: boolean;
   container?: HTMLElement | null;
   /**
-   * Gets triggered after the open or close animation ends, it receives an `open` argument with the `open` state of the drawer by the time the function was triggered. 
+   * Gets triggered after the open or close animation ends, it receives an `open` argument with the `open` state of the drawer by the time the function was triggered.
    * Useful to revert any state changes for example.
    */
   onAnimationEnd?: (open: boolean) => void;
@@ -765,6 +765,7 @@ export function Root({
           keyboardIsOpen,
           modal,
           snapPointsOffset,
+          activeSnapPointIndex,
           direction,
           shouldScaleBackground,
           setBackgroundColorOnScale,
