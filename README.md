@@ -21,7 +21,7 @@ function MyComponent() {
       <Drawer.Trigger>Open</Drawer.Trigger>
       <Drawer.Portal>
         <Drawer.Content>
-          <Drawer.Title>Title</p>
+          <Drawer.Title>Title</Drawer.Title>
         </Drawer.Content>
         <Drawer.Overlay />
       </Drawer.Portal>
