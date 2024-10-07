@@ -60,7 +60,7 @@ export function useSnapPoints({
   );
 
   const activeSnapPointIndex = React.useMemo(
-    () => snapPoints?.findIndex((snapPoint) => snapPoint === activeSnapPoint),
+    () => snapPoints?.findIndex((snapPoint) => snapPoint === activeSnapPoint) ?? null,
     [snapPoints, activeSnapPoint],
   );
 
@@ -126,6 +126,7 @@ export function useSnapPoints({
       if (
         snapPointsOffset &&
         newSnapPointIndex !== snapPointsOffset.length - 1 &&
+        fadeFromIndex !== undefined &&
         newSnapPointIndex !== fadeFromIndex &&
         newSnapPointIndex < fadeFromIndex
       ) {
@@ -205,7 +206,7 @@ export function useSnapPoints({
       const dragDirection = hasDraggedUp ? 1 : -1; // 1 = up, -1 = down
 
       // Don't do anything if we swipe upwards while being on the last snap point
-      if (dragDirection > 0 && isLastSnapPoint) {
+      if (dragDirection > 0 && isLastSnapPoint && snapPoints) {
         snapToPoint(snapPointsOffset[snapPoints.length - 1]);
         return;
       }

@@ -268,11 +268,11 @@ function preventScrollMobileSafari() {
 
 // Sets a CSS property on an element, and returns a function to revert it to the previous value.
 function setStyle(element: HTMLElement, style: string, value: string) {
-  let cur = element.style[style];
-  element.style[style] = value;
+  let cur = element.style.getPropertyValue(style);
+  element.style.setProperty(style, value);
 
   return () => {
-    element.style[style] = cur;
+    element.style.setProperty(style, cur);
   };
 }
 

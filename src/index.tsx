@@ -155,7 +155,7 @@ export function Root({
   modal = true,
   onClose,
   nested,
-  noBodyStyles,
+  noBodyStyles = false,
   direction = 'bottom',
   defaultOpen = false,
   disablePreventScroll = true,
@@ -247,7 +247,7 @@ export function Root({
   const { restorePositionSetting } = usePositionFixed({
     isOpen,
     modal,
-    nested,
+    nested: nested ?? false,
     hasBeenOpened,
     preventScrollRestoration,
     noBodyStyles,
@@ -307,7 +307,11 @@ export function Root({
     }
 
     // Disallow dragging if drawer was scrolled within `scrollLockTimeout`
-    if (date.getTime() - lastTimeDragPrevented.current?.getTime() < scrollLockTimeout && swipeAmount === 0) {
+    if (
+      lastTimeDragPrevented.current &&
+      date.getTime() - lastTimeDragPrevented.current.getTime() < scrollLockTimeout &&
+      swipeAmount === 0
+    ) {
       lastTimeDragPrevented.current = date;
       return false;
     }
@@ -867,10 +871,12 @@ export const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
     }
   }, []);
 
-  function handleOnPointerUp(event: React.PointerEvent<HTMLDivElement>) {
+  function handleOnPointerUp(event: React.PointerEvent<HTMLDivElement> | null) {
     pointerStartRef.current = null;
     wasBeyondThePointRef.current = false;
-    onRelease(event);
+    if (event) {
+      onRelease(event);
+    }
   }
 
   return (
@@ -1005,8 +1011,10 @@ export const Handle = React.forwardRef<HTMLDivElement, HandleProps>(function (
     // Make sure to clear the timeout id if the user releases the handle before the cancel timeout
     handleCancelInteraction();
 
-    if ((!snapPoints || snapPoints.length === 0) && dismissible) {
-      closeDrawer();
+    if (!snapPoints || snapPoints.length === 0) {
+      if (!dismissible) {
+        closeDrawer();
+      }
       return;
     }
 
@@ -1031,7 +1039,9 @@ export const Handle = React.forwardRef<HTMLDivElement, HandleProps>(function (
   }
 
   function handleCancelInteraction() {
-    window.clearTimeout(closeTimeoutIdRef.current);
+    if (closeTimeoutIdRef.current) {
+      window.clearTimeout(closeTimeoutIdRef.current);
+    }
     shouldCancelInteractionRef.current = false;
   }
 

@@ -23,7 +23,7 @@ interface DrawerContextValue {
   closeDrawer: () => void;
   openProp?: boolean;
   onOpenChange?: (o: boolean) => void;
-  direction?: DrawerDirection;
+  direction: DrawerDirection;
   shouldScaleBackground: boolean;
   setBackgroundColorOnScale: boolean;
   noBodyStyles: boolean;
