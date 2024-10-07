@@ -269,13 +269,14 @@ function preventScrollMobileSafari() {
 // Sets a CSS property on an element, and returns a function to revert it to the previous value.
 function setStyle(element: HTMLElement, style: keyof React.CSSProperties, value: string) {
   // https://github.com/microsoft/TypeScript/issues/17827#issuecomment-391663310
-  let elStyle = <any>element.style;
-
-  let cur = elStyle[style];
-  elStyle[style] = value;
+  // @ts-ignore
+  let cur = element.style[style];
+  // @ts-ignore
+  element.style[style] = value;
 
   return () => {
-    elStyle[style] = cur;
+    // @ts-ignore
+    element.style[style] = cur;
   };
 }
 
