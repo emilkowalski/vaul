@@ -585,7 +585,7 @@ export function Root({
     dragEndTime.current = new Date();
   }
 
-  function onRelease(event: React.PointerEvent<HTMLDivElement>) {
+  function onRelease(event: React.PointerEvent<HTMLDivElement> | null) {
     if (!isDragging || !drawerRef.current) return;
 
     drawerRef.current.classList.remove(DRAG_CLASS);
@@ -594,7 +594,7 @@ export function Root({
     dragEndTime.current = new Date();
     const swipeAmount = getTranslate(drawerRef.current, direction);
 
-    if (!shouldDrag(event.target, false) || !swipeAmount || Number.isNaN(swipeAmount)) return;
+    if (!event || !shouldDrag(event.target, false) || !swipeAmount || Number.isNaN(swipeAmount)) return;
 
     if (dragStartTime.current === null) return;
 
@@ -794,9 +794,11 @@ export const Overlay = React.forwardRef<HTMLDivElement, React.ComponentPropsWith
       return null;
     }
 
+    const onMouseUp = React.useCallback((event: React.PointerEvent<HTMLDivElement>) => onRelease(event), [onRelease]);
+
     return (
       <DialogPrimitive.Overlay
-        onMouseUp={onRelease}
+        onMouseUp={onMouseUp}
         ref={composedRef}
         data-vaul-overlay=""
         data-vaul-snap-points={isOpen && hasSnapPoints ? 'true' : 'false'}
@@ -874,9 +876,7 @@ export const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
   function handleOnPointerUp(event: React.PointerEvent<HTMLDivElement> | null) {
     pointerStartRef.current = null;
     wasBeyondThePointRef.current = false;
-    if (event) {
-      onRelease(event);
-    }
+    onRelease(event);
   }
 
   return (
