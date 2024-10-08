@@ -5,7 +5,7 @@ interface DrawerContextValue {
   drawerRef: React.RefObject<HTMLDivElement>;
   overlayRef: React.RefObject<HTMLDivElement>;
   onPress: (event: React.PointerEvent<HTMLDivElement>) => void;
-  onRelease: (event: React.PointerEvent<HTMLDivElement>) => void;
+  onRelease: (event: React.PointerEvent<HTMLDivElement> | null) => void;
   onDrag: (event: React.PointerEvent<HTMLDivElement>) => void;
   onNestedDrag: (event: React.PointerEvent<HTMLDivElement>, percentageDragged: number) => void;
   onNestedOpenChange: (o: boolean) => void;
@@ -23,7 +23,7 @@ interface DrawerContextValue {
   closeDrawer: () => void;
   openProp?: boolean;
   onOpenChange?: (o: boolean) => void;
-  direction?: DrawerDirection;
+  direction: DrawerDirection;
   shouldScaleBackground: boolean;
   setBackgroundColorOnScale: boolean;
   noBodyStyles: boolean;
