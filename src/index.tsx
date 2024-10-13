@@ -4,7 +4,7 @@ import * as DialogPrimitive from '@radix-ui/react-dialog';
 import React from 'react';
 import { DrawerContext, useDrawerContext } from './context';
 import './style.css';
-import { usePreventScroll, isInput, isIOS } from './use-prevent-scroll';
+import { usePreventScroll, isInput } from './use-prevent-scroll';
 import { useComposedRefs } from './use-composed-refs';
 import { useSnapPoints } from './use-snap-points';
 import { set, getTranslate, dampenValue, isVertical, reset } from './helpers';
@@ -22,6 +22,7 @@ import { DrawerDirection } from './types';
 import { useControllableState } from './use-controllable-state';
 import { useScaleBackground } from './use-scale-background';
 import { usePositionFixed } from './use-position-fixed';
+import { isIOS, isMobileFirefox } from './browser';
 
 export interface WithFadeFromProps {
   /**
@@ -500,7 +501,6 @@ export function Root({
           const activeSnapPointHeight = snapPointsOffset[activeSnapPointIndex] || 0;
           diffFromInitial += activeSnapPointHeight;
         }
-
         previousDiffFromInitial.current = diffFromInitial;
         // We don't have to change the height if the input is in view, when we are here we are in the opened keyboard state so we can correctly check if the input is in view
         if (drawerHeight > visualViewportHeight || keyboardIsOpen.current) {
@@ -516,7 +516,7 @@ export function Root({
           } else {
             drawerRef.current.style.height = `${Math.max(newDrawerHeight, visualViewportHeight - offsetFromTop)}px`;
           }
-        } else {
+        } else if (!isMobileFirefox()) {
           drawerRef.current.style.height = `${initialDrawerHeight.current}px`;
         }
 
