@@ -501,7 +501,6 @@ export function Root({
           const activeSnapPointHeight = snapPointsOffset[activeSnapPointIndex] || 0;
           diffFromInitial += activeSnapPointHeight;
         }
-        console.log(isMobileFirefox());
         previousDiffFromInitial.current = diffFromInitial;
         // We don't have to change the height if the input is in view, when we are here we are in the opened keyboard state so we can correctly check if the input is in view
         if (drawerHeight > visualViewportHeight || keyboardIsOpen.current) {
