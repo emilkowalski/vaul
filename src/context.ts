@@ -31,6 +31,7 @@ interface DrawerContextValue {
   handleOnly?: boolean;
   container?: HTMLElement | null;
   autoFocus?: boolean;
+  shouldAnimate?: React.RefObject<boolean>;
 }
 
 export const DrawerContext = React.createContext<DrawerContextValue>({
@@ -57,6 +58,7 @@ export const DrawerContext = React.createContext<DrawerContextValue>({
   setActiveSnapPoint: () => {},
   closeDrawer: () => {},
   direction: 'bottom',
+  shouldAnimate: { current: true },
   shouldScaleBackground: false,
   setBackgroundColorOnScale: true,
   noBodyStyles: false,
