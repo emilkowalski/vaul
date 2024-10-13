@@ -35,19 +35,19 @@
 }
 
 [data-vaul-drawer][data-vaul-snap-points='true'][data-vaul-drawer-direction='bottom'] {
-  transform: translate3d(0, 100%, 0);
+  transform: translate3d(0, var(--initial-transform, 100%), 0);
 }
 
 [data-vaul-drawer][data-vaul-snap-points='true'][data-vaul-drawer-direction='top'] {
-  transform: translate3d(0, -100%, 0);
+  transform: translate3d(0, calc(var(--initial-transform, 100%) * -1), 0);
 }
 
 [data-vaul-drawer][data-vaul-snap-points='true'][data-vaul-drawer-direction='left'] {
-  transform: translate3d(-100%, 0, 0);
+  transform: translate3d(calc(var(--initial-transform, 100%) * -1), 0, 0);
 }
 
 [data-vaul-drawer][data-vaul-snap-points='true'][data-vaul-drawer-direction='right'] {
-  transform: translate3d(100%, 0, 0);
+  transform: translate3d(var(--initial-transform, 100%) %, 0, 0);
 }
 
 [data-vaul-drawer][data-vaul-delayed-snap-points='true'][data-vaul-drawer-direction='top'] {
@@ -176,14 +176,6 @@
   }
 }
 
-/* This will allow us to not animate via animation, but still benefit from delaying unmount via Radix. */
-@keyframes fake-animation {
-  from {
-  }
-  to {
-  }
-}
-
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -201,7 +193,7 @@
 
 @keyframes slideFromBottom {
   from {
-    transform: translate3d(0, 100%, 0);
+    transform: translate3d(0, var(--initial-transform, 100%), 0);
   }
   to {
     transform: translate3d(0, 0, 0);
@@ -210,13 +202,13 @@
 
 @keyframes slideToBottom {
   to {
-    transform: translate3d(0, 100%, 0);
+    transform: translate3d(0, var(--initial-transform, 100%), 0);
   }
 }
 
 @keyframes slideFromTop {
   from {
-    transform: translate3d(0, -100%, 0);
+    transform: translate3d(0, calc(var(--initial-transform, 100%) * -1), 0);
   }
   to {
     transform: translate3d(0, 0, 0);
@@ -225,13 +217,13 @@
 
 @keyframes slideToTop {
   to {
-    transform: translate3d(0, -100%, 0);
+    transform: translate3d(0, calc(var(--initial-transform, 100%) * -1), 0);
   }
 }
 
 @keyframes slideFromLeft {
   from {
-    transform: translate3d(-100%, 0, 0);
+    transform: translate3d(calc(var(--initial-transform, 100%) * -1), 0, 0);
   }
   to {
     transform: translate3d(0, 0, 0);
@@ -240,13 +232,13 @@
 
 @keyframes slideToLeft {
   to {
-    transform: translate3d(-100%, 0, 0);
+    transform: translate3d(calc(var(--initial-transform, 100%) * -1), 0, 0);
   }
 }
 
 @keyframes slideFromRight {
   from {
-    transform: translate3d(100%, 0, 0);
+    transform: translate3d(var(--initial-transform, 100%), 0, 0);
   }
   to {
     transform: translate3d(0, 0, 0);
@@ -255,6 +247,6 @@
 
 @keyframes slideToRight {
   to {
-    transform: translate3d(100%, 0, 0);
+    transform: translate3d(var(--initial-transform, 100%), 0, 0);
   }
 }
