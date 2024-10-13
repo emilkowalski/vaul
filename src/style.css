@@ -47,7 +47,7 @@
 }
 
 [data-vaul-drawer][data-vaul-snap-points='true'][data-vaul-drawer-direction='right'] {
-  transform: translate3d(var(--initial-transform, 100%) %, 0, 0);
+  transform: translate3d(var(--initial-transform, 100%), 0, 0);
 }
 
 [data-vaul-drawer][data-vaul-delayed-snap-points='true'][data-vaul-drawer-direction='top'] {
@@ -75,6 +75,10 @@
 }
 [data-vaul-overlay][data-state='closed'] {
   animation-name: fadeOut;
+}
+
+[data-vaul-animate='false'] {
+  animation: none !important;
 }
 
 [data-vaul-overlay][data-vaul-snap-points='true'] {

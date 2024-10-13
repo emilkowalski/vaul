@@ -103,7 +103,7 @@ export type DialogProps = {
    */
   direction?: 'top' | 'bottom' | 'left' | 'right';
   /**
-   * Opened by default, still reacts to `open` state changes
+   * Opened by default, skips initial enter animation. Still reacts to `open` state changes
    * @default false
    */
   defaultOpen?: boolean;
@@ -206,6 +206,7 @@ export function Root({
   const nestedOpenChangeTimer = React.useRef<NodeJS.Timeout | null>(null);
   const pointerStart = React.useRef(0);
   const keyboardIsOpen = React.useRef(false);
+  const shouldAnimate = React.useRef(!defaultOpen);
   const previousDiffFromInitial = React.useRef(0);
   const drawerRef = React.useRef<HTMLDivElement>(null);
   const drawerHeightRef = React.useRef(drawerRef.current?.getBoundingClientRect().height || 0);
@@ -464,6 +465,12 @@ export function Root({
       }
     }
   }
+
+  React.useEffect(() => {
+    window.requestAnimationFrame(() => {
+      shouldAnimate.current = true;
+    });
+  }, []);
 
   React.useEffect(() => {
     function onVisualViewportChange() {
@@ -763,6 +770,7 @@ export function Root({
           onRelease,
           onDrag,
           dismissible,
+          shouldAnimate,
           handleOnly,
           isOpen,
           isDragging,
@@ -791,7 +799,7 @@ export function Root({
 
 export const Overlay = React.forwardRef<HTMLDivElement, React.ComponentPropsWithoutRef<typeof DialogPrimitive.Overlay>>(
   function ({ ...rest }, ref) {
-    const { overlayRef, snapPoints, onRelease, shouldFade, isOpen, modal } = useDrawerContext();
+    const { overlayRef, snapPoints, onRelease, shouldFade, isOpen, modal, shouldAnimate } = useDrawerContext();
     const composedRef = useComposedRefs(ref, overlayRef);
     const hasSnapPoints = snapPoints && snapPoints.length > 0;
 
@@ -809,6 +817,7 @@ export const Overlay = React.forwardRef<HTMLDivElement, React.ComponentPropsWith
         data-vaul-overlay=""
         data-vaul-snap-points={isOpen && hasSnapPoints ? 'true' : 'false'}
         data-vaul-snap-points-overlay={isOpen && shouldFade ? 'true' : 'false'}
+        data-vaul-animate={shouldAnimate?.current ? 'true' : 'false'}
         {...rest}
       />
     );
@@ -837,6 +846,7 @@ export const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
     snapPoints,
     container,
     handleOnly,
+    shouldAnimate,
     autoFocus,
   } = useDrawerContext();
   // Needed to use transition instead of animations
@@ -893,6 +903,7 @@ export const Content = React.forwardRef<HTMLDivElement, ContentProps>(function (
       data-vaul-delayed-snap-points={delayedSnapPoints ? 'true' : 'false'}
       data-vaul-snap-points={isOpen && hasSnapPoints ? 'true' : 'false'}
       data-vaul-custom-container={container ? 'true' : 'false'}
+      data-vaul-animate={shouldAnimate?.current ? 'true' : 'false'}
       {...rest}
       ref={composedRef}
       style={
