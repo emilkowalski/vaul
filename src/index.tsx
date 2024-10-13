@@ -22,7 +22,7 @@ import { DrawerDirection } from './types';
 import { useControllableState } from './use-controllable-state';
 import { useScaleBackground } from './use-scale-background';
 import { usePositionFixed } from './use-position-fixed';
-import { isFirefox, isIOS, isMobileFirefox } from './browser';
+import { isIOS, isMobileFirefox } from './browser';
 
 export interface WithFadeFromProps {
   /**
