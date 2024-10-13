@@ -16,7 +16,7 @@ interface DrawerContextValue {
   keyboardIsOpen: React.MutableRefObject<boolean>;
   snapPointsOffset: number[] | null;
   snapPoints?: (number | string)[] | null;
-  activeSnapPointIndex?: number;
+  activeSnapPointIndex?: number | null;
   modal: boolean;
   shouldFade: boolean;
   activeSnapPoint?: number | string | null;
