@@ -688,7 +688,9 @@ export function Root({
 
     set(drawerRef.current, {
       transition: `transform ${TRANSITIONS.DURATION}s cubic-bezier(${TRANSITIONS.EASE.join(',')})`,
-      transform: isVertical(direction) ? `scale(${scale}) translate3d(0, ${initialTranslate}px, 0)` : `scale(${scale}) translate3d(${initialTranslate}, 0, 0)`,
+      transform: isVertical(direction)
+        ? `scale(${scale}) translate3d(0, ${initialTranslate}px, 0)`
+        : `scale(${scale}) translate3d(${initialTranslate}px, 0, 0)`,
     });
 
     if (!o && drawerRef.current) {
@@ -1093,7 +1095,7 @@ export const Handle = React.forwardRef<HTMLDivElement, HandleProps>(function (
 
 Handle.displayName = 'Drawer.Handle';
 
-export function NestedRoot({ onDrag, onOpenChange, ...rest }: DialogProps) {
+export function NestedRoot({ onDrag, onOpenChange, open: nestedIsOpen, ...rest }: DialogProps) {
   const { onNestedDrag, onNestedOpenChange, onNestedRelease } = useDrawerContext();
 
   if (!onNestedDrag) {
@@ -1103,6 +1105,7 @@ export function NestedRoot({ onDrag, onOpenChange, ...rest }: DialogProps) {
   return (
     <Root
       nested
+      open={nestedIsOpen}
       onClose={() => {
         onNestedOpenChange(false);
       }}
@@ -1114,6 +1117,7 @@ export function NestedRoot({ onDrag, onOpenChange, ...rest }: DialogProps) {
         if (o) {
           onNestedOpenChange(o);
         }
+        onOpenChange?.(o);
       }}
       onRelease={onNestedRelease}
       {...rest}
