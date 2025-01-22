@@ -19,6 +19,10 @@ export function isSafari(): boolean | undefined {
   return /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
 }
 
+export function isAndroid(): boolean | undefined {
+  return /Android/.test(navigator.userAgent);
+}
+
 export function isIPad(): boolean | undefined {
   return (
     testPlatform(/^iPad/) ||

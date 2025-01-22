@@ -22,7 +22,7 @@ import { DrawerDirection } from './types';
 import { useControllableState } from './use-controllable-state';
 import { useScaleBackground } from './use-scale-background';
 import { usePositionFixed } from './use-position-fixed';
-import { isIOS, isMobileFirefox } from './browser';
+import { isIOS, isMobileFirefox, isAndroid } from './browser';
 
 export interface WithFadeFromProps {
   /**
@@ -475,9 +475,15 @@ export function Root({
 
   React.useEffect(() => {
     function onVisualViewportChange() {
+      if (!drawerRef.current) return;
+
+      // drawerRef.current.style.height = ''
+      // drawerRef.current.style.bottom = ''
+
       if (!drawerRef.current || !repositionInputs) return;
 
       const focusedElement = document.activeElement as HTMLElement;
+
       if (isInput(focusedElement) || keyboardIsOpen.current) {
         const visualViewportHeight = window.visualViewport?.height || 0;
         const totalHeight = window.innerHeight;
@@ -516,7 +522,7 @@ export function Root({
           } else {
             drawerRef.current.style.height = `${Math.max(newDrawerHeight, visualViewportHeight - offsetFromTop)}px`;
           }
-        } else if (!isMobileFirefox()) {
+        } else if (!isMobileFirefox() && !isAndroid()) {
           drawerRef.current.style.height = `${initialDrawerHeight.current}px`;
         }
 
