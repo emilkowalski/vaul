@@ -97,6 +97,7 @@ export default function Page() {
               <button className="bg-black text-gray-50 mt-8 rounded-md h-[48px] flex-shrink-0 font-medium">
                 Buy for $199
               </button>
+              <Drawer.SnapPoint offset={24} />
               <div className="mt-12">
                 <h2 className="text-xl font-medium">Module 01. The Details</h2>
                 <div className="space-y-4 mt-4">
@@ -114,7 +115,6 @@ export default function Page() {
                   </div>
                 </div>
               </div>
-              <Drawer.SnapPoint offset={0} />
               <div className="mt-12">
                 <figure>
                   <blockquote className="font-serif">
