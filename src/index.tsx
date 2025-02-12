@@ -29,9 +29,9 @@ export interface WithFadeFromProps {
    * Array of numbers from 0 to 100 that corresponds to % of the screen a given snap point should take up.
    * Should go from least visible. Example `[0.2, 0.5, 0.8]`.
    * You can also use px values, which doesn't take screen height into account.
-   * Should <Drawer.SnapPoint /> be used, this prop will be ignored.
+   * Should <Drawer.SnapPoint /> be used, calculated points will be included in the callback.
    */
-  snapPoints: (number | string)[];
+  snapPoints: (number | string)[] | ((embeddedSnapPoints: (number | string)[]) => (number | string)[]);
   /**
    * Index of a `snapPoint` from which the overlay fade should be applied. Defaults to the last snap point.
    */
@@ -43,9 +43,9 @@ export interface WithoutFadeFromProps {
    * Array of numbers from 0 to 100 that corresponds to % of the screen a given snap point should take up.
    * Should go from least visible. Example `[0.2, 0.5, 0.8]`.
    * You can also use px values, which doesn't take screen height into account.
-   * Should <Drawer.SnapPoint /> be used, this prop will be ignored.
+   * Should <Drawer.SnapPoint /> be used, calculated points will be included in the callback.
    */
-  snapPoints?: (number | string)[];
+  snapPoints?: (number | string)[] | ((embeddedSnapPoints: (number | string)[]) => (number | string)[]);
   fadeFromIndex?: never;
 }
 
@@ -171,7 +171,7 @@ export function Root({
 }: DialogProps) {
   const [snapPoints, setSnapPoints] = React.useState<(string | number)[] | undefined>(
     // If no snap points are provided, default to [0, 1] until we can ensure no snap points are present in DOM
-    initialSnapPoints ?? [0, 1],
+    (typeof initialSnapPoints === 'function' ? initialSnapPoints([]) : initialSnapPoints) ?? [0, 1],
   );
   const fadeFromIndex = initialFadeFromIndex ?? (snapPoints && snapPoints.length - 1);
 
@@ -676,15 +676,16 @@ export function Root({
   }
 
   function updateSnapPoints() {
-    if (!drawerRef.current) return;
+    if (!drawerRef.current || (initialSnapPoints && typeof initialSnapPoints !== 'function')) return;
     const drawerPosition = drawerRef.current?.getBoundingClientRect().y ?? 0;
     const snapPointsNodes = document.querySelectorAll('[data-vaul-snap-point]');
     if (snapPointsNodes.length === 0) return;
-    const newSnapPoints = Array.from(snapPointsNodes).map((snapPoint) => {
+    const embeddedSnapPoints = Array.from(snapPointsNodes).map((snapPoint) => {
       const snapPointOffset = Number(snapPoint.getAttribute('data-vaul-offset')) ?? 0;
       const snapPointVerticalPosition = snapPoint.getBoundingClientRect().y;
       return `${snapPointVerticalPosition + WINDOW_TOP_OFFSET + snapPointOffset - drawerPosition}px`;
     });
+    const newSnapPoints = initialSnapPoints?.(embeddedSnapPoints) ?? embeddedSnapPoints;
     setSnapPoints(newSnapPoints);
 
     return newSnapPoints;
@@ -697,7 +698,7 @@ export function Root({
         const newSnapPoints = updateSnapPoints();
         if (newSnapPoints) {
           setActiveSnapPoint(newSnapPoints[0]);
-        } else if (!initialSnapPoints || initialSnapPoints.length === 0) {
+        } else if (!initialSnapPoints) {
           setSnapPoints(undefined);
         }
       });
