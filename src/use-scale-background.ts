@@ -11,7 +11,7 @@ export function useScaleBackground() {
   const initialBackgroundColor = useMemo(() => document.body.style.backgroundColor, []);
 
   function getScale(wrapper: HTMLElement) {
-    return (wrapper.clientHeight - WINDOW_TOP_OFFSET) / wrapper.clientHeight;
+    return (wrapper.offsetHeight - WINDOW_TOP_OFFSET) / wrapper.offsetHeight;
   }
 
   React.useEffect(() => {
