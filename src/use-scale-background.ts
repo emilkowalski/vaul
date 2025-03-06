@@ -10,8 +10,8 @@ export function useScaleBackground() {
   const timeoutIdRef = React.useRef<number | null>(null);
   const initialBackgroundColor = useMemo(() => document.body.style.backgroundColor, []);
 
-  function getScale() {
-    return (window.innerWidth - WINDOW_TOP_OFFSET) / window.innerWidth;
+  function getScale(wrapper: HTMLElement) {
+    return (wrapper.clientHeight - WINDOW_TOP_OFFSET) / wrapper.clientHeight;
   }
 
   React.useEffect(() => {
@@ -38,10 +38,10 @@ export function useScaleBackground() {
         overflow: 'hidden',
         ...(isVertical(direction)
           ? {
-              transform: `scale(${getScale()}) translate3d(0, calc(env(safe-area-inset-top) + 14px), 0)`,
+              transform: `scale(${getScale(wrapper)}) translate3d(0, calc(env(safe-area-inset-top) + 14px), 0)`,
             }
           : {
-              transform: `scale(${getScale()}) translate3d(calc(env(safe-area-inset-top) + 14px), 0, 0)`,
+              transform: `scale(${getScale(wrapper)}) translate3d(calc(env(safe-area-inset-top) + 14px), 0, 0)`,
             }),
       });
 
