@@ -27,6 +27,7 @@ interface DrawerContextValue {
   direction: DrawerDirection;
   shouldScaleBackground: boolean;
   setBackgroundColorOnScale: boolean;
+  backgroundColor: string;
   noBodyStyles: boolean;
   handleOnly?: boolean;
   container?: HTMLElement | null;
@@ -61,6 +62,7 @@ export const DrawerContext = React.createContext<DrawerContextValue>({
   shouldAnimate: { current: true },
   shouldScaleBackground: false,
   setBackgroundColorOnScale: true,
+  backgroundColor: 'black',
   noBodyStyles: false,
   container: null,
   autoFocus: false,
