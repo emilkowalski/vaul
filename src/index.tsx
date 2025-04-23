@@ -759,6 +759,7 @@ export function Root({
         setIsOpen(open);
       }}
       open={isOpen}
+      modal={modal}
     >
       <DrawerContext.Provider
         value={{
