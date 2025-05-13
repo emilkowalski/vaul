@@ -17,6 +17,7 @@ export default function Page() {
       <Link href="/default-open">Default open</Link>
       <Link href="/with-redirect">With redirect</Link>
       <Link href="/different-directions">Different directions</Link>
+      <Link href="/with-snap-nested">With snap nested</Link>
     </div>
   );
 }
