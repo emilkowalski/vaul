@@ -1102,6 +1102,12 @@ export function NestedRoot({ onDrag, onOpenChange, open: nestedIsOpen, ...rest }
     throw new Error('Drawer.NestedRoot must be placed in another drawer');
   }
 
+  React.useEffect(() => {
+    if (nestedIsOpen) {
+      onNestedOpenChange(true);
+    }
+  }, [nestedIsOpen]);
+
   return (
     <Root
       nested
