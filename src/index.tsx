@@ -678,29 +678,35 @@ export function Root({
   }, [isOpen]);
 
   function onNestedOpenChange(o: boolean) {
+    const currentTranslate = drawerRef.current ? getTranslate(drawerRef.current, direction) ?? 0 : 0;
     const scale = o ? (window.innerWidth - NESTED_DISPLACEMENT) / window.innerWidth : 1;
-
     const initialTranslate = o ? -NESTED_DISPLACEMENT : 0;
 
     if (nestedOpenChangeTimer.current) {
       window.clearTimeout(nestedOpenChangeTimer.current);
     }
 
+    // Store the initial translate value when opening the nested drawer
+    if (o) {
+      drawerRef.current.dataset.initialTranslate = currentTranslate.toString();
+    }
+
     set(drawerRef.current, {
       transition: `transform ${TRANSITIONS.DURATION}s cubic-bezier(${TRANSITIONS.EASE.join(',')})`,
       transform: isVertical(direction)
-        ? `scale(${scale}) translate3d(0, ${initialTranslate}px, 0)`
-        : `scale(${scale}) translate3d(${initialTranslate}px, 0, 0)`,
+        ? `scale(${scale}) translate3d(0, ${currentTranslate + initialTranslate}px, 0)`
+        : `scale(${scale}) translate3d(${currentTranslate + initialTranslate}px, 0, 0)`,
     });
 
     if (!o && drawerRef.current) {
       nestedOpenChangeTimer.current = setTimeout(() => {
-        const translateValue = getTranslate(drawerRef.current as HTMLElement, direction);
+        // Restore to the initial position when closing
+        const initialTranslate = Number(drawerRef.current.dataset.initialTranslate || '0');
         set(drawerRef.current, {
           transition: 'none',
           transform: isVertical(direction)
-            ? `translate3d(0, ${translateValue}px, 0)`
-            : `translate3d(${translateValue}px, 0, 0)`,
+            ? `translate3d(0, ${initialTranslate}px, 0)`
+            : `translate3d(${initialTranslate}px, 0, 0)`,
         });
       }, 500);
     }
@@ -709,19 +715,22 @@ export function Root({
   function onNestedDrag(_event: React.PointerEvent<HTMLDivElement>, percentageDragged: number) {
     if (percentageDragged < 0) return;
 
+    // Use the stored initial translate value
+    const initialTranslate = Number(drawerRef.current?.dataset.initialTranslate || '0');
     const initialScale = (window.innerWidth - NESTED_DISPLACEMENT) / window.innerWidth;
     const newScale = initialScale + percentageDragged * (1 - initialScale);
     const newTranslate = -NESTED_DISPLACEMENT + percentageDragged * NESTED_DISPLACEMENT;
 
     set(drawerRef.current, {
       transform: isVertical(direction)
-        ? `scale(${newScale}) translate3d(0, ${newTranslate}px, 0)`
-        : `scale(${newScale}) translate3d(${newTranslate}px, 0, 0)`,
+        ? `scale(${newScale}) translate3d(0, ${initialTranslate + newTranslate}px, 0)`
+        : `scale(${newScale}) translate3d(${initialTranslate + newTranslate}px, 0, 0)`,
       transition: 'none',
     });
   }
 
   function onNestedRelease(_event: React.PointerEvent<HTMLDivElement>, o: boolean) {
+    const initialTranslate = Number(drawerRef.current?.dataset.initialTranslate || '0');
     const dim = isVertical(direction) ? window.innerHeight : window.innerWidth;
     const scale = o ? (dim - NESTED_DISPLACEMENT) / dim : 1;
     const translate = o ? -NESTED_DISPLACEMENT : 0;
@@ -730,8 +739,8 @@ export function Root({
       set(drawerRef.current, {
         transition: `transform ${TRANSITIONS.DURATION}s cubic-bezier(${TRANSITIONS.EASE.join(',')})`,
         transform: isVertical(direction)
-          ? `scale(${scale}) translate3d(0, ${translate}px, 0)`
-          : `scale(${scale}) translate3d(${translate}px, 0, 0)`,
+          ? `scale(${scale}) translate3d(0, ${initialTranslate + translate}px, 0)`
+          : `scale(${scale}) translate3d(${initialTranslate + translate}px, 0, 0)`,
       });
     }
   }
@@ -743,7 +752,7 @@ export function Root({
         document.body.style.pointerEvents = 'auto';
       });
     }
-  }, [modal,isOpen]);
+  }, [modal, isOpen]);
 
   return (
     <DialogPrimitive.Root
