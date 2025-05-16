@@ -20,6 +20,7 @@ export default function Page() {
         setActiveSnapPoint={setMainSnap}
         modal={false}
         onOpenChange={(o) => console.log('main on open change', o)}
+        onDragStart={(e) => console.log('main on drag start', e)}
       >
         <Drawer.Trigger asChild>
           <button data-testid="trigger">Open Drawer</button>

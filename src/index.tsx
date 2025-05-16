@@ -89,6 +89,7 @@ export type DialogProps = {
    * @default true
    */
   dismissible?: boolean;
+  onDragStart?: (event: React.PointerEvent<HTMLDivElement>) => void;
   onDrag?: (event: React.PointerEvent<HTMLDivElement>, percentageDragged: number) => void;
   onRelease?: (event: React.PointerEvent<HTMLDivElement>, open: boolean) => void;
   /**
@@ -140,6 +141,7 @@ export function Root({
   open: openProp,
   onOpenChange,
   children,
+  onDragStart: onDragStartProp,
   onDrag: onDragProp,
   onRelease: onReleaseProp,
   snapPoints,
@@ -267,6 +269,7 @@ export function Root({
     drawerWidthRef.current = drawerRef.current?.getBoundingClientRect().width || 0;
     setIsDragging(true);
     dragStartTime.current = new Date();
+    onDragStartProp?.(event);
 
     // iOS doesn't trigger mouseUp after scrolling so we need to listen to touched in order to disallow dragging
     if (isIOS()) {
