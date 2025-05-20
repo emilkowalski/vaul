@@ -506,6 +506,7 @@ function useControllableState({ prop, defaultProp, onChange = ()=>{} }) {
 }
 
 function useSnapPoints({ activeSnapPointProp, setActiveSnapPointProp, snapPoints, drawerRef, overlayRef, fadeFromIndex, onSnapPointChange, direction = 'bottom', container, snapToSequentialPoint }) {
+    var _drawerRef_current;
     const [activeSnapPoint, setActiveSnapPoint] = useControllableState({
         prop: activeSnapPointProp,
         defaultProp: snapPoints == null ? void 0 : snapPoints[0],
@@ -537,6 +538,7 @@ function useSnapPoints({ activeSnapPointProp, setActiveSnapPointProp, snapPoints
         activeSnapPoint
     ]);
     const shouldFade = snapPoints && snapPoints.length > 0 && (fadeFromIndex || fadeFromIndex === 0) && !Number.isNaN(fadeFromIndex) && snapPoints[fadeFromIndex] === activeSnapPoint || !snapPoints;
+    const drawerRect = (_drawerRef_current = drawerRef.current) == null ? void 0 : _drawerRef_current.getBoundingClientRect();
     const snapPointsOffset = React__default.useMemo(()=>{
         const containerSize = container ? {
             width: container.getBoundingClientRect().width,
@@ -548,6 +550,10 @@ function useSnapPoints({ activeSnapPointProp, setActiveSnapPointProp, snapPoints
             width: 0,
             height: 0
         };
+        const contentSize = drawerRect ? {
+            width: drawerRect.width,
+            height: drawerRect.height
+        } : containerSize;
         var _snapPoints_map;
         return (_snapPoints_map = snapPoints == null ? void 0 : snapPoints.map((snapPoint)=>{
             const isPx = typeof snapPoint === 'string';
@@ -556,22 +562,23 @@ function useSnapPoints({ activeSnapPointProp, setActiveSnapPointProp, snapPoints
                 snapPointAsNumber = parseInt(snapPoint, 10);
             }
             if (isVertical(direction)) {
-                const height = isPx ? snapPointAsNumber : windowDimensions ? snapPoint * containerSize.height : 0;
+                const height = isPx ? snapPointAsNumber : windowDimensions ? snapPoint * contentSize.height : 0;
                 if (windowDimensions) {
-                    return direction === 'bottom' ? containerSize.height - height : -containerSize.height + height;
+                    return direction === 'bottom' ? contentSize.height - height : -contentSize.height + height;
                 }
                 return height;
             }
-            const width = isPx ? snapPointAsNumber : windowDimensions ? snapPoint * containerSize.width : 0;
+            const width = isPx ? snapPointAsNumber : windowDimensions ? snapPoint * contentSize.width : 0;
             if (windowDimensions) {
-                return direction === 'right' ? containerSize.width - width : -containerSize.width + width;
+                return direction === 'right' ? contentSize.width - width : -contentSize.width + width;
             }
             return width;
         })) != null ? _snapPoints_map : [];
     }, [
         snapPoints,
         windowDimensions,
-        container
+        container,
+        drawerRect
     ]);
     const activeSnapPointOffset = React__default.useMemo(()=>activeSnapPointIndex !== null ? snapPointsOffset == null ? void 0 : snapPointsOffset[activeSnapPointIndex] : null, [
         snapPointsOffset,
