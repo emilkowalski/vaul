@@ -681,7 +681,10 @@ export function Root({
   }, [isOpen]);
 
   function onNestedOpenChange(o: boolean) {
-    const currentTranslate = drawerRef.current ? getTranslate(drawerRef.current, direction) ?? 0 : 0;
+    if (snapPoints && snapPoints.length > 0) {
+      return;
+    }
+
     const scale = o ? (window.innerWidth - NESTED_DISPLACEMENT) / window.innerWidth : 1;
     const initialTranslate = o ? -NESTED_DISPLACEMENT : 0;
 
@@ -716,6 +719,9 @@ export function Root({
   }
 
   function onNestedDrag(_event: React.PointerEvent<HTMLDivElement>, percentageDragged: number) {
+    if (snapPoints && snapPoints.length > 0) {
+      return;
+    }
     if (percentageDragged < 0) return;
 
     // Use the stored initial translate value
@@ -733,7 +739,9 @@ export function Root({
   }
 
   function onNestedRelease(_event: React.PointerEvent<HTMLDivElement>, o: boolean) {
-    const initialTranslate = Number(drawerRef.current?.dataset.initialTranslate || '0');
+    if (snapPoints && snapPoints.length > 0) {
+      return;
+    }
     const dim = isVertical(direction) ? window.innerHeight : window.innerWidth;
     const scale = o ? (dim - NESTED_DISPLACEMENT) / dim : 1;
     const translate = o ? -NESTED_DISPLACEMENT : 0;
@@ -1113,12 +1121,6 @@ export function NestedRoot({ onDrag, onOpenChange, open: nestedIsOpen, ...rest }
   if (!onNestedDrag) {
     throw new Error('Drawer.NestedRoot must be placed in another drawer');
   }
-
-  React.useEffect(() => {
-    if (nestedIsOpen) {
-      onNestedOpenChange(true);
-    }
-  }, [nestedIsOpen]);
 
   return (
     <Root
