@@ -72,8 +72,6 @@ export function useSnapPoints({
       snapPoints[fadeFromIndex] === activeSnapPoint) ||
     !snapPoints;
 
-  const drawerRect = drawerRef.current?.getBoundingClientRect();
-
   const snapPointsOffset = React.useMemo(() => {
     const containerSize = container
       ? { width: container.getBoundingClientRect().width, height: container.getBoundingClientRect().height }
@@ -91,7 +89,7 @@ export function useSnapPoints({
         }
 
         if (isVertical(direction)) {
-          const height = isPx ? snapPointAsNumber : windowDimensions ? snapPoint * contentSize.height : 0;
+          const height = isPx ? snapPointAsNumber : windowDimensions ? snapPoint * containerSize.height : 0;
 
           if (windowDimensions) {
             return direction === 'bottom' ? containerSize.height - height : -containerSize.height + height;
@@ -99,7 +97,7 @@ export function useSnapPoints({
 
           return height;
         }
-        const width = isPx ? snapPointAsNumber : windowDimensions ? snapPoint * contentSize.width : 0;
+        const width = isPx ? snapPointAsNumber : windowDimensions ? snapPoint * containerSize.width : 0;
 
         if (windowDimensions) {
           return direction === 'right' ? containerSize.width - width : -containerSize.width + width;
@@ -108,7 +106,7 @@ export function useSnapPoints({
         return width;
       }) ?? []
     );
-  }, [snapPoints, windowDimensions, container, drawerRect]);
+  }, [snapPoints, windowDimensions, container]);
 
   const activeSnapPointOffset = React.useMemo(
     () => (activeSnapPointIndex !== null ? snapPointsOffset?.[activeSnapPointIndex] : null),
