@@ -411,7 +411,10 @@ export function Root({
       if (isDraggingInDirection && !snapPoints) {
         const dampenedDraggedDistance = dampenValue(draggedDistance);
 
-        const translateValue = Math.min(dampenedDraggedDistance * -1, 0) * directionMultiplier;
+        let translateValue = Math.min(dampenedDraggedDistance * -1, 0) * directionMultiplier;
+        if (translateValue < 0) {
+          translateValue = 0;
+        }
         set(drawerRef.current, {
           transform: isVertical(direction)
             ? `translate3d(0, ${translateValue}px, 0)`
