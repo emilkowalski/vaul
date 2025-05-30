@@ -11,6 +11,10 @@ export function isMac(): boolean | undefined {
   return testPlatform(/^Mac/);
 }
 
+export function isAndroid(): boolean | undefined {
+  return /Android/.test(navigator.userAgent);
+}
+
 export function isIPhone(): boolean | undefined {
   return testPlatform(/^iPhone/);
 }
