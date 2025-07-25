@@ -8,17 +8,19 @@ jobs:
   test:
     timeout-minutes: 60
     runs-on: ubuntu-latest
+    container:
+        image: mcr.microsoft.com/playwright:v1.41.2
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: 20
       - run: npm install -g pnpm@8.8.0
       - run: pnpm install
       - run: pnpm build
-      - run: npx playwright install --with-deps
+      - run: npx playwright install
       - run: pnpm test || exit 1
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: playwright-report
