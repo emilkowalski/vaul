@@ -8,7 +8,7 @@ const noop = () => () => {};
 export function useScaleBackground() {
   const { direction, isOpen, shouldScaleBackground, setBackgroundColorOnScale, noBodyStyles } = useDrawerContext();
   const timeoutIdRef = React.useRef<number | null>(null);
-  const initialBackgroundColor = useMemo(() => document.body.style.backgroundColor, []);
+  const initialBackgroundColor = useMemo(() => typeof document === "undefined" ? undefined : document.body.style.backgroundColor, []);
 
   function getScale() {
     return (window.innerWidth - WINDOW_TOP_OFFSET) / window.innerWidth;
