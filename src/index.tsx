@@ -440,15 +440,15 @@ export function Root({
         const scaleValue = Math.min(getScale() + percentageDragged * (1 - getScale()), 1);
         const borderRadiusValue = 8 - percentageDragged * 8;
 
-        const translateValue = Math.max(0, 14 - percentageDragged * 14);
+        const translatePercent = 1 - percentageDragged;
 
         set(
           wrapper,
           {
             borderRadius: `${borderRadiusValue}px`,
             transform: isVertical(direction)
-              ? `scale(${scaleValue}) translate3d(0, ${translateValue}px, 0)`
-              : `scale(${scaleValue}) translate3d(${translateValue}px, 0, 0)`,
+              ? `scale(${scaleValue}) translate3d(0, calc((env(safe-area-inset-top) + 14px) * ${translatePercent}), 0)`
+              : `scale(${scaleValue}) translate3d(calc((env(safe-area-inset-top) + 14px) * ${translatePercent}), 0, 0)`,
             transition: 'none',
           },
           true,
