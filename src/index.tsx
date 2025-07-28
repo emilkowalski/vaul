@@ -29,8 +29,9 @@ export interface WithFadeFromProps {
    * Array of numbers from 0 to 100 that corresponds to % of the screen a given snap point should take up.
    * Should go from least visible. Example `[0.2, 0.5, 0.8]`.
    * You can also use px values, which doesn't take screen height into account.
+   * Should <Drawer.SnapPoint /> be used, calculated points will be included in the callback.
    */
-  snapPoints: (number | string)[];
+  snapPoints: (number | string)[] | ((embeddedSnapPoints: (number | string)[]) => (number | string)[]);
   /**
    * Index of a `snapPoint` from which the overlay fade should be applied. Defaults to the last snap point.
    */
@@ -42,8 +43,9 @@ export interface WithoutFadeFromProps {
    * Array of numbers from 0 to 100 that corresponds to % of the screen a given snap point should take up.
    * Should go from least visible. Example `[0.2, 0.5, 0.8]`.
    * You can also use px values, which doesn't take screen height into account.
+   * Should <Drawer.SnapPoint /> be used, calculated points will be included in the callback.
    */
-  snapPoints?: (number | string)[];
+  snapPoints?: (number | string)[] | ((embeddedSnapPoints: (number | string)[]) => (number | string)[]);
   fadeFromIndex?: never;
 }
 
@@ -142,14 +144,14 @@ export function Root({
   children,
   onDrag: onDragProp,
   onRelease: onReleaseProp,
-  snapPoints,
+  snapPoints: initialSnapPoints,
   shouldScaleBackground = false,
   setBackgroundColorOnScale = true,
   closeThreshold = CLOSE_THRESHOLD,
   scrollLockTimeout = SCROLL_LOCK_TIMEOUT,
   dismissible = true,
   handleOnly = false,
-  fadeFromIndex = snapPoints && snapPoints.length - 1,
+  fadeFromIndex: initialFadeFromIndex,
   activeSnapPoint: activeSnapPointProp,
   setActiveSnapPoint: setActiveSnapPointProp,
   fixed,
@@ -167,6 +169,12 @@ export function Root({
   container,
   autoFocus = false,
 }: DialogProps) {
+  const [snapPoints, setSnapPoints] = React.useState<(string | number)[] | undefined>(
+    // If no snap points are provided, default to [0, 1] until we can ensure no snap points are present in DOM
+    (typeof initialSnapPoints === 'function' ? initialSnapPoints([]) : initialSnapPoints) ?? [0, 1],
+  );
+  const fadeFromIndex = initialFadeFromIndex ?? (snapPoints && snapPoints.length - 1);
+
   const [isOpen = false, setIsOpen] = useControllableState({
     defaultProp: defaultOpen,
     prop: openProp,
@@ -214,10 +222,13 @@ export function Root({
   const drawerWidthRef = React.useRef(drawerRef.current?.getBoundingClientRect().width || 0);
   const initialDrawerHeight = React.useRef(0);
 
-  const onSnapPointChange = React.useCallback((activeSnapPointIndex: number) => {
-    // Change openTime ref when we reach the last snap point to prevent dragging for 500ms incase it's scrollable.
-    if (snapPoints && activeSnapPointIndex === snapPointsOffset.length - 1) openTime.current = new Date();
-  }, []);
+  const onSnapPointChange = React.useCallback(
+    (activeSnapPointIndex: number) => {
+      // Change openTime ref when we reach the last snap point to prevent dragging for 500ms incase it's scrollable.
+      if (snapPoints && activeSnapPointIndex === snapPointsOffset.length - 1) openTime.current = new Date();
+    },
+    [snapPoints],
+  );
 
   const {
     activeSnapPoint,
@@ -477,6 +488,8 @@ export function Root({
     function onVisualViewportChange() {
       if (!drawerRef.current || !repositionInputs) return;
 
+      updateSnapPoints();
+
       const focusedElement = document.activeElement as HTMLElement;
       if (isInput(focusedElement) || keyboardIsOpen.current) {
         const visualViewportHeight = window.visualViewport?.height || 0;
@@ -661,6 +674,36 @@ export function Root({
     onReleaseProp?.(event, true);
     resetDrawer();
   }
+
+  function updateSnapPoints() {
+    if (!drawerRef.current || (initialSnapPoints && typeof initialSnapPoints !== 'function')) return;
+    const drawerPosition = drawerRef.current?.getBoundingClientRect().y ?? 0;
+    const snapPointsNodes = document.querySelectorAll('[data-vaul-snap-point]');
+    if (snapPointsNodes.length === 0) return;
+    const embeddedSnapPoints = Array.from(snapPointsNodes).map((snapPoint) => {
+      const snapPointOffset = Number(snapPoint.getAttribute('data-vaul-offset')) ?? 0;
+      const snapPointVerticalPosition = snapPoint.getBoundingClientRect().y;
+      return `${snapPointVerticalPosition + WINDOW_TOP_OFFSET + snapPointOffset - drawerPosition}px`;
+    });
+    const newSnapPoints = initialSnapPoints?.(embeddedSnapPoints) ?? embeddedSnapPoints;
+    setSnapPoints(newSnapPoints);
+
+    return newSnapPoints;
+  }
+
+  React.useEffect(() => {
+    if (isOpen) {
+      // Detect if any snapPoints are present in DOM, otherwise set snapPoints to undefined
+      window.requestAnimationFrame(() => {
+        const newSnapPoints = updateSnapPoints();
+        if (newSnapPoints) {
+          setActiveSnapPoint(newSnapPoints[0]);
+        } else if (!initialSnapPoints) {
+          setSnapPoints(undefined);
+        }
+      });
+    }
+  }, [isOpen]);
 
   React.useEffect(() => {
     // Trigger enter animation without using CSS animation
@@ -1095,6 +1138,16 @@ export const Handle = React.forwardRef<HTMLDivElement, HandleProps>(function (
 
 Handle.displayName = 'Drawer.Handle';
 
+export type SnapPointProps = {
+  offset?: number;
+};
+
+export const SnapPoint = React.forwardRef<HTMLAnchorElement, SnapPointProps>(function ({ offset = 0 }, ref) {
+  return <a ref={ref} data-vaul-snap-point data-vaul-offset={offset} />;
+});
+
+SnapPoint.displayName = 'Drawer.SnapPoint';
+
 export function NestedRoot({ onDrag, onOpenChange, open: nestedIsOpen, ...rest }: DialogProps) {
   const { onNestedDrag, onNestedOpenChange, onNestedRelease } = useDrawerContext();
 
@@ -1145,4 +1198,5 @@ export const Drawer = {
   Close: DialogPrimitive.Close,
   Title: DialogPrimitive.Title,
   Description: DialogPrimitive.Description,
+  SnapPoint,
 };
