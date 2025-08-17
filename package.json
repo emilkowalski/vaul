@@ -21,7 +21,7 @@
   },
   "scripts": {
     "type-check": "tsc --noEmit",
-    "build": "pnpm type-check && bunchee && pnpm copy-assets",
+    "build": "npm type-check && bunchee && npm copy-assets",
     "copy-assets": "cp -r ./src/style.css ./style.css",
     "dev": "bunchee --watch",
     "dev:test": "turbo run dev --filter=test...",
