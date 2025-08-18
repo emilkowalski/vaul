@@ -89,6 +89,7 @@ export type DialogProps = {
    * @default true
    */
   dismissible?: boolean;
+  onDragStart?: (event: React.PointerEvent<HTMLDivElement>) => void;
   onDrag?: (event: React.PointerEvent<HTMLDivElement>, percentageDragged: number) => void;
   onRelease?: (event: React.PointerEvent<HTMLDivElement>, open: boolean) => void;
   /**
@@ -140,6 +141,7 @@ export function Root({
   open: openProp,
   onOpenChange,
   children,
+  onDragStart: onDragStartProp,
   onDrag: onDragProp,
   onRelease: onReleaseProp,
   snapPoints,
@@ -267,6 +269,7 @@ export function Root({
     drawerWidthRef.current = drawerRef.current?.getBoundingClientRect().width || 0;
     setIsDragging(true);
     dragStartTime.current = new Date();
+    onDragStartProp?.(event);
 
     // iOS doesn't trigger mouseUp after scrolling so we need to listen to touched in order to disallow dragging
     if (isIOS()) {
@@ -678,50 +681,67 @@ export function Root({
   }, [isOpen]);
 
   function onNestedOpenChange(o: boolean) {
-    const scale = o ? (window.innerWidth - NESTED_DISPLACEMENT) / window.innerWidth : 1;
+    if (snapPoints && snapPoints.length > 0) {
+      return;
+    }
 
+    const scale = o ? (window.innerWidth - NESTED_DISPLACEMENT) / window.innerWidth : 1;
     const initialTranslate = o ? -NESTED_DISPLACEMENT : 0;
 
     if (nestedOpenChangeTimer.current) {
       window.clearTimeout(nestedOpenChangeTimer.current);
     }
 
+    // Store the initial translate value when opening the nested drawer
+    if (o) {
+      drawerRef.current.dataset.initialTranslate = currentTranslate.toString();
+    }
+
     set(drawerRef.current, {
       transition: `transform ${TRANSITIONS.DURATION}s cubic-bezier(${TRANSITIONS.EASE.join(',')})`,
       transform: isVertical(direction)
-        ? `scale(${scale}) translate3d(0, ${initialTranslate}px, 0)`
-        : `scale(${scale}) translate3d(${initialTranslate}px, 0, 0)`,
+        ? `scale(${scale}) translate3d(0, ${currentTranslate + initialTranslate}px, 0)`
+        : `scale(${scale}) translate3d(${currentTranslate + initialTranslate}px, 0, 0)`,
     });
 
     if (!o && drawerRef.current) {
       nestedOpenChangeTimer.current = setTimeout(() => {
-        const translateValue = getTranslate(drawerRef.current as HTMLElement, direction);
+        // Restore to the initial position when closing
+        const initialTranslate = Number(drawerRef.current.dataset.initialTranslate || '0');
         set(drawerRef.current, {
           transition: 'none',
           transform: isVertical(direction)
-            ? `translate3d(0, ${translateValue}px, 0)`
-            : `translate3d(${translateValue}px, 0, 0)`,
+            ? `translate3d(0, ${initialTranslate}px, 0)`
+            : `translate3d(${initialTranslate}px, 0, 0)`,
         });
       }, 500);
     }
   }
 
   function onNestedDrag(_event: React.PointerEvent<HTMLDivElement>, percentageDragged: number) {
+    if (snapPoints && snapPoints.length > 0) {
+      return;
+    }
     if (percentageDragged < 0) return;
 
+    // Use the stored initial translate value
+    const initialTranslate = Number(drawerRef.current?.dataset.initialTranslate || '0');
     const initialScale = (window.innerWidth - NESTED_DISPLACEMENT) / window.innerWidth;
     const newScale = initialScale + percentageDragged * (1 - initialScale);
     const newTranslate = -NESTED_DISPLACEMENT + percentageDragged * NESTED_DISPLACEMENT;
 
     set(drawerRef.current, {
       transform: isVertical(direction)
-        ? `scale(${newScale}) translate3d(0, ${newTranslate}px, 0)`
-        : `scale(${newScale}) translate3d(${newTranslate}px, 0, 0)`,
+        ? `scale(${newScale}) translate3d(0, ${initialTranslate + newTranslate}px, 0)`
+        : `scale(${newScale}) translate3d(${initialTranslate + newTranslate}px, 0, 0)`,
       transition: 'none',
     });
   }
 
   function onNestedRelease(_event: React.PointerEvent<HTMLDivElement>, o: boolean) {
+    if (snapPoints && snapPoints.length > 0) {
+      return;
+    }
     const dim = isVertical(direction) ? window.innerHeight : window.innerWidth;
     const scale = o ? (dim - NESTED_DISPLACEMENT) / dim : 1;
     const translate = o ? -NESTED_DISPLACEMENT : 0;
@@ -730,20 +750,20 @@ export function Root({
       set(drawerRef.current, {
         transition: `transform ${TRANSITIONS.DURATION}s cubic-bezier(${TRANSITIONS.EASE.join(',')})`,
         transform: isVertical(direction)
-          ? `scale(${scale}) translate3d(0, ${translate}px, 0)`
-          : `scale(${scale}) translate3d(${translate}px, 0, 0)`,
+          ? `scale(${scale}) translate3d(0, ${initialTranslate + translate}px, 0)`
+          : `scale(${scale}) translate3d(${initialTranslate + translate}px, 0, 0)`,
       });
     }
   }
 
   React.useEffect(() => {
-    if (!modal) {
+    if (!modal && isOpen) {
       // Need to do this manually unfortunately
       window.requestAnimationFrame(() => {
         document.body.style.pointerEvents = 'auto';
       });
     }
-  }, [modal]);
+  }, [modal, isOpen]);
 
   return (
     <DialogPrimitive.Root
