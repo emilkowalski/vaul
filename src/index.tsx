@@ -482,7 +482,7 @@ export function Root({
         const visualViewportHeight = window.visualViewport?.height || 0;
         const totalHeight = window.innerHeight;
         // This is the height of the keyboard
-        let diffFromInitial = totalHeight - visualViewportHeight;
+        let diffFromInitial = window.outerHeight - visualViewportHeight;
         const drawerHeight = drawerRef.current.getBoundingClientRect().height || 0;
         // Adjust drawer height only if it's tall enough
         const isTallEnough = drawerHeight > totalHeight * 0.8;
@@ -502,8 +502,12 @@ export function Root({
           diffFromInitial += activeSnapPointHeight;
         }
         previousDiffFromInitial.current = diffFromInitial;
-        // We don't have to change the height if the input is in view, when we are here we are in the opened keyboard state so we can correctly check if the input is in view
-        if (drawerHeight > visualViewportHeight || keyboardIsOpen.current) {
+
+        if (!keyboardIsOpen.current) {
+          drawerRef.current.style.removeProperty('height');
+          drawerRef.current.style.removeProperty('bottom');
+        } else if (drawerHeight > visualViewportHeight) {
+          // We don't have to change the height if the input is in view, when we are here we are in the opened keyboard state so we can correctly check if the input is in view
           const height = drawerRef.current.getBoundingClientRect().height;
           let newDrawerHeight = height;
 
@@ -516,6 +520,7 @@ export function Root({
           } else {
             drawerRef.current.style.height = `${Math.max(newDrawerHeight, visualViewportHeight - offsetFromTop)}px`;
           }
+          drawerRef.current.style.bottom = '0px';
         } else if (!isMobileFirefox()) {
           drawerRef.current.style.height = `${initialDrawerHeight.current}px`;
         }
