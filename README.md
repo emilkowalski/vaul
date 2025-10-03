@@ -1,35 +1,3 @@
-https://github.com/emilkowalski/vaul/assets/36730035/fdf8c5e8-ade8-433b-8bb0-4ce10e722516
+> **Note**  
+> This repo is unmaintained. I might come back to it at some point, but not in the near future. This was and always will be a hobby project and I simply don't have the time or will to work on it right now.
 
-Vaul is an unstyled drawer component for React that can be used as a Dialog replacement on tablet and mobile devices. You can read about why and how it was built [here](https://emilkowal.ski/ui/building-a-drawer-component).
-
-## Usage
-
-To start using the library, install it in your project:,
-
-```bash
-npm install vaul
-```
-
-Use the drawer in your app.
-
-```jsx
-import { Drawer } from 'vaul';
-
-function MyComponent() {
-  return (
-    <Drawer.Root>
-      <Drawer.Trigger>Open</Drawer.Trigger>
-      <Drawer.Portal>
-        <Drawer.Content>
-          <Drawer.Title>Title</Drawer.Title>
-        </Drawer.Content>
-        <Drawer.Overlay />
-      </Drawer.Portal>
-    </Drawer.Root>
-  );
-}
-```
-
-## Documentation
-
-Find the full API reference and examples in the [documentation](https://vaul.emilkowal.ski/getting-started).
