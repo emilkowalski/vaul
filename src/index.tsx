@@ -435,7 +435,7 @@ export function Root({
         );
       }
 
-      if (wrapper && overlayRef.current && shouldScaleBackground) {
+      if (wrapper && shouldScaleBackground) {
         // Calculate percentageDragged as a fraction (0 to 1)
         const scaleValue = Math.min(getScale() + percentageDragged * (1 - getScale()), 1);
         const borderRadiusValue = 8 - percentageDragged * 8;
