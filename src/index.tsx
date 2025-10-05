@@ -22,7 +22,7 @@ import { DrawerDirection } from './types';
 import { useControllableState } from './use-controllable-state';
 import { useScaleBackground } from './use-scale-background';
 import { usePositionFixed } from './use-position-fixed';
-import { isIOS, isMobileFirefox } from './browser';
+import { isIOS, isMobileFirefox, isAndroid } from './browser';
 
 export interface WithFadeFromProps {
   /**
@@ -516,7 +516,7 @@ export function Root({
           } else {
             drawerRef.current.style.height = `${Math.max(newDrawerHeight, visualViewportHeight - offsetFromTop)}px`;
           }
-        } else if (!isMobileFirefox()) {
+        } else if (!isMobileFirefox() && !isAndroid()) {
           drawerRef.current.style.height = `${initialDrawerHeight.current}px`;
         }
 
