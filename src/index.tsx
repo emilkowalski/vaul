@@ -737,13 +737,13 @@ export function Root({
   }
 
   React.useEffect(() => {
-    if (!modal) {
+    if (!modal && isOpen) {
       // Need to do this manually unfortunately
       window.requestAnimationFrame(() => {
         document.body.style.pointerEvents = 'auto';
       });
     }
-  }, [modal]);
+  }, [modal,isOpen]);
 
   return (
     <DialogPrimitive.Root
