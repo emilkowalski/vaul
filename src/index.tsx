@@ -380,7 +380,7 @@ export function Root({
 
       // Calculate the percentage dragged, where 1 is the closed position
       let percentageDragged = absDraggedDistance / drawerDimension;
-      const snapPointPercentageDragged = getSnapPointsPercentageDragged(absDraggedDistance, isDraggingInDirection);
+      const snapPointPercentageDragged = getSnapPointsPercentageDragged(absDraggedDistance, !isDraggingInDirection);
 
       if (snapPointPercentageDragged !== null) {
         percentageDragged = snapPointPercentageDragged;
