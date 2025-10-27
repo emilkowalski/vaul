@@ -386,6 +386,9 @@ export function Root({
         percentageDragged = snapPointPercentageDragged;
       }
 
+      // Execute onDragProp if it's defined
+      if (onDragProp) onDragProp(event, percentageDragged);
+
       // Disallow close dragging beyond the smallest snap point.
       if (noCloseSnapPointsPreCondition && percentageDragged >= 1) {
         return;
@@ -423,8 +426,6 @@ export function Root({
       const opacityValue = 1 - percentageDragged;
 
       if (shouldFade || (fadeFromIndex && activeSnapPointIndex === fadeFromIndex - 1)) {
-        onDragProp?.(event, percentageDragged);
-
         set(
           overlayRef.current,
           {
