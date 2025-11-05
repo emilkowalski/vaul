@@ -70,6 +70,11 @@ export type DialogProps = {
    */
   setBackgroundColorOnScale?: boolean;
   /**
+   * Background color to be used when the drawer is scaled.
+   * @default 'black'
+   */
+  backgroundColorOnScale?: string;
+  /**
    * Duration for which the drawer is not draggable after scrolling content inside of the drawer.
    * @default 500ms
    */
@@ -145,6 +150,7 @@ export function Root({
   snapPoints,
   shouldScaleBackground = false,
   setBackgroundColorOnScale = true,
+  backgroundColorOnScale = 'black',
   closeThreshold = CLOSE_THRESHOLD,
   scrollLockTimeout = SCROLL_LOCK_TIMEOUT,
   dismissible = true,
@@ -789,6 +795,7 @@ export function Root({
           direction,
           shouldScaleBackground,
           setBackgroundColorOnScale,
+          backgroundColorOnScale,
           noBodyStyles,
           container,
           autoFocus,
