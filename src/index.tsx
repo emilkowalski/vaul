@@ -110,7 +110,7 @@ export type DialogProps = {
   defaultOpen?: boolean;
   /**
    * When set to `true` prevents scrolling on the document body on mount, and restores it on unmount.
-   * @default false
+   * @default true
    */
   disablePreventScroll?: boolean;
   /**
