@@ -478,12 +478,29 @@ export function Root({
       if (!drawerRef.current || !repositionInputs) return;
 
       const focusedElement = document.activeElement as HTMLElement;
-      if (isInput(focusedElement) || keyboardIsOpen.current) {
-        const visualViewportHeight = window.visualViewport?.height || 0;
+      const isFocusedInsideDrawer =
+          !!focusedElement && drawerRef.current.contains(focusedElement);
+
+      // Only react if:
+      // - the focused element is an input *inside this drawer*, or
+      // - we already think the keyboard is open.
+      // This prevents an unrelated modal on top from collapsing this drawer.
+      if ((isInput(focusedElement) && isFocusedInsideDrawer) || keyboardIsOpen.current) {
+        const visualViewport = window.visualViewport;
+        const visualViewportHeight = visualViewport?.height || 0;
+        const visualViewportOffsetTop = visualViewport?.offsetTop || 0;
         const totalHeight = window.innerHeight;
-        // This is the height of the keyboard
+
+        // This is the height of the keyboard.
+        // Normal case (adjustResize): totalHeight - visualViewportHeight > 0.
+        // Android adjustPan: height often stays the same, but offsetTop > 0.
         let diffFromInitial = totalHeight - visualViewportHeight;
-        const drawerHeight = drawerRef.current.getBoundingClientRect().height || 0;
+        if (diffFromInitial <= 0 && visualViewportOffsetTop > 0) {
+          diffFromInitial = visualViewportOffsetTop;
+        }
+
+        const drawerRect = drawerRef.current.getBoundingClientRect();
+        const drawerHeight = drawerRect.height || 0;
         // Adjust drawer height only if it's tall enough
         const isTallEnough = drawerHeight > totalHeight * 0.8;
 
@@ -492,46 +509,79 @@ export function Root({
         }
         const offsetFromTop = drawerRef.current.getBoundingClientRect().top;
 
-        // visualViewport height may change due to somq e subtle changes to the keyboard. Checking if the height changed by 60 or more will make sure that they keyboard really changed its open state.
+        // visualViewport height may change due to some subtle changes to the keyboard.
+        // Checking if the height changed by 60 or more will make sure that the
+        // keyboard really changed its open state.
         if (Math.abs(previousDiffFromInitial.current - diffFromInitial) > 60) {
           keyboardIsOpen.current = !keyboardIsOpen.current;
         }
 
-        if (snapPoints && snapPoints.length > 0 && snapPointsOffset && activeSnapPointIndex) {
+        // Fix: allow activeSnapPointIndex === 0
+        if (
+            snapPoints &&
+            snapPoints.length > 0 &&
+            snapPointsOffset &&
+            typeof activeSnapPointIndex === 'number'
+        ) {
           const activeSnapPointHeight = snapPointsOffset[activeSnapPointIndex] || 0;
           diffFromInitial += activeSnapPointHeight;
         }
         previousDiffFromInitial.current = diffFromInitial;
-        // We don't have to change the height if the input is in view, when we are here we are in the opened keyboard state so we can correctly check if the input is in view
-        if (drawerHeight > visualViewportHeight || keyboardIsOpen.current) {
+
+        // When keyboard is open, ensure the drawer is positioned above it
+        if (keyboardIsOpen.current && diffFromInitial > 0) {
+          const currentBottom = window.innerHeight - drawerRect.bottom;
+
+          // Calculate the maximum height that keeps the drawer visible above keyboard
+          const maxDrawerHeight = visualViewportHeight - Math.max(offsetFromTop, WINDOW_TOP_OFFSET);
+          const newDrawerHeight = Math.min(drawerHeight, maxDrawerHeight);
+
+          // When fixed, only adjust height to prevent scrolling issues
+          if (fixed) {
+            drawerRef.current.style.height = `${newDrawerHeight - Math.max(diffFromInitial, 0)}px`;
+            drawerRef.current.style.bottom = '0px';
+          } else {
+            // Position drawer above keyboard with proper height
+            drawerRef.current.style.height = `${Math.max(newDrawerHeight, visualViewportHeight - offsetFromTop)}px`;
+            // Ensure bottom is positioned to keep drawer above keyboard
+            const bottomOffset = Math.max(diffFromInitial - Math.max(currentBottom, 0), 0);
+            drawerRef.current.style.bottom = `${bottomOffset}px`;
+          }
+        } else if (drawerHeight > visualViewportHeight && !keyboardIsOpen.current) {
+          // Handle case when drawer is taller than viewport but keyboard is closed
           const height = drawerRef.current.getBoundingClientRect().height;
           let newDrawerHeight = height;
 
           if (height > visualViewportHeight) {
             newDrawerHeight = visualViewportHeight - (isTallEnough ? offsetFromTop : WINDOW_TOP_OFFSET);
           }
-          // When fixed, don't move the drawer upwards if there's space, but rather only change it's height so it's fully scrollable when the keyboard is open
+          // When fixed, don't move the drawer upwards if there's space, but rather only
+          // change its height so it's fully scrollable when the keyboard is open
           if (fixed) {
             drawerRef.current.style.height = `${height - Math.max(diffFromInitial, 0)}px`;
           } else {
             drawerRef.current.style.height = `${Math.max(newDrawerHeight, visualViewportHeight - offsetFromTop)}px`;
           }
-        } else if (!isMobileFirefox()) {
+          // Place drawer at bottom of viewport
+          drawerRef.current.style.bottom = '0px';
+        } else if (!isMobileFirefox() && !keyboardIsOpen.current) {
+          // Reset to original state when keyboard is closed
           drawerRef.current.style.height = `${initialDrawerHeight.current}px`;
-        }
-
-        if (snapPoints && snapPoints.length > 0 && !keyboardIsOpen.current) {
-          drawerRef.current.style.bottom = `0px`;
-        } else {
-          // Negative bottom value would never make sense
-          drawerRef.current.style.bottom = `${Math.max(diffFromInitial, 0)}px`;
+          // Place drawer at bottom of viewport
+          drawerRef.current.style.bottom = '0px';
         }
       }
     }
 
     window.visualViewport?.addEventListener('resize', onVisualViewportChange);
-    return () => window.visualViewport?.removeEventListener('resize', onVisualViewportChange);
-  }, [activeSnapPointIndex, snapPoints, snapPointsOffset]);
+    // New: on some Android / WebViews with adjustPan, the keyboard pans via scroll
+    // rather than resize, so we also watch scroll.
+    window.visualViewport?.addEventListener('scroll', onVisualViewportChange);
+    return () => {
+      window.visualViewport?.removeEventListener('resize', onVisualViewportChange);
+      window.visualViewport?.removeEventListener('scroll', onVisualViewportChange);
+    };
+  }, [activeSnapPointIndex, snapPoints, snapPointsOffset, fixed, repositionInputs]);
 
   function closeDrawer(fromWithin?: boolean) {
     cancelDrag();
