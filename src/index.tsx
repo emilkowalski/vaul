@@ -209,6 +209,11 @@ export function Root({
   const keyboardIsOpen = React.useRef(false);
   const shouldAnimate = React.useRef(!defaultOpen);
   const previousDiffFromInitial = React.useRef(0);
+  // Some iOS/WKWebView environments report transient `visualViewport.height` values like `0`
+  // (or extremely small numbers) during browser UI transitions. Using those values in height/
+  // transform calculations can push the drawer off-screen. We keep a "last known good" height
+  // and ignore obviously invalid measurements.
+  const lastKnownVisualViewportHeight = React.useRef(0);
   const drawerRef = React.useRef<HTMLDivElement>(null);
   const drawerHeightRef = React.useRef(drawerRef.current?.getBoundingClientRect().height || 0);
   const drawerWidthRef = React.useRef(drawerRef.current?.getBoundingClientRect().width || 0);
@@ -479,8 +484,42 @@ export function Root({
 
       const focusedElement = document.activeElement as HTMLElement;
       if (isInput(focusedElement) || keyboardIsOpen.current) {
-        const visualViewportHeight = window.visualViewport?.height || 0;
         const totalHeight = window.innerHeight;
+        const rawVisualViewportHeight = window.visualViewport?.height;
+
+        const visualViewportHeight = (() => {
+          const candidate =
+            typeof rawVisualViewportHeight === 'number' && Number.isFinite(rawVisualViewportHeight)
+              ? rawVisualViewportHeight
+              : 0;
+
+          const fallback =
+            lastKnownVisualViewportHeight.current > 0
+              ? lastKnownVisualViewportHeight.current
+              : typeof totalHeight === 'number' && Number.isFinite(totalHeight) && totalHeight > 0
+              ? totalHeight
+              : 0;
+
+          // Ignore `0`/NaN/negative values (known to occur transiently on iOS/WKWebView).
+          if (candidate <= 0) return fallback;
+
+          // Also ignore extremely small values on normal-sized viewports; these are almost always transient.
+          // (Example: permission sheets / browser chrome animations reporting 0~80px for a frame.)
+          if (
+            typeof totalHeight === 'number' &&
+            Number.isFinite(totalHeight) &&
+            totalHeight > 300 &&
+            candidate < 100
+          ) {
+            return fallback;
+          }
+
+          // Clamp to totalHeight when available to avoid negative diffs.
+          const safe = typeof totalHeight === 'number' && Number.isFinite(totalHeight) && totalHeight > 0 ? Math.min(candidate, totalHeight) : candidate;
+          lastKnownVisualViewportHeight.current = safe;
+          return safe;
+        })();
+
         // This is the height of the keyboard
         let diffFromInitial = totalHeight - visualViewportHeight;
         const drawerHeight = drawerRef.current.getBoundingClientRect().height || 0;
@@ -512,7 +551,7 @@ export function Root({
           }
           // When fixed, don't move the drawer upwards if there's space, but rather only change it's height so it's fully scrollable when the keyboard is open
           if (fixed) {
-            drawerRef.current.style.height = `${height - Math.max(diffFromInitial, 0)}px`;
+            drawerRef.current.style.height = `${Math.max(height - Math.max(diffFromInitial, 0), 0)}px`;
           } else {
             drawerRef.current.style.height = `${Math.max(newDrawerHeight, visualViewportHeight - offsetFromTop)}px`;
           }
