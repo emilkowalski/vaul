@@ -96,18 +96,20 @@ export function usePositionFixed({
   }, [activeUrl]);
 
   React.useEffect(() => {
+    if (!isOpen) return;
+
+    scrollPos.current = window.scrollY;
+
     function onScroll() {
       scrollPos.current = window.scrollY;
     }
-
-    onScroll();
 
     window.addEventListener('scroll', onScroll);
 
     return () => {
       window.removeEventListener('scroll', onScroll);
     };
-  }, []);
+  }, [isOpen]);
 
   React.useEffect(() => {
     if (!modal) return;
