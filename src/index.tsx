@@ -332,6 +332,13 @@ export function Root({
 
     // Keep climbing up the DOM tree as long as there's a parent
     while (element) {
+      // Stop once we reach the drawer itself — ancestors above it (e.g. the
+      // page when the drawer is not `position: fixed`) may be scrollable and
+      // would otherwise block dragging of the drawer (#651).
+      if (element === drawerRef.current) {
+        return true;
+      }
+
       // Check if the element is scrollable
       if (element.scrollHeight > element.clientHeight) {
         if (element.scrollTop !== 0) {
