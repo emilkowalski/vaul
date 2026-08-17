@@ -42,6 +42,16 @@ export function useControllableState<T>({ prop, defaultProp, onChange = () => {}
   const value = isControlled ? prop : uncontrolledProp;
   const handleChange = useCallbackRef(onChange);
 
+  // Fire onChange when the controlled prop changes from outside
+  // (e.g. a parent sets `open` directly on a controlled Drawer with modal={false}),
+  // so side effects like resetting pointerEvents run as expected.
+  React.useEffect(() => {
+    if (isControlled) {
+      handleChange(prop as T);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [prop]);
+
   const setValue: React.Dispatch<React.SetStateAction<T | undefined>> = React.useCallback(
     (nextValue) => {
       if (isControlled) {
