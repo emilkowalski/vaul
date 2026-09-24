@@ -59,8 +59,14 @@
     "typescript": "5.2.2"
   },
   "peerDependencies": {
+    "@types/react": "*",
     "react": "^16.8 || ^17.0 || ^18.0 || ^19.0.0 || ^19.0.0-rc",
     "react-dom": "^16.8 || ^17.0 || ^18.0 || ^19.0.0 || ^19.0.0-rc"
+  },
+  "peerDependenciesMeta": {
+    "@types/react": {
+      "optional": true
+    }
   },
   "packageManager": "pnpm@8.8.0",
   "dependencies": {
